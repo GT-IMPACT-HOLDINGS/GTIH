@@ -1,0 +1,226 @@
+# Lexiom Invitation Semantic UX Specification  
+## Version 1.4 — Dual-Artifact Invitation Architecture
+
+---
+
+## 1. Purpose
+
+This specification defines how Lexiom composes and delivers invitations for a second participant to join an Accord case.
+
+Lexiom invitations must:
+
+- faithfully reflect the initiating player’s perspective  
+- create a psychologically safe shared narrative entry-point  
+- support legal coordination, lay conflict navigation, and mediation practice  
+- separate **semantic meeting ground creation** from **operational outreach delivery**
+
+Vertical semantic weighting:
+
+- Lawyers — 60%  
+- Laypersons — 30%  
+- Mediators — 10%
+
+---
+
+## 2. Core Semantic Principle  
+### Third-Perspective Narrative Legitimacy
+
+Invitation synthesis produces narratives that both sides may recognize as reasonable starting descriptions of reality.
+
+Narrative legitimacy precedes persuasion.
+
+---
+
+## 3. Input Substrate
+
+Invitation inference operates on six approved inputs:
+
+1. Case seed narrative  
+2. Disputed items  
+3. Personal goals  
+4. Conduct / strategy reflections  
+5. Undisputed anchors  
+6. Recipient positioning (ally/foe × direct/mediated)
+
+---
+
+## 4. Dual-Artifact Invitation Model
+
+Lexiom generates **two semantically linked invitation artifacts**.
+
+### 4.1 Shared Case Seed Narrative (Primary Semantic Artifact)
+
+Purpose:
+
+- establish a legitimate shared situational description  
+- serve as the cognitive starting point for Accord rounds  
+- persist as a **shared document** in the right panel for both players  
+
+Characteristics:
+
+- written in third-perspective synthesis voice  
+- forward-looking and non-accusatory  
+- highlights common ground and clarifiable differences  
+- editable by Player A before dispatch  
+- becomes the first shared artifact in the case workspace  
+
+This document functions as the **semantic meeting ground**.
+
+---
+
+### 4.2 Email Invitation (Operational Outreach Artifact)
+
+Purpose:
+
+- notify and invite the counterpart  
+- provide access pathway to the shared narrative  
+- minimize friction for engagement initiation  
+
+Structure:
+
+- subject line  
+- short human-tone invitation message  
+- link to the shared narrative resource  
+
+Preferred implementation:
+
+- generated as a `mailto:` link  
+- pre-filled subject and body  
+- embedded anchor allows opening user’s default email client  
+
+The email functions as the **delivery vehicle**, not the primary semantic container.
+
+---
+
+## 5. Single-Call Weighted Semantic Synthesis
+
+Both artifacts are generated within a single inference request.
+
+GT3 must:
+
+- synthesize the shared narrative first  
+- then compose the shorter email message derived from it  
+
+The two outputs must remain semantically coherent.
+
+---
+
+## 6. Recipient Positioning Model
+
+At Zenith → Accord transition, Player A selects:
+
+- relational polarity (ally / foe)  
+- interaction channel (direct / mediated)
+
+This positioning influences:
+
+- narrative framing  
+- legitimacy emphasis  
+- tone calibration  
+- process visibility level  
+
+---
+
+## 7. Opening Archetype Guidance
+
+Default opening tendencies:
+
+- Direct Ally → collaborative orientation  
+- Mediated Ally → coordinated facilitation  
+- Direct Foe → respectful dialogue framing  
+- Mediated Foe → neutral structured invitation  
+
+---
+
+## 8. Adaptive Playfulness Governor
+
+Playfulness intensity is modulated by:
+
+- conflict polarity  
+- mediation presence  
+- professional context  
+- emotional risk inference  
+
+Metaphor must never trivialize dispute reality.
+
+---
+
+## 9. Audience Register Adaptation
+
+Language dynamically aligns with:
+
+- legal-professional  
+- everyday relational  
+- facilitator-neutral  
+
+Register selection impacts engagement probability.
+
+---
+
+## 10. Mediation Process Priming
+
+Shared narrative may implicitly prepare participants for:
+
+1. presentation  
+2. listening  
+3. shared synthesis  
+4. negotiation dialogue  
+
+---
+
+## 11. Acceptance Optimization Objective
+
+Semantic synthesis aims to maximize:
+
+- perceived fairness  
+- narrative legitimacy  
+- voluntary engagement  
+- constructive response timing  
+
+Player A retains editorial sovereignty.
+
+---
+
+## 12. Learning Evolution Path
+
+Future tuning may incorporate:
+
+- invitation acceptance metrics  
+- sentiment evolution  
+- agreement convergence  
+- mediator feedback loops  
+
+---
+
+## 13. Design Essence
+
+Lexiom invitations operate through:
+
+> creation of a shared semantic ground  
+> followed by lightweight human outreach enabling entry into Accord.
+
+---
+
+## 14. Implementation Snapshot (retrofit, current demo)
+
+Current `app.js` implementation aligns with this spec at a high level but realizes it through the Zenith home-run transition flow:
+
+- Recipient positioning is captured in transition UI as polarity × channel (`ALLY|FOE` × `DIRECT|MEDIATED`) via `SET_ACCORD_RECIPIENT_POSITIONING`.
+- Shared seed narrative is generated by one GT3 call (`inferenceType: TRANSIENT_DRAFT`) using case seed + disputes + goals + strategy + undisputed + recipient positioning.
+- Accord share link is generated and shown in transition instructions; copy-link and `mailto:` affordances are rendered from `ui.accordSetup.sharedResourceLink`.
+- Entering Accord is gated on link-generation + link action (`linkActionTaken`) before `START_ACCORD_STAGE`.
+
+### 14.1 Known divergence
+
+- **Known divergence:** this spec’s older language about “supplying a directory path” during invitation prep is not how current Accord invitation flow operates. Current flow uses already-available case state in cockpit, not a new directory picker in transition.
+- **Known divergence:** “both artifacts are generated within a single inference request” is currently true for semantic seed generation, but outbound email text is templated client-side (`mailto:` body) rather than LM-generated as a second artifact payload.
+- **Open question:** whether invitation email body should be LM-generated in the same call (as originally intended) or remain deterministic template copy for predictability and legal review.
+
+### 14.2 Follow-up required
+
+- If product requires strict dual-artifact LM synthesis, define concrete output schema and parser contract for shared seed + email body in one response.
+- If product keeps template email body, update sections 4.2 and 5 language from “generated” to “assembled from generated seed + deterministic template.”
+
+---
+
+End of Specification

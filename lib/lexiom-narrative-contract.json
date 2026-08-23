@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "blockLabels": [
+    "APPROVED_L24D_UNDISPUTED_FACTS:",
+    "APPROVED_L24A_DISPUTES:",
+    "APPROVED_L24B_GOALS:",
+    "APPROVED_L24C_STRATEGY:",
+    "APPROVED_L24D_UNDISPUTED:",
+    "APPROVED_DRAFT:",
+    "CHAT_HISTORY:",
+    "CASE_SEED_NARRATIVE:",
+    "L2A_CHAT_HISTORY (Goals lens):",
+    "L2B_CHAT_HISTORY (Strategy lens):",
+    "L24D_CHAT_HISTORY (undisputed / common-ground lens):",
+    "L24A_CHAT_HISTORY (disputes lens, optional):"
+  ],
+  "deprecatedBlockLabels": [],
+  "appendLogSectionTitles": [
+    "Loving response",
+    "Original response",
+    "Single original response",
+    "Loving error",
+    "Original error",
+    "Single original error"
+  ]
+}

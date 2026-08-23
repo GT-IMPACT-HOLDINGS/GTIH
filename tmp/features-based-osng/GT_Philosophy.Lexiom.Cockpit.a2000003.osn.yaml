@@ -1,0 +1,307 @@
+# Outcome Specification Node (OSN)
+#
+# See also: ../OSNG_Basics_README.md — filename conventions for reconstructing
+# the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.Lexiom.Cockpit.a2000003.osn
+file_name: GT_Philosophy.Lexiom.Cockpit.a2000003.osn
+node_type: feature
+feature: Cockpit
+title: Lexiom Cockpit Shell
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Cockpit Feature OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.Lexiom.a2000002.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.product.cockpit
+seed: >
+  Shape the Lexiom cockpit as a deterministic, inspectable single-page shell on the GT3 Node server:
+  five fixed cabinet regions, OSN graph navigation, draft-first center playfield, evidence tray,
+  thematic lenses, branching/maturation, build previews, and YAML rewritten only through explicit
+  White Move persist/canonize/prune — never by silent background mutation of semantic source.
+thematic_lenses:
+  - lens_id: lens.cockpit.first_time_clarity
+    name: First-Time Clarity
+    purpose: Reduce cognitive load in the first thirty seconds of the shell.
+  - lens_id: lens.cockpit.orientation
+    name: Region Orientation
+    purpose: Teach what each cockpit region does through visible placement.
+  - lens_id: lens.cockpit.osn_files
+    name: OSN File Metaphor
+    purpose: Make hierarchical OSN files feel openable and inspectable in the left graph.
+  - lens_id: lens.code.server_osn_files
+    name: Server-Hosted OSN Files
+    purpose: >-
+      Keep the feature-graph OSNs (and any later canonized branch YAML files) as real files under
+      the product OSN directory tree, loaded at runtime rather than hard-coded in the SPA.
+  - lens_id: lens.code.action_log
+    name: Append-Only Action Log
+    purpose: Record user actions in session memory without requiring a visible action-log panel.
+  - lens_id: lens.code.section_navigation
+    name: Section-Level Graph Navigation
+    purpose: >-
+      Let the Focus OSN show section glyphs inline in its node row and runtime Build children after
+      build invocation while preserving immature branch nodes until canonized or pruned.
+  - lens_id: lens.code.gt3_cohosted
+    name: GT3 Co-Hosted
+    purpose: >-
+      Serve the SPA and OSN files from the same local Node server; call GT3 POST /inference for lens
+      reframing, maturation proposals, and cockpit-title proposal; use OSN list/save routes for graph
+      discovery and explicit disk writes, with no external database. (Evidence-scoped chat inference
+      is owned by CockpitChat.)
+  - lens_id: lens.cockpit.deterministic_spa
+    name: Deterministic SPA Shape
+    purpose: Keep loading, state, filters, and disk writes inspectable and approval-gated.
+output_spec: |
+  Present a quiet welcome screen using the fixed Lexiom cockpit layout. On first
+  visit, page reload, or ?welcome=1, show a welcoming modal until dismissed with
+  "Begin exploring." The cockpit shell title may be replaced by a GT3-proposed
+  title derived from the loaded OSN graph, but it is hidden until the player
+  enables the Cockpit title filter.
+
+  --- Experience (from prior UX, shell-scoped) ---
+
+  Left panel — expose the OSN graph through a Focus-centered viewport. Keep the
+  Focus OSN vertically centered and left-aligned, stack its fitted
+  primary-parent ancestors above at the same origin, and render fitted
+  descendants below with branch indentation. Off-chain siblings such as
+  Cockpit / CockpitChat do not occupy the vertical tree; adjacent ◀ / ▶ glyphs
+  move Focus between them. Keep nearest ancestors and shallower descendants
+  first, clip farthest/deepest rows to the graph frame, show no OSN scrollbar,
+  and refit on resize. Use origin-leaf labels; keep full file_name via tooltip /
+  focus control. Only the Focus OSN shows its four section glyphs inline in the
+  same node row: Seed, Thematic Lenses, Output Spec, and Success Evidences.
+  Immature nodes are marked and later maturation glyphs stay locked until prior
+  gates approve. A pencil glyph inside the Focus OSN button opens OSN Name
+  editing; branch (+) and prune (×) controls appear only on that Focus row. The
+  Focus OSN and fitted ancestors get bluish neon highlight; only the active
+  section glyph glows.
+  Four optional filters start off: Evidence approval glyphs (navigate only),
+  Build controls (build glyphs / disconnected plug when not buildable), Top bar
+  (L2 thematic lenses), and Cockpit title. With Cockpit title off, the cabinet
+  fills the browser viewport; enabling it restores the inset frame.
+
+  Center playfield — sole execution surface for one Focus section, meta field,
+  Build preview, or opened evidence artifact. Draft-first cards are editable and
+  glyph-approved. Immature gates show locked messages. Canonize/persist status
+  appears after explicit approvals. The top focus strip exposes only "Owned by:"
+  plus the clickable owner; OSN Name opens from the graph pencil, while OSN Title
+  remains an available center meta card rather than visible shell chrome.
+
+  Top L2 — hidden until the player enables the Top bar filter. Once visible,
+  thematic lens chips represent the Focus OSN. Immature OSNs use L2 for
+  maturation proposals. Lens clicks deepen the current section via GT3 with
+  ancestor seed/output_spec context. Build sections and open evidence disable
+  chips. During evidence review, chips stay visible but disabled; chat
+  exposition is owned by CockpitChat (bottom ribbon), not by replacing L2.
+
+  Right panel — linked demo evidence artifacts for the Focus OSN with Approve
+  checkboxes when files exist; placeholders otherwise. Opening an artifact hands
+  the bottom ribbon to CockpitChat.
+
+  Bottom ribbon (non-chat) — placeholder "Semantic actions — coming soon" when
+  no evidence is open. Evidence-open behavior is specified by CockpitChat.
+
+  --- Code shaping (from prior CodeShape.osn, shell-scoped) ---
+
+  Build a welcome SPA served by the existing GT3 Node server alongside OSN YAML
+  files. For the live domain graph the starting quartet lives under
+  public/gt2/Lexiom_1_3/; for this feature-based experimental graph the quartet
+  lives under public/gt2/Lexiom_1_3/features-based-osng/ as
+  GT_Philosophy.a2000001.osn.yaml, GT_Philosophy.Lexiom.a2000002.osn.yaml,
+  GT_Philosophy.Lexiom.Cockpit.a2000003.osn.yaml, and
+  GT_Philosophy.Lexiom.CockpitChat.a2000004.osn.yaml. Wiring which directory the
+  SPA loads is a product configuration concern (Lexiom OSN); this feature owns
+  how loading, rendering, and persistence behave once paths are resolved.
+
+  OSN loading — on startup, resolve live OSN paths via GET /lexiom13/osn/list
+  (falling back to a configured path list), fetch each YAML from its static URL,
+  parse it, and hold parsed objects in SPA memory for rendering. Tombstoned
+  *.tomb.osn.yaml files are excluded from the live list. The files on disk remain
+  the semantic source; the SPA does not embed OSN content as hard-coded objects.
+  The loaded graph preserves GT_Philosophy as the top root and Lexiom as its
+  child; the Focus-centered viewport exposes either when it belongs to the
+  fitted Focus / ancestor / descendant set. Use origin-leaf labels in the UI
+  while keeping hierarchical id === file_name identity. Newly written YAML must
+  include the shared OSN comment header
+  (serializeLexiom13OsnYaml / lib/lexiom13OsnPersist.js).
+
+  Lexiom 1.3 server routes (GT3 Node, lib/lexiom13OsnPersist.js):
+  - GET /lexiom13/osn/list — live OSN YAML public paths.
+  - POST /lexiom13/osn/save — create (canonize immature branch), update
+    (persist approved canonical edits / identity remount), or prune
+    (tombstone subtree). POST /lexiom13/osn/canonize remains available as a
+    dedicated create helper; the SPA uses save with operation create/update/prune.
+
+  State (shell) — keep selectedOsnId (Focus OSN) and selectedSectionKey so the
+  center playfield renders one OSN section or meta field at a time; OSN selection
+  defaults to output_spec and falls back to the first unlocked immature gate. Also keep
+  selectedLensId, lensMode, lensThreadsByKey, lensDraftsByOsnSection,
+  lensIntensityByKey (pass counter keyed by osnId + sectionKey + lensId),
+  selectedEvidenceId, ui.pendingLensRefresh, and evidenceApprovalByKey
+  (session-only Map keyed by osnId + evidenceId). Keep expandedOsnIds only for
+  legacy expansion/build helpers. Maintain runtime-only build previews keyed by OSN,
+  draftCardsByOsnId / drafts for section text, runtime immature OSNs
+  (__canonical: false) with maturity gates, branchSequence, and pending ui for
+  maturation, canonization, persist, and prune. Keep cockpitTitle* ui for
+  GT3-proposed shell title. (Causal-chat Maps and pendingCausalLineage /
+  pendingPlayerAsk are owned by CockpitChat.)
+
+  Rendering — deterministically paint all five cockpit regions from the loaded
+  OSN data and this feature's layout rules. Compose the left graph from fitted
+  ancestor, Focus, and descendant zones, use adjacent sibling arrows, keep Focus
+  centered, clip overflow without graph-row scrolling, and refit with
+  ResizeObserver. The left graph must render primary OSN nodes (leaf labels),
+  four inline section glyphs only on the Focus OSN, Focus-only branch (+), prune
+  (×), and nested pencil controls, and runtime Build children only after build
+  is invoked. Apply Focus OSN plus fitted ancestor-chain neon highlighting and
+  a single active-section glyph glow. Delegate four optional
+  graph filters to osn-filtering.js; Evidence approval, Build controls, Top bar,
+  and Cockpit title all start disabled. Top bar and Cockpit title toggle hidden
+  shell elements, and the title filter also controls edge-fill versus inset
+  cabinet framing. Nodes whose compilation settings are not connected to a build
+  agent render a disconnected plug glyph and must not open a build preview.
+
+  Center playfield — render one Lexiom draft-first card at a time for the
+  selected section, meta field, or Build child; or an evidence artifact /
+  lineage narrative / output_spec change viewer when those are active (lineage /
+  change cards are produced by CockpitChat but still paint in center). Immature
+  sections behind maturation gates render a locked message. Card edits update
+  runtime draft state first; approving a canonical section (or meta identity)
+  queues an explicit persist White Move that writes YAML via /lexiom13/osn/save.
+  Approving the final success_evidences gate on a fully matured immature OSN
+  queues canonization (create) to disk and links the new file into the parent
+  graph. Approving an output_spec change proposal (from CockpitChat) copies text
+  into the Focus OSN Output Spec draft without auto-persisting until that section
+  is approved.
+
+  Welcome modal — on first visit, page reload, or ?welcome=1, show the modal
+  overlay until dismissed; persist dismissal in localStorage key
+  lexiom13_welcome_seen and log welcome_modal_shown / welcome_modal_dismissed.
+
+  User actions — provide appendAction(action) to record interactions in an
+  append-only in-memory log. The log remains internal; it does not require a
+  dedicated visible panel. User actions may update runtime view state; they must
+  not silently overwrite canonical OSN YAML. Disk writes occur only through the
+  explicit save/create/prune paths after White Moves.
+
+  Round loop (shell) — route decisive interactions through dispatchWhiteMove
+  with explicit White, Black, and Stability phases. Lens selection publishes
+  aiBusEvent lens_selected and sets ui.pendingLensRefresh; after Black, call
+  GT3 through public/gt2/Lexiom_1_3/gt3-client.js and inference-narratives.js
+  via POST /inference, then apply returned text through a new White move.
+  Every lens click re-runs this loop using current draft text and
+  getLensIntensity + 1; APPLY_LENS_DRAFT increments lensIntensityByKey.
+  Immature maturation uses the same loop after seed / lenses / output_spec
+  approvals to propose the next gated section (and related meta such as title).
+  The 1.3 client uses reasoning-making persona framing only. (Causal Lineage /
+  player-ask Black Moves are specified under CockpitChat.)
+
+  Branching / pruning — BRANCH_OSN creates an immature shell with hierarchical
+  NewBranch_* identity under the parent. PRUNE_OSN_BRANCH collects the subtree;
+  runtime-only subtrees prune in memory, while on-disk nodes are tombstoned
+  through /lexiom13/osn/save operation prune. Placeholder NewBranch_* leaves may
+  be promoted from the matured title before first canonize write so the graph
+  label matches the new OSN name.
+
+  Ancestor context — getAncestorContextForLens walks each selected OSN's
+  parent_osn_ids chain and supplies ancestor seed plus output_spec draft text
+  into the ANCESTOR CONTEXT block of GT3 narratives. Child reframing and
+  maturation must honor upstream owner outcome specifications.
+
+  Lens drafts — keep lens-specific runtime drafts separate from canonical
+  section text. GT3 may propose lens reframes, but approval is explicit.
+  Approved lens drafts may be included as supplemental context in client-side
+  build previews; transient lens drafts do not alter compilation by default.
+
+  Build invocation — when Build controls is enabled, each buildable OSN exposes
+  a build glyph. Clicking it computes a client-side build preview from the OSN's
+  compilation scope, creates a runtime Build child, and opens the Build draft
+  card. No GT3 inference call is required for this preview.
+
+  Evidence linking — osn-evidence-links.js resolves demo artifacts under
+  public/gt2/Lexiom_1_3/evidences/ using versioned filenames
+  ({OSN.file_name}.{evidence_id}.{version}.{ext}), preferring v2 then v1.
+  The right panel lists linked artifacts for the Focus OSN; clicking one opens
+  it in the center and activates Causal Lineage Chat (CockpitChat). Approve
+  toggles update evidenceApprovalByKey and log toggle_evidence_approval;
+  approval state is session-only.
+
+  Suggestions — any generated or proposed content stays in a separate draft
+  layer until a recorded user action promotes it.
+
+  Right panel — render a tray of linked demo evidence artifacts for the Focus
+  OSN's success evidences, each with an Approve checkbox when a reviewable file
+  exists. Unlinked evidences show a waiting placeholder.
+
+  Session persistence — selection, drafts, build previews, evidence approval,
+  graph filter toggles, and the internal action log live in SPA memory for the
+  POC session. Canonical OSN YAML on disk is updated only through explicit
+  persist / canonize / prune. Welcome-seen uses localStorage. Keep OSN schema
+  fields and hierarchical id/file_name conventions stable so durable session
+  stores can be added later without renaming core fields. (Causal chat session
+  Maps are owned by CockpitChat but likewise session-only.)
+
+  Functional minimum:
+  - Show all five regions and the welcome modal until dismissed.
+  - Keep Focus centered with fitted ancestors above and indented descendants
+    below; navigate off-chain siblings with ◀ / ▶ and never scroll OSN rows
+    beyond the graph viewport.
+  - Select OSNs and inline section glyphs; branch and prune from the Focus row;
+    edit owner and OSN Name through their current triggers.
+  - Apply L2 lenses when unlocked; open evidences and toggle approval.
+  - Enable Build controls and open a Build child from a buildable glyph.
+  - Persist/canonize only after explicit White Moves.
+  - Implement the shell code-shaping contracts above (load, state, filters,
+    round loop, save routes, evidence linking modules).
+
+  Out of scope for this feature OSN:
+  - Causal Lineage Chat ask/proposal loop, player-ask unlock, output_spec change
+    proposals, and chat-specific state/inference (see CockpitChat).
+success_evidences:
+  - evidence_id: sev.cockpit.viewport_screenshot
+    kind: screenshot
+    direct: true
+    inspection_prompt: >
+      Open the welcome SPA with Cockpit selected as the Focus OSN. Capture one full-viewport
+      screenshot showing all five cockpit regions, Cockpit vertically centered in the clipped left
+      graph with its fitted ancestors above, its four section glyphs inline, and the ▶ sibling glyph
+      that reaches CockpitChat. Also show one draft-first section card in the center and the right
+      evidence tray with at least one linked demo artifact and its approval control. Deliver the
+      screenshot image file as the evidence artifact.
+  - evidence_id: sev.cockpit.shell_snippet_review
+    kind: direct_code_snippet
+    direct: true
+    inspection_prompt: >
+      From the welcome SPA source, produce a single readable code snippet that shows how the app
+      resolves OSN paths via /lexiom13/osn/list (with configured-path fallback), fetches and parses
+      OSN YAML, links versioned demo evidence artifacts through osn-evidence-links.js, applies
+      all four optional graph filters through osn-filtering.js, composes the fitted Focus-centered
+      ancestor / Focus / descendant viewport with sibling arrows and resize refitting, renders the
+      Focus OSN's section glyphs inline, branches immature OSNs, and canonizes/persists/prunes through
+      /lexiom13/osn/save (including
+      shared comment-header serialization), walks ancestor output_spec into lens GT3 narratives,
+      handles the per-OSN build glyph when Build controls is enabled, generates runtime Build
+      children, and records interactions through appendAction. Format it as a copy-pasteable excerpt
+      suitable for direct review. Deliver the snippet as the evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_plus_parent_context
+  target_tool_profile: cursor_static_spa_prompt

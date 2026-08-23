@@ -1,0 +1,151 @@
+/* Constrains the card + actions below to one column; actions sit outside the bordered playfield. */
+.lexiom-case-create-outer {
+  width: min(72rem, 100%);
+  max-width: min(72rem, 100%);
+  margin-inline: auto;
+}
+
+.lexiom-case-create-outer .lexiom-onboarding-card.lexiom-case-create-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Titles share one grid row on large screens so both H2s align horizontally; body row starts below the taller title. */
+.lexiom-case-create-playfield-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+.lexiom-case-create-section-card {
+  border: 1px solid var(--lexiom-frame-rgba);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: var(--lexiom-surface-bg);
+}
+
+.lexiom-case-create-grid-title--intent {
+  margin-bottom: 0.75rem;
+}
+
+.lexiom-case-create-grid-title--folder {
+  margin-bottom: 0.75rem;
+}
+
+.lexiom-case-create-grid-body--intent {
+  flex: 1 1 auto;
+}
+
+.lexiom-case-create-grid-body--folder {
+  flex: 1 1 auto;
+}
+
+/* Center titles and controls within each playfield column; keep typed intent left/right logical. */
+.lexiom-case-create-playfield-grid .lexiom-onboarding-heading.lexiom-case-create-grid-title {
+  text-align: center;
+}
+
+.lexiom-case-create-grid-body--intent {
+  align-items: center;
+}
+
+.lexiom-case-create-grid-body--intent .lexiom-onboarding-textarea {
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+}
+
+.lexiom-case-create-grid-body--intent .lexiom-onboarding-textarea::placeholder {
+  color: #d7dbe4;
+  opacity: 1;
+  text-align: center;
+}
+
+.lexiom-case-create-grid-body--folder {
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+}
+
+.lexiom-case-create-grid-body--folder > .d-flex.flex-wrap {
+  justify-content: center;
+}
+
+/* Folder discovery details should follow locale side (LTR left / RTL right). */
+#case-create-folder-details {
+  width: 100%;
+  text-align: start;
+}
+
+.lexiom-case-create-folder-feedback {
+  width: 100%;
+  margin-top: auto !important;
+}
+
+.lexiom-case-create-file-list {
+  margin-top: 0.25rem;
+  padding-inline-start: 1.1rem;
+}
+
+@media (min-width: 992px) {
+  .lexiom-case-create-playfield-grid {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
+    row-gap: 1rem;
+    align-items: stretch;
+  }
+
+  .lexiom-case-create-grid-body--intent,
+  .lexiom-case-create-grid-body--folder {
+    min-height: 0;
+  }
+
+  .lexiom-case-create-intent-textarea {
+    min-height: 12rem;
+  }
+}
+
+.lexiom-case-create-card code {
+  font-size: 0.9em;
+}
+
+/* Smooth handoff from post-title slide into case-creation screen. */
+body.lexiom-case-create-mode #lexiom-main-wrap {
+  transition: opacity 1.2s ease-in-out;
+}
+
+/* Case-creation slide palette (mapped to provided dark/bright Lexiom artworks). */
+body.lexiom-case-create-mode {
+  --lexiom-body-bg: #030416;
+  --lexiom-text: #efe6ff;
+  --lexiom-frame: #9d7bff;
+  --lexiom-frame-rgba: rgba(157, 123, 255, 0.5);
+  --lexiom-highlight-bg: rgba(120, 92, 255, 0.26);
+  --lexiom-highlight-strong: rgba(167, 133, 255, 0.5);
+  --lexiom-error-bg: rgba(130, 104, 255, 0.16);
+  --lexiom-placeholder-bg: rgba(121, 88, 255, 0.44);
+  --lexiom-selection-bg: rgba(155, 120, 255, 0.4);
+  --lexiom-surface-bg: rgba(24, 14, 52, 0.62);
+  --lexiom-overlay-bg: rgba(8, 4, 20, 0.68);
+  --lexiom-cabinet-bg: radial-gradient(circle at 50% 12%, #2c1d6b 0%, #130a33 48%, #050316 100%);
+}
+
+@media (prefers-color-scheme: light) {
+  body.lexiom-case-create-mode {
+    --lexiom-body-bg: #f7f5fb;
+    --lexiom-text: #2f2a3f;
+    --lexiom-frame: #7a6c9e;
+    --lexiom-frame-rgba: rgba(122, 108, 158, 0.5);
+    --lexiom-highlight-bg: rgba(197, 187, 223, 0.42);
+    --lexiom-highlight-strong: rgba(172, 156, 208, 0.48);
+    --lexiom-error-bg: rgba(208, 198, 230, 0.34);
+    --lexiom-placeholder-bg: rgba(207, 197, 226, 0.5);
+    --lexiom-selection-bg: rgba(170, 152, 209, 0.32);
+    --lexiom-surface-bg: rgba(255, 255, 255, 0.84);
+    --lexiom-overlay-bg: rgba(247, 245, 251, 0.95);
+    --lexiom-cabinet-bg: radial-gradient(circle at 50% 12%, #f1ecf8 0%, #ece6f5 58%, #e2d9ef 100%);
+  }
+}

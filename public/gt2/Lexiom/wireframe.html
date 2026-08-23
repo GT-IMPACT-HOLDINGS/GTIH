@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lexiom Cockpit — Spatial Wireframe (text-free)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #030416;
+      --frame: #9d7bff;
+      --frame-soft: rgba(157, 123, 255, 0.5);
+      --frame-faint: rgba(157, 123, 255, 0.28);
+      --fill-dim: rgba(157, 123, 255, 0.12);
+      --fill-mid: rgba(157, 123, 255, 0.22);
+      --fill-strong: rgba(157, 123, 255, 0.38);
+      --cabinet-bg: radial-gradient(circle at 50% 12%, #2c1d6b 0%, #130a33 48%, #050316 100%);
+      --scanline-opacity: 0.18;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7f5fb;
+        --frame: #7a6c9e;
+        --frame-soft: rgba(122, 108, 158, 0.55);
+        --frame-faint: rgba(122, 108, 158, 0.30);
+        --fill-dim: rgba(122, 108, 158, 0.14);
+        --fill-mid: rgba(122, 108, 158, 0.26);
+        --fill-strong: rgba(122, 108, 158, 0.42);
+        --cabinet-bg: radial-gradient(circle at 50% 12%, #f1ecf8 0%, #ece6f5 58%, #e2d9ef 100%);
+        --scanline-opacity: 0;
+      }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--frame);
+    }
+
+    .stage {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Cabinet — 80vw x 80vh, monochrome arcade skin (mirrors styles.css) */
+    .cabinet {
+      width: 80vw;
+      height: 80vh;
+      background: var(--cabinet-bg);
+      border: 2px solid var(--frame);
+      box-shadow: 0 0 20px var(--frame-soft);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      isolation: isolate;
+      filter: contrast(1.05) saturate(1.03);
+      overflow: hidden;
+    }
+
+    .cabinet::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.55) 0px,
+        rgba(0, 0, 0, 0) 2px
+      );
+      opacity: var(--scanline-opacity);
+    }
+
+    .cabinet > * { position: relative; z-index: 1; }
+
+    /* ---- Top HUD (fixed height): L1 (two centered lines) + L2 quartet ---- */
+    .top-hud {
+      flex: 0 0 16%;
+      border-bottom: 1px solid var(--frame-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9vh;
+      padding: 1vh 1ch;
+      box-sizing: border-box;
+    }
+
+    .l1-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5vh;
+      width: 100%;
+    }
+    .l1-line {
+      height: 1.2vh;
+      background: var(--fill-strong);
+      border-radius: 2px;
+    }
+    .l1-title { width: 16%; }
+    .l1-summary { width: 34%; opacity: 0.7; }
+
+    .l2-row {
+      display: flex;
+      width: calc(100% - 2ch);
+      margin: 0 1ch;
+      gap: 1ch;
+      justify-content: center;
+      align-items: stretch;
+      flex: 1 1 0;
+      max-height: 5vh;
+    }
+    .l2-btn {
+      flex: 1 1 0;
+      border: 1px solid var(--frame);
+      background: var(--fill-dim);
+    }
+
+    /* ---- Main row: Left 20% / Center 60% / Right 20% ---- */
+    .main {
+      flex: 1 1 0;
+      display: flex;
+      min-height: 0;
+    }
+
+    .panel {
+      padding: 1.4vh 1ch;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1vh;
+      box-sizing: border-box;
+      min-height: 0;
+    }
+    .panel-left {
+      flex: 1 1 0;
+      border-right: 1px solid var(--frame-soft);
+    }
+    .panel-right {
+      flex: 1 1 0;
+      border-left: 1px solid var(--frame-soft);
+    }
+    .center {
+      flex: 2 1 0;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      min-height: 0;
+    }
+
+    /* Panel title bar (left-aligned per spec) */
+    .panel-title {
+      height: 1vh;
+      width: 38%;
+      background: var(--fill-strong);
+      border-radius: 2px;
+    }
+
+    /* ---- Left Panel internals: Stage Tower + Proposed slot + Action items ---- */
+    .stage-tower {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7vh;
+    }
+    .stage-line {
+      height: 1vh;
+      background: var(--fill-dim);
+      border-left: 2px solid var(--frame-faint);
+    }
+    .stage-line.current {
+      background: var(--fill-strong);
+      border-left-color: var(--frame);
+    }
+
+    .proposed-slot {
+      height: 1.6vh;
+      border: 1px dashed var(--frame);
+      background: var(--fill-dim);
+    }
+
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8vh;
+    }
+    .action-line {
+      display: flex;
+      align-items: center;
+      gap: 0.8ch;
+    }
+    .action-prefix {
+      width: 4ch;
+      height: 1vh;
+      background: var(--fill-strong);
+      border: 1px solid var(--frame-faint);
+    }
+    .action-prefix.done {
+      background: var(--frame);
+      opacity: 0.85;
+    }
+    .action-bar {
+      flex: 1 1 0;
+      height: 1vh;
+      background: var(--fill-mid);
+    }
+
+    /* ---- Center Playfield: draft-first card silhouette ---- */
+    .activity {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4vh;
+      padding: 2vh 2ch;
+      min-height: 0;
+    }
+    .draft-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1.2ch;
+    }
+    .glyph {
+      width: 1.8vh;
+      height: 1.8vh;
+      border: 1.5px solid var(--frame);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .draft-card-label {
+      flex: 0 0 30%;
+      height: 1vh;
+      background: var(--fill-strong);
+    }
+    .draft-card-body {
+      flex: 1 1 0;
+      border: 1px solid var(--frame-soft);
+      background: var(--fill-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 1vh;
+      padding: 1.6vh 1.4ch;
+      min-height: 0;
+    }
+    .text-line {
+      height: 0.7vh;
+      background: var(--fill-strong);
+      opacity: 0.7;
+      border-radius: 1px;
+    }
+    .w-95 { width: 95%; }
+    .w-88 { width: 88%; }
+    .w-82 { width: 82%; }
+    .w-75 { width: 75%; }
+    .w-66 { width: 66%; }
+    .w-58 { width: 58%; }
+    .w-44 { width: 44%; }
+    .w-32 { width: 32%; }
+
+    /* ---- L3 ribbon: 3 centered buttons attached to bottom of Center column ---- */
+    .l3-ribbon {
+      flex: 0 0 12%;
+      display: flex;
+      gap: 1.2ch;
+      padding: 1.2vh 2ch;
+      justify-content: center;
+      align-items: stretch;
+      box-sizing: border-box;
+    }
+    .l3-btn {
+      flex: 0 1 22%;
+      border: 1px solid var(--frame);
+      background: var(--fill-dim);
+    }
+
+    /* ---- Right Panel: Shared Harmony (top) + Private Artifacts (bottom) ---- */
+    .right-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8vh;
+      min-height: 0;
+    }
+    .right-section.top {
+      flex: 1 1 0;
+    }
+    .right-section.bottom {
+      flex: 1 1 0;
+    }
+
+    /* Shared harmony in Zenith default = intentionally quiet placeholder */
+    .placeholder-block {
+      flex: 1 1 0;
+      border: 1px dashed var(--frame-faint);
+      background: var(--fill-dim);
+      opacity: 0.5;
+    }
+
+    .right-divider {
+      height: 1px;
+      background: var(--frame-faint);
+      margin: 0.4vh 0;
+    }
+
+    .artifact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8vh;
+    }
+    .artifact-line {
+      display: flex;
+      align-items: center;
+      gap: 0.8ch;
+    }
+    .artifact-prefix {
+      width: 4ch;
+      height: 1vh;
+      background: var(--fill-strong);
+      border: 1px solid var(--frame-faint);
+    }
+    /* "italic" feel for artifact filenames (per spec §3.3): subtle skew */
+    .artifact-name {
+      flex: 1 1 0;
+      height: 1vh;
+      background: var(--fill-mid);
+      transform: skewX(-12deg);
+      transform-origin: left center;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="cabinet" aria-hidden="true">
+
+      <!-- Top HUD: L1 (centered, 2 lines) + L2 Topic Quartet (4) -->
+      <header class="top-hud">
+        <div class="l1-stack">
+          <div class="l1-line l1-title"></div>
+          <div class="l1-line l1-summary"></div>
+        </div>
+        <div class="l2-row">
+          <div class="l2-btn"></div>
+          <div class="l2-btn"></div>
+          <div class="l2-btn"></div>
+          <div class="l2-btn"></div>
+        </div>
+      </header>
+
+      <!-- Main row: Left / Center / Right -->
+      <main class="main">
+
+        <!-- Left Panel: Stage Tower + Proposed Action slot + Approved Action Items -->
+        <aside class="panel panel-left">
+          <div class="panel-title"></div>
+
+          <div class="stage-tower">
+            <div class="stage-line"></div>
+            <div class="stage-line current"></div>
+            <div class="stage-line"></div>
+            <div class="stage-line"></div>
+            <div class="stage-line"></div>
+            <div class="stage-line"></div>
+          </div>
+
+          <div class="panel-title" style="width:30%;"></div>
+          <div class="proposed-slot"></div>
+
+          <div class="panel-title" style="width:34%;"></div>
+          <div class="action-list">
+            <div class="action-line">
+              <div class="action-prefix done"></div>
+              <div class="action-bar" style="width:80%;"></div>
+            </div>
+            <div class="action-line">
+              <div class="action-prefix"></div>
+              <div class="action-bar" style="width:62%;"></div>
+            </div>
+            <div class="action-line">
+              <div class="action-prefix"></div>
+              <div class="action-bar" style="width:74%;"></div>
+            </div>
+            <div class="action-line">
+              <div class="action-prefix"></div>
+              <div class="action-bar" style="width:55%;"></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center Playfield: draft-first card silhouette + L3 ribbon at bottom -->
+        <section class="center">
+          <div class="activity">
+            <div class="draft-card-header">
+              <div class="glyph"></div>
+              <div class="draft-card-label"></div>
+            </div>
+            <div class="draft-card-body">
+              <div class="text-line w-95"></div>
+              <div class="text-line w-88"></div>
+              <div class="text-line w-82"></div>
+              <div class="text-line w-95"></div>
+              <div class="text-line w-66"></div>
+              <div class="text-line w-75"></div>
+              <div class="text-line w-58"></div>
+              <div class="text-line w-88"></div>
+              <div class="text-line w-44"></div>
+              <div class="text-line w-32"></div>
+            </div>
+          </div>
+
+          <footer class="l3-ribbon">
+            <div class="l3-btn"></div>
+            <div class="l3-btn"></div>
+            <div class="l3-btn"></div>
+          </footer>
+        </section>
+
+        <!-- Right Panel: Shared Harmony (top) + Private Artifacts (bottom) -->
+        <aside class="panel panel-right">
+          <div class="panel-title"></div>
+          <div class="right-section top">
+            <div class="placeholder-block"></div>
+          </div>
+
+          <div class="right-divider"></div>
+
+          <div class="panel-title" style="width:32%;"></div>
+          <div class="right-section bottom">
+            <div class="artifact-list">
+              <div class="artifact-line">
+                <div class="artifact-prefix"></div>
+                <div class="artifact-name" style="max-width:75%;"></div>
+              </div>
+              <div class="artifact-line">
+                <div class="artifact-prefix"></div>
+                <div class="artifact-name" style="max-width:65%;"></div>
+              </div>
+              <div class="artifact-line">
+                <div class="artifact-prefix"></div>
+                <div class="artifact-name" style="max-width:80%;"></div>
+              </div>
+              <div class="artifact-line">
+                <div class="artifact-prefix"></div>
+                <div class="artifact-name" style="max-width:55%;"></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>

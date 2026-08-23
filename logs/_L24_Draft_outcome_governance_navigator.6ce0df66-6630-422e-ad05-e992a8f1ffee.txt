@@ -1,0 +1,2124 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: 6ce0df66-6630-422e-ad05-e992a8f1ffee
+Timestamp: 2026-07-23T15:08:20.731Z
+LexiomNarrativeContract: 1
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+This request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.
+
+You are GT3, let your answer refer to the System Under Development (SUD) as a mean to assist our friend in maturing the SUD specifications for the purpose of maturing the SUD itself.
+
+TASK:
+- Propose ONE short cockpit title that captures what this entire OSN tree is collectively trying to produce.
+- Ground the title ONLY in the OSN TREE OUTPUT SPECIFICATIONS below.
+- The title should feel like a human-facing name for the experience or system outcome, not a file name, node id, or technical label.
+- Return only the proposed title. No preamble, no markdown fences, no 'Title:' label, no explanation.
+
+OUTPUT CONTRACT (write exactly this and nothing else):
+- Output ONLY the title on a single line.
+- Use between 2 and 8 words.
+- Do NOT echo output specifications, OSN file names, or ancestor labels in the output.
+
+EXACT OUTPUT EXAMPLES (format only):
+Welcoming OSN Cockpit
+
+Reasoning Source Tree
+
+OSN TREE OUTPUT SPECIFICATIONS (hierarchical — honor the full tree):
+- GT_Philosophy
+  Output Spec:
+    1. Enter the GT constellation philosophy as a living software-development standard — human-governed,
+    draft-first, evidence-backed — then explore Constellation Value Flow, Human Governance, Traceable
+    Buildability, and Reusable Core for how Lexiom 1.3 currently embodies that standard.
+    
+    ## Constellation Value Flow
+    2. Productize GT3 inference inside the GT2 Lexiom SPA on the same Node origin (cockpit + POST
+    /inference) without collapsing GT3 reusable core into one-off UI code.
+    3. Host ProductLexiom and BrandLexiom as sibling branches under GT_Philosophy in one OSN graph
+    (full-graph mode shows both domains).
+    4. Map build plugins by branch: software-coding for ProductLexiom scopes and document builder for
+    BrandLexiom scopes.
+    
+    ## Human Governance
+    5. Land LM/GT3 output only as editable non-canonical drafts; mutate disk YAML only after explicit
+    human approve through persist, canonize, or prune.
+    6. Keep session evidence approvals and chat proposals from auto-writing OSN files.
+    7. Require draft-card glyph approval before treating center edits as committed White Moves for
+    persistence.
+    
+    ## Traceable Buildability
+    8. Bind each OSN to inspectable success-evidence artifacts (bundled evidences/ and/or build-run
+    collections) so fulfillment can be reviewed first-hand.
+    9. When building, write inspectable handoff and prompt artifacts under builds/lexiom13/<runId>/
+    and keep a session action log of select/edit/approve/build/causal events.
+    
+    ## Reusable Core
+    10. Reuse one OSN YAML schema and recursive loader across nested domain directories.
+    11. Reuse one GT3 client path for lens, maturation, title, and causal narratives with Lexiom
+    persona framing.
+    12. Prefer Node co-host + static YAML over a product database so the constellation core stays
+    portable across surfaces.
+
+- ProductLexiom
+  Output Spec:
+    1. Step into Lexiom 1.3.3 as a calm, welcoming SPA where newcomers meet OSNs as owned,
+    evidence-backed, file-like semantic artifacts — then explore the UX and Code Shaping chapters
+    below for how to rebuild that product surface.
+    
+    ## UX
+    2. Ship one welcoming single-page cockpit that presents the OSN graph as playable semantic
+    source, with default Focus on ProductLexiom and default section Output Spec.
+    3. Keep ProductLexiom discipline children (UX, CodeShape, GameificationFlow) and sibling
+    BrandLexiom discoverable in the same graph so the product outcome stays graph-native.
+    4. Orient the welcome narrative so machine output arrives as draft and only human approval
+    makes semantic source canonical.
+    5. Expose section glyphs, owner/name meta, evidence tray, Causal Lineage Chat, and optional
+    filters as the product self-explanatory encounter — without auth, billing, or multi-user flows.
+    
+    ## Code Shaping
+    6. Implement Lexiom 1.3 as one inspectable SPA co-hosted on the GT3 Node server beside canonical
+    OSN YAML under public/gt2/Lexiom_1_3/ (recursive list with ProductLexiom quartet fallback).
+    7. Load and navigate OSNs by hierarchical id/file_name with origin-leaf labels; treat graph.*
+    links as authoritative across nested directories.
+    8. Persist canonical changes only through explicit approve to /lexiom13/osn/save create, update,
+    or prune; keep drafts, evidence approvals, filters, and action history session-only.
+    9. When Build controls is enabled, map ProductLexiom / UX / CodeShape to the software-coding
+    builder and BrandLexiom to the document builder; show a Build handoff/report child, not the
+    delivered artifact.
+    10. Poll Focus-closure evidence collections (default 5s) and overlay build-collected artifacts
+    on bundled demos without auto-approving them.
+    11. Support GT3-backed lens reframing, maturation proposals, optional cockpit title, and
+    evidence-scoped causal asks via POST /inference without silent canonization of LM text.
+    12. Document known POC limits in the rebuild: session-only action log, no durable Move ledger,
+    and current side-panel branch/prune/build/lens/evidence actions as center-only execution
+    divergences.
+
+- UX
+  Output Spec:
+    1. Come explore how Lexiom teaches a newcomer — in the first encounter — that this is a
+    reasoning-making cockpit for opening, inspecting, branching, compiling, and tracing semantic
+    source files; the First-Time Clarity, Cockpit Orientation, and OSN File Metaphor chapters below
+    are the rebuild map.
+    
+    ## First-Time Clarity
+    2. Show a welcome modal that orients left graph, center playfield, and right evidences, dismissed
+    with Begin exploring, on first visit, reload, or ?welcome=1|force|true.
+    3. Label regions clearly (Outcome Specifications, Owned by:, Success Evidences) so the cabinet
+    reads without a tutorial tour.
+    4. Hide Top HUD and cockpit title by default until the player enables Top bar / Cockpit title
+    filters, keeping the first thirty seconds visually quiet.
+    
+    ## Cockpit Orientation
+    5. Layout a three-panel cabinet: left Focus graph, center section strip + draft card + bottom
+    ribbon, right success-evidence tray.
+    6. Compose the left graph Focus-centered (ancestors above, Focus near the top quarter, descendants
+    below), always reserve sibling arrows, clip rather than scroll, and refit on resize.
+    7. Provide full-graph mode from the left-corner toggle (cabinet-wide tree; center/right hidden);
+    Escape or toggle exits; selecting an OSN returns to the three-panel cockpit.
+    8. Wire arrow-key Focus moves (Left/Right siblings, Up parent, Down first child), remember the
+    active core section key across OSN moves, and host L2 lenses / Causal Lineage Chat as optional
+    orientation surfaces when Top bar is on or evidence is open.
+    
+    ## OSN File Metaphor
+    9. Render graph rows as origin-leaf labels with full file_name in tooltips so nodes feel like
+    hierarchical OSN files.
+    10. Place the Focus OSN four section glyphs (Seed, Thematic Lenses, Output Spec, Success Evidences)
+    in the center strip — not on the left row — as openable file sections.
+    11. Open Focus owner from the Owned by cell and OSN name from the Focus-row pencil into
+    draft-first center cards (no separate player-opened OSN Title card).
+    12. List the Focus OSN success-evidence artifacts in the right tray for open/inspect/approve,
+    preserving the file-and-evidence metaphor beside the draft card.
+
+- CodeShape
+  Output Spec:
+    1. Dive into how Lexiom 1.3 stays a deterministic, inspectable SPA on the GT3 Node server —
+    OSNs as YAML on disk, loaded at runtime, rewritten only through explicit White Move paths —
+    then explore Server-Hosted OSN Files, Append-Only Action Log, Section-Level Graph Navigation,
+    and GT3 Co-Hosted below.
+    
+    ## Server-Hosted OSN Files
+    2. On startup call GET /lexiom13/osn/list (exclude tombstones), fetch each YAML under
+    /gt2/Lexiom_1_3/, and fall back to the hard-coded ProductLexiom quartet if listing fails.
+    3. Persist via POST /lexiom13/osn/save for create (canonize), update (approved edits / identity
+    remount), and prune (tombstone subtree); write new children beside the primary parent.
+    4. Keep id === file_name hierarchical identity and treat graph.* as authoritative across
+    directories.
+    
+    ## Append-Only Action Log
+    5. Append navigation, edit, approve, welcome, filter, build, and causal actions to an in-memory
+    action log with timestamps; do not require a visible action-log panel.
+    6. Keep the log and evidenceApprovalByKey session-only — no durable Move ledger or replay
+    reconstruction in the current POC.
+    
+    ## Section-Level Graph Navigation
+    7. Hold selectedOsnId and selectedSectionKey; default section output_spec; remember core section
+    keys across Focus moves including arrow keys; render section glyphs in #lexiom-osn-section-strip.
+    8. Keep immature runtime shells with maturity gates until canonize or prune; create Build children
+    only after prepare/run; store draftCardsByOsnId, lens drafts/intensity, and causal maps in SPA
+    memory.
+    9. On first changing keystroke of an approved card, clear card.approved and capture editBaseline
+    (session draft only); clear green insert diffs on glyph approval.
+    
+    ## GT3 Co-Hosted
+    10. Call POST /inference through gt3-client.js for lens reframe, maturation, cockpit-title, and
+    causal lineage / player-ask narratives with Lexiom 1.3 persona headers.
+    11. Run POST /lexiom13/build/prepare then /run when a profile maps to a plugin; package OSNG
+    snapshot, HANDOFF, EVIDENCE_PLAN, and agent prompts under builds/lexiom13/<runId>/.
+    12. Poll GET /lexiom13/evidence/collections?osn_id= every 5s (pause when hidden) and resolve
+    bundled evidences/ plus build artifact URLs without poll-driven approval changes.
+
+- GameificationFlow
+  Output Spec:
+    1. Dive into Lexiom 1.3's gamification as it is built today — the cadence, gates, and feedback
+    loops that make the cockpit feel playable — then explore the Engagement, Progression, and
+    Feedback chapters below for the concrete rebuild requirements.
+    
+    ## Engagement
+    2. Present the welcome modal on first visit, every page reload, or ?welcome=1|force|true, and
+    persist dismissal in localStorage key lexiom13_welcome_seen so the opening cadence invites
+    return play without hard-coding a one-shot gate.
+    3. Keep the four graph filters (Evidence approval, Build controls, Top bar, Cockpit title)
+    disabled by default so the player opts into denser chrome rather than being flooded on entry.
+    4. After the player approves a Causal Lineage narrative for an open evidence artifact, unlock
+    continued player-asks in the bottom ribbon (with a brief unlock flash) so engagement deepens
+    through a second ask loop rather than a single response.
+    
+    ## Progression
+    5. Mature immature OSNs through the gated ladder Seed → Thematic Lenses → Output Spec →
+    Success Evidences, unlocking each next section only after the prior gate is approved.
+    6. When a maturation section is still locked, show the center locked-gate message instead of
+    an editable draft card so progression is visible and blocked honestly.
+    7. Mark immature nodes and locked section glyphs visually (dashed / is-immature / is-locked)
+    so the player can see which branches and sections remain incomplete.
+    8. When an immature OSN completes its final success-evidences gate, canonize it to linked YAML
+    on disk so "becoming a file" is the achievement that closes the progression arc.
+    
+    ## Feedback
+    9. Drive draft-card attestation glyphs from draft state (empty / ● human / ◯ LM-or-approved /
+    ◉ LM+edits) and shift approved cards to the bluish ready presentation until a first edit
+    auto-revokes approval.
+    10. When Evidence approval is enabled, show per-OSN attestation glyphs (· / ○ / ◐ / ●) that
+    reflect linked-artifact review state without changing approval when clicked (navigation only).
+    11. Fade the center playfield with Lexiom Canonical Duration timing (1500ms out / 3000ms in at
+    full scale): full LCD on Focus OSN change and editing→approved; three-quarters on section-key
+    swaps; half on approved→editing (including first-keystroke auto-revoke).
+    12. On Focus OSN transitions, run DaDa look-and-feel only when authorized (Love-biased Matrix
+    rain + outline breath), skipping both under prefers-reduced-motion; never let DaDa mutate
+    drafts or YAML.
+    13. Flash player-ask unlock and narrative / output_spec-change jump targets briefly so the
+    player feels immediate response to those unlock and reveal actions.
+
+- BrandLexiom
+  Output Spec:
+    Produce and govern an approved Ogun brand standard and executive brand brief.
+    
+    Source scope: §§1–2 and §§24–28 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- BrandStrategy
+  Output Spec:
+    Produce and govern an approved brand strategy deck.
+    
+    Source scope: §§2, 4–10, 15, and 20 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define the market meaning, category, audiences, value, and defensible claims that keep Ogun commercially coherent.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- MarketPositioning
+  Output Spec:
+    Produce and govern an approved positioning framework.
+    
+    Source scope: §§4, 9, and 15 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Position Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CategoryDefinition
+  Output Spec:
+    Produce and govern an approved category-definition brief.
+    
+    Source scope: §4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Establish the primary commercial category and its supporting technical vocabulary for business and technical audiences.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PrimaryCategory
+  Output Spec:
+    Produce and govern a reviewed primary-category statement.
+    
+    Source scope: §§4.1 and 4.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Lead consistently with Outcome Governance and Semantic Relationship Operating System and explain the organizational value carried by that category.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CategoryStatement
+  Output Spec:
+    Produce and govern an approved canonical category statement.
+    
+    Source scope: §§4.1 and 4.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Produce a concise canonical category statement that connects intentions, standards, governed outcome graphs, human authority, and evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CategoryEducation
+  Output Spec:
+    Produce and govern a published category-education explainer.
+    
+    Source scope: §§4.1 and 17.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Teach prospects what outcome governance and semantic relationship management mean without relying on unexplained product jargon.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- TechnicalCategories
+  Output Spec:
+    Produce and govern an approved technical-positioning brief.
+    
+    Source scope: §4.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use technical descriptors to clarify architecture for technical, investor, security, and architecture audiences without displacing the primary category.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DeterministicSemanticOS
+  Output Spec:
+    Produce and govern a reviewed technical architecture narrative.
+    
+    Source scope: §§4.2 and 9.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain the implemented Lexiom 1.3 POC as a deterministic human-approval and persistence boundary between probabilistic GT3 drafts and canonical OSN YAML, without implying control over general enterprise state.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- GovernedAgentLifecycle
+  Output Spec:
+    Produce and govern an approved governed-agent lifecycle explainer.
+    
+    Source scope: §§4.2, 6.3, and 9.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain that mapped build agents receive snapshotted OSN compilation instructions while explicit human actions retain authority over canonical OSN YAML; characterize this as a governed build-agent handoff, not a complete agent lifecycle.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CompetitiveDifferentiation
+  Output Spec:
+    Produce and govern an approved competitive differentiation matrix.
+    
+    Source scope: §15 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Differentiate Ogun by the meaning, authority, lineage, inheritance, and evidence it governs rather than by feature-list comparison.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- RecordSystemsContrast
+  Output Spec:
+    Produce and govern a reviewed record-systems comparison.
+    
+    Source scope: §§15.1–15.2 and 15.7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Contrast Ogun with CRM, project management, and requirements systems while respecting the strengths and proper role of each.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CrmContrast
+  Output Spec:
+    Produce and govern an approved CRM-versus-Ogun comparison.
+    
+    Source scope: §15.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show that CRM records commercial relationships while Ogun governs their intended outcomes and evolving meaning.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ProjectRequirementsContrast
+  Output Spec:
+    Produce and govern an approved project-and-requirements comparison.
+    
+    Source scope: §§15.2 and 15.7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show that work and requirements tools track activity or specifications while Ogun governs why work exists and what proves success.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AIPlatformContrast
+  Output Spec:
+    Produce and govern a reviewed AI-platform comparison.
+    
+    Source scope: §§15.3–15.6 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Distinguish Ogun from AI governance, observability, orchestration, and coding tools through its control of authority, outcome meaning, and evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- GovernanceObservabilityContrast
+  Output Spec:
+    Produce and govern an approved governance-and-observability comparison.
+    
+    Source scope: §§15.3–15.4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain that the current POC gates canonical OSN writes through explicit human actions and carries explicitly linked standard ancestors into lineage context and build snapshots; policy enforcement, live conflict detection, and Concordance resolution are not implemented.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AgentCodingContrast
+  Output Spec:
+    Produce and govern an approved agent-and-coding comparison.
+    
+    Source scope: §§15.5–15.6 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain that Ogun governs the OSN graph used to prepare coding-agent handoffs and human evidence review, rather than claiming that it automatically authorizes or validates execution.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AudienceValue
+  Output Spec:
+    Produce and govern an approved audience-and-value strategy.
+    
+    Source scope: §§5, 7, and 8 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Connect Ogun’s governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CustomerProfiles
+  Output Spec:
+    Produce and govern an approved ideal-customer profile pack.
+    
+    Source scope: §8 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define priority organizations, sectors, and buying roles while preserving Ogun’s cross-domain identity.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PrioritySectors
+  Output Spec:
+    Produce and govern an approved priority-sector portfolio.
+    
+    Source scope: §§8.1–8.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Prioritize consequential, multidisciplinary environments with costly misunderstanding, AI-assisted processes, and evidence obligations.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- RegulatedSectors
+  Output Spec:
+    Produce and govern a reviewed regulated-sector solution brief.
+    
+    Source scope: §8.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Adapt the Ogun narrative for financial services, healthcare, government, legal services, and regulated manufacturing without making unsupported compliance claims.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EnterpriseDeliverySectors
+  Output Spec:
+    Produce and govern a reviewed enterprise-delivery solution brief.
+    
+    Source scope: §§5.5 and 8.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Adapt the narrative for enterprise software, professional services, systems integration, procurement, construction, and telecommunications.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- BuyingCommittee
+  Output Spec:
+    Produce and govern an approved buying-committee map.
+    
+    Source scope: §8.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Equip economic buyers, champions, and evaluators with role-specific value and proof while preserving one coherent product truth.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EconomicBuyers
+  Output Spec:
+    Produce and govern a reviewed executive buyer brief.
+    
+    Source scope: §8.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Address executive concerns about failed outcomes, uncontrolled AI, delivery risk, rework, accountability, and portfolio visibility.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ChampionsEvaluators
+  Output Spec:
+    Produce and govern a reviewed champion-and-evaluator brief.
+    
+    Source scope: §8.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Address champion and evaluator concerns about alignment, ambiguity, handoffs, proving completion, security, legal, compliance, and operations.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ValueProposition
+  Output Spec:
+    Produce and govern an approved enterprise value proposition.
+    
+    Source scope: §§5 and 7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Translate Ogun’s semantic governance into credible effects for alignment, governed AI adoption, evidence-backed delivery, continuity, and economic intelligence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EnterprisePillars
+  Output Spec:
+    Produce and govern a reviewed enterprise value-pillar deck.
+    
+    Source scope: §7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Organize Ogun’s value around alignment, governed AI adoption, evidence-backed delivery, relationship continuity, and economic intelligence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AlignmentGovernedAI
+  Output Spec:
+    Produce and govern an approved alignment-and-governed-AI case narrative.
+    
+    Source scope: §§7.1A–7.1B of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show how explicit ownership and approval reduce ambiguity and unauthorized drift while enabling faster AI-assisted work.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EvidenceEconomics
+  Output Spec:
+    Produce and govern a reviewed evidence-and-economics value model.
+    
+    Source scope: §§7.1C–7.1E of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show how direct evidence, relationship continuity, and graph-garden intelligence improve confidence and resource allocation.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- XrmNarrative
+  Output Spec:
+    Produce and govern an approved XRM narrative.
+    
+    Source scope: §5 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Position XRM as CRM determinism plus semantic relationship probabilisticity governed by human approval and evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SrmDefinition
+  Output Spec:
+    Produce and govern a published SRM explainer.
+    
+    Source scope: §5.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define SRM as management of evolving intentions, interpretations, commitments, risks, dependencies, evidence, and context.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- XrmPositioning
+  Output Spec:
+    Produce and govern an approved XRM positioning brief.
+    
+    Source scope: §§5.3–5.5 and 9.4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show how Ogun extends relationship systems from stable records to governed outcome relationships across organizations.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- BrandExpression
+  Output Spec:
+    Produce and govern an approved integrated brand-expression system.
+    
+    Source scope: §§3, 10–14, 16–19, and 22–23 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Translate strategy into coherent names, language, visual identity, product experience, campaigns, sales materials, and measurable market activation.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CreativeIdentity
+  Output Spec:
+    Produce and govern an approved creative identity system.
+    
+    Source scope: §§3 and 10–13 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Express Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- VerbalIdentity
+  Output Spec:
+    Produce and govern an approved verbal identity guide.
+    
+    Source scope: §§3 and 10–12 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Govern naming, message hierarchy, taglines, personality, and voice so every expression remains clear and evidence-aware.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- NamingArchitecture
+  Output Spec:
+    Produce and govern an approved naming architecture.
+    
+    Source scope: §3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Keep Lexiom, Lexiom 1.3, Ogun, Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence in one coherent hierarchy.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- MasterNaming
+  Output Spec:
+    Produce and govern a reviewed naming standards sheet.
+    
+    Source scope: §3.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Standardize first and subsequent mentions and prevent Ogun from appearing as an unrelated product separate from Lexiom.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- NamingRationale
+  Output Spec:
+    Produce and govern an approved naming-rationale narrative.
+    
+    Source scope: §§3.2–3.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use the governed-forge metaphor to evoke disciplined toolmaking and accountable transformation without mysticism or aggression.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- MessagingVoice
+  Output Spec:
+    Produce and govern an approved messaging and voice guide.
+    
+    Source scope: §§10–12 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Apply the message hierarchy, tagline system, personality, and voice consistently from promise through technical proof.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- TaglineSystem
+  Output Spec:
+    Produce and govern a reviewed tagline and campaign-line library.
+    
+    Source scope: §§10–11 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Lead with “Govern what must become real” and select supporting or campaign lines according to audience and proof context.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ToneOfVoice
+  Output Spec:
+    Produce and govern an approved tone-of-voice guide.
+    
+    Source scope: §12 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use declarative clarity, active verbs, restrained metaphor, and human language while avoiding hype and probabilistic claims presented as fact.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- VisualIdentity
+  Output Spec:
+    Produce and govern an approved visual identity board.
+    
+    Source scope: §13 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Create an accessible visual system for the governed forge and living graph whose states communicate authority, proposals, evidence, and conflict.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- VisualLanguage
+  Output Spec:
+    Produce and govern a reviewed visual-language board.
+    
+    Source scope: §§13.1–13.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define core forms, avoided motifs, and semantic color principles for disciplined pathways, inheritance, evidence, and state.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CoreMetaphor
+  Output Spec:
+    Produce and govern an approved core-metaphor concept board.
+    
+    Source scope: §§13.1–13.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Express the governed forge and living graph through structured nodes, convergence, seeds, layers, anchors, and lineage without cliché or appropriation.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ColorPrinciples
+  Output Spec:
+    Produce and govern an accessibility-reviewed semantic palette.
+    
+    Source scope: §13.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Distinguish approved, proposed, stable, conflict, missing-evidence, achieved, inherited, and overridden states with accessible contrast.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- TypographyMotion
+  Output Spec:
+    Produce and govern an approved typography-and-motion system.
+    
+    Source scope: §§13.4–13.5 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use architectural readability and restrained state-transition motion to reinforce credibility and governance.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- Typography
+  Output Spec:
+    Produce and govern an accessibility-reviewed typographic specimen.
+    
+    Source scope: §13.4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Specify spacious headings, highly legible body text, and restrained monospace for identifiers and provenance without pseudo-futuristic distortion.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- Motion
+  Output Spec:
+    Produce and govern a reviewed motion prototype reel.
+    
+    Source scope: §13.5 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Animate proposals, White Move anchoring, lineage inspection, and evidence closure as meaningful state transitions rather than decoration.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- GoToMarket
+  Output Spec:
+    Produce and govern an approved go-to-market plan.
+    
+    Source scope: §§14 and 16–19 and 22–23 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Turn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DemandGeneration
+  Output Spec:
+    Produce and govern a reviewed demand-generation campaign.
+    
+    Source scope: §§17 and 19 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Build website and educational content journeys that teach the category, demonstrate governed cooperation, and invite consequential use cases.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- WebsiteExperience
+  Output Spec:
+    Produce and govern a reviewable website prototype.
+    
+    Source scope: §17 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Sequence the website from promise and market gap through the Ogun model, XRM, governed AI, value, proof, and a consequential-workflow call to action.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- HomepageSequence
+  Output Spec:
+    Produce and govern a rendered homepage prototype.
+    
+    Source scope: §17.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Deliver the prescribed homepage sequence with “Govern what must become real,” clear category explanation, product model, proof, and calls to action.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SolutionPages
+  Output Spec:
+    Produce and govern a reviewed solution-page collection.
+    
+    Source scope: §§17.2–17.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Deliver solution and educational pages for priority use cases and foundational concepts such as OSNs, SRM, evidence, inheritance, and human authority.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ContentStrategy
+  Output Spec:
+    Produce and govern an approved editorial strategy.
+    
+    Source scope: §19 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Educate the market through durable pillars and flagship assets centered on authority, outcomes, relationships, evidence, economics, and disciplined toolmaking.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ContentPillars
+  Output Spec:
+    Produce and govern a reviewed editorial pillar calendar.
+    
+    Source scope: §19.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Maintain the ten core content pillars as a balanced editorial system spanning human authority, XRM, evidence, standards, cooperation, and accountable execution.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- FlagshipAssets
+  Output Spec:
+    Produce and govern a published flagship thought-leadership asset.
+    
+    Source scope: §19.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Produce the manifesto, SRM case, human-authority argument, evidence narrative, executive guide, interactive proof, and assessment assets.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SalesEnablement
+  Output Spec:
+    Produce and govern an approved sales enablement kit.
+    
+    Source scope: §§16 and 18 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Equip commercial teams to discover consequential workflows, demonstrate governed outcomes, package value, and frame credible pilots.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SalesNarrative
+  Output Spec:
+    Produce and govern a reviewed enterprise sales playbook.
+    
+    Source scope: §18 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Guide discovery, demonstration, and proof language so sales distinguishes currently visible proposal, approval, evidence, lineage, and build behavior from planned inherited-conflict and Concordance capabilities.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DiscoveryQuestions
+  Output Spec:
+    Produce and govern a field-tested discovery guide.
+    
+    Source scope: §18.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use questions that reveal ambiguity, interdependence, AI-to-commitment boundaries, approval gaps, evidence needs, standards loss, and hidden disagreement.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DemonstrationArc
+  Output Spec:
+    Produce and govern a recorded end-to-end Ogun demonstration.
+    
+    Source scope: §§18.2–18.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Demonstrate the current journey from OSN seed through gated maturation, human approval, branching, compilation/build handoff, direct evidence inspection, and Causal Lineage Chat. Label inherited-conflict harmonization, Concordance, and executive garden analysis as future or separately simulated capabilities.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ServicePackaging
+  Output Spec:
+    Produce and govern an approved commercial packaging brief.
+    
+    Source scope: §16 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Package Ogun around enterprise governance value, participation scope, policy and evidence depth, and consequential pilots rather than seat utility or token consumption.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PackagingTiers
+  Output Spec:
+    Produce and govern a reviewed offer-tier comparison.
+    
+    Source scope: §16.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define Foundation, Enterprise, and Ecosystem offers by governance scope, graph gardens, inheritance, participation, analytics, and strategic services.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PricingPilot
+  Output Spec:
+    Produce and govern an approved pricing hypothesis and pilot offer.
+    
+    Source scope: §§16.2–16.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Price against avoided rework, governed risk, acceptance, accountability, and reuse, and frame pilots around real multidisciplinary workflows with direct evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+GUIDANCE:
+- Synthesize the tree into one memorable title a newcomer would understand.
+- Prefer outcome language over implementation jargon.
+- Treat this as a draft proposal; the player may later edit surrounding cockpit copy.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L24_Draft_ followed by four words (underscore-separated) that capture what you draft in this inference, within the current OSN reasoning workspace. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+This request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.
+
+You are GT3, let your answer refer to the System Under Development (SUD) as a mean to assist our friend in maturing the SUD specifications for the purpose of maturing the SUD itself.
+
+TASK:
+- Propose ONE short cockpit title that captures what this entire OSN tree is collectively trying to produce.
+- Ground the title ONLY in the OSN TREE OUTPUT SPECIFICATIONS below.
+- The title should feel like a human-facing name for the experience or system outcome, not a file name, node id, or technical label.
+- Return only the proposed title. No preamble, no markdown fences, no 'Title:' label, no explanation.
+
+OUTPUT CONTRACT (write exactly this and nothing else):
+- Output ONLY the title on a single line.
+- Use between 2 and 8 words.
+- Do NOT echo output specifications, OSN file names, or ancestor labels in the output.
+
+EXACT OUTPUT EXAMPLES (format only):
+Welcoming OSN Cockpit
+
+Reasoning Source Tree
+
+OSN TREE OUTPUT SPECIFICATIONS (hierarchical — honor the full tree):
+- GT_Philosophy
+  Output Spec:
+    1. Enter the GT constellation philosophy as a living software-development standard — human-governed,
+    draft-first, evidence-backed — then explore Constellation Value Flow, Human Governance, Traceable
+    Buildability, and Reusable Core for how Lexiom 1.3 currently embodies that standard.
+    
+    ## Constellation Value Flow
+    2. Productize GT3 inference inside the GT2 Lexiom SPA on the same Node origin (cockpit + POST
+    /inference) without collapsing GT3 reusable core into one-off UI code.
+    3. Host ProductLexiom and BrandLexiom as sibling branches under GT_Philosophy in one OSN graph
+    (full-graph mode shows both domains).
+    4. Map build plugins by branch: software-coding for ProductLexiom scopes and document builder for
+    BrandLexiom scopes.
+    
+    ## Human Governance
+    5. Land LM/GT3 output only as editable non-canonical drafts; mutate disk YAML only after explicit
+    human approve through persist, canonize, or prune.
+    6. Keep session evidence approvals and chat proposals from auto-writing OSN files.
+    7. Require draft-card glyph approval before treating center edits as committed White Moves for
+    persistence.
+    
+    ## Traceable Buildability
+    8. Bind each OSN to inspectable success-evidence artifacts (bundled evidences/ and/or build-run
+    collections) so fulfillment can be reviewed first-hand.
+    9. When building, write inspectable handoff and prompt artifacts under builds/lexiom13/<runId>/
+    and keep a session action log of select/edit/approve/build/causal events.
+    
+    ## Reusable Core
+    10. Reuse one OSN YAML schema and recursive loader across nested domain directories.
+    11. Reuse one GT3 client path for lens, maturation, title, and causal narratives with Lexiom
+    persona framing.
+    12. Prefer Node co-host + static YAML over a product database so the constellation core stays
+    portable across surfaces.
+
+- ProductLexiom
+  Output Spec:
+    1. Step into Lexiom 1.3.3 as a calm, welcoming SPA where newcomers meet OSNs as owned,
+    evidence-backed, file-like semantic artifacts — then explore the UX and Code Shaping chapters
+    below for how to rebuild that product surface.
+    
+    ## UX
+    2. Ship one welcoming single-page cockpit that presents the OSN graph as playable semantic
+    source, with default Focus on ProductLexiom and default section Output Spec.
+    3. Keep ProductLexiom discipline children (UX, CodeShape, GameificationFlow) and sibling
+    BrandLexiom discoverable in the same graph so the product outcome stays graph-native.
+    4. Orient the welcome narrative so machine output arrives as draft and only human approval
+    makes semantic source canonical.
+    5. Expose section glyphs, owner/name meta, evidence tray, Causal Lineage Chat, and optional
+    filters as the product self-explanatory encounter — without auth, billing, or multi-user flows.
+    
+    ## Code Shaping
+    6. Implement Lexiom 1.3 as one inspectable SPA co-hosted on the GT3 Node server beside canonical
+    OSN YAML under public/gt2/Lexiom_1_3/ (recursive list with ProductLexiom quartet fallback).
+    7. Load and navigate OSNs by hierarchical id/file_name with origin-leaf labels; treat graph.*
+    links as authoritative across nested directories.
+    8. Persist canonical changes only through explicit approve to /lexiom13/osn/save create, update,
+    or prune; keep drafts, evidence approvals, filters, and action history session-only.
+    9. When Build controls is enabled, map ProductLexiom / UX / CodeShape to the software-coding
+    builder and BrandLexiom to the document builder; show a Build handoff/report child, not the
+    delivered artifact.
+    10. Poll Focus-closure evidence collections (default 5s) and overlay build-collected artifacts
+    on bundled demos without auto-approving them.
+    11. Support GT3-backed lens reframing, maturation proposals, optional cockpit title, and
+    evidence-scoped causal asks via POST /inference without silent canonization of LM text.
+    12. Document known POC limits in the rebuild: session-only action log, no durable Move ledger,
+    and current side-panel branch/prune/build/lens/evidence actions as center-only execution
+    divergences.
+
+- UX
+  Output Spec:
+    1. Come explore how Lexiom teaches a newcomer — in the first encounter — that this is a
+    reasoning-making cockpit for opening, inspecting, branching, compiling, and tracing semantic
+    source files; the First-Time Clarity, Cockpit Orientation, and OSN File Metaphor chapters below
+    are the rebuild map.
+    
+    ## First-Time Clarity
+    2. Show a welcome modal that orients left graph, center playfield, and right evidences, dismissed
+    with Begin exploring, on first visit, reload, or ?welcome=1|force|true.
+    3. Label regions clearly (Outcome Specifications, Owned by:, Success Evidences) so the cabinet
+    reads without a tutorial tour.
+    4. Hide Top HUD and cockpit title by default until the player enables Top bar / Cockpit title
+    filters, keeping the first thirty seconds visually quiet.
+    
+    ## Cockpit Orientation
+    5. Layout a three-panel cabinet: left Focus graph, center section strip + draft card + bottom
+    ribbon, right success-evidence tray.
+    6. Compose the left graph Focus-centered (ancestors above, Focus near the top quarter, descendants
+    below), always reserve sibling arrows, clip rather than scroll, and refit on resize.
+    7. Provide full-graph mode from the left-corner toggle (cabinet-wide tree; center/right hidden);
+    Escape or toggle exits; selecting an OSN returns to the three-panel cockpit.
+    8. Wire arrow-key Focus moves (Left/Right siblings, Up parent, Down first child), remember the
+    active core section key across OSN moves, and host L2 lenses / Causal Lineage Chat as optional
+    orientation surfaces when Top bar is on or evidence is open.
+    
+    ## OSN File Metaphor
+    9. Render graph rows as origin-leaf labels with full file_name in tooltips so nodes feel like
+    hierarchical OSN files.
+    10. Place the Focus OSN four section glyphs (Seed, Thematic Lenses, Output Spec, Success Evidences)
+    in the center strip — not on the left row — as openable file sections.
+    11. Open Focus owner from the Owned by cell and OSN name from the Focus-row pencil into
+    draft-first center cards (no separate player-opened OSN Title card).
+    12. List the Focus OSN success-evidence artifacts in the right tray for open/inspect/approve,
+    preserving the file-and-evidence metaphor beside the draft card.
+
+- CodeShape
+  Output Spec:
+    1. Dive into how Lexiom 1.3 stays a deterministic, inspectable SPA on the GT3 Node server —
+    OSNs as YAML on disk, loaded at runtime, rewritten only through explicit White Move paths —
+    then explore Server-Hosted OSN Files, Append-Only Action Log, Section-Level Graph Navigation,
+    and GT3 Co-Hosted below.
+    
+    ## Server-Hosted OSN Files
+    2. On startup call GET /lexiom13/osn/list (exclude tombstones), fetch each YAML under
+    /gt2/Lexiom_1_3/, and fall back to the hard-coded ProductLexiom quartet if listing fails.
+    3. Persist via POST /lexiom13/osn/save for create (canonize), update (approved edits / identity
+    remount), and prune (tombstone subtree); write new children beside the primary parent.
+    4. Keep id === file_name hierarchical identity and treat graph.* as authoritative across
+    directories.
+    
+    ## Append-Only Action Log
+    5. Append navigation, edit, approve, welcome, filter, build, and causal actions to an in-memory
+    action log with timestamps; do not require a visible action-log panel.
+    6. Keep the log and evidenceApprovalByKey session-only — no durable Move ledger or replay
+    reconstruction in the current POC.
+    
+    ## Section-Level Graph Navigation
+    7. Hold selectedOsnId and selectedSectionKey; default section output_spec; remember core section
+    keys across Focus moves including arrow keys; render section glyphs in #lexiom-osn-section-strip.
+    8. Keep immature runtime shells with maturity gates until canonize or prune; create Build children
+    only after prepare/run; store draftCardsByOsnId, lens drafts/intensity, and causal maps in SPA
+    memory.
+    9. On first changing keystroke of an approved card, clear card.approved and capture editBaseline
+    (session draft only); clear green insert diffs on glyph approval.
+    
+    ## GT3 Co-Hosted
+    10. Call POST /inference through gt3-client.js for lens reframe, maturation, cockpit-title, and
+    causal lineage / player-ask narratives with Lexiom 1.3 persona headers.
+    11. Run POST /lexiom13/build/prepare then /run when a profile maps to a plugin; package OSNG
+    snapshot, HANDOFF, EVIDENCE_PLAN, and agent prompts under builds/lexiom13/<runId>/.
+    12. Poll GET /lexiom13/evidence/collections?osn_id= every 5s (pause when hidden) and resolve
+    bundled evidences/ plus build artifact URLs without poll-driven approval changes.
+
+- GameificationFlow
+  Output Spec:
+    1. Dive into Lexiom 1.3's gamification as it is built today — the cadence, gates, and feedback
+    loops that make the cockpit feel playable — then explore the Engagement, Progression, and
+    Feedback chapters below for the concrete rebuild requirements.
+    
+    ## Engagement
+    2. Present the welcome modal on first visit, every page reload, or ?welcome=1|force|true, and
+    persist dismissal in localStorage key lexiom13_welcome_seen so the opening cadence invites
+    return play without hard-coding a one-shot gate.
+    3. Keep the four graph filters (Evidence approval, Build controls, Top bar, Cockpit title)
+    disabled by default so the player opts into denser chrome rather than being flooded on entry.
+    4. After the player approves a Causal Lineage narrative for an open evidence artifact, unlock
+    continued player-asks in the bottom ribbon (with a brief unlock flash) so engagement deepens
+    through a second ask loop rather than a single response.
+    
+    ## Progression
+    5. Mature immature OSNs through the gated ladder Seed → Thematic Lenses → Output Spec →
+    Success Evidences, unlocking each next section only after the prior gate is approved.
+    6. When a maturation section is still locked, show the center locked-gate message instead of
+    an editable draft card so progression is visible and blocked honestly.
+    7. Mark immature nodes and locked section glyphs visually (dashed / is-immature / is-locked)
+    so the player can see which branches and sections remain incomplete.
+    8. When an immature OSN completes its final success-evidences gate, canonize it to linked YAML
+    on disk so "becoming a file" is the achievement that closes the progression arc.
+    
+    ## Feedback
+    9. Drive draft-card attestation glyphs from draft state (empty / ● human / ◯ LM-or-approved /
+    ◉ LM+edits) and shift approved cards to the bluish ready presentation until a first edit
+    auto-revokes approval.
+    10. When Evidence approval is enabled, show per-OSN attestation glyphs (· / ○ / ◐ / ●) that
+    reflect linked-artifact review state without changing approval when clicked (navigation only).
+    11. Fade the center playfield with Lexiom Canonical Duration timing (1500ms out / 3000ms in at
+    full scale): full LCD on Focus OSN change and editing→approved; three-quarters on section-key
+    swaps; half on approved→editing (including first-keystroke auto-revoke).
+    12. On Focus OSN transitions, run DaDa look-and-feel only when authorized (Love-biased Matrix
+    rain + outline breath), skipping both under prefers-reduced-motion; never let DaDa mutate
+    drafts or YAML.
+    13. Flash player-ask unlock and narrative / output_spec-change jump targets briefly so the
+    player feels immediate response to those unlock and reveal actions.
+
+- BrandLexiom
+  Output Spec:
+    Produce and govern an approved Ogun brand standard and executive brand brief.
+    
+    Source scope: §§1–2 and §§24–28 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- BrandStrategy
+  Output Spec:
+    Produce and govern an approved brand strategy deck.
+    
+    Source scope: §§2, 4–10, 15, and 20 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define the market meaning, category, audiences, value, and defensible claims that keep Ogun commercially coherent.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- MarketPositioning
+  Output Spec:
+    Produce and govern an approved positioning framework.
+    
+    Source scope: §§4, 9, and 15 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Position Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CategoryDefinition
+  Output Spec:
+    Produce and govern an approved category-definition brief.
+    
+    Source scope: §4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Establish the primary commercial category and its supporting technical vocabulary for business and technical audiences.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PrimaryCategory
+  Output Spec:
+    Produce and govern a reviewed primary-category statement.
+    
+    Source scope: §§4.1 and 4.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Lead consistently with Outcome Governance and Semantic Relationship Operating System and explain the organizational value carried by that category.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CategoryStatement
+  Output Spec:
+    Produce and govern an approved canonical category statement.
+    
+    Source scope: §§4.1 and 4.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Produce a concise canonical category statement that connects intentions, standards, governed outcome graphs, human authority, and evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CategoryEducation
+  Output Spec:
+    Produce and govern a published category-education explainer.
+    
+    Source scope: §§4.1 and 17.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Teach prospects what outcome governance and semantic relationship management mean without relying on unexplained product jargon.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- TechnicalCategories
+  Output Spec:
+    Produce and govern an approved technical-positioning brief.
+    
+    Source scope: §4.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use technical descriptors to clarify architecture for technical, investor, security, and architecture audiences without displacing the primary category.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DeterministicSemanticOS
+  Output Spec:
+    Produce and govern a reviewed technical architecture narrative.
+    
+    Source scope: §§4.2 and 9.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain the implemented Lexiom 1.3 POC as a deterministic human-approval and persistence boundary between probabilistic GT3 drafts and canonical OSN YAML, without implying control over general enterprise state.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- GovernedAgentLifecycle
+  Output Spec:
+    Produce and govern an approved governed-agent lifecycle explainer.
+    
+    Source scope: §§4.2, 6.3, and 9.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain that mapped build agents receive snapshotted OSN compilation instructions while explicit human actions retain authority over canonical OSN YAML; characterize this as a governed build-agent handoff, not a complete agent lifecycle.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CompetitiveDifferentiation
+  Output Spec:
+    Produce and govern an approved competitive differentiation matrix.
+    
+    Source scope: §15 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Differentiate Ogun by the meaning, authority, lineage, inheritance, and evidence it governs rather than by feature-list comparison.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- RecordSystemsContrast
+  Output Spec:
+    Produce and govern a reviewed record-systems comparison.
+    
+    Source scope: §§15.1–15.2 and 15.7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Contrast Ogun with CRM, project management, and requirements systems while respecting the strengths and proper role of each.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CrmContrast
+  Output Spec:
+    Produce and govern an approved CRM-versus-Ogun comparison.
+    
+    Source scope: §15.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show that CRM records commercial relationships while Ogun governs their intended outcomes and evolving meaning.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ProjectRequirementsContrast
+  Output Spec:
+    Produce and govern an approved project-and-requirements comparison.
+    
+    Source scope: §§15.2 and 15.7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show that work and requirements tools track activity or specifications while Ogun governs why work exists and what proves success.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AIPlatformContrast
+  Output Spec:
+    Produce and govern a reviewed AI-platform comparison.
+    
+    Source scope: §§15.3–15.6 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Distinguish Ogun from AI governance, observability, orchestration, and coding tools through its control of authority, outcome meaning, and evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- GovernanceObservabilityContrast
+  Output Spec:
+    Produce and govern an approved governance-and-observability comparison.
+    
+    Source scope: §§15.3–15.4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain that the current POC gates canonical OSN writes through explicit human actions and carries explicitly linked standard ancestors into lineage context and build snapshots; policy enforcement, live conflict detection, and Concordance resolution are not implemented.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AgentCodingContrast
+  Output Spec:
+    Produce and govern an approved agent-and-coding comparison.
+    
+    Source scope: §§15.5–15.6 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Explain that Ogun governs the OSN graph used to prepare coding-agent handoffs and human evidence review, rather than claiming that it automatically authorizes or validates execution.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AudienceValue
+  Output Spec:
+    Produce and govern an approved audience-and-value strategy.
+    
+    Source scope: §§5, 7, and 8 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Connect Ogun’s governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CustomerProfiles
+  Output Spec:
+    Produce and govern an approved ideal-customer profile pack.
+    
+    Source scope: §8 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define priority organizations, sectors, and buying roles while preserving Ogun’s cross-domain identity.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PrioritySectors
+  Output Spec:
+    Produce and govern an approved priority-sector portfolio.
+    
+    Source scope: §§8.1–8.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Prioritize consequential, multidisciplinary environments with costly misunderstanding, AI-assisted processes, and evidence obligations.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- RegulatedSectors
+  Output Spec:
+    Produce and govern a reviewed regulated-sector solution brief.
+    
+    Source scope: §8.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Adapt the Ogun narrative for financial services, healthcare, government, legal services, and regulated manufacturing without making unsupported compliance claims.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EnterpriseDeliverySectors
+  Output Spec:
+    Produce and govern a reviewed enterprise-delivery solution brief.
+    
+    Source scope: §§5.5 and 8.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Adapt the narrative for enterprise software, professional services, systems integration, procurement, construction, and telecommunications.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- BuyingCommittee
+  Output Spec:
+    Produce and govern an approved buying-committee map.
+    
+    Source scope: §8.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Equip economic buyers, champions, and evaluators with role-specific value and proof while preserving one coherent product truth.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EconomicBuyers
+  Output Spec:
+    Produce and govern a reviewed executive buyer brief.
+    
+    Source scope: §8.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Address executive concerns about failed outcomes, uncontrolled AI, delivery risk, rework, accountability, and portfolio visibility.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ChampionsEvaluators
+  Output Spec:
+    Produce and govern a reviewed champion-and-evaluator brief.
+    
+    Source scope: §8.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Address champion and evaluator concerns about alignment, ambiguity, handoffs, proving completion, security, legal, compliance, and operations.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ValueProposition
+  Output Spec:
+    Produce and govern an approved enterprise value proposition.
+    
+    Source scope: §§5 and 7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Translate Ogun’s semantic governance into credible effects for alignment, governed AI adoption, evidence-backed delivery, continuity, and economic intelligence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EnterprisePillars
+  Output Spec:
+    Produce and govern a reviewed enterprise value-pillar deck.
+    
+    Source scope: §7 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Organize Ogun’s value around alignment, governed AI adoption, evidence-backed delivery, relationship continuity, and economic intelligence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- AlignmentGovernedAI
+  Output Spec:
+    Produce and govern an approved alignment-and-governed-AI case narrative.
+    
+    Source scope: §§7.1A–7.1B of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show how explicit ownership and approval reduce ambiguity and unauthorized drift while enabling faster AI-assisted work.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- EvidenceEconomics
+  Output Spec:
+    Produce and govern a reviewed evidence-and-economics value model.
+    
+    Source scope: §§7.1C–7.1E of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show how direct evidence, relationship continuity, and graph-garden intelligence improve confidence and resource allocation.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- XrmNarrative
+  Output Spec:
+    Produce and govern an approved XRM narrative.
+    
+    Source scope: §5 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Position XRM as CRM determinism plus semantic relationship probabilisticity governed by human approval and evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SrmDefinition
+  Output Spec:
+    Produce and govern a published SRM explainer.
+    
+    Source scope: §5.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define SRM as management of evolving intentions, interpretations, commitments, risks, dependencies, evidence, and context.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- XrmPositioning
+  Output Spec:
+    Produce and govern an approved XRM positioning brief.
+    
+    Source scope: §§5.3–5.5 and 9.4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Show how Ogun extends relationship systems from stable records to governed outcome relationships across organizations.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- BrandExpression
+  Output Spec:
+    Produce and govern an approved integrated brand-expression system.
+    
+    Source scope: §§3, 10–14, 16–19, and 22–23 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Translate strategy into coherent names, language, visual identity, product experience, campaigns, sales materials, and measurable market activation.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CreativeIdentity
+  Output Spec:
+    Produce and govern an approved creative identity system.
+    
+    Source scope: §§3 and 10–13 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Express Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- VerbalIdentity
+  Output Spec:
+    Produce and govern an approved verbal identity guide.
+    
+    Source scope: §§3 and 10–12 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Govern naming, message hierarchy, taglines, personality, and voice so every expression remains clear and evidence-aware.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- NamingArchitecture
+  Output Spec:
+    Produce and govern an approved naming architecture.
+    
+    Source scope: §3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Keep Lexiom, Lexiom 1.3, Ogun, Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence in one coherent hierarchy.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- MasterNaming
+  Output Spec:
+    Produce and govern a reviewed naming standards sheet.
+    
+    Source scope: §3.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Standardize first and subsequent mentions and prevent Ogun from appearing as an unrelated product separate from Lexiom.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- NamingRationale
+  Output Spec:
+    Produce and govern an approved naming-rationale narrative.
+    
+    Source scope: §§3.2–3.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use the governed-forge metaphor to evoke disciplined toolmaking and accountable transformation without mysticism or aggression.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- MessagingVoice
+  Output Spec:
+    Produce and govern an approved messaging and voice guide.
+    
+    Source scope: §§10–12 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Apply the message hierarchy, tagline system, personality, and voice consistently from promise through technical proof.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- TaglineSystem
+  Output Spec:
+    Produce and govern a reviewed tagline and campaign-line library.
+    
+    Source scope: §§10–11 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Lead with “Govern what must become real” and select supporting or campaign lines according to audience and proof context.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ToneOfVoice
+  Output Spec:
+    Produce and govern an approved tone-of-voice guide.
+    
+    Source scope: §12 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use declarative clarity, active verbs, restrained metaphor, and human language while avoiding hype and probabilistic claims presented as fact.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- VisualIdentity
+  Output Spec:
+    Produce and govern an approved visual identity board.
+    
+    Source scope: §13 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Create an accessible visual system for the governed forge and living graph whose states communicate authority, proposals, evidence, and conflict.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- VisualLanguage
+  Output Spec:
+    Produce and govern a reviewed visual-language board.
+    
+    Source scope: §§13.1–13.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define core forms, avoided motifs, and semantic color principles for disciplined pathways, inheritance, evidence, and state.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- CoreMetaphor
+  Output Spec:
+    Produce and govern an approved core-metaphor concept board.
+    
+    Source scope: §§13.1–13.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Express the governed forge and living graph through structured nodes, convergence, seeds, layers, anchors, and lineage without cliché or appropriation.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ColorPrinciples
+  Output Spec:
+    Produce and govern an accessibility-reviewed semantic palette.
+    
+    Source scope: §13.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Distinguish approved, proposed, stable, conflict, missing-evidence, achieved, inherited, and overridden states with accessible contrast.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- TypographyMotion
+  Output Spec:
+    Produce and govern an approved typography-and-motion system.
+    
+    Source scope: §§13.4–13.5 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use architectural readability and restrained state-transition motion to reinforce credibility and governance.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- Typography
+  Output Spec:
+    Produce and govern an accessibility-reviewed typographic specimen.
+    
+    Source scope: §13.4 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Specify spacious headings, highly legible body text, and restrained monospace for identifiers and provenance without pseudo-futuristic distortion.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- Motion
+  Output Spec:
+    Produce and govern a reviewed motion prototype reel.
+    
+    Source scope: §13.5 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Animate proposals, White Move anchoring, lineage inspection, and evidence closure as meaningful state transitions rather than decoration.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- GoToMarket
+  Output Spec:
+    Produce and govern an approved go-to-market plan.
+    
+    Source scope: §§14 and 16–19 and 22–23 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Turn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DemandGeneration
+  Output Spec:
+    Produce and govern a reviewed demand-generation campaign.
+    
+    Source scope: §§17 and 19 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Build website and educational content journeys that teach the category, demonstrate governed cooperation, and invite consequential use cases.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- WebsiteExperience
+  Output Spec:
+    Produce and govern a reviewable website prototype.
+    
+    Source scope: §17 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Sequence the website from promise and market gap through the Ogun model, XRM, governed AI, value, proof, and a consequential-workflow call to action.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- HomepageSequence
+  Output Spec:
+    Produce and govern a rendered homepage prototype.
+    
+    Source scope: §17.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Deliver the prescribed homepage sequence with “Govern what must become real,” clear category explanation, product model, proof, and calls to action.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SolutionPages
+  Output Spec:
+    Produce and govern a reviewed solution-page collection.
+    
+    Source scope: §§17.2–17.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Deliver solution and educational pages for priority use cases and foundational concepts such as OSNs, SRM, evidence, inheritance, and human authority.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ContentStrategy
+  Output Spec:
+    Produce and govern an approved editorial strategy.
+    
+    Source scope: §19 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Educate the market through durable pillars and flagship assets centered on authority, outcomes, relationships, evidence, economics, and disciplined toolmaking.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ContentPillars
+  Output Spec:
+    Produce and govern a reviewed editorial pillar calendar.
+    
+    Source scope: §19.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Maintain the ten core content pillars as a balanced editorial system spanning human authority, XRM, evidence, standards, cooperation, and accountable execution.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- FlagshipAssets
+  Output Spec:
+    Produce and govern a published flagship thought-leadership asset.
+    
+    Source scope: §19.2 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Produce the manifesto, SRM case, human-authority argument, evidence narrative, executive guide, interactive proof, and assessment assets.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SalesEnablement
+  Output Spec:
+    Produce and govern an approved sales enablement kit.
+    
+    Source scope: §§16 and 18 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Equip commercial teams to discover consequential workflows, demonstrate governed outcomes, package value, and frame credible pilots.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- SalesNarrative
+  Output Spec:
+    Produce and govern a reviewed enterprise sales playbook.
+    
+    Source scope: §18 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Guide discovery, demonstration, and proof language so sales distinguishes currently visible proposal, approval, evidence, lineage, and build behavior from planned inherited-conflict and Concordance capabilities.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DiscoveryQuestions
+  Output Spec:
+    Produce and govern a field-tested discovery guide.
+    
+    Source scope: §18.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Use questions that reveal ambiguity, interdependence, AI-to-commitment boundaries, approval gaps, evidence needs, standards loss, and hidden disagreement.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- DemonstrationArc
+  Output Spec:
+    Produce and govern a recorded end-to-end Ogun demonstration.
+    
+    Source scope: §§18.2–18.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Demonstrate the current journey from OSN seed through gated maturation, human approval, branching, compilation/build handoff, direct evidence inspection, and Causal Lineage Chat. Label inherited-conflict harmonization, Concordance, and executive garden analysis as future or separately simulated capabilities.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- ServicePackaging
+  Output Spec:
+    Produce and govern an approved commercial packaging brief.
+    
+    Source scope: §16 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Package Ogun around enterprise governance value, participation scope, policy and evidence depth, and consequential pilots rather than seat utility or token consumption.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PackagingTiers
+  Output Spec:
+    Produce and govern a reviewed offer-tier comparison.
+    
+    Source scope: §16.1 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Define Foundation, Enterprise, and Ecosystem offers by governance scope, graph gardens, inheritance, participation, analytics, and strategic services.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+- PricingPilot
+  Output Spec:
+    Produce and govern an approved pricing hypothesis and pilot offer.
+    
+    Source scope: §§16.2–16.3 of Branding/branding_spec.md.
+    
+    Outcome requirements:
+    - Price against avoided rework, governed risk, acceptance, accountability, and reuse, and frame pilots around real multidisciplinary workflows with direct evidence.
+    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+GUIDANCE:
+- Synthesize the tree into one memorable title a newcomer would understand.
+- Prefer outcome language over implementation jargon.
+- Treat this as a draft proposal; the player may later edit surrounding cockpit copy.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L24_Draft_ followed by four words (underscore-separated) that capture what you draft in this inference, within the current OSN reasoning workspace. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it.
+
+=== LM outbound — loving_only ===
+{
+  "logged_at": "2026-07-23T15:08:20.735Z",
+  "variant": "loving_only",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise assistant responding to a single narrative. Output clean, ready-to-display text.\n\nIf the user asks for the name of the language model or assistant used for this inference, say you are GT3 (Generative Team Trained Transformer)."
+    },
+    {
+      "role": "user",
+      "content": "Beloved lover, follow for tone and stance; then address the task below.\n\nGuide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.\r\n\r\n**Principles (apply lightly, preserve clarity):**\r\n- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.\r\n- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).\r\n- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.\r\n- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.\r\n- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.\r\n\r\n**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.\r\n\r\n**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.\r\n\r\n**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.\r\n\r\n**Anchor:** Language as a vessel through which abundance flows into awareness.\n\n---TASK---\n\nThis request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.\n\nYou are GT3, let your answer refer to the System Under Development (SUD) as a mean to assist our friend in maturing the SUD specifications for the purpose of maturing the SUD itself.\n\nTASK:\n- Propose ONE short cockpit title that captures what this entire OSN tree is collectively trying to produce.\n- Ground the title ONLY in the OSN TREE OUTPUT SPECIFICATIONS below.\n- The title should feel like a human-facing name for the experience or system outcome, not a file name, node id, or technical label.\n- Return only the proposed title. No preamble, no markdown fences, no 'Title:' label, no explanation.\n\nOUTPUT CONTRACT (write exactly this and nothing else):\n- Output ONLY the title on a single line.\n- Use between 2 and 8 words.\n- Do NOT echo output specifications, OSN file names, or ancestor labels in the output.\n\nEXACT OUTPUT EXAMPLES (format only):\nWelcoming OSN Cockpit\n\nReasoning Source Tree\n\nOSN TREE OUTPUT SPECIFICATIONS (hierarchical — honor the full tree):\n- GT_Philosophy\n  Output Spec:\n    1. Enter the GT constellation philosophy as a living software-development standard — human-governed,\n    draft-first, evidence-backed — then explore Constellation Value Flow, Human Governance, Traceable\n    Buildability, and Reusable Core for how Lexiom 1.3 currently embodies that standard.\n    \n    ## Constellation Value Flow\n    2. Productize GT3 inference inside the GT2 Lexiom SPA on the same Node origin (cockpit + POST\n    /inference) without collapsing GT3 reusable core into one-off UI code.\n    3. Host ProductLexiom and BrandLexiom as sibling branches under GT_Philosophy in one OSN graph\n    (full-graph mode shows both domains).\n    4. Map build plugins by branch: software-coding for ProductLexiom scopes and document builder for\n    BrandLexiom scopes.\n    \n    ## Human Governance\n    5. Land LM/GT3 output only as editable non-canonical drafts; mutate disk YAML only after explicit\n    human approve through persist, canonize, or prune.\n    6. Keep session evidence approvals and chat proposals from auto-writing OSN files.\n    7. Require draft-card glyph approval before treating center edits as committed White Moves for\n    persistence.\n    \n    ## Traceable Buildability\n    8. Bind each OSN to inspectable success-evidence artifacts (bundled evidences/ and/or build-run\n    collections) so fulfillment can be reviewed first-hand.\n    9. When building, write inspectable handoff and prompt artifacts under builds/lexiom13/<runId>/\n    and keep a session action log of select/edit/approve/build/causal events.\n    \n    ## Reusable Core\n    10. Reuse one OSN YAML schema and recursive loader across nested domain directories.\n    11. Reuse one GT3 client path for lens, maturation, title, and causal narratives with Lexiom\n    persona framing.\n    12. Prefer Node co-host + static YAML over a product database so the constellation core stays\n    portable across surfaces.\n\n- ProductLexiom\n  Output Spec:\n    1. Step into Lexiom 1.3.3 as a calm, welcoming SPA where newcomers meet OSNs as owned,\n    evidence-backed, file-like semantic artifacts — then explore the UX and Code Shaping chapters\n    below for how to rebuild that product surface.\n    \n    ## UX\n    2. Ship one welcoming single-page cockpit that presents the OSN graph as playable semantic\n    source, with default Focus on ProductLexiom and default section Output Spec.\n    3. Keep ProductLexiom discipline children (UX, CodeShape, GameificationFlow) and sibling\n    BrandLexiom discoverable in the same graph so the product outcome stays graph-native.\n    4. Orient the welcome narrative so machine output arrives as draft and only human approval\n    makes semantic source canonical.\n    5. Expose section glyphs, owner/name meta, evidence tray, Causal Lineage Chat, and optional\n    filters as the product self-explanatory encounter — without auth, billing, or multi-user flows.\n    \n    ## Code Shaping\n    6. Implement Lexiom 1.3 as one inspectable SPA co-hosted on the GT3 Node server beside canonical\n    OSN YAML under public/gt2/Lexiom_1_3/ (recursive list with ProductLexiom quartet fallback).\n    7. Load and navigate OSNs by hierarchical id/file_name with origin-leaf labels; treat graph.*\n    links as authoritative across nested directories.\n    8. Persist canonical changes only through explicit approve to /lexiom13/osn/save create, update,\n    or prune; keep drafts, evidence approvals, filters, and action history session-only.\n    9. When Build controls is enabled, map ProductLexiom / UX / CodeShape to the software-coding\n    builder and BrandLexiom to the document builder; show a Build handoff/report child, not the\n    delivered artifact.\n    10. Poll Focus-closure evidence collections (default 5s) and overlay build-collected artifacts\n    on bundled demos without auto-approving them.\n    11. Support GT3-backed lens reframing, maturation proposals, optional cockpit title, and\n    evidence-scoped causal asks via POST /inference without silent canonization of LM text.\n    12. Document known POC limits in the rebuild: session-only action log, no durable Move ledger,\n    and current side-panel branch/prune/build/lens/evidence actions as center-only execution\n    divergences.\n\n- UX\n  Output Spec:\n    1. Come explore how Lexiom teaches a newcomer — in the first encounter — that this is a\n    reasoning-making cockpit for opening, inspecting, branching, compiling, and tracing semantic\n    source files; the First-Time Clarity, Cockpit Orientation, and OSN File Metaphor chapters below\n    are the rebuild map.\n    \n    ## First-Time Clarity\n    2. Show a welcome modal that orients left graph, center playfield, and right evidences, dismissed\n    with Begin exploring, on first visit, reload, or ?welcome=1|force|true.\n    3. Label regions clearly (Outcome Specifications, Owned by:, Success Evidences) so the cabinet\n    reads without a tutorial tour.\n    4. Hide Top HUD and cockpit title by default until the player enables Top bar / Cockpit title\n    filters, keeping the first thirty seconds visually quiet.\n    \n    ## Cockpit Orientation\n    5. Layout a three-panel cabinet: left Focus graph, center section strip + draft card + bottom\n    ribbon, right success-evidence tray.\n    6. Compose the left graph Focus-centered (ancestors above, Focus near the top quarter, descendants\n    below), always reserve sibling arrows, clip rather than scroll, and refit on resize.\n    7. Provide full-graph mode from the left-corner toggle (cabinet-wide tree; center/right hidden);\n    Escape or toggle exits; selecting an OSN returns to the three-panel cockpit.\n    8. Wire arrow-key Focus moves (Left/Right siblings, Up parent, Down first child), remember the\n    active core section key across OSN moves, and host L2 lenses / Causal Lineage Chat as optional\n    orientation surfaces when Top bar is on or evidence is open.\n    \n    ## OSN File Metaphor\n    9. Render graph rows as origin-leaf labels with full file_name in tooltips so nodes feel like\n    hierarchical OSN files.\n    10. Place the Focus OSN four section glyphs (Seed, Thematic Lenses, Output Spec, Success Evidences)\n    in the center strip — not on the left row — as openable file sections.\n    11. Open Focus owner from the Owned by cell and OSN name from the Focus-row pencil into\n    draft-first center cards (no separate player-opened OSN Title card).\n    12. List the Focus OSN success-evidence artifacts in the right tray for open/inspect/approve,\n    preserving the file-and-evidence metaphor beside the draft card.\n\n- CodeShape\n  Output Spec:\n    1. Dive into how Lexiom 1.3 stays a deterministic, inspectable SPA on the GT3 Node server —\n    OSNs as YAML on disk, loaded at runtime, rewritten only through explicit White Move paths —\n    then explore Server-Hosted OSN Files, Append-Only Action Log, Section-Level Graph Navigation,\n    and GT3 Co-Hosted below.\n    \n    ## Server-Hosted OSN Files\n    2. On startup call GET /lexiom13/osn/list (exclude tombstones), fetch each YAML under\n    /gt2/Lexiom_1_3/, and fall back to the hard-coded ProductLexiom quartet if listing fails.\n    3. Persist via POST /lexiom13/osn/save for create (canonize), update (approved edits / identity\n    remount), and prune (tombstone subtree); write new children beside the primary parent.\n    4. Keep id === file_name hierarchical identity and treat graph.* as authoritative across\n    directories.\n    \n    ## Append-Only Action Log\n    5. Append navigation, edit, approve, welcome, filter, build, and causal actions to an in-memory\n    action log with timestamps; do not require a visible action-log panel.\n    6. Keep the log and evidenceApprovalByKey session-only — no durable Move ledger or replay\n    reconstruction in the current POC.\n    \n    ## Section-Level Graph Navigation\n    7. Hold selectedOsnId and selectedSectionKey; default section output_spec; remember core section\n    keys across Focus moves including arrow keys; render section glyphs in #lexiom-osn-section-strip.\n    8. Keep immature runtime shells with maturity gates until canonize or prune; create Build children\n    only after prepare/run; store draftCardsByOsnId, lens drafts/intensity, and causal maps in SPA\n    memory.\n    9. On first changing keystroke of an approved card, clear card.approved and capture editBaseline\n    (session draft only); clear green insert diffs on glyph approval.\n    \n    ## GT3 Co-Hosted\n    10. Call POST /inference through gt3-client.js for lens reframe, maturation, cockpit-title, and\n    causal lineage / player-ask narratives with Lexiom 1.3 persona headers.\n    11. Run POST /lexiom13/build/prepare then /run when a profile maps to a plugin; package OSNG\n    snapshot, HANDOFF, EVIDENCE_PLAN, and agent prompts under builds/lexiom13/<runId>/.\n    12. Poll GET /lexiom13/evidence/collections?osn_id= every 5s (pause when hidden) and resolve\n    bundled evidences/ plus build artifact URLs without poll-driven approval changes.\n\n- GameificationFlow\n  Output Spec:\n    1. Dive into Lexiom 1.3's gamification as it is built today — the cadence, gates, and feedback\n    loops that make the cockpit feel playable — then explore the Engagement, Progression, and\n    Feedback chapters below for the concrete rebuild requirements.\n    \n    ## Engagement\n    2. Present the welcome modal on first visit, every page reload, or ?welcome=1|force|true, and\n    persist dismissal in localStorage key lexiom13_welcome_seen so the opening cadence invites\n    return play without hard-coding a one-shot gate.\n    3. Keep the four graph filters (Evidence approval, Build controls, Top bar, Cockpit title)\n    disabled by default so the player opts into denser chrome rather than being flooded on entry.\n    4. After the player approves a Causal Lineage narrative for an open evidence artifact, unlock\n    continued player-asks in the bottom ribbon (with a brief unlock flash) so engagement deepens\n    through a second ask loop rather than a single response.\n    \n    ## Progression\n    5. Mature immature OSNs through the gated ladder Seed → Thematic Lenses → Output Spec →\n    Success Evidences, unlocking each next section only after the prior gate is approved.\n    6. When a maturation section is still locked, show the center locked-gate message instead of\n    an editable draft card so progression is visible and blocked honestly.\n    7. Mark immature nodes and locked section glyphs visually (dashed / is-immature / is-locked)\n    so the player can see which branches and sections remain incomplete.\n    8. When an immature OSN completes its final success-evidences gate, canonize it to linked YAML\n    on disk so \"becoming a file\" is the achievement that closes the progression arc.\n    \n    ## Feedback\n    9. Drive draft-card attestation glyphs from draft state (empty / ● human / ◯ LM-or-approved /\n    ◉ LM+edits) and shift approved cards to the bluish ready presentation until a first edit\n    auto-revokes approval.\n    10. When Evidence approval is enabled, show per-OSN attestation glyphs (· / ○ / ◐ / ●) that\n    reflect linked-artifact review state without changing approval when clicked (navigation only).\n    11. Fade the center playfield with Lexiom Canonical Duration timing (1500ms out / 3000ms in at\n    full scale): full LCD on Focus OSN change and editing→approved; three-quarters on section-key\n    swaps; half on approved→editing (including first-keystroke auto-revoke).\n    12. On Focus OSN transitions, run DaDa look-and-feel only when authorized (Love-biased Matrix\n    rain + outline breath), skipping both under prefers-reduced-motion; never let DaDa mutate\n    drafts or YAML.\n    13. Flash player-ask unlock and narrative / output_spec-change jump targets briefly so the\n    player feels immediate response to those unlock and reveal actions.\n\n- BrandLexiom\n  Output Spec:\n    Produce and govern an approved Ogun brand standard and executive brand brief.\n    \n    Source scope: §§1–2 and §§24–28 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- BrandStrategy\n  Output Spec:\n    Produce and govern an approved brand strategy deck.\n    \n    Source scope: §§2, 4–10, 15, and 20 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Define the market meaning, category, audiences, value, and defensible claims that keep Ogun commercially coherent.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- MarketPositioning\n  Output Spec:\n    Produce and govern an approved positioning framework.\n    \n    Source scope: §§4, 9, and 15 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Position Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CategoryDefinition\n  Output Spec:\n    Produce and govern an approved category-definition brief.\n    \n    Source scope: §4 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Establish the primary commercial category and its supporting technical vocabulary for business and technical audiences.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- PrimaryCategory\n  Output Spec:\n    Produce and govern a reviewed primary-category statement.\n    \n    Source scope: §§4.1 and 4.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Lead consistently with Outcome Governance and Semantic Relationship Operating System and explain the organizational value carried by that category.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CategoryStatement\n  Output Spec:\n    Produce and govern an approved canonical category statement.\n    \n    Source scope: §§4.1 and 4.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Produce a concise canonical category statement that connects intentions, standards, governed outcome graphs, human authority, and evidence.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CategoryEducation\n  Output Spec:\n    Produce and govern a published category-education explainer.\n    \n    Source scope: §§4.1 and 17.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Teach prospects what outcome governance and semantic relationship management mean without relying on unexplained product jargon.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- TechnicalCategories\n  Output Spec:\n    Produce and govern an approved technical-positioning brief.\n    \n    Source scope: §4.2 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Use technical descriptors to clarify architecture for technical, investor, security, and architecture audiences without displacing the primary category.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- DeterministicSemanticOS\n  Output Spec:\n    Produce and govern a reviewed technical architecture narrative.\n    \n    Source scope: §§4.2 and 9.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Explain the implemented Lexiom 1.3 POC as a deterministic human-approval and persistence boundary between probabilistic GT3 drafts and canonical OSN YAML, without implying control over general enterprise state.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- GovernedAgentLifecycle\n  Output Spec:\n    Produce and govern an approved governed-agent lifecycle explainer.\n    \n    Source scope: §§4.2, 6.3, and 9.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Explain that mapped build agents receive snapshotted OSN compilation instructions while explicit human actions retain authority over canonical OSN YAML; characterize this as a governed build-agent handoff, not a complete agent lifecycle.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CompetitiveDifferentiation\n  Output Spec:\n    Produce and govern an approved competitive differentiation matrix.\n    \n    Source scope: §15 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Differentiate Ogun by the meaning, authority, lineage, inheritance, and evidence it governs rather than by feature-list comparison.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- RecordSystemsContrast\n  Output Spec:\n    Produce and govern a reviewed record-systems comparison.\n    \n    Source scope: §§15.1–15.2 and 15.7 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Contrast Ogun with CRM, project management, and requirements systems while respecting the strengths and proper role of each.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CrmContrast\n  Output Spec:\n    Produce and govern an approved CRM-versus-Ogun comparison.\n    \n    Source scope: §15.1 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Show that CRM records commercial relationships while Ogun governs their intended outcomes and evolving meaning.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ProjectRequirementsContrast\n  Output Spec:\n    Produce and govern an approved project-and-requirements comparison.\n    \n    Source scope: §§15.2 and 15.7 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Show that work and requirements tools track activity or specifications while Ogun governs why work exists and what proves success.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- AIPlatformContrast\n  Output Spec:\n    Produce and govern a reviewed AI-platform comparison.\n    \n    Source scope: §§15.3–15.6 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Distinguish Ogun from AI governance, observability, orchestration, and coding tools through its control of authority, outcome meaning, and evidence.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- GovernanceObservabilityContrast\n  Output Spec:\n    Produce and govern an approved governance-and-observability comparison.\n    \n    Source scope: §§15.3–15.4 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Explain that the current POC gates canonical OSN writes through explicit human actions and carries explicitly linked standard ancestors into lineage context and build snapshots; policy enforcement, live conflict detection, and Concordance resolution are not implemented.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- AgentCodingContrast\n  Output Spec:\n    Produce and govern an approved agent-and-coding comparison.\n    \n    Source scope: §§15.5–15.6 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Explain that Ogun governs the OSN graph used to prepare coding-agent handoffs and human evidence review, rather than claiming that it automatically authorizes or validates execution.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- AudienceValue\n  Output Spec:\n    Produce and govern an approved audience-and-value strategy.\n    \n    Source scope: §§5, 7, and 8 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Connect Ogun’s governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CustomerProfiles\n  Output Spec:\n    Produce and govern an approved ideal-customer profile pack.\n    \n    Source scope: §8 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Define priority organizations, sectors, and buying roles while preserving Ogun’s cross-domain identity.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- PrioritySectors\n  Output Spec:\n    Produce and govern an approved priority-sector portfolio.\n    \n    Source scope: §§8.1–8.2 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Prioritize consequential, multidisciplinary environments with costly misunderstanding, AI-assisted processes, and evidence obligations.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- RegulatedSectors\n  Output Spec:\n    Produce and govern a reviewed regulated-sector solution brief.\n    \n    Source scope: §8.2 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Adapt the Ogun narrative for financial services, healthcare, government, legal services, and regulated manufacturing without making unsupported compliance claims.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- EnterpriseDeliverySectors\n  Output Spec:\n    Produce and govern a reviewed enterprise-delivery solution brief.\n    \n    Source scope: §§5.5 and 8.2 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Adapt the narrative for enterprise software, professional services, systems integration, procurement, construction, and telecommunications.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- BuyingCommittee\n  Output Spec:\n    Produce and govern an approved buying-committee map.\n    \n    Source scope: §8.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Equip economic buyers, champions, and evaluators with role-specific value and proof while preserving one coherent product truth.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- EconomicBuyers\n  Output Spec:\n    Produce and govern a reviewed executive buyer brief.\n    \n    Source scope: §8.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Address executive concerns about failed outcomes, uncontrolled AI, delivery risk, rework, accountability, and portfolio visibility.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ChampionsEvaluators\n  Output Spec:\n    Produce and govern a reviewed champion-and-evaluator brief.\n    \n    Source scope: §8.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Address champion and evaluator concerns about alignment, ambiguity, handoffs, proving completion, security, legal, compliance, and operations.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ValueProposition\n  Output Spec:\n    Produce and govern an approved enterprise value proposition.\n    \n    Source scope: §§5 and 7 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Translate Ogun’s semantic governance into credible effects for alignment, governed AI adoption, evidence-backed delivery, continuity, and economic intelligence.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- EnterprisePillars\n  Output Spec:\n    Produce and govern a reviewed enterprise value-pillar deck.\n    \n    Source scope: §7 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Organize Ogun’s value around alignment, governed AI adoption, evidence-backed delivery, relationship continuity, and economic intelligence.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- AlignmentGovernedAI\n  Output Spec:\n    Produce and govern an approved alignment-and-governed-AI case narrative.\n    \n    Source scope: §§7.1A–7.1B of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Show how explicit ownership and approval reduce ambiguity and unauthorized drift while enabling faster AI-assisted work.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- EvidenceEconomics\n  Output Spec:\n    Produce and govern a reviewed evidence-and-economics value model.\n    \n    Source scope: §§7.1C–7.1E of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Show how direct evidence, relationship continuity, and graph-garden intelligence improve confidence and resource allocation.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- XrmNarrative\n  Output Spec:\n    Produce and govern an approved XRM narrative.\n    \n    Source scope: §5 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Position XRM as CRM determinism plus semantic relationship probabilisticity governed by human approval and evidence.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- SrmDefinition\n  Output Spec:\n    Produce and govern a published SRM explainer.\n    \n    Source scope: §5.2 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Define SRM as management of evolving intentions, interpretations, commitments, risks, dependencies, evidence, and context.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- XrmPositioning\n  Output Spec:\n    Produce and govern an approved XRM positioning brief.\n    \n    Source scope: §§5.3–5.5 and 9.4 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Show how Ogun extends relationship systems from stable records to governed outcome relationships across organizations.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- BrandExpression\n  Output Spec:\n    Produce and govern an approved integrated brand-expression system.\n    \n    Source scope: §§3, 10–14, 16–19, and 22–23 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Translate strategy into coherent names, language, visual identity, product experience, campaigns, sales materials, and measurable market activation.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CreativeIdentity\n  Output Spec:\n    Produce and govern an approved creative identity system.\n    \n    Source scope: §§3 and 10–13 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Express Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- VerbalIdentity\n  Output Spec:\n    Produce and govern an approved verbal identity guide.\n    \n    Source scope: §§3 and 10–12 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Govern naming, message hierarchy, taglines, personality, and voice so every expression remains clear and evidence-aware.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- NamingArchitecture\n  Output Spec:\n    Produce and govern an approved naming architecture.\n    \n    Source scope: §3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Keep Lexiom, Lexiom 1.3, Ogun, Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence in one coherent hierarchy.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- MasterNaming\n  Output Spec:\n    Produce and govern a reviewed naming standards sheet.\n    \n    Source scope: §3.1 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Standardize first and subsequent mentions and prevent Ogun from appearing as an unrelated product separate from Lexiom.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- NamingRationale\n  Output Spec:\n    Produce and govern an approved naming-rationale narrative.\n    \n    Source scope: §§3.2–3.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Use the governed-forge metaphor to evoke disciplined toolmaking and accountable transformation without mysticism or aggression.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- MessagingVoice\n  Output Spec:\n    Produce and govern an approved messaging and voice guide.\n    \n    Source scope: §§10–12 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Apply the message hierarchy, tagline system, personality, and voice consistently from promise through technical proof.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- TaglineSystem\n  Output Spec:\n    Produce and govern a reviewed tagline and campaign-line library.\n    \n    Source scope: §§10–11 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Lead with “Govern what must become real” and select supporting or campaign lines according to audience and proof context.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ToneOfVoice\n  Output Spec:\n    Produce and govern an approved tone-of-voice guide.\n    \n    Source scope: §12 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Use declarative clarity, active verbs, restrained metaphor, and human language while avoiding hype and probabilistic claims presented as fact.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- VisualIdentity\n  Output Spec:\n    Produce and govern an approved visual identity board.\n    \n    Source scope: §13 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Create an accessible visual system for the governed forge and living graph whose states communicate authority, proposals, evidence, and conflict.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- VisualLanguage\n  Output Spec:\n    Produce and govern a reviewed visual-language board.\n    \n    Source scope: §§13.1–13.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Define core forms, avoided motifs, and semantic color principles for disciplined pathways, inheritance, evidence, and state.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- CoreMetaphor\n  Output Spec:\n    Produce and govern an approved core-metaphor concept board.\n    \n    Source scope: §§13.1–13.2 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Express the governed forge and living graph through structured nodes, convergence, seeds, layers, anchors, and lineage without cliché or appropriation.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ColorPrinciples\n  Output Spec:\n    Produce and govern an accessibility-reviewed semantic palette.\n    \n    Source scope: §13.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Distinguish approved, proposed, stable, conflict, missing-evidence, achieved, inherited, and overridden states with accessible contrast.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- TypographyMotion\n  Output Spec:\n    Produce and govern an approved typography-and-motion system.\n    \n    Source scope: §§13.4–13.5 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Use architectural readability and restrained state-transition motion to reinforce credibility and governance.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- Typography\n  Output Spec:\n    Produce and govern an accessibility-reviewed typographic specimen.\n    \n    Source scope: §13.4 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Specify spacious headings, highly legible body text, and restrained monospace for identifiers and provenance without pseudo-futuristic distortion.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- Motion\n  Output Spec:\n    Produce and govern a reviewed motion prototype reel.\n    \n    Source scope: §13.5 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Animate proposals, White Move anchoring, lineage inspection, and evidence closure as meaningful state transitions rather than decoration.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- GoToMarket\n  Output Spec:\n    Produce and govern an approved go-to-market plan.\n    \n    Source scope: §§14 and 16–19 and 22–23 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Turn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- DemandGeneration\n  Output Spec:\n    Produce and govern a reviewed demand-generation campaign.\n    \n    Source scope: §§17 and 19 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Build website and educational content journeys that teach the category, demonstrate governed cooperation, and invite consequential use cases.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- WebsiteExperience\n  Output Spec:\n    Produce and govern a reviewable website prototype.\n    \n    Source scope: §17 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Sequence the website from promise and market gap through the Ogun model, XRM, governed AI, value, proof, and a consequential-workflow call to action.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- HomepageSequence\n  Output Spec:\n    Produce and govern a rendered homepage prototype.\n    \n    Source scope: §17.1 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Deliver the prescribed homepage sequence with “Govern what must become real,” clear category explanation, product model, proof, and calls to action.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- SolutionPages\n  Output Spec:\n    Produce and govern a reviewed solution-page collection.\n    \n    Source scope: §§17.2–17.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Deliver solution and educational pages for priority use cases and foundational concepts such as OSNs, SRM, evidence, inheritance, and human authority.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ContentStrategy\n  Output Spec:\n    Produce and govern an approved editorial strategy.\n    \n    Source scope: §19 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Educate the market through durable pillars and flagship assets centered on authority, outcomes, relationships, evidence, economics, and disciplined toolmaking.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ContentPillars\n  Output Spec:\n    Produce and govern a reviewed editorial pillar calendar.\n    \n    Source scope: §19.1 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Maintain the ten core content pillars as a balanced editorial system spanning human authority, XRM, evidence, standards, cooperation, and accountable execution.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- FlagshipAssets\n  Output Spec:\n    Produce and govern a published flagship thought-leadership asset.\n    \n    Source scope: §19.2 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Produce the manifesto, SRM case, human-authority argument, evidence narrative, executive guide, interactive proof, and assessment assets.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- SalesEnablement\n  Output Spec:\n    Produce and govern an approved sales enablement kit.\n    \n    Source scope: §§16 and 18 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Equip commercial teams to discover consequential workflows, demonstrate governed outcomes, package value, and frame credible pilots.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- SalesNarrative\n  Output Spec:\n    Produce and govern a reviewed enterprise sales playbook.\n    \n    Source scope: §18 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Guide discovery, demonstration, and proof language so sales distinguishes currently visible proposal, approval, evidence, lineage, and build behavior from planned inherited-conflict and Concordance capabilities.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- DiscoveryQuestions\n  Output Spec:\n    Produce and govern a field-tested discovery guide.\n    \n    Source scope: §18.1 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Use questions that reveal ambiguity, interdependence, AI-to-commitment boundaries, approval gaps, evidence needs, standards loss, and hidden disagreement.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- DemonstrationArc\n  Output Spec:\n    Produce and govern a recorded end-to-end Ogun demonstration.\n    \n    Source scope: §§18.2–18.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Demonstrate the current journey from OSN seed through gated maturation, human approval, branching, compilation/build handoff, direct evidence inspection, and Causal Lineage Chat. Label inherited-conflict harmonization, Concordance, and executive garden analysis as future or separately simulated capabilities.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- ServicePackaging\n  Output Spec:\n    Produce and govern an approved commercial packaging brief.\n    \n    Source scope: §16 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Package Ogun around enterprise governance value, participation scope, policy and evidence depth, and consequential pilots rather than seat utility or token consumption.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- PackagingTiers\n  Output Spec:\n    Produce and govern a reviewed offer-tier comparison.\n    \n    Source scope: §16.1 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Define Foundation, Enterprise, and Ecosystem offers by governance scope, graph gardens, inheritance, participation, analytics, and strategic services.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\n- PricingPilot\n  Output Spec:\n    Produce and govern an approved pricing hypothesis and pilot offer.\n    \n    Source scope: §§16.2–16.3 of Branding/branding_spec.md.\n    \n    Outcome requirements:\n    - Price against avoided rework, governed risk, acceptance, accountability, and reuse, and frame pilots around real multidisciplinary workflows with direct evidence.\n    - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n    - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n    - Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n    - Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\nGUIDANCE:\n- Synthesize the tree into one memorable title a newcomer would understand.\n- Prefer outcome language over implementation jargon.\n- Treat this as a draft proposal; the player may later edit surrounding cockpit copy.\n\nIMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).\nFormat: _L24_Draft_ followed by four words (underscore-separated) that capture what you draft in this inference, within the current OSN reasoning workspace. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it."
+    }
+  ]
+}
+
+=== Loving-only response ===
+Outcome Governance Navigator  
+_L24_Draft_outcome_governance_navigator_
+

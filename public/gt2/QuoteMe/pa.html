@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="gt3-file-uuid" content="56de099c-1ffa-4edc-aad6-24c19e1f1fa2" />
+  <title>QuoteMe v1 — Proposal Anatomy</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../gt2-logo-small.png" />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #fafafa;
+    }
+    .quote-me-primary {
+      color: #2F6BFF;
+    }
+    .quote-me-approved {
+      color: #00B8D9;
+    }
+    .btn-primary {
+      background-color: #2F6BFF;
+      border-color: #2F6BFF;
+    }
+    .btn-primary:hover {
+      background-color: #1a5ae6;
+      border-color: #1a5ae6;
+    }
+    .btn-outline-success.approved {
+      background-color: #00B8D9;
+      border-color: #00B8D9;
+      color: white;
+    }
+    .pa-textarea {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      min-height: 400px;
+    }
+    .approved-badge {
+      background-color: #00B8D9;
+      color: white;
+    }
+    .draft-badge {
+      background-color: #ffc107;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <!-- Header -->
+    <header class="d-flex align-items-center mb-4 gap-2">
+      <a href="index.html" class="btn btn-outline-secondary btn-sm">← Back</a>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <img src="../gt2-logo-small.png" alt="GT2 logo" class="gt2-logo" style="height: 28px;">
+        <h1 class="h5 m-0 quote-me-primary">QuoteMe — Proposal Anatomy</h1>
+      </div>
+    </header>
+
+    <!-- PA Editor Card -->
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h5 class="mb-1">Proposal Anatomy</h5>
+            <p class="small text-muted mb-0">
+              This structure guides Engagement Proposal generation. It was generated based on your Profile and best practices.
+            </p>
+          </div>
+          <div id="pa-approval-badge">
+            <span class="badge draft-badge">Draft</span>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="pa-textarea" class="form-label">PA Content</label>
+          <textarea 
+            id="pa-textarea" 
+            class="form-control pa-textarea" 
+            placeholder="Proposal Anatomy will appear here after Profile submission..."
+          ></textarea>
+        </div>
+
+        <div id="pa-status-message" class="alert d-none" role="alert"></div>
+
+        <div class="d-flex gap-2">
+          <button id="btn-save-pa" class="btn btn-outline-primary">Save PA</button>
+          <button id="btn-approve-pa" class="btn btn-outline-success">Approve PA</button>
+          <button id="btn-regenerate-pa" class="btn btn-outline-secondary">Regenerate from GT3</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explainability Note -->
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <p class="small text-muted mb-0">
+          <strong>Note:</strong> The Proposal Anatomy was generated based on your Profile and aggregated best practices. 
+          It is fully editable and owned by you. EP generation requires an approved PA.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script type="module">
+    import {
+      loadQuoteMeData,
+      saveQuoteMeData,
+      createPA,
+      updatePA,
+      approvePA
+    } from './storage.js';
+    import { callGT3 } from './gt3-client.js';
+    import { buildPANarrative } from './inference-narratives.js';
+
+    // ---------- State ----------
+    let currentData = loadQuoteMeData();
+    let originalPAText = '';
+
+    // ---------- UI Elements ----------
+    const textarea = document.getElementById('pa-textarea');
+    const saveBtn = document.getElementById('btn-save-pa');
+    const approveBtn = document.getElementById('btn-approve-pa');
+    const regenerateBtn = document.getElementById('btn-regenerate-pa');
+    const statusMsg = document.getElementById('pa-status-message');
+    const approvalBadge = document.getElementById('pa-approval-badge');
+
+    // ---------- Render ----------
+    function renderPA() {
+      if (!currentData.pa || !currentData.pa.text) {
+        textarea.value = '';
+        textarea.disabled = true;
+        saveBtn.disabled = true;
+        approveBtn.disabled = true;
+        regenerateBtn.disabled = true;
+        statusMsg.className = 'alert alert-info';
+        statusMsg.textContent = 'No PA exists yet. Complete Profile onboarding to generate PA.';
+        statusMsg.classList.remove('d-none');
+        return;
+      }
+
+      const pa = currentData.pa;
+      textarea.value = pa.text;
+      originalPAText = pa.text;
+      textarea.disabled = false;
+
+      // Update approval badge
+      if (pa.paApproved) {
+        approvalBadge.innerHTML = '<span class="badge approved-badge">Approved</span>';
+        approveBtn.textContent = 'PA Approved';
+        approveBtn.classList.remove('btn-outline-success');
+        approveBtn.classList.add('btn-success');
+      } else {
+        approvalBadge.innerHTML = '<span class="badge draft-badge">Draft</span>';
+        approveBtn.textContent = 'Approve PA';
+        approveBtn.classList.remove('btn-success');
+        approveBtn.classList.add('btn-outline-success');
+      }
+
+      // Check if text was edited after approval (revoke approval)
+      if (pa.paApproved && textarea.value !== originalPAText) {
+        // Approval will be revoked on save
+      }
+
+      saveBtn.disabled = false;
+      approveBtn.disabled = !pa.text.trim();
+      regenerateBtn.disabled = !currentData.profile;
+    }
+
+    // ---------- Save PA ----------
+    saveBtn.addEventListener('click', () => {
+      if (!currentData.pa) {
+        statusMsg.className = 'alert alert-danger';
+        statusMsg.textContent = 'No PA exists. Cannot save.';
+        statusMsg.classList.remove('d-none');
+        return;
+      }
+
+      const updatedPA = updatePA(currentData.pa, textarea.value);
+      currentData.pa = updatedPA;
+      
+      if (saveQuoteMeData(currentData)) {
+        currentData = loadQuoteMeData();
+        originalPAText = textarea.value;
+        renderPA();
+        
+        statusMsg.className = 'alert alert-success';
+        statusMsg.textContent = 'PA saved successfully.';
+        statusMsg.classList.remove('d-none');
+        setTimeout(() => statusMsg.classList.add('d-none'), 3000);
+      } else {
+        statusMsg.className = 'alert alert-danger';
+        statusMsg.textContent = 'Failed to save PA. Please try again.';
+        statusMsg.classList.remove('d-none');
+      }
+    });
+
+    // ---------- Approve PA ----------
+    approveBtn.addEventListener('click', () => {
+      if (!currentData.pa) {
+        statusMsg.className = 'alert alert-danger';
+        statusMsg.textContent = 'No PA exists. Cannot approve.';
+        statusMsg.classList.remove('d-none');
+        return;
+      }
+
+      // Save current text first
+      const updatedPA = updatePA(currentData.pa, textarea.value);
+      currentData.pa = approvePA(updatedPA);
+      
+      if (saveQuoteMeData(currentData)) {
+        currentData = loadQuoteMeData();
+        originalPAText = textarea.value;
+        renderPA();
+        
+        statusMsg.className = 'alert alert-success';
+        statusMsg.textContent = 'PA approved. EP generation is now enabled.';
+        statusMsg.classList.remove('d-none');
+        setTimeout(() => statusMsg.classList.add('d-none'), 3000);
+      } else {
+        statusMsg.className = 'alert alert-danger';
+        statusMsg.textContent = 'Failed to approve PA. Please try again.';
+        statusMsg.classList.remove('d-none');
+      }
+    });
+
+    // ---------- Regenerate PA ----------
+    regenerateBtn.addEventListener('click', async () => {
+      if (!currentData.profile) {
+        statusMsg.className = 'alert alert-danger';
+        statusMsg.textContent = 'Profile not found. Cannot regenerate PA.';
+        statusMsg.classList.remove('d-none');
+        return;
+      }
+
+      const confirmed = confirm(
+        'Regenerate PA from Profile? This will overwrite the current PA and revoke approval. Continue?'
+      );
+      
+      if (!confirmed) return;
+
+      regenerateBtn.disabled = true;
+      regenerateBtn.textContent = 'Regenerating...';
+      statusMsg.className = 'alert alert-info';
+      statusMsg.textContent = 'Regenerating PA from Profile...';
+      statusMsg.classList.remove('d-none');
+
+      try {
+        const narrative = buildPANarrative(currentData.profile);
+        const result = await callGT3(narrative);
+
+        if (result.ok && result.text) {
+          // Overwrite PA and revoke approval (per StateMachineSpec)
+          const newPA = createPA(result.text);
+          newPA.paApproved = false;
+          newPA.paApprovedAt = null;
+          
+          currentData.pa = newPA;
+          if (saveQuoteMeData(currentData)) {
+            currentData = loadQuoteMeData();
+            originalPAText = result.text;
+            renderPA();
+            
+            statusMsg.className = 'alert alert-success';
+            statusMsg.textContent = 'PA regenerated successfully. Please review and approve.';
+            statusMsg.classList.remove('d-none');
+          } else {
+            throw new Error('Failed to save regenerated PA');
+          }
+        } else {
+          throw new Error(result.error || 'PA generation failed');
+        }
+      } catch (err) {
+        console.error('[PA regeneration] Error:', err);
+        statusMsg.className = 'alert alert-danger';
+        statusMsg.textContent = `Regeneration failed: ${String(err)}`;
+        statusMsg.classList.remove('d-none');
+      } finally {
+        regenerateBtn.disabled = false;
+        regenerateBtn.textContent = 'Regenerate from GT3';
+      }
+    });
+
+    // ---------- Edit detection (revoke approval on edit) ----------
+    textarea.addEventListener('input', () => {
+      if (currentData.pa && currentData.pa.paApproved && textarea.value !== originalPAText) {
+        // Approval will be revoked when saved (handled by updatePA)
+        // Visual indicator could be added here if needed
+      }
+    });
+
+    // ---------- Initialization ----------
+    renderPA();
+  </script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="gt3-file-uuid" content="69ce19f5-92dc-4bd3-a974-ddd42230852b" />
+  <title>GT2 | Legato (v11.2) • ציר חיים של מקרה</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../gt2-logo-small.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f5f5f5;
+    }
+    .lifecycle-container {
+      width: 75vw;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .event-type {
+      font-weight: 600;
+    }
+    .event-meta {
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .event-timestamp {
+      font-size: 0.8rem;
+      color: #888;
+    }
+    pre.event-text {
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      background: #fafafa;
+      border-radius: 8px;
+      padding: .5rem .75rem;
+      border: 1px solid #e0e0e0;
+    }
+    .gt2-logo {
+      height: 28px;
+      width: auto;
+    }
+  </style>
+</head>
+<body class="py-3">
+  <div class="container lifecycle-container">
+    <header class="d-flex align-items-center mb-3 gap-2">
+      <button id="btn-back" class="btn btn-outline-secondary btn-sm">⬅ חזרה לרשימת המקרים</button>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <img src="../gt2-logo-small.png" alt="GT2 logo" class="gt2-logo">
+        <h1 class="h5 m-0 text-end">GT2 | Legato • ציר חיים של מקרה</h1>
+      </div>
+    </header>
+
+    <section id="case-header" class="mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex flex-column gap-1">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="small text-muted">מזהה מקרה</div>
+              <div id="case-id-display" class="fw-semibold"></div>
+            </div>
+            <div class="text-end">
+              <div class="small text-muted">כותרת מקרה</div>
+              <div id="case-title-display" class="fw-semibold"></div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center small text-muted mt-2">
+            <span id="case-last-updated"></span>
+            <span id="case-events-count"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="timeline-section">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-semibold">ציר פעולות במאגר מקומי</span>
+          <span class="small text-muted">כרונולוגי, ללא סינון</span>
+        </div>
+        <div class="card-body p-0">
+          <div id="timeline-list" class="list-group list-group-flush"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="empty-state" class="mt-3 d-none">
+      <div class="alert alert-info small mb-0">
+        לא נמצאו אירועים עבור המקרה הזה. ייתכן שזה מקרה חדש מאוד או שנמחק השמירה המקומית.
+      </div>
+    </section>
+
+    <section id="error-state" class="mt-3 d-none">
+      <div class="alert alert-danger small mb-0" id="error-message"></div>
+    </section>
+  </div>
+
+  <script type="module">
+    const INDEX_KEY = 'gt2_cases_index';
+    const CASE_KEY  = (id) => `gt2_case_${id}`;
+
+    // --- Admin visibility toggle (Ctrl/Cmd + Alt + E) -----------------------
+    let adminVisible = true;
+
+    function updateAdminVisibility() {
+      const adminEls = document.querySelectorAll('[data-admin-only="true"]');
+      adminEls.forEach(el => {
+        const isDetails = el.dataset.adminDetails === 'true';
+        if (adminVisible) {
+          if (isDetails) {
+            // keep details collapsed by default
+            if (!el.classList.contains('d-none')) {
+              el.classList.add('d-none');
+            }
+          } else {
+            el.classList.remove('d-none');
+          }
+        } else {
+          el.classList.add('d-none');
+        }
+      });
+      console.log('[lifecycle] adminVisible =', adminVisible);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      if (isCtrlOrCmd && e.altKey && (e.key === 'e' || e.key === 'E')) {
+        adminVisible = !adminVisible;
+        updateAdminVisibility();
+      }
+    });
+
+    // ------------------------------------------------------------------------
+    function loadCaseState(caseId) {
+      try {
+        const raw = localStorage.getItem(CASE_KEY(caseId));
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed.events) parsed.events = [];
+        return parsed;
+      } catch (e) {
+        console.error('[lifecycle] failed to parse case state', e);
+        return null;
+      }
+    }
+
+    function toLocal(tsIso) {
+      if (!tsIso) return '';
+      const d = new Date(tsIso);
+      if (Number.isNaN(d.getTime())) return tsIso;
+      return d.toLocaleString();
+    }
+
+    function mapEventTypeToLabel(type) {
+      switch (type) {
+        case 'case_created': return 'מקרה נוצר';
+        case 'doc_uploaded': return 'מסמך הועלה';
+        case 'inference_success': return 'אינפרנס הצליח (תוכנית+סטטוס)';
+        case 'inference_error': return 'שגיאה באינפרנס (תוכנית+סטטוס)';
+        case 'plan_approved': return 'תוכנית אושרה';
+        case 'status_approved': return 'סטטוס אושר';
+        case 'admin_narrative_changed': return 'שינוי תבנית נרטיב (אדמין)';
+        case 'admin_default_prev_plan_changed': return 'שינוי תכנית ברירת מחדל (אדמין)';
+        case 'admin_default_status_changed': return 'שינוי סטטוס ברירת מחדל (אדמין)';
+        case 'admin_narrative_reset': return 'איפוס תבנית נרטיב (אדמין)';
+        case 'admin_default_prev_plan_reset': return 'איפוס תכנית ברירת מחדל (אדמין)';
+        case 'admin_default_status_reset': return 'איפוס סטטוס ברירת מחדל (אדמין)';
+
+        // EP-related events
+        case 'ep_inference_started': return 'בקשת אינפרנס להצעת שכ״ט נשלחה';
+        case 'ep_inference_success': return 'אינפרנס הצעת שכ״ט הצליח';
+        case 'ep_inference_error': return 'שגיאה באינפרנס הצעת שכ״ט';
+        case 'ep_approved': return 'הצעת שכר טרחה אושרה';
+
+        default: return type || 'אירוע';
+      }
+    }
+
+    function buildEventMetaText(evt) {
+      const { type, meta = {} } = evt;
+
+      if (type === 'doc_uploaded') {
+        return `שם מסמך: ${meta.fileName || 'לא ידוע'} · מספר מילים: ${meta.wordCount ?? '—'}`;
+      }
+      if (type === 'inference_error') {
+        return `שגיאה: ${(meta.message || '').toString().slice(0, 160)}`;
+      }
+      if (type === 'plan_approved' || type === 'status_approved') {
+        return `אורך: ${meta.length ?? '—'} תווים · ${meta.wordCount ?? '—'} מילים`;
+      }
+      if (type === 'inference_success' && meta.narrative) {
+        const text = meta.narrative || '';
+        const words = text ? (text.trim().match(/\S+/g) || []).length : 0;
+        return `נרטיב השתמש אינפרנס אחרון · אורך: ${text.length} תווים · ${words} מילים`;
+      }
+
+      // EP inference + approval meta text
+      if (type === 'ep_inference_started') {
+        const nWords = meta.narrativeWordCount ?? '—';
+        const tplLen = meta.templateLength ?? '—';
+        return `בקשת אינפרנס EP נשלחה · נרטיב: ${nWords} מילים · תבנית: ${tplLen} תווים`;
+      }
+      if (type === 'ep_inference_success') {
+        const len = meta.draftLength ?? '—';
+        const words = meta.draftWordCount ?? '—';
+        const dur = meta.durationMs ?? '—';
+        return `טיוטת EP התקבלה · אורך: ${len} תווים · ${words} מילים · זמן: ${dur} מ״ש`;
+      }
+      if (type === 'ep_inference_error') {
+        return `שגיאה באינפרנס EP: ${(meta.message || '').toString().slice(0, 160)}`;
+      }
+      if (type === 'ep_approved') {
+        return `הצעת שכר טרחה אושרה · אורך: ${meta.length ?? '—'} תווים · ${meta.wordCount ?? '—'} מילים`;
+      }
+
+      return '';
+    }
+
+    function renderTimeline(caseState) {
+      const listEl = document.getElementById('timeline-list');
+      const emptyState = document.getElementById('empty-state');
+
+      listEl.innerHTML = '';
+
+      const events = (caseState.events || []).slice().sort((a, b) => {
+        const ta = a.tsIso || '';
+        const tb = b.tsIso || '';
+        return ta.localeCompare(tb); // ascending chronological
+      });
+
+      document.getElementById('case-events-count').textContent =
+        `${events.length} אירועים מתועדים`;
+
+      if (!events.length) {
+        emptyState.classList.remove('d-none');
+        return;
+      } else {
+        emptyState.classList.add('d-none');
+      }
+
+      events.forEach((evt) => {
+        const item = document.createElement('div');
+        item.className = 'list-group-item';
+
+        const headerRow = document.createElement('div');
+        headerRow.className = 'd-flex justify-content-between align-items-center';
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'event-type';
+        titleSpan.textContent = mapEventTypeToLabel(evt.type);
+
+        const tsSpan = document.createElement('span');
+        tsSpan.className = 'event-timestamp';
+        tsSpan.textContent = toLocal(evt.tsIso);
+
+        headerRow.appendChild(titleSpan);
+        headerRow.appendChild(tsSpan);
+        item.appendChild(headerRow);
+
+        const metaText = buildEventMetaText(evt);
+        if (metaText) {
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'event-meta mt-1';
+          metaDiv.textContent = metaText;
+          item.appendChild(metaDiv);
+        }
+
+        const { type, meta = {} } = evt;
+
+        // Helper for expandable text blocks
+        const addExpandableBlock = (buttonLabel, sections, options = {}) => {
+          const { adminOnly = false } = options;
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn btn-link btn-sm p-0 mt-1';
+          btn.textContent = buttonLabel;
+
+          const detailsWrapper = document.createElement('div');
+          detailsWrapper.className = 'mt-2 d-none';
+
+          sections.forEach(section => {
+            if (!section.text) return;
+            if (section.title) {
+              const titleDiv = document.createElement('div');
+              titleDiv.className = 'small fw-semibold' + (section.marginTop ? ' mt-2' : '');
+              titleDiv.textContent = section.title;
+              detailsWrapper.appendChild(titleDiv);
+            }
+            const pre = document.createElement('pre');
+            pre.className = 'event-text mt-1';
+            pre.textContent = section.text;
+            detailsWrapper.appendChild(pre);
+          });
+
+          if (!detailsWrapper.childElementCount) return; // nothing to show
+
+          btn.addEventListener('click', () => {
+            detailsWrapper.classList.toggle('d-none');
+          });
+
+          if (adminOnly) {
+            btn.dataset.adminOnly = 'true';
+            detailsWrapper.dataset.adminOnly = 'true';
+            detailsWrapper.dataset.adminDetails = 'true';
+            if (!adminVisible) {
+              btn.classList.add('d-none');
+              detailsWrapper.classList.add('d-none');
+            }
+          }
+
+          item.appendChild(btn);
+          item.appendChild(detailsWrapper);
+        };
+
+        // Inference_success (plan+status) – show narrative snapshot + returned work plan & status
+        if (type === 'inference_success') {
+          const narrative = meta.narrative || '';
+
+          if (narrative) {
+            // ADMIN-ONLY: include case ID + narrative request for plan+status
+            const caseIdForDebug = caseState.caseId || '';
+            addExpandableBlock(
+              'הצג נרטיב בקשת אינפרנס -->',
+              [
+                {
+                  title: 'פרטי אינפרנס (אדמין בלבד)',
+                  text: `מזהה מקרה: ${caseIdForDebug}`,
+                  marginTop: false
+                },
+                {
+                  title: 'נרטיב שנשלח למודל:',
+                  text: narrative,
+                  marginTop: true
+                }
+              ],
+              { adminOnly: true }
+            );
+          }
+
+          // Visible to all: returned work plan + status
+          addExpandableBlock(
+            'הצג תוכנית וסטטוס מוצעים',
+            [
+              {
+                title: 'תוכנית עבודה שהוחזרה:',
+                text: meta.workPlan || '',
+                marginTop: false
+              },
+              {
+                title: 'סטטוס שהוחזר:',
+                text: meta.status || '',
+                marginTop: true
+              }
+            ]
+          );
+        }
+
+        // Plan approved – show full approved plan (with fallbacks)
+        if (type === 'plan_approved') {
+          const text =
+            meta.fullText ||
+            meta.text ||
+            meta.planText ||
+            (caseState.approvedPlan || '');
+
+          addExpandableBlock(
+            'הצג / הסתר תוכנית שאושרה',
+            [{ title: 'תוכנית עבודה שאושרה:', text: text, marginTop: false }]
+          );
+        }
+
+        // Status approved – show full approved status (with fallbacks)
+        if (type === 'status_approved') {
+          const text =
+            meta.fullText ||
+            meta.text ||
+            meta.statusText ||
+            (caseState.approvedStatus || '');
+
+          addExpandableBlock(
+            'הצג / הסתר סטטוס שאושר',
+            [{ title: 'סטטוס שאושר:', text: text, marginTop: false }]
+          );
+        }
+
+        // EP-related rich views
+        if (type === 'ep_inference_success') {
+          const narrative = meta.narrative || '';
+          const draftText =
+            meta.fullText ||
+            meta.draftText ||
+            caseState.epDraftText ||
+            '';
+
+          if (narrative) {
+            // ADMIN-ONLY: EP inference request narrative + case ID
+            const caseIdForDebug = caseState.caseId || '';
+            addExpandableBlock(
+              'הצג נרטיב בקשת EP -->',
+              [
+                {
+                  title: 'פרטי אינפרנס EP (אדמין בלבד)',
+                  text: `מזהה מקרה: ${caseIdForDebug}`,
+                  marginTop: false
+                },
+                {
+                  title: 'נרטיב שנשלח ל-GT3 עבור יצירת הצעת שכר טרחה:',
+                  text: narrative,
+                  marginTop: true
+                }
+              ],
+              { adminOnly: true }
+            );
+          }
+
+          if (draftText) {
+            // Visible to all: EP draft returned from GT3
+            addExpandableBlock(
+              'הצג / הסתר טיוטת EP שהוצעה',
+              [{
+                title: 'טיוטת הצעת שכר טרחה שהוחזרה מהמודל:',
+                text: draftText,
+                marginTop: !narrative
+              }]
+            );
+          }
+        }
+
+        // EP approved – show approved EP text
+        if (type === 'ep_approved') {
+          const approvedEp =
+            meta.fullText ||
+            caseState.approvedEpText ||
+            '';
+
+          if (approvedEp) {
+            addExpandableBlock(
+              'הצג / הסתר הצעת שכ״ט שאושרה',
+              [{
+                title: 'הצעת שכר טרחה שאושרה על ידי המשתמש:',
+                text: approvedEp,
+                marginTop: false
+              }]
+            );
+          }
+        }
+
+        listEl.appendChild(item);
+      });
+
+      // Ensure admin-only elements follow current visibility state
+      updateAdminVisibility();
+    }
+
+    function main() {
+      const params = new URLSearchParams(location.search);
+      const caseId = params.get('caseId');
+      const from   = params.get('from');
+
+      const errorState = document.getElementById('error-state');
+      const errorMsg   = document.getElementById('error-message');
+
+      if (!caseId) {
+        errorMsg.textContent = 'לא סופק מזהה מקרה בכתובת (caseId).';
+        errorState.classList.remove('d-none');
+        return;
+      }
+
+      const caseState = loadCaseState(caseId);
+      if (!caseState) {
+        errorMsg.textContent = 'לא נמצא מקרה תואם במאגר המקומי (localStorage).';
+        errorState.classList.remove('d-none');
+        return;
+      }
+
+      document.getElementById('case-id-display').textContent = caseState.caseId || caseId;
+      document.getElementById('case-title-display').textContent =
+        caseState.title || '(ללא כותרת)';
+      document.getElementById('case-last-updated').textContent =
+        'עודכן לאחרונה: ' + (toLocal(caseState.lastUpdatedIso) || 'לא ידוע');
+
+      renderTimeline(caseState);
+
+      const backBtn = document.getElementById('btn-back');
+      backBtn.addEventListener('click', () => {
+        if (from) {
+          window.location.href = decodeURIComponent(from);
+        } else if (document.referrer) {
+          window.history.back();
+        } else {
+          // Fallback
+          window.location.href = './';
+        }
+      });
+    }
+
+    main();
+  </script>
+</body>
+</html>

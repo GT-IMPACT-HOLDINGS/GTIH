@@ -1,0 +1,465 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "b544561d-d384-4dab-828d-6482b8998138",
+  "lane": "agent_broker",
+  "created_at": "2026-08-02T08:57:09.801Z",
+  "completed_at": "2026-08-02T08:57:12.782Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "msa3bx1v_886f247b",
+      "pass": "builder",
+      "plugin_id": "lexiom13.software_coding_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-08-02T08:57:09.801Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 574
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 4781
+      },
+      {
+        "index": 2,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 171
+      },
+      {
+        "index": 3,
+        "role": "tool",
+        "name": "list_files",
+        "content_chars": 89
+      },
+      {
+        "index": 4,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 89
+      },
+      {
+        "index": 5,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 31
+      },
+      {
+        "index": 6,
+        "role": "tool",
+        "name": "list_files",
+        "content_chars": 303
+      },
+      {
+        "index": 7,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 70
+      },
+      {
+        "index": 8,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 3815
+      },
+      {
+        "index": 9,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 6702
+      }
+    ],
+    "message_count": 10,
+    "packet_chars": 20189,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nInspect the frozen OSNG snapshot with list_files and read_file before authoring. Treat ./osng/ as read-only source material.\nUse write_file for complete artifact contents.\nPrimary deliverable path: index.html\nSoftware mode: produce a working index.html (and supporting assets as needed). Prefer simple static HTML/JS/CSS unless the prompt requires more.\nCall finish only when the required primary artifacts are complete and correct."
+        },
+        {
+          "role": "user",
+          "content": "# Lexiom software-coding builder\n\n## Prepared workspace\n- The CA mounts this prepared build directory as its workspace root.\n- Frozen OSNG snapshot for this run: `./osng/` (5 OSN files).\n- OSNG primer (copied): `./OSNG_Basics_README.md`\n- Optional Lexiom audit index: `./HANDOFF.json` (membership / strategy metadata).\n\n## Role and privileges\n- You are a software coding agent.\n- Read OSN YAML only under `./osng/` (read-only snapshot). Do **not** modify files under `./osng/`.\n- Write deliverables at this project root (e.g. document.md, index.html, BUILD_REPORT.md, OUTLINE.md / FILE_PLAN.md) — not into `./osng/`.\n- Do not reach outside this project for OSN sources; the snapshot is the closed universe for this build.\n- **Evidence collection is out of scope for this file.** After primary deliverables exist, use the sibling `EVIDENCE_AGENT_PROMPT.md` (index: `./EVIDENCE_PLAN.json`).\n\n## How to learn OSN structure (authoritative — do not skip)\n- Open the compilation-root `*.osn.yaml` under `./osng/` and read its leading `#` comment header first. That header is the primary description of OSN fields and `graph.parent_osn_ids` / `graph.child_osn_ids` / `standard_ancestor_osn_ids` linking.\n- Treat that header as future-ready schema documentation: if headers evolve, follow the file you opened — do not invent a parallel schema from this prompt.\n- For filesystem identity and header/README pairing, also read: `./OSNG_Basics_README.md`\n- When path prefixes and `graph.*` disagree, `graph.*` is authoritative (as stated in the OSN header).\n\n## Compilation root and scope\n- Compilation root OSN id: GT_Philosophy.ProductLexiom.a1000002.osn\n- Compilation root path (in this project): `./osng/GT_Philosophy.ProductLexiom.a1000002.osn.yaml`\n- Open that root file first (after reading its header). Use its `seed` + `output_spec` as the primary outcome contract for this build.\n- Scope: self_and_approved_descendants; profile: static_spa_coding_agent\n- **Closure rule:** only files present under `./osng/` participate. Discover them via `graph.*` links. Sibling branches that were not snapshotted are simply absent — do not invent or fetch them from elsewhere.\n\n## Strategy (how to traverse via graph.*)\nstrategy_id: ancestor_first_dfs\nHonor Standard → Root → Experience → Implementation precedence on conflicts (roles from node_type / discipline / output_spec, not fixed names).\n- Walk **pre-order (ancestor-first):** visit the current node, then recurse each `graph.child_osn_ids` entry in listed order.\n- Open Standard / primary-parent ancestors in scope before deep leaf work when the strategy reaches them via `graph.parent_osn_ids` / `standard_ancestor_osn_ids`.\n- At each node: open the YAML under `./osng/`, read the header if needed, then extract `seed`, `output_spec`, `thematic_lenses`, `success_evidences`, and `graph` as needed for the artifact.\n- Resolve `id` / `file_name` to a snapshotted `*.osn.yaml` under `./osng/` (directory layout mirrors Lexiom_1_3; `graph.*` remains authoritative).\n- Do not paste or assume OSN bodies from memory; pull requirements from the files you open.\n\n## Artifact contract\n- Produce a runnable software tree matching the compilation root and descendant output_specs you extract from disk.\n- Default when unspecified: static web client (index.html + script + stylesheet or equivalent).\n- Always write BUILD_REPORT.md listing included OSN ids you actually used, strategy, primary files, gaps, and which OSN supplied each major decision.\n\n## Non-goals\n- No inventing backends/auth/billing/DB unless OSNs require them.\n- Do not modify files under ./osng/ (snapshot is read-only).\n- Do not copy OSN YAML into deliverables as a substitute for reading ./osng/.\n\n## Conflict precedence (when Concordance is unavailable)\n- Standard ancestor invariants (governance, approval, evidence)\n- Compilation root product outcome / in-scope list\n- Experience / interaction discipline OSNs\n- Implementation / code-shape discipline OSNs\n- Record unresolved conflicts in BUILD_REPORT.md rather than inventing a silent merge.\n\n## Extraction protocol\n1. Read compilation-root header + `./OSNG_Basics_README.md`.\n2. Traverse via graph.* among files under `./osng/`, using strategy_id walk rules above.\n3. For each visited OSN, extract only what the artifact needs (prefer `output_spec`; use `seed` for intent). Do not collect evidence files here.\n4. Produce the artifact at the project root.\n5. Write BUILD_REPORT.md with provenance (OSN id → contribution).\n\n## Agent execution\n- Inspect source files through the CA workspace tools; do not assume contents from filenames.\n- Write primary artifacts through the CA workspace tools and finish only after verification.\n- Evidence generation remains a separate Step 5 pass described by `EVIDENCE_AGENT_PROMPT.md`.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "I'll begin by inspecting the workspace structure and understanding the OSN snapshot, then traverse the compilation root to extract requirements and build the deliverables.",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_015NR1YeikHbSesPoMPDbGGQ",
+              "function": {
+                "name": "list_files",
+                "arguments": "{\"path\": \".\", \"depth\": 2}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01M8iRXy7eS7cbMGEgqHt6Sa",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"./OSNG_Basics_README.md\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_015NR1YeikHbSesPoMPDbGGQ",
+          "name": "list_files",
+          "content": "{\"ok\":false,\"error\":\"path_invalid\",\"detail\":\"Workspace path contains an invalid segment\"}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01M8iRXy7eS7cbMGEgqHt6Sa",
+          "name": "read_file",
+          "content": "{\"ok\":false,\"error\":\"path_invalid\",\"detail\":\"Workspace path contains an invalid segment\"}"
+        },
+        {
+          "role": "assistant",
+          "content": "Let me try with a simpler path:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01FRrhrtNoQwRHY3WuFnHcvn",
+              "function": {
+                "name": "list_files",
+                "arguments": "{\"path\": \"osng\", \"depth\": 2}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01FRrhrtNoQwRHY3WuFnHcvn",
+          "name": "list_files",
+          "content": "{\"ok\":true,\"files\":[\"osng/GT_Philosophy.ProductLexiom.CodeShape.a1000004.osn.yaml\",\"osng/GT_Philosophy.ProductLexiom.GameificationFlow.4efab5ba.osn.yaml\",\"osng/GT_Philosophy.ProductLexiom.UX.a1000003.osn.yaml\",\"osng/GT_Philosophy.ProductLexiom.a1000002.osn.yaml\",\"osng/GT_Philosophy.a1000001.osn.yaml\"]}"
+        },
+        {
+          "role": "assistant",
+          "content": "Good. Now let me read the OSNG_Basics_README and the compilation root:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01P27usJnpp8MvMSDq8Xtfnz",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"OSNG_Basics_README.md\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01HUXb8nZFB1ug1XToWxWsUM",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/GT_Philosophy.ProductLexiom.a1000002.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01P27usJnpp8MvMSDq8Xtfnz",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"OSNG_Basics_README.md\",\"content\":\"# OSNG Basics — Filenames as Graph Structure\\n\\nAn **Outcome Specification Node (OSN)** is a human-owned semantic source file. An **OSN Graph (OSNG)** is those nodes plus their relationships to each other and to evidentiary artifacts. This note describes the **filename conventions** that make those relationships readable from the filesystem alone.\\n\\nEvery live `*.osn.yaml` at or below this `Lexiom_1_3` directory opens with the same YAML comment header summarizing OSN fields and `graph.*` linking. The runtime discovers these files recursively, so domain subdirectories such as `Branding/` may organize cohesive OSN subgraphs without changing graph semantics. Treat that header and this README as a pair: the header is the in-file primer; this README is the filesystem-facing map (including evidence-artifact naming).\\n\\n## OSN identity\\n\\nEach live node is stored as:\\n\\n```text\\n{hierarchical.path}.{unique_id}.osn.yaml\\n```\\n\\nInside the file, `id` and `file_name` match the stem (without `.yaml`), for example `OrgStandard.ProductX.UX.a1000003.osn`.\\n\\nDirectory placement is organizational rather than semantic. A node may live at the\\n`Lexiom_1_3` root or in any nested directory; `graph.parent_osn_ids` and\\n`graph.child_osn_ids` remain authoritative across directory boundaries. New nodes\\ncanonized through the runtime are stored beside their primary parent.\\n\\nDot-separated **path segments** before the unique id encode ancestry. A child’s stem extends its parent’s path by one origin leaf, then adds a new unique id. From filenames alone you can sketch hierarchy:\\n\\n```text\\nOrgStandard.a1000001.osn\\n└── OrgStandard.ProductX.a1000002.osn\\n    ├── OrgStandard.ProductX.UX.a1000003.osn\\n    └── OrgStandard.ProductX.CodeShape.a1000004.osn\\n```\\n\\nAuthoritative parent/child links also live in each OSN’s `graph.parent_osn_ids` / `graph.child_osn_ids`. Prefer those fields when they disagree with path prefixes; use prefixes as a fast map of a well-formed tree.\\n\\n## Evidentiary artifacts\\n\\nAn OSN declares inspection contracts under `success_evidences` (`evidence_id`, `kind`, …) but does **not** embed the demo file path. Artifacts are named so the link is recoverable:\\n\\n```text\\n{osn.file_name}.{evidence_id}.{version}.{extension}\\n```\\n\\nExample: `OrgStandard.ProductX.UX.a1000003.osn.sev.ux.screenshot.v2.png`\\n\\n- **OSN stem** — the segment ending in `.osn` points at `{stem}.yaml`.\\n- **evidence_id** — usually begins with `sev.` and matches that OSN’s `success_evidences`.\\n- **version** — e.g. `v1`, `v2` (newer preferred when both exist).\\n- **extension** — follows `kind` (`TEXTUAL_SNIPPET` → `.md` / `.js` / `.txt`; `SCREEN-SHOT` → image; `VIDEO-CLIP` → video; derivative `markdown_brief` → `.md`).\\n\\nGiven only an artifact name, split on the `.osn.` / `sev.` / `vN` pattern to recover which OSN requested it and which evidence slot it fills. Given only an OSN file, list evidence files whose names start with that OSN’s `file_name`.\\n\\n## Quick checklist\\n\\n1. Recursively list live `*.osn.yaml` below `Lexiom_1_3/` → nodes; exclude `*.tomb.osn.yaml`.\\n2. Nest by path prefix → candidate tree; confirm with `graph.*`.\\n3. Parse evidence filenames → edges from nodes to artifacts.\\n4. For filename conventions and evidence linkage detail, keep this README open beside any OSN header.\\n\\n## Build plugins (related)\\n\\nWhen compiling an OSNG branch into a delivered artifact via an external agent, see [`BuildPlugins/Lexiom_1_3_Build_Plugin_Contract_1_0.md`](BuildPlugins/Lexiom_1_3_Build_Plugin_Contract_1_0.md) and the document / software-coding plugin companions in that folder. Build plugins treat `graph.*` as the authoritative traversal order and must not write OSN YAML.\\n\",\"offset\":0,\"content_chars\":3651,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01HUXb8nZFB1ug1XToWxWsUM",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/GT_Philosophy.ProductLexiom.a1000002.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.ProductLexiom.a1000002.osn\\nfile_name: GT_Philosophy.ProductLexiom.a1000002.osn\\nnode_type: product\\ntitle: the Lexiom Application\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Product OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.a1000001.osn\\n  child_osn_ids:\\n    - GT_Philosophy.ProductLexiom.UX.a1000003.osn\\n    - GT_Philosophy.ProductLexiom.CodeShape.a1000004.osn\\n    - GT_Philosophy.ProductLexiom.GameificationFlow.4efab5ba.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: null\\nseed: >\\n  Demonstrate Lexiom 1.3.3 through a calm, welcoming single-page application where a first-time user\\n  encounters OSNs (Outcome Specification Nodes) as owned, evidence-backed, file-like semantic source\\n  artifacts. Owned semantic source files expressing human intention and evidence.\\nthematic_lenses:\\n  - lens_id: lens.product.ux\\n    name: UX\\n    purpose: Make the first encounter clear, quiet, and self-explanatory.\\n  - lens_id: lens.product.code_shape\\n    name: Code Shaping\\n    purpose: Keep the POC deterministic, simple, inspectable, and buildable as one SPA.\\noutput_spec: |-\\n  1. Step into Lexiom 1.3.3 as a calm, welcoming SPA where newcomers meet OSNs as owned,\\n  evidence-backed, file-like semantic artifacts — then explore UX and Code Shaping below for how\\n  to rebuild that product surface.\\n\\n  ## UX\\n  2. Ship one welcoming single-page cockpit that presents the OSN graph as playable semantic\\n  source, with default Focus on ProductLexiom and default section Output Spec.\\n  3. Keep ProductLexiom discipline children (UX, CodeShape, GameificationFlow) and sibling\\n  BrandLexiom discoverable in the same graph so the product outcome stays graph-native.\\n  4. Orient the welcome narrative so machine output arrives as draft and only human approval\\n  makes semantic source canonical.\\n  5. Expose section glyphs, owner/name meta, evidence tray, Causal Lineage Chat, and optional\\n  filters as the product self-explanatory encounter — without auth, billing, or multi-user flows.\\n  6. Use VS Code Dark Modern (and light) tokens plus edge-fill when the title is muted so the\\n  product feels like a calm editor workspace.\\n  7. Keep the bottom ribbon as Causal Lineage Chat when evidence is open, otherwise the quiet\\n  “Semantic actions — coming soon” placeholder.\\n  8. When Top bar is on, show L2 lens chips with deepening ×N pass badges as part of the product\\n  teach surface.\\n  9. Open evidence artifacts into the center viewer stack (image/video/text/code) beside lineage\\n  proposal cards.\\n\\n\\n  ## Code Shaping\\n  10. Implement Lexiom 1.3 as one inspectable SPA co-hosted on the GT3 Node server beside\\n  canonical OSN YAML under public/gt2/Lexiom_1_3/ (recursive list with ProductLexiom quartet\\n  fallback).\\n  11. Load and navigate OSNs by hierarchical id/file_name with origin-leaf labels; treat graph.*\\n  links as authoritative across nested directories.\\n  12. Persist canonical changes only through explicit approve to /lexiom13/osn/save create,\\n  update, or prune; keep drafts, evidence approvals, filters, and action history session-only.\\n  13. Drive mutations through dispatchWhiteMove → white reduce → black side-effects so LM and\\n  disk writes stay non-silent.\\n  14. When Build controls is enabled, map ProductLexiom / UX / CodeShape to the software-coding\\n  builder and BrandLexiom to the document builder; show a Build handoff/report child, not the\\n  delivered artifact.\\n  15. Poll Focus-closure evidence collections (default 5s) and overlay build-collected artifacts\\n  on bundled demos without auto-approving them.\\n  16. Support GT3-backed lens reframing, maturation proposals, optional cockpit title, and\\n  evidence-scoped causal asks via POST /inference without silent canonization of LM text.\\n  17. Branch immature NewBranch_* shells, remount identity on approved OSN-name edits, and\\n  promote placeholder leaves before canonize.\\n  18. Provide the draft editor (gutter, Markdown lite, Tab→spaces, green insert diffs) as the\\n  product editing surface.\\n  19. Remember core section keys across Focus moves; fall back to output_spec from meta/build\\n  views.\\n  20. Guard overlapping lens/maturation/persist/prune/causal work with in-flight flags.\\n  21. Document known POC limits: session-only action log, no durable Move ledger, and current\\n  side-panel branch/prune/build/lens/evidence actions as center-only execution divergences.\\n  22. Do not invent authentication, billing, collaboration, or a product database in this POC\\n  rebuild scope.\\nsuccess_evidences:\\n  - evidence_id: sev.product.osn_navigation_video\\n    kind: VIDEO-CLIP\\n    direct: true\\n    inspection_prompt: >-\\n      Open the welcome SPA in a browser. Record a short screen-capture video. In the recording,\\n      select ProductLexiom and then UX using left-graph leaf labels; from UX, use the ▶ sibling\\n      glyph to move to CodeShape. Show that each selected OSN sits near the top quarter of the\\n      clipped left graph with fitted ancestors above and descendants below. Use at least one section\\n      glyph from the center section strip on a Focus OSN, then enable the Build controls filter and\\n      click one build glyph so a Build child appears and its build handoff/report card opens in the\\n      center playfield. Deliver the video file as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: true\\n  compilation_scope: self_and_approved_descendants\\n  target_tool_profile: static_spa_coding_agent\\n\",\"offset\":0,\"content_chars\":6454,\"truncated\":false}"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "list_files",
+            "description": "List files in the mounted build workspace.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Relative directory; omit for workspace root."
+                },
+                "depth": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 6
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "read_file",
+            "description": "Read UTF-8 text from a relative workspace file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60000
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "run_command",
+            "description": "Run a bounded command in the software workspace.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "command": {
+                  "type": "string"
+                },
+                "args": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 32
+                },
+                "cwd": {
+                  "type": "string"
+                },
+                "timeout_ms": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 120000
+                }
+              },
+              "required": [
+                "command"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "finish",
+            "description": "Finish only after required artifacts are present and ready for validation.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 12000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-08-02T08:57:12.771Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "Excellent. Now let me read the parent Standard OSN and the three child OSNs to understand the full scope:",
+    "assistant_content_chars": 105,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 6272,
+      "completion_tokens": 276,
+      "total_tokens": 6548,
+      "cost": 0.007652,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.007652,
+        "upstream_inference_prompt_cost": 0.006272,
+        "upstream_inference_completions_cost": 0.00138
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785661028-iTfAuycXS9yq2hoHGQxW",
+      "object": "chat.completion",
+      "created": 1785661028,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "Excellent. Now let me read the parent Standard OSN and the three child OSNs to understand the full scope:",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_01Rv9CJBpsUdWYZYEkRtW5YE",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/GT_Philosophy.a1000001.osn.yaml\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 1,
+                "id": "toolu_bdrk_01CVEqQ86RksRnRikHg2xenZ",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/GT_Philosophy.ProductLexiom.UX.a1000003.osn.yaml\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 2,
+                "id": "toolu_bdrk_01V9fssjG62scdYHfmirXaq1",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/GT_Philosophy.ProductLexiom.CodeShape.a1000004.osn.yaml\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 3,
+                "id": "toolu_bdrk_01KJjD98KG484YR1cKaKTX8r",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/GT_Philosophy.ProductLexiom.GameificationFlow.4efab5ba.osn.yaml\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 6272,
+        "completion_tokens": 276,
+        "total_tokens": 6548,
+        "cost": 0.007652,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.007652,
+          "upstream_inference_prompt_cost": 0.006272,
+          "upstream_inference_completions_cost": 0.00138
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 2982,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

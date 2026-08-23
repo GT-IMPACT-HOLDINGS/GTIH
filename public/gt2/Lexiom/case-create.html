@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n-title="case_create_page_title">Lexiom — New case</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="landing.css" />
+  <link rel="stylesheet" href="case-create.css" />
+</head>
+<body class="lexiom-body lexiom-case-create-mode">
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search || "");
+        if (params.get("bypassFirstEntry") === "1") return;
+        var raw = window.localStorage.getItem("lexiom_first_entry_profile_v1");
+        var profile = raw ? JSON.parse(raw) : null;
+        if (!profile || !profile.approved) {
+          window.location.replace("/gt2/Lexiom/landing.html");
+        }
+      } catch (_) {
+        window.location.replace("/gt2/Lexiom/landing.html");
+      }
+    })();
+  </script>
+  <div id="lexiom-main-wrap" class="lexiom-main-wrap">
+    <div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+      <div id="lexiom-cabinet" class="lexiom-cabinet border">
+        <main class="lexiom-main flex-grow-1 d-flex flex-column">
+          <header
+            class="lexiom-top-hud d-flex flex-column justify-content-center align-items-center text-center"
+          >
+            <div class="lexiom-top-hud-l1 fw-bold text-center" data-i18n="case_create_main_title">
+              CREATE A CASE
+            </div>
+            <div class="lexiom-onboarding-copy mt-2 small text-secondary" data-i18n="case_create_intro">
+              Frame the matter or point to a folder.
+            </div>
+          </header>
+
+          <section class="flex-grow-1 d-flex justify-content-center align-items-start py-3 lexiom-case-create-section">
+            <div class="lexiom-case-create-outer d-flex flex-column align-items-stretch w-100">
+              <div class="lexiom-onboarding-card lexiom-case-create-card">
+                <div class="lexiom-case-create-playfield-grid">
+                  <div class="lexiom-case-create-section-card d-flex flex-column">
+                    <div class="lexiom-case-create-grid-body lexiom-case-create-grid-body--intent d-flex flex-column">
+                      <label for="case-create-intent" class="visually-hidden">Case framing</label>
+                      <textarea
+                        id="case-create-intent"
+                        class="form-control lexiom-onboarding-textarea flex-lg-grow-1 lexiom-case-create-intent-textarea"
+                        rows="6"
+                        maxlength="8000"
+                        placeholder="What is this case about?"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div class="lexiom-case-create-section-card d-flex flex-column">
+                    <div class="lexiom-case-create-grid-body lexiom-case-create-grid-body--folder d-flex flex-column">
+                      <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <button id="case-create-pick-folder" type="button" class="btn btn-sm lexiom-clickable lexiom-onboarding-btn-secondary" data-i18n="case_create_choose_folder">
+                          Choose folder for case
+                        </button>
+                      </div>
+                      <div class="lexiom-case-create-folder-feedback mt-2">
+                        <div id="case-create-folder-details" class="lexiom-onboarding-copy small mt-2" hidden>
+                          <div><span data-i18n="case_create_folder_name">Folder name:</span> <code id="case-create-folder-name"></code></div>
+                        </div>
+                        <div id="case-create-file-list-wrap" class="lexiom-onboarding-copy small mt-2" hidden>
+                          <div><span data-i18n="case_create_files_list_label">Files:</span></div>
+                          <ul id="case-create-file-list" class="lexiom-case-create-file-list mb-0"></ul>
+                        </div>
+                        <p id="case-create-fs-api-warning" class="lexiom-onboarding-copy small text-warning mt-2" data-i18n="case_create_fs_warning" hidden>
+                          Folder pick requires a Chromium-based browser (e.g. Chrome or Edge). You can continue with your text answer only.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3 d-flex flex-wrap gap-2 justify-content-center align-items-center lexiom-case-create-actions" id="case-create-actions-row" hidden>
+                <button id="case-create-enter" type="button" class="btn btn-sm lexiom-clickable lexiom-onboarding-btn-primary" data-i18n="case_create_enter_cabinet" hidden>
+                  Enter
+                </button>
+              </div>
+
+              <div id="case-create-error" class="lexiom-onboarding-error mt-3" hidden></div>
+              <div id="case-create-busy" class="lexiom-onboarding-copy small mt-2" data-i18n="case_create_working" hidden>Working…</div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script src="gt3-client.js"></script>
+  <script src="lexiom-i18n.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script src="case-create.js"></script>
+</body>
+</html>

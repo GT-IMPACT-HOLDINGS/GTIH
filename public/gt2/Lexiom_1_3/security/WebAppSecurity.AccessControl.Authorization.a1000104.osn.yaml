@@ -1,0 +1,85 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: WebAppSecurity.AccessControl.Authorization.a1000104.osn
+file_name: WebAppSecurity.AccessControl.Authorization.a1000104.osn
+node_type: discipline
+discipline: Authorization
+title: Authorization
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Authorization OSN Owner
+graph:
+  parent_osn_ids:
+    - WebAppSecurity.AccessControl.a1000101.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.security.access_control.professional_craft
+seed: >-
+  Allow only the actions and resources each authenticated actor is permitted —
+  enforcing object-level and function-level checks so ID guessing cannot cross
+  ownership or role boundaries.
+thematic_lenses:
+  - lens_id: lens.security.authorization.professional_craft
+    name: Authorization
+    purpose: Apply authorization judgment to this outcome.
+  - lens_id: lens.security.authorization.object_boundaries
+    name: Object Boundaries
+    purpose: Keep per-resource ownership and tenancy checks unavoidable.
+  - lens_id: lens.security.authorization.evidence
+    name: Evidence and Claims
+    purpose: Require inspectable delivery and classify claims according to available proof.
+output_spec: |-
+  1. Come explore how Lexiom 1.3 currently allows only permitted actions and resources — then
+  explore Authorization, Object Boundaries, and Evidence and Claims below for the code-backed
+  rebuild contract.
+  
+  ## Authorization
+  2. Live as navigable AccessControl leaf YAML under security/ with reciprocal parent link to
+  AccessControl.
+  3. Enforce relative-path sandboxing for browser-CA tool writes (list/read/write/run_command)
+  via sealedOsngBounds — deny path escape rather than trusting the model transcript.
+  4. Keep evidence-collection write authority on the host path; refuse browser-CA evidence Jobs
+  so the player container cannot self-authorize evidence artifacts.
+  
+  ## Object Boundaries
+  5. Keep OSN identity hierarchical (id === file_name) and persist/prune only through explicit
+  White Move save paths — do not invent cross-owner object ACLs the POC does not implement.
+  6. Do not invent horizontal multi-tenant authorization UI or IDOR defenses beyond the current
+  single-demo tenant headers and filesystem save contract.
+  
+  ## Evidence and Claims
+  7. Inspect fulfillment via TEXTUAL_SNIPPET evidence quoted from a delivered authorization
+  review or hardening artifact (SUD), never from this OSN's own seed, lenses, or output_spec.
+success_evidences:
+  - evidence_id: sev.security.authorization.delivered_artifact
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered authorization review or hardening artifact (SUD), extract
+      a single readable quoted passage that shows how the application fulfills this
+      node's outcome: Allow only the actions and resources each authenticated actor
+      is permitted — enforcing object-level and function-level checks so ID guessing
+      cannot cross ownership or role boundaries. The quote must come from the
+      delivered artifact itself — not from this OSN's seed, lenses, or output_spec.
+      Deliver the snippet as the evidence artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

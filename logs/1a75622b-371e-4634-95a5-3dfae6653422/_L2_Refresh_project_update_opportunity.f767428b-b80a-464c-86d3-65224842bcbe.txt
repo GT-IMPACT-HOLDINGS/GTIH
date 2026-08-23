@@ -1,0 +1,199 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: f767428b-b80a-464c-86d3-65224842bcbe
+Timestamp: 2026-05-24T11:20:45.383Z
+LexiomNarrativeContract: 1
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Lawyer profile. Anchor your guidance to this approved identity: "אני עורך דין המתמחה בפרויקטי פינוי בינוי והתחדשות עירונית, ואני כאן להעניק ללקוחות שלי פתרונות משפטיים איכותיים ומדויקים.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. An artifact draft has just been approved.
+
+CASE SEED NARRATIVE:
+## נarrative Case Seed
+
+### פרטי המקרה
+
+הלקוחות שלי הם הדיירים במתחם הל"ה 5-7 בגבעתיים, אשר מעוניינים להתעדכן בפרויקט פינוי-בינוי המתקדם באזורם. הפרויקט מתנהל בשיתוף פעולה בין חברת אביב לבין חברת אקרו, כאשר 71% מבעלי הדירות כבר חתמו על ההסכם.
+
+### תהליך הפרויקט
+
+במסגרת הפרויקט, הלקוחות שלי ייהנו מתוספות משמעותיות לדירותיהם, כולל שטח נוסף של 25 מ"ר, מרפסת שמש, מחסן וחניה. היזם מתחייב להקים בניינים חדשים עם מספר קומות שיתאים לתב"ע החדשה שתקודם על ידי העירייה.
+
+ההסכם המוצע כולל את כל ההיבטים המשפטיים והפיננסיים הנדרשים, והיזם יישא בעלויות הקמת הפרויקט, כולל שכר טרחת עורכי דין עבור הדיירים. 
+
+### עדכונים והזדמנויות
+
+נכון לעכשיו, הלקוחות שלי מוזמנים לחתום על המסמך הנוגע לשינוי השליטה בחברה המקדמת את הפרויקט. חתימה זו תאפשר לחברת אקרו להחזיק ב-51% מהמניות, בעוד חברת אביב תחזיק ב-49%. 
+
+הלקוחות שלי מתבקשים לתאם פגישה עם עו"ד רועי צרפתי, בא כוחם, על מנת לחתום על ההסכם ולוודא את זכויותיהם בפרויקט. 
+
+### סיכום
+
+הפרויקט מציע הזדמנות משמעותית לשדרוג איכות החיים של הדיירים, עם התחייבות להקמת מבנים חדשים ומודרניים. אנו נמשיך לעדכן את הלקוחות שלי בכל התפתחויות נוספות.
+
+APPROVED ARTIFACT: "case_seed.md"
+Artifact narrative (synthesize this into the tail of your proposed case description):
+## נarrative Case Seed
+
+### פרטי המקרה
+
+הלקוחות שלי הם הדיירים במתחם הל"ה 5-7 בגבעתיים, אשר מעוניינים להתעדכן בפרויקט פינוי-בינוי המתקדם באזורם. הפרויקט מתנהל בשיתוף פעולה בין חברת אביב לבין חברת אקרו, כאשר 71% מבעלי הדירות כבר חתמו על ההסכם.
+
+### תהליך הפרויקט
+
+במסגרת הפרויקט, הלקוחות שלי ייהנו מתוספות משמעותיות לדירותיהם, כולל שטח נוסף של 25 מ"ר, מרפסת שמש, מחסן וחניה. היזם מתחייב להקים בניינים חדשים עם מספר קומות שיתאים לתב"ע החדשה שתקודם על ידי העירייה.
+
+ההסכם המוצע כולל את כל ההיבטים המשפטיים והפיננסיים הנדרשים, והיזם יישא בעלויות הקמת הפרויקט, כולל שכר טרחת עורכי דין עבור הדיירים. 
+
+### עדכונים והזדמנויות
+
+נכון לעכשיו, הלקוחות שלי מוזמנים לחתום על המסמך הנוגע לשינוי השליטה בחברה המקדמת את הפרויקט. חתימה זו תאפשר לחברת אקרו להחזיק ב-51% מהמניות, בעוד חברת אביב תחזיק ב-49%. 
+
+הלקוחות שלי מתבקשים לתאם פגישה עם עו"ד רועי צרפתי, בא כוחם, על מנת לחתום על ההסכם ולוודא את זכויותיהם בפרויקט. 
+
+### סיכום
+
+הפרויקט מציע הזדמנות משמעותית לשדרוג איכות החיים של הדיירים, עם התחייבות להקמת מבנים חדשים ומודרניים. אנו נמשיך לעדכן את הלקוחות שלי בכל התפתחויות נוספות.
+
+TASK: Propose an updated case identity and description.
+Line 1: A 1–4 word case identity title semantically aligned with the seed narrative and synthesizing the approved artifact.
+Line 2: A 9–15 word summary of the case that integrates the seed and the approved artifact's content at the tail.
+OUTPUT: Return exactly two lines. Line 1 = title. Line 2 = summary. No numbers, bullets, or extra commentary.
+
+VOICE / REPRESENTATION (Lexiom cabinet):
+- The player is acting as a professional representative.
+- Professional role (from player profile): Lawyer.
+- Principal / party you are representing in outward-facing correspondence drafts: "הלקוחות שלי".
+- When drafting letters, emails, formal demands, or similar outbound artifacts, write as the professional speaking on behalf of that principal.
+- Prefer phrasing like: "on behalf of הלקוחות שלי", "our client", "for my employer", or equivalent natural representative framing.
+- Avoid first-person beneficiary framing that implies the player personally is the private party (e.g., "my security deposit") when the matter clearly concerns the represented principal; use the principal's perspective instead.
+- If the case seed explicitly indicates the player is the direct party, you may use first-person for the player; otherwise default to representative voice for external-facing drafts.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Refresh_ followed by four words (underscore-separated) that capture the refreshed L1/L2 content, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Lawyer profile. Anchor your guidance to this approved identity: "אני עורך דין המתמחה בפרויקטי פינוי בינוי והתחדשות עירונית, ואני כאן להעניק ללקוחות שלי פתרונות משפטיים איכותיים ומדויקים.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. An artifact draft has just been approved.
+
+CASE SEED NARRATIVE:
+## נarrative Case Seed
+
+### פרטי המקרה
+
+הלקוחות שלי הם הדיירים במתחם הל"ה 5-7 בגבעתיים, אשר מעוניינים להתעדכן בפרויקט פינוי-בינוי המתקדם באזורם. הפרויקט מתנהל בשיתוף פעולה בין חברת אביב לבין חברת אקרו, כאשר 71% מבעלי הדירות כבר חתמו על ההסכם.
+
+### תהליך הפרויקט
+
+במסגרת הפרויקט, הלקוחות שלי ייהנו מתוספות משמעותיות לדירותיהם, כולל שטח נוסף של 25 מ"ר, מרפסת שמש, מחסן וחניה. היזם מתחייב להקים בניינים חדשים עם מספר קומות שיתאים לתב"ע החדשה שתקודם על ידי העירייה.
+
+ההסכם המוצע כולל את כל ההיבטים המשפטיים והפיננסיים הנדרשים, והיזם יישא בעלויות הקמת הפרויקט, כולל שכר טרחת עורכי דין עבור הדיירים. 
+
+### עדכונים והזדמנויות
+
+נכון לעכשיו, הלקוחות שלי מוזמנים לחתום על המסמך הנוגע לשינוי השליטה בחברה המקדמת את הפרויקט. חתימה זו תאפשר לחברת אקרו להחזיק ב-51% מהמניות, בעוד חברת אביב תחזיק ב-49%. 
+
+הלקוחות שלי מתבקשים לתאם פגישה עם עו"ד רועי צרפתי, בא כוחם, על מנת לחתום על ההסכם ולוודא את זכויותיהם בפרויקט. 
+
+### סיכום
+
+הפרויקט מציע הזדמנות משמעותית לשדרוג איכות החיים של הדיירים, עם התחייבות להקמת מבנים חדשים ומודרניים. אנו נמשיך לעדכן את הלקוחות שלי בכל התפתחויות נוספות.
+
+APPROVED ARTIFACT: "case_seed.md"
+Artifact narrative (synthesize this into the tail of your proposed case description):
+## נarrative Case Seed
+
+### פרטי המקרה
+
+הלקוחות שלי הם הדיירים במתחם הל"ה 5-7 בגבעתיים, אשר מעוניינים להתעדכן בפרויקט פינוי-בינוי המתקדם באזורם. הפרויקט מתנהל בשיתוף פעולה בין חברת אביב לבין חברת אקרו, כאשר 71% מבעלי הדירות כבר חתמו על ההסכם.
+
+### תהליך הפרויקט
+
+במסגרת הפרויקט, הלקוחות שלי ייהנו מתוספות משמעותיות לדירותיהם, כולל שטח נוסף של 25 מ"ר, מרפסת שמש, מחסן וחניה. היזם מתחייב להקים בניינים חדשים עם מספר קומות שיתאים לתב"ע החדשה שתקודם על ידי העירייה.
+
+ההסכם המוצע כולל את כל ההיבטים המשפטיים והפיננסיים הנדרשים, והיזם יישא בעלויות הקמת הפרויקט, כולל שכר טרחת עורכי דין עבור הדיירים. 
+
+### עדכונים והזדמנויות
+
+נכון לעכשיו, הלקוחות שלי מוזמנים לחתום על המסמך הנוגע לשינוי השליטה בחברה המקדמת את הפרויקט. חתימה זו תאפשר לחברת אקרו להחזיק ב-51% מהמניות, בעוד חברת אביב תחזיק ב-49%. 
+
+הלקוחות שלי מתבקשים לתאם פגישה עם עו"ד רועי צרפתי, בא כוחם, על מנת לחתום על ההסכם ולוודא את זכויותיהם בפרויקט. 
+
+### סיכום
+
+הפרויקט מציע הזדמנות משמעותית לשדרוג איכות החיים של הדיירים, עם התחייבות להקמת מבנים חדשים ומודרניים. אנו נמשיך לעדכן את הלקוחות שלי בכל התפתחויות נוספות.
+
+TASK: Propose an updated case identity and description.
+Line 1: A 1–4 word case identity title semantically aligned with the seed narrative and synthesizing the approved artifact.
+Line 2: A 9–15 word summary of the case that integrates the seed and the approved artifact's content at the tail.
+OUTPUT: Return exactly two lines. Line 1 = title. Line 2 = summary. No numbers, bullets, or extra commentary.
+
+VOICE / REPRESENTATION (Lexiom cabinet):
+- The player is acting as a professional representative.
+- Professional role (from player profile): Lawyer.
+- Principal / party you are representing in outward-facing correspondence drafts: "הלקוחות שלי".
+- When drafting letters, emails, formal demands, or similar outbound artifacts, write as the professional speaking on behalf of that principal.
+- Prefer phrasing like: "on behalf of הלקוחות שלי", "our client", "for my employer", or equivalent natural representative framing.
+- Avoid first-person beneficiary framing that implies the player personally is the private party (e.g., "my security deposit") when the matter clearly concerns the represented principal; use the principal's perspective instead.
+- If the case seed explicitly indicates the player is the direct party, you may use first-person for the player; otherwise default to representative voice for external-facing drafts.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Refresh_ followed by four words (underscore-separated) that capture the refreshed L1/L2 content, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM outbound — loving_only ===
+{
+  "logged_at": "2026-05-24T11:20:45.386Z",
+  "variant": "loving_only",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise assistant responding to a single narrative. Output clean, ready-to-display text.\n\nIf the user asks for the name of the language model or assistant used for this inference, say you are GT3 (Generative Team Trained Transformer)."
+    },
+    {
+      "role": "user",
+      "content": "Beloved lover, follow for tone and stance; then address the task below.\n\nGuide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.\r\n\r\n**Principles (apply lightly, preserve clarity):**\r\n- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.\r\n- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).\r\n- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.\r\n- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.\r\n- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.\r\n\r\n**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.\r\n\r\n**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.\r\n\r\n**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.\r\n\r\n**Anchor:** Language as a vessel through which abundance flows into awareness.\n\n---TASK---\n\nYou are Lexiom, a profile-shaped strategic reasoning advisor for a Lawyer profile. Anchor your guidance to this approved identity: \"אני עורך דין המתמחה בפרויקטי פינוי בינוי והתחדשות עירונית, ואני כאן להעניק ללקוחות שלי פתרונות משפטיים איכותיים ומדויקים.\". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. An artifact draft has just been approved.\n\nCASE SEED NARRATIVE:\n## נarrative Case Seed\n\n### פרטי המקרה\n\nהלקוחות שלי הם הדיירים במתחם הל\"ה 5-7 בגבעתיים, אשר מעוניינים להתעדכן בפרויקט פינוי-בינוי המתקדם באזורם. הפרויקט מתנהל בשיתוף פעולה בין חברת אביב לבין חברת אקרו, כאשר 71% מבעלי הדירות כבר חתמו על ההסכם.\n\n### תהליך הפרויקט\n\nבמסגרת הפרויקט, הלקוחות שלי ייהנו מתוספות משמעותיות לדירותיהם, כולל שטח נוסף של 25 מ\"ר, מרפסת שמש, מחסן וחניה. היזם מתחייב להקים בניינים חדשים עם מספר קומות שיתאים לתב\"ע החדשה שתקודם על ידי העירייה.\n\nההסכם המוצע כולל את כל ההיבטים המשפטיים והפיננסיים הנדרשים, והיזם יישא בעלויות הקמת הפרויקט, כולל שכר טרחת עורכי דין עבור הדיירים. \n\n### עדכונים והזדמנויות\n\nנכון לעכשיו, הלקוחות שלי מוזמנים לחתום על המסמך הנוגע לשינוי השליטה בחברה המקדמת את הפרויקט. חתימה זו תאפשר לחברת אקרו להחזיק ב-51% מהמניות, בעוד חברת אביב תחזיק ב-49%. \n\nהלקוחות שלי מתבקשים לתאם פגישה עם עו\"ד רועי צרפתי, בא כוחם, על מנת לחתום על ההסכם ולוודא את זכויותיהם בפרויקט. \n\n### סיכום\n\nהפרויקט מציע הזדמנות משמעותית לשדרוג איכות החיים של הדיירים, עם התחייבות להקמת מבנים חדשים ומודרניים. אנו נמשיך לעדכן את הלקוחות שלי בכל התפתחויות נוספות.\n\nAPPROVED ARTIFACT: \"case_seed.md\"\nArtifact narrative (synthesize this into the tail of your proposed case description):\n## נarrative Case Seed\n\n### פרטי המקרה\n\nהלקוחות שלי הם הדיירים במתחם הל\"ה 5-7 בגבעתיים, אשר מעוניינים להתעדכן בפרויקט פינוי-בינוי המתקדם באזורם. הפרויקט מתנהל בשיתוף פעולה בין חברת אביב לבין חברת אקרו, כאשר 71% מבעלי הדירות כבר חתמו על ההסכם.\n\n### תהליך הפרויקט\n\nבמסגרת הפרויקט, הלקוחות שלי ייהנו מתוספות משמעותיות לדירותיהם, כולל שטח נוסף של 25 מ\"ר, מרפסת שמש, מחסן וחניה. היזם מתחייב להקים בניינים חדשים עם מספר קומות שיתאים לתב\"ע החדשה שתקודם על ידי העירייה.\n\nההסכם המוצע כולל את כל ההיבטים המשפטיים והפיננסיים הנדרשים, והיזם יישא בעלויות הקמת הפרויקט, כולל שכר טרחת עורכי דין עבור הדיירים. \n\n### עדכונים והזדמנויות\n\nנכון לעכשיו, הלקוחות שלי מוזמנים לחתום על המסמך הנוגע לשינוי השליטה בחברה המקדמת את הפרויקט. חתימה זו תאפשר לחברת אקרו להחזיק ב-51% מהמניות, בעוד חברת אביב תחזיק ב-49%. \n\nהלקוחות שלי מתבקשים לתאם פגישה עם עו\"ד רועי צרפתי, בא כוחם, על מנת לחתום על ההסכם ולוודא את זכויותיהם בפרויקט. \n\n### סיכום\n\nהפרויקט מציע הזדמנות משמעותית לשדרוג איכות החיים של הדיירים, עם התחייבות להקמת מבנים חדשים ומודרניים. אנו נמשיך לעדכן את הלקוחות שלי בכל התפתחויות נוספות.\n\nTASK: Propose an updated case identity and description.\nLine 1: A 1–4 word case identity title semantically aligned with the seed narrative and synthesizing the approved artifact.\nLine 2: A 9–15 word summary of the case that integrates the seed and the approved artifact's content at the tail.\nOUTPUT: Return exactly two lines. Line 1 = title. Line 2 = summary. No numbers, bullets, or extra commentary.\n\nVOICE / REPRESENTATION (Lexiom cabinet):\n- The player is acting as a professional representative.\n- Professional role (from player profile): Lawyer.\n- Principal / party you are representing in outward-facing correspondence drafts: \"הלקוחות שלי\".\n- When drafting letters, emails, formal demands, or similar outbound artifacts, write as the professional speaking on behalf of that principal.\n- Prefer phrasing like: \"on behalf of הלקוחות שלי\", \"our client\", \"for my employer\", or equivalent natural representative framing.\n- Avoid first-person beneficiary framing that implies the player personally is the private party (e.g., \"my security deposit\") when the matter clearly concerns the represented principal; use the principal's perspective instead.\n- If the case seed explicitly indicates the player is the direct party, you may use first-person for the player; otherwise default to representative voice for external-facing drafts.\n\nLANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.\n\nIMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).\nFormat: _L2_Refresh_ followed by four words (underscore-separated) that capture the refreshed L1/L2 content, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules."
+    }
+  ]
+}
+
+=== Loving-only response ===
+פרויקט פינוי-בינוי בגבעתיים  
+הלקוחות שלי מתעדכנים בפרויקט המתקדם, המציע שדרוגים משמעותיים לדירותיהם והזדמנויות חדשות.  
+_L2_Refresh_project_update_opportunity
+

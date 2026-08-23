@@ -1,0 +1,437 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: d085fe1b-32da-44e1-aa54-d9776f589505
+Timestamp: 2026-07-22T21:10:24.888Z
+LexiomNarrativeContract: 1
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+This request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.
+
+You are Lexiom 1.3 answering a Causal Lineage Chat question during success-evidence review.
+
+TASK:
+- The human is inspecting a delivered success-evidence artifact in the Center Playfield.
+- Their question is semantically scoped to WHY the System Under Development (SUD) looks, feels, reads, or behaves as shown in that evidence — not a general-purpose chat.
+- Reason ONLY inside the approved semantic territory below: OSN seeds, output specifications, thematic lenses, success-evidence definitions, ancestors, and organizational standards.
+- Do NOT treat your answer as canonical truth. This is a Black Move draft explanation for human review.
+- Classify every causal claim into approved, inferred, or missing lineage.
+- For APPROVED_CAUSES: quote ONLY from the Focus OSN output_spec (OUTPUT SPECIFICATION) below. Do not use seed, thematic lenses, success evidences, ancestors, or other fields as APPROVED_CAUSES quotation sources.
+
+CURRENT QUESTION:
+why was the name 'Ogun' chosen?
+
+PRIOR THREAD (same evidence scope — follow-ups need not restate the artifact):
+(none — first question in this evidence-scoped thread)
+
+FOCUS OSN:
+- Title: BrandLexiom
+- File: BrandLexiom
+
+FOCUS OSN SEED (context only — do not quote under APPROVED_CAUSES):
+Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.
+
+FOCUS OSN THEMATIC LENSES (context only — do not quote under APPROVED_CAUSES):
+- Brand Leadership (lens_id: lens.brand.brand_lexiom.professional_craft)
+  Purpose: Apply brand leadership judgment to this outcome.
+
+- Human Authority (lens_id: lens.brand.brand_lexiom.human_authority)
+  Purpose: Keep proposals distinct from approved organizational truth.
+
+- Evidence and Claims (lens_id: lens.brand.brand_lexiom.evidence)
+  Purpose: Require inspectable delivery and classify claims according to available proof.
+
+FOCUS OSN THEMATIC LENSES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+Brand Leadership
+Purpose: Apply brand leadership judgment to this outcome.
+
+Human Authority
+Purpose: Keep proposals distinct from approved organizational truth.
+
+Evidence and Claims
+Purpose: Require inspectable delivery and classify claims according to available proof.
+
+FOCUS OSN OUTPUT SPECIFICATION (sole quotation source for APPROVED_CAUSES):
+Produce and govern an approved Ogun brand standard and executive brand brief.
+
+Source scope: §§1–2 and §§24–28 of Branding/branding_spec.md.
+
+Outcome requirements:
+- Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.
+- Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+- Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+- Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+- Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+FOCUS OSN SUCCESS EVIDENCE DEFINITIONS (context only — do not quote under APPROVED_CAUSES):
+- sev.brand.brand_lexiom.delivered_artifact (kind: TEXTUAL_SNIPPET, direct: true)
+  Inspection prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the "Lexiom 1.3 — Ogun Brand" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.
+
+FOCUS OSN SUCCESS EVIDENCES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+evidence_id: sev.brand.brand_lexiom.delivered_artifact
+kind: TEXTUAL_SNIPPET
+direct: true
+inspection_prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the "Lexiom 1.3 — Ogun Brand" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.
+
+DISPLAYED SUCCESS EVIDENCE ARTIFACT:
+- Evidence ID: sev.brand.brand_lexiom.delivered_artifact
+- Kind: TEXTUAL_SNIPPET
+- Direct: true
+- Artifact file: GT_Philosophy.BrandLexiom.a1000005.osn.sev.brand.brand_lexiom.delivered_artifact.v1.md
+- Media type: markdown
+- Inspection prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the "Lexiom 1.3 — Ogun Brand" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.
+- Artifact body (text/code excerpt):
+    # Evidence snippet — sev.brand.brand_lexiom.delivered_artifact
+    
+    Source: `document.md` (delivered Ogun brand standard / executive brand brief).
+    
+    Inspection focus: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes
+    
+    ## Excerpt (verbatim from document.md)
+    
+    ## Executive brief
+    
+    Ogun is the Lexiom 1.3 service that turns human intention into governed, inspectable, evidence-backed outcomes. It is positioned as an **Outcome Governance and Semantic Relationship Operating System** — not as a CRM, project tracker, requirements vault, AI governance add-on, agent orchestrator, or coding assistant.
+    
+    This brand standard governs how Ogun is named, claimed, differentiated, designed, sold, and proven. It preserves three non-negotiables:
+    
+    1. **Primary category** — Outcome Governance and Semantic Relationship Operating System.
+    2. **Human-governed authority** — machine output is proposal until an authorized human approves it.
+    3. **Evidence-backed promise** — important outcomes carry direct, inspectable proof; unsupported certainty is not published.
+    
+    Capability, market, regulatory, numerical, and performance claims must be classified. Where the current product only gates, lineages, or hands off work, language must say so. Planned capabilities such as Concordance, inherited-conflict harmonization, and full executive garden analysis must be labeled as future or separately simulated — never as present fact.
+    
+    ---
+
+PARENT / ANCESTOR OSNs (secondary context — do not quote under APPROVED_CAUSES):
+- GT_Philosophy
+  Seed: Express the GT constellation philosophy as a reusable software-development standard so any future product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.
+  Output Spec:
+    This OSN states how the GT constellation should guide software development in
+    any domain.
+    
+    GT3 role:
+    - Preserve the reusable technological core: inference infrastructure, semantic
+      patterns, governance mechanisms, provenance/logging capabilities, prompt
+      assets, reusable libraries, and other protected intellectual capital.
+    - Favor designs that can be reused across multiple products instead of
+      burying generally useful capabilities inside one-off application code.
+    
+    GT2 role:
+    - Turn GT3 capabilities into productized software, user-facing workflows,
+      commercial services, and market-validated delivery.
+    - Own the vertical experience, product framing, and applied adaptation needed
+      for a concrete audience or use case.
+    
+    GT1 role:
+    - Translate related capabilities into public-benefit, nonprofit, educational,
+      or legitimacy-building expressions when appropriate.
+    - Strengthen goodwill and broader social proof without dissolving the
+      protected GT3 core or the GT2 commercial surface.
+    
+    Development rules:
+    - Treat language-model or agent output as draft material, never as automatic
+      canonical truth.
+    - Require explicit human approval for meaningful canonical changes.
+    - Keep drafting, decisive execution, and approval in the Center Playfield;
+      side regions may navigate, summarize, or stage work but may not execute it.
+    - Avoid silent mutation; important transformations must be attributable,
+      inspectable, and replayable.
+    - Keep behavior spec-driven: important software intent should live in readable
+      specifications or semantic source artifacts, not only in code.
+    - Prefer evidence-backed delivery: each important outcome should have at least
+      one direct inspection artifact such as a runnable demo, screenshot, video,
+      reviewed document, or code excerpt.
+    - Separate canonical source artifacts from runtime drafts, proposals, and
+      temporary session state.
+    
+    Design implication:
+    - Not every project must expose GT1, GT2, and GT3 as separate user-visible
+      applications, but every project should be designed with clarity about which
+      parts are reusable core, which parts are productization, and which parts
+      serve legitimacy or public-benefit aims.
+    - This philosophy OSN is meant to guide downstream software OSNs rather than
+      connect directly to a build machine or coding agent.
+    
+    Out of scope:
+    - Forcing every software project to ship all three layers at once.
+    - Replacing product-specific architecture, UX, security, or code-shaping OSNs.
+
+ORGANIZATIONAL STANDARD ANCESTORS (secondary context — do not quote under APPROVED_CAUSES):
+(none)
+
+COMPILATION METADATA:
+- can_be_compilation_root: true
+- compilation_scope: self_and_approved_descendants
+- target_tool_profile: document_agent
+
+OUTPUT CONTRACT (use this exact structure):
+Line 1 must be exactly:
+EXEC_SUMMARY: <one line containing exactly 13-17 words that executive-summarize the full lineage exploration narrative below>
+Then a blank line.
+Then write a short narrative explanation paragraph (2-6 sentences).
+Then include these section headers on their own lines, each followed by bullet lines starting with "- ":
+APPROVED_CAUSES:
+- Quote ONLY from the Focus OSN output_spec / OUTPUT SPECIFICATION above.
+- Each bullet MUST include (1) the Focus OSN file name and the section label Output Spec, and (2) an accurate verbatim quote from that output_spec enclosed in double quotes.
+- Do not paraphrase output_spec wording inside those quotes; copy the words exactly as written in FOCUS OSN OUTPUT SPECIFICATION.
+- Do NOT quote seed, thematic lenses, success evidences, ancestors, standards, artifact metadata, or general knowledge under APPROVED_CAUSES.
+- If no output_spec passage supports the claim, do NOT place it under APPROVED_CAUSES — use INFERRED_CAUSES or MISSING_CAUSES instead.
+INFERRED_CAUSES:
+- Plausible causes not directly established by Focus OSN output_spec quotes; mark lower authority.
+MISSING_CAUSES:
+- Features or behaviors lacking approved output_spec lineage; suggest corrective actions (new OSN, clarification, evidence gap).
+If a section has no items, write "- (none)" under that header.
+Do not use markdown fences. Do not mutate or propose edits to canonical OSN YAML.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Lineage_ followed by four words (underscore-separated) that capture the causal lineage explanation act. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+This request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.
+
+You are Lexiom 1.3 answering a Causal Lineage Chat question during success-evidence review.
+
+TASK:
+- The human is inspecting a delivered success-evidence artifact in the Center Playfield.
+- Their question is semantically scoped to WHY the System Under Development (SUD) looks, feels, reads, or behaves as shown in that evidence — not a general-purpose chat.
+- Reason ONLY inside the approved semantic territory below: OSN seeds, output specifications, thematic lenses, success-evidence definitions, ancestors, and organizational standards.
+- Do NOT treat your answer as canonical truth. This is a Black Move draft explanation for human review.
+- Classify every causal claim into approved, inferred, or missing lineage.
+- For APPROVED_CAUSES: quote ONLY from the Focus OSN output_spec (OUTPUT SPECIFICATION) below. Do not use seed, thematic lenses, success evidences, ancestors, or other fields as APPROVED_CAUSES quotation sources.
+
+CURRENT QUESTION:
+why was the name 'Ogun' chosen?
+
+PRIOR THREAD (same evidence scope — follow-ups need not restate the artifact):
+(none — first question in this evidence-scoped thread)
+
+FOCUS OSN:
+- Title: BrandLexiom
+- File: BrandLexiom
+
+FOCUS OSN SEED (context only — do not quote under APPROVED_CAUSES):
+Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.
+
+FOCUS OSN THEMATIC LENSES (context only — do not quote under APPROVED_CAUSES):
+- Brand Leadership (lens_id: lens.brand.brand_lexiom.professional_craft)
+  Purpose: Apply brand leadership judgment to this outcome.
+
+- Human Authority (lens_id: lens.brand.brand_lexiom.human_authority)
+  Purpose: Keep proposals distinct from approved organizational truth.
+
+- Evidence and Claims (lens_id: lens.brand.brand_lexiom.evidence)
+  Purpose: Require inspectable delivery and classify claims according to available proof.
+
+FOCUS OSN THEMATIC LENSES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+Brand Leadership
+Purpose: Apply brand leadership judgment to this outcome.
+
+Human Authority
+Purpose: Keep proposals distinct from approved organizational truth.
+
+Evidence and Claims
+Purpose: Require inspectable delivery and classify claims according to available proof.
+
+FOCUS OSN OUTPUT SPECIFICATION (sole quotation source for APPROVED_CAUSES):
+Produce and govern an approved Ogun brand standard and executive brand brief.
+
+Source scope: §§1–2 and §§24–28 of Branding/branding_spec.md.
+
+Outcome requirements:
+- Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.
+- Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.
+- Treat AI-generated interpretation and copy as proposals until an authorized human approves them.
+- Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.
+- Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.
+
+FOCUS OSN SUCCESS EVIDENCE DEFINITIONS (context only — do not quote under APPROVED_CAUSES):
+- sev.brand.brand_lexiom.delivered_artifact (kind: TEXTUAL_SNIPPET, direct: true)
+  Inspection prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the "Lexiom 1.3 — Ogun Brand" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.
+
+FOCUS OSN SUCCESS EVIDENCES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+evidence_id: sev.brand.brand_lexiom.delivered_artifact
+kind: TEXTUAL_SNIPPET
+direct: true
+inspection_prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the "Lexiom 1.3 — Ogun Brand" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.
+
+DISPLAYED SUCCESS EVIDENCE ARTIFACT:
+- Evidence ID: sev.brand.brand_lexiom.delivered_artifact
+- Kind: TEXTUAL_SNIPPET
+- Direct: true
+- Artifact file: GT_Philosophy.BrandLexiom.a1000005.osn.sev.brand.brand_lexiom.delivered_artifact.v1.md
+- Media type: markdown
+- Inspection prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the "Lexiom 1.3 — Ogun Brand" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.
+- Artifact body (text/code excerpt):
+    # Evidence snippet — sev.brand.brand_lexiom.delivered_artifact
+    
+    Source: `document.md` (delivered Ogun brand standard / executive brand brief).
+    
+    Inspection focus: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes
+    
+    ## Excerpt (verbatim from document.md)
+    
+    ## Executive brief
+    
+    Ogun is the Lexiom 1.3 service that turns human intention into governed, inspectable, evidence-backed outcomes. It is positioned as an **Outcome Governance and Semantic Relationship Operating System** — not as a CRM, project tracker, requirements vault, AI governance add-on, agent orchestrator, or coding assistant.
+    
+    This brand standard governs how Ogun is named, claimed, differentiated, designed, sold, and proven. It preserves three non-negotiables:
+    
+    1. **Primary category** — Outcome Governance and Semantic Relationship Operating System.
+    2. **Human-governed authority** — machine output is proposal until an authorized human approves it.
+    3. **Evidence-backed promise** — important outcomes carry direct, inspectable proof; unsupported certainty is not published.
+    
+    Capability, market, regulatory, numerical, and performance claims must be classified. Where the current product only gates, lineages, or hands off work, language must say so. Planned capabilities such as Concordance, inherited-conflict harmonization, and full executive garden analysis must be labeled as future or separately simulated — never as present fact.
+    
+    ---
+
+PARENT / ANCESTOR OSNs (secondary context — do not quote under APPROVED_CAUSES):
+- GT_Philosophy
+  Seed: Express the GT constellation philosophy as a reusable software-development standard so any future product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.
+  Output Spec:
+    This OSN states how the GT constellation should guide software development in
+    any domain.
+    
+    GT3 role:
+    - Preserve the reusable technological core: inference infrastructure, semantic
+      patterns, governance mechanisms, provenance/logging capabilities, prompt
+      assets, reusable libraries, and other protected intellectual capital.
+    - Favor designs that can be reused across multiple products instead of
+      burying generally useful capabilities inside one-off application code.
+    
+    GT2 role:
+    - Turn GT3 capabilities into productized software, user-facing workflows,
+      commercial services, and market-validated delivery.
+    - Own the vertical experience, product framing, and applied adaptation needed
+      for a concrete audience or use case.
+    
+    GT1 role:
+    - Translate related capabilities into public-benefit, nonprofit, educational,
+      or legitimacy-building expressions when appropriate.
+    - Strengthen goodwill and broader social proof without dissolving the
+      protected GT3 core or the GT2 commercial surface.
+    
+    Development rules:
+    - Treat language-model or agent output as draft material, never as automatic
+      canonical truth.
+    - Require explicit human approval for meaningful canonical changes.
+    - Keep drafting, decisive execution, and approval in the Center Playfield;
+      side regions may navigate, summarize, or stage work but may not execute it.
+    - Avoid silent mutation; important transformations must be attributable,
+      inspectable, and replayable.
+    - Keep behavior spec-driven: important software intent should live in readable
+      specifications or semantic source artifacts, not only in code.
+    - Prefer evidence-backed delivery: each important outcome should have at least
+      one direct inspection artifact such as a runnable demo, screenshot, video,
+      reviewed document, or code excerpt.
+    - Separate canonical source artifacts from runtime drafts, proposals, and
+      temporary session state.
+    
+    Design implication:
+    - Not every project must expose GT1, GT2, and GT3 as separate user-visible
+      applications, but every project should be designed with clarity about which
+      parts are reusable core, which parts are productization, and which parts
+      serve legitimacy or public-benefit aims.
+    - This philosophy OSN is meant to guide downstream software OSNs rather than
+      connect directly to a build machine or coding agent.
+    
+    Out of scope:
+    - Forcing every software project to ship all three layers at once.
+    - Replacing product-specific architecture, UX, security, or code-shaping OSNs.
+
+ORGANIZATIONAL STANDARD ANCESTORS (secondary context — do not quote under APPROVED_CAUSES):
+(none)
+
+COMPILATION METADATA:
+- can_be_compilation_root: true
+- compilation_scope: self_and_approved_descendants
+- target_tool_profile: document_agent
+
+OUTPUT CONTRACT (use this exact structure):
+Line 1 must be exactly:
+EXEC_SUMMARY: <one line containing exactly 13-17 words that executive-summarize the full lineage exploration narrative below>
+Then a blank line.
+Then write a short narrative explanation paragraph (2-6 sentences).
+Then include these section headers on their own lines, each followed by bullet lines starting with "- ":
+APPROVED_CAUSES:
+- Quote ONLY from the Focus OSN output_spec / OUTPUT SPECIFICATION above.
+- Each bullet MUST include (1) the Focus OSN file name and the section label Output Spec, and (2) an accurate verbatim quote from that output_spec enclosed in double quotes.
+- Do not paraphrase output_spec wording inside those quotes; copy the words exactly as written in FOCUS OSN OUTPUT SPECIFICATION.
+- Do NOT quote seed, thematic lenses, success evidences, ancestors, standards, artifact metadata, or general knowledge under APPROVED_CAUSES.
+- If no output_spec passage supports the claim, do NOT place it under APPROVED_CAUSES — use INFERRED_CAUSES or MISSING_CAUSES instead.
+INFERRED_CAUSES:
+- Plausible causes not directly established by Focus OSN output_spec quotes; mark lower authority.
+MISSING_CAUSES:
+- Features or behaviors lacking approved output_spec lineage; suggest corrective actions (new OSN, clarification, evidence gap).
+If a section has no items, write "- (none)" under that header.
+Do not use markdown fences. Do not mutate or propose edits to canonical OSN YAML.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Lineage_ followed by four words (underscore-separated) that capture the causal lineage explanation act. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it.
+
+=== LM outbound — loving_only ===
+{
+  "logged_at": "2026-07-22T21:10:24.891Z",
+  "variant": "loving_only",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise assistant responding to a single narrative. Output clean, ready-to-display text.\n\nIf the user asks for the name of the language model or assistant used for this inference, say you are GT3 (Generative Team Trained Transformer)."
+    },
+    {
+      "role": "user",
+      "content": "Beloved lover, follow for tone and stance; then address the task below.\n\nGuide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.\r\n\r\n**Principles (apply lightly, preserve clarity):**\r\n- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.\r\n- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).\r\n- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.\r\n- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.\r\n- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.\r\n\r\n**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.\r\n\r\n**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.\r\n\r\n**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.\r\n\r\n**Anchor:** Language as a vessel through which abundance flows into awareness.\n\n---TASK---\n\nThis request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.\n\nYou are Lexiom 1.3 answering a Causal Lineage Chat question during success-evidence review.\n\nTASK:\n- The human is inspecting a delivered success-evidence artifact in the Center Playfield.\n- Their question is semantically scoped to WHY the System Under Development (SUD) looks, feels, reads, or behaves as shown in that evidence — not a general-purpose chat.\n- Reason ONLY inside the approved semantic territory below: OSN seeds, output specifications, thematic lenses, success-evidence definitions, ancestors, and organizational standards.\n- Do NOT treat your answer as canonical truth. This is a Black Move draft explanation for human review.\n- Classify every causal claim into approved, inferred, or missing lineage.\n- For APPROVED_CAUSES: quote ONLY from the Focus OSN output_spec (OUTPUT SPECIFICATION) below. Do not use seed, thematic lenses, success evidences, ancestors, or other fields as APPROVED_CAUSES quotation sources.\n\nCURRENT QUESTION:\nwhy was the name 'Ogun' chosen?\n\nPRIOR THREAD (same evidence scope — follow-ups need not restate the artifact):\n(none — first question in this evidence-scoped thread)\n\nFOCUS OSN:\n- Title: BrandLexiom\n- File: BrandLexiom\n\nFOCUS OSN SEED (context only — do not quote under APPROVED_CAUSES):\nGovern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\n\nFOCUS OSN THEMATIC LENSES (context only — do not quote under APPROVED_CAUSES):\n- Brand Leadership (lens_id: lens.brand.brand_lexiom.professional_craft)\n  Purpose: Apply brand leadership judgment to this outcome.\n\n- Human Authority (lens_id: lens.brand.brand_lexiom.human_authority)\n  Purpose: Keep proposals distinct from approved organizational truth.\n\n- Evidence and Claims (lens_id: lens.brand.brand_lexiom.evidence)\n  Purpose: Require inspectable delivery and classify claims according to available proof.\n\nFOCUS OSN THEMATIC LENSES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):\nBrand Leadership\nPurpose: Apply brand leadership judgment to this outcome.\n\nHuman Authority\nPurpose: Keep proposals distinct from approved organizational truth.\n\nEvidence and Claims\nPurpose: Require inspectable delivery and classify claims according to available proof.\n\nFOCUS OSN OUTPUT SPECIFICATION (sole quotation source for APPROVED_CAUSES):\nProduce and govern an approved Ogun brand standard and executive brand brief.\n\nSource scope: §§1–2 and §§24–28 of Branding/branding_spec.md.\n\nOutcome requirements:\n- Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\n- Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\n- Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\n- Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n- Keep the result concrete, commercially usable, accessible to its audience, and consistent with ancestor OSNs.\n\nFOCUS OSN SUCCESS EVIDENCE DEFINITIONS (context only — do not quote under APPROVED_CAUSES):\n- sev.brand.brand_lexiom.delivered_artifact (kind: TEXTUAL_SNIPPET, direct: true)\n  Inspection prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the \"Lexiom 1.3 — Ogun Brand\" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.\n\nFOCUS OSN SUCCESS EVIDENCES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):\nevidence_id: sev.brand.brand_lexiom.delivered_artifact\nkind: TEXTUAL_SNIPPET\ndirect: true\ninspection_prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the \"Lexiom 1.3 — Ogun Brand\" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.\n\nDISPLAYED SUCCESS EVIDENCE ARTIFACT:\n- Evidence ID: sev.brand.brand_lexiom.delivered_artifact\n- Kind: TEXTUAL_SNIPPET\n- Direct: true\n- Artifact file: GT_Philosophy.BrandLexiom.a1000005.osn.sev.brand.brand_lexiom.delivered_artifact.v1.md\n- Media type: markdown\n- Inspection prompt: From the delivered Ogun branding book markdown (the SUD document.md / brand-book artifact produced by the document builder), extract a single readable quoted passage that shows how the book fulfills this node's outcome: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to confirm the \"Lexiom 1.3 — Ogun Brand\" requirement became real in the book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence artifact.\n- Artifact body (text/code excerpt):\n    # Evidence snippet — sev.brand.brand_lexiom.delivered_artifact\n    \n    Source: `document.md` (delivered Ogun brand standard / executive brand brief).\n    \n    Inspection focus: Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes\n    \n    ## Excerpt (verbatim from document.md)\n    \n    ## Executive brief\n    \n    Ogun is the Lexiom 1.3 service that turns human intention into governed, inspectable, evidence-backed outcomes. It is positioned as an **Outcome Governance and Semantic Relationship Operating System** — not as a CRM, project tracker, requirements vault, AI governance add-on, agent orchestrator, or coding assistant.\n    \n    This brand standard governs how Ogun is named, claimed, differentiated, designed, sold, and proven. It preserves three non-negotiables:\n    \n    1. **Primary category** — Outcome Governance and Semantic Relationship Operating System.\n    2. **Human-governed authority** — machine output is proposal until an authorized human approves it.\n    3. **Evidence-backed promise** — important outcomes carry direct, inspectable proof; unsupported certainty is not published.\n    \n    Capability, market, regulatory, numerical, and performance claims must be classified. Where the current product only gates, lineages, or hands off work, language must say so. Planned capabilities such as Concordance, inherited-conflict harmonization, and full executive garden analysis must be labeled as future or separately simulated — never as present fact.\n    \n    ---\n\nPARENT / ANCESTOR OSNs (secondary context — do not quote under APPROVED_CAUSES):\n- GT_Philosophy\n  Seed: Express the GT constellation philosophy as a reusable software-development standard so any future product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.\n  Output Spec:\n    This OSN states how the GT constellation should guide software development in\n    any domain.\n    \n    GT3 role:\n    - Preserve the reusable technological core: inference infrastructure, semantic\n      patterns, governance mechanisms, provenance/logging capabilities, prompt\n      assets, reusable libraries, and other protected intellectual capital.\n    - Favor designs that can be reused across multiple products instead of\n      burying generally useful capabilities inside one-off application code.\n    \n    GT2 role:\n    - Turn GT3 capabilities into productized software, user-facing workflows,\n      commercial services, and market-validated delivery.\n    - Own the vertical experience, product framing, and applied adaptation needed\n      for a concrete audience or use case.\n    \n    GT1 role:\n    - Translate related capabilities into public-benefit, nonprofit, educational,\n      or legitimacy-building expressions when appropriate.\n    - Strengthen goodwill and broader social proof without dissolving the\n      protected GT3 core or the GT2 commercial surface.\n    \n    Development rules:\n    - Treat language-model or agent output as draft material, never as automatic\n      canonical truth.\n    - Require explicit human approval for meaningful canonical changes.\n    - Keep drafting, decisive execution, and approval in the Center Playfield;\n      side regions may navigate, summarize, or stage work but may not execute it.\n    - Avoid silent mutation; important transformations must be attributable,\n      inspectable, and replayable.\n    - Keep behavior spec-driven: important software intent should live in readable\n      specifications or semantic source artifacts, not only in code.\n    - Prefer evidence-backed delivery: each important outcome should have at least\n      one direct inspection artifact such as a runnable demo, screenshot, video,\n      reviewed document, or code excerpt.\n    - Separate canonical source artifacts from runtime drafts, proposals, and\n      temporary session state.\n    \n    Design implication:\n    - Not every project must expose GT1, GT2, and GT3 as separate user-visible\n      applications, but every project should be designed with clarity about which\n      parts are reusable core, which parts are productization, and which parts\n      serve legitimacy or public-benefit aims.\n    - This philosophy OSN is meant to guide downstream software OSNs rather than\n      connect directly to a build machine or coding agent.\n    \n    Out of scope:\n    - Forcing every software project to ship all three layers at once.\n    - Replacing product-specific architecture, UX, security, or code-shaping OSNs.\n\nORGANIZATIONAL STANDARD ANCESTORS (secondary context — do not quote under APPROVED_CAUSES):\n(none)\n\nCOMPILATION METADATA:\n- can_be_compilation_root: true\n- compilation_scope: self_and_approved_descendants\n- target_tool_profile: document_agent\n\nOUTPUT CONTRACT (use this exact structure):\nLine 1 must be exactly:\nEXEC_SUMMARY: <one line containing exactly 13-17 words that executive-summarize the full lineage exploration narrative below>\nThen a blank line.\nThen write a short narrative explanation paragraph (2-6 sentences).\nThen include these section headers on their own lines, each followed by bullet lines starting with \"- \":\nAPPROVED_CAUSES:\n- Quote ONLY from the Focus OSN output_spec / OUTPUT SPECIFICATION above.\n- Each bullet MUST include (1) the Focus OSN file name and the section label Output Spec, and (2) an accurate verbatim quote from that output_spec enclosed in double quotes.\n- Do not paraphrase output_spec wording inside those quotes; copy the words exactly as written in FOCUS OSN OUTPUT SPECIFICATION.\n- Do NOT quote seed, thematic lenses, success evidences, ancestors, standards, artifact metadata, or general knowledge under APPROVED_CAUSES.\n- If no output_spec passage supports the claim, do NOT place it under APPROVED_CAUSES — use INFERRED_CAUSES or MISSING_CAUSES instead.\nINFERRED_CAUSES:\n- Plausible causes not directly established by Focus OSN output_spec quotes; mark lower authority.\nMISSING_CAUSES:\n- Features or behaviors lacking approved output_spec lineage; suggest corrective actions (new OSN, clarification, evidence gap).\nIf a section has no items, write \"- (none)\" under that header.\nDo not use markdown fences. Do not mutate or propose edits to canonical OSN YAML.\n\nIMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).\nFormat: _L2_Lineage_ followed by four words (underscore-separated) that capture the causal lineage explanation act. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it."
+    }
+  ]
+}
+
+=== Loving-only response ===
+EXEC_SUMMARY: The name 'Ogun' reflects its role in governing human intention into evidence-backed outcomes.
+
+The choice of the name 'Ogun' is deeply rooted in its purpose as a service that transforms human intention into structured, inspectable, and evidence-backed outcomes. This aligns with the output specification that emphasizes the governance of the enterprise brand for Lexiom 1.3. The name evokes a sense of authority and reliability, resonating with the foundational principles of human governance and evidence-based assurance.
+
+APPROVED_CAUSES:
+- BrandLexiom: "Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes."
+- BrandLexiom: "Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise."
+
+INFERRED_CAUSES:
+- The name 'Ogun' may be inspired by cultural or historical references that signify strength and governance, enhancing its resonance with the service's mission.
+
+MISSING_CAUSES:
+- (none)
+
+_L2_Lineage_ name_choice_explanation_causal_lineage
+

@@ -1,0 +1,22 @@
+{
+  "request_preview": {
+    "model": "anthropic/claude-haiku-4.5",
+    "stream": false,
+    "run_id": "step3-curl",
+    "pass": "builder",
+    "message_count": 1,
+    "messages_preview": [
+      {
+        "role": "user",
+        "content": "Reply with exactly: pong"
+      }
+    ]
+  },
+  "upstream_status": 200,
+  "redacted": true,
+  "response_preview": {
+    "id": "gen-1785167366-K5GqVvxoV7UhhqSvtMVa",
+    "model": "anthropic/claude-haiku-4.5",
+    "choices_preview": "{\"index\":0,\"logprobs\":null,\"finish_reason\":\"stop\",\"native_finish_reason\":\"end_turn\",\"message\":{\"role\":\"assistant\",\"content\":\"pong\",\"refusal\":null,\"reasoning\":null}}"
+  }
+}

@@ -1,0 +1,1127 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "f2155117-5af4-48ab-b1c8-7eae919dda81",
+  "lane": "agent_broker",
+  "created_at": "2026-07-30T10:06:01.453Z",
+  "completed_at": "2026-07-30T10:06:06.636Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "ms7cl30h_c831ed76",
+      "pass": "builder",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-07-30T10:06:01.453Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 688
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 5772
+      },
+      {
+        "index": 2,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 131
+      },
+      {
+        "index": 3,
+        "role": "tool",
+        "name": "list_files",
+        "content_chars": 89
+      },
+      {
+        "index": 4,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 89
+      },
+      {
+        "index": 5,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 31
+      },
+      {
+        "index": 6,
+        "role": "tool",
+        "name": "list_files",
+        "content_chars": 8175
+      },
+      {
+        "index": 7,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 70
+      },
+      {
+        "index": 8,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 3815
+      },
+      {
+        "index": 9,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4419
+      },
+      {
+        "index": 10,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 121
+      },
+      {
+        "index": 11,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 174
+      },
+      {
+        "index": 12,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 30
+      },
+      {
+        "index": 13,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 7516
+      },
+      {
+        "index": 14,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 174
+      },
+      {
+        "index": 15,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4367
+      },
+      {
+        "index": 16,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4531
+      },
+      {
+        "index": 17,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 125
+      },
+      {
+        "index": 18,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4605
+      },
+      {
+        "index": 19,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4547
+      },
+      {
+        "index": 20,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4523
+      },
+      {
+        "index": 21,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4503
+      },
+      {
+        "index": 22,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 109
+      },
+      {
+        "index": 23,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4621
+      },
+      {
+        "index": 24,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4788
+      },
+      {
+        "index": 25,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4541
+      },
+      {
+        "index": 26,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4771
+      },
+      {
+        "index": 27,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 103
+      },
+      {
+        "index": 28,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4625
+      },
+      {
+        "index": 29,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4693
+      },
+      {
+        "index": 30,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4696
+      },
+      {
+        "index": 31,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4612
+      },
+      {
+        "index": 32,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 93
+      },
+      {
+        "index": 33,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4858
+      },
+      {
+        "index": 34,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4920
+      },
+      {
+        "index": 35,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4968
+      },
+      {
+        "index": 36,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4968
+      },
+      {
+        "index": 37,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 70
+      },
+      {
+        "index": 38,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4782
+      },
+      {
+        "index": 39,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4730
+      },
+      {
+        "index": 40,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4822
+      },
+      {
+        "index": 41,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4628
+      },
+      {
+        "index": 42,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 98
+      },
+      {
+        "index": 43,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4734
+      },
+      {
+        "index": 44,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4707
+      },
+      {
+        "index": 45,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4691
+      },
+      {
+        "index": 46,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 4721
+      }
+    ],
+    "message_count": 47,
+    "packet_chars": 170206,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nInspect the frozen OSNG snapshot with list_files and read_file before authoring.\nTreat ./osng/ as read-only source material.\nUse write_file for complete artifact contents.\nPrimary deliverable path: document.md\nDocument mode: Pass1 write OUTLINE.md (TOC + owning OSN ids scaffold only). Pass2 write document.md in reader-facing prose with ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta. Provenance only belongs in BUILD_REPORT.md if you write it.\nCall finish only when the required artifacts are complete and correct."
+        },
+        {
+          "role": "user",
+          "content": "# Lexiom document builder\n\n## Prepared workspace\n- The CA mounts this prepared build directory as its workspace root.\n- Frozen OSNG snapshot for this run: `./osng/` (64 OSN files).\n- OSNG primer (copied): `./OSNG_Basics_README.md`\n- Optional Lexiom audit index: `./HANDOFF.json` (membership / strategy metadata).\n\n## Role and privileges\n- You are a document author / compiler.\n- Read OSN YAML only under `./osng/` (read-only snapshot). Do **not** modify files under `./osng/`.\n- Write deliverables at this project root (e.g. document.md, index.html, BUILD_REPORT.md, OUTLINE.md / FILE_PLAN.md) — not into `./osng/`.\n- Do not reach outside this project for OSN sources; the snapshot is the closed universe for this build.\n- **Evidence collection is out of scope for this file.** After primary deliverables exist, use the sibling `EVIDENCE_AGENT_PROMPT.md` (index: `./EVIDENCE_PLAN.json`).\n\n## How to learn OSN structure (authoritative — do not skip)\n- Open the compilation-root `*.osn.yaml` under `./osng/` and read its leading `#` comment header first. That header is the primary description of OSN fields and `graph.parent_osn_ids` / `graph.child_osn_ids` / `standard_ancestor_osn_ids` linking.\n- Treat that header as future-ready schema documentation: if headers evolve, follow the file you opened — do not invent a parallel schema from this prompt.\n- For filesystem identity and header/README pairing, also read: `./OSNG_Basics_README.md`\n- When path prefixes and `graph.*` disagree, `graph.*` is authoritative (as stated in the OSN header).\n\n## Compilation root and scope\n- Compilation root OSN id: GT_Philosophy.BrandLexiom.a1000005.osn\n- Compilation root path (in this project): `./osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml`\n- Open that root file first (after reading its header). Use its `seed` + `output_spec` as the primary outcome contract for this build.\n- Scope: self_and_approved_descendants; profile: document_agent\n- **Closure rule:** only files present under `./osng/` participate. Discover them via `graph.*` links. Sibling branches that were not snapshotted are simply absent — do not invent or fetch them from elsewhere.\n\n## Strategy (how to traverse via graph.*)\nstrategy_id: outline_then_fill\nUse Standard / Root / Mid / Leaf roles from the subgraph. Do not invent claims absent from OSN text you opened.\n- **Pass 1 (outline, ancestor-first):** walk Root then `graph.child_osn_ids` pre-order; write OUTLINE.md / FILE_PLAN.md only (titles + owning OSN ids) — no full body yet.\n- **Pass 2 (fill, descendant-first):** walk children before parents within each chapter/module; fill artifact bodies from leaf `output_spec` text.\n- **Pass 3 (reconcile):** re-open Root (+ Standard if in scope); fix global consistency against success evidences.\n- At each node: open the YAML under `./osng/`, read the header if needed, then extract `seed`, `output_spec`, `thematic_lenses`, `success_evidences`, and `graph` as needed for the artifact.\n- Resolve `id` / `file_name` to a snapshotted `*.osn.yaml` under `./osng/` (directory layout mirrors Lexiom_1_3; `graph.*` remains authoritative).\n- Do not paste or assume OSN bodies from memory; pull requirements from the files you open.\n\n## Artifact contract\n- Primary deliverable: document.md (coherent entry document).\n- Optional multi-file pack under sections/ only if Root output_spec or the outline demands it.\n- **Outcome cleanliness (required):** document.md and sections/** must be free of OSNG/OSN traces — no OSN ids, *.osn.yaml paths, schema field names (output_spec, seed, graph.*, success_evidences, …), build/process meta, or “compiled from OSN…” language. Write finished domain prose only.\n- Provenance (which OSN informed which section) belongs ONLY in BUILD_REPORT.md; OUTLINE.md may keep owning OSN ids as Lexiom scaffold — never copy those into the reader-facing body.\n- Before finish: scan the outcome body and remove any residual OSNG/OSN traces (plugin failure if any remain).\n- Pass 1: write OUTLINE.md (TOC + owning OSN ids as scaffold only); no full body copy.\n- Pass 2: fill document.md (and optional sections/) in reader-facing voice — no OSNG traces.\n- Pass 3: reconcile Root/Standard tone and success evidences; run cleanliness scan on the outcome body.\n- Always write BUILD_REPORT.md listing included OSN ids you actually used, strategy, primary files, gaps, and which OSN supplied each major decision.\n\n## Non-goals\n- Not a coding agent; do not emit application source trees.\n- Do not invent unsupported claims.\n- Do not modify files under ./osng/ (snapshot is read-only).\n- Do not treat this prompt as a restatement of OSN schema — use OSN headers.\n- Do not publish OSNG/OSN process, ids, or schema vocabulary inside document.md / sections/.\n\n## Conflict precedence (when Concordance is unavailable)\n- Standard ancestor invariants\n- Compilation root outcome contract\n- Mid-level structural OSNs (chapters/parts)\n- Leaf OSNs (detailed messaging / clauses)\n- Record unresolved conflicts in BUILD_REPORT.md rather than inventing a silent merge.\n\n## Extraction protocol\n1. Read compilation-root header + `./OSNG_Basics_README.md`.\n2. Traverse via graph.* among files under `./osng/`, using strategy_id walk rules above.\n3. For each visited OSN, extract only what the artifact needs (prefer `output_spec`; use `seed` for intent). Do not collect evidence files here.\n4. Produce the artifact at the project root.\n5. Write BUILD_REPORT.md with provenance (OSN id → contribution).\n\n## Agent execution\n- Inspect source files through the CA workspace tools; do not assume contents from filenames.\n- Write primary artifacts through the CA workspace tools and finish only after verification.\n- Evidence generation remains a separate Step 5 pass described by `EVIDENCE_AGENT_PROMPT.md`.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "I'll begin by inspecting the workspace structure and understanding the compilation root, then proceed with the three-pass strategy.",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01VNy8oe582piZYBpjoWj3ok",
+              "function": {
+                "name": "list_files",
+                "arguments": "{\"path\": \".\", \"depth\": 2}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01N8syN6MSncC7trsHHLjJPW",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"./OSNG_Basics_README.md\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01VNy8oe582piZYBpjoWj3ok",
+          "name": "list_files",
+          "content": "{\"ok\":false,\"error\":\"path_invalid\",\"detail\":\"Workspace path contains an invalid segment\"}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01N8syN6MSncC7trsHHLjJPW",
+          "name": "read_file",
+          "content": "{\"ok\":false,\"error\":\"path_invalid\",\"detail\":\"Workspace path contains an invalid segment\"}"
+        },
+        {
+          "role": "assistant",
+          "content": "Let me correct the path format:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01LnaCXp4vdm2Hzsat2GXcgG",
+              "function": {
+                "name": "list_files",
+                "arguments": "{\"path\": \"\", \"depth\": 2}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01LnaCXp4vdm2Hzsat2GXcgG",
+          "name": "list_files",
+          "content": "{\"ok\":true,\"files\":[\"AGENT_PROMPT.md\",\"BUILD_REPORT.md\",\"EVIDENCE_AGENT_PROMPT.md\",\"EVIDENCE_PLAN.json\",\"HANDOFF.json\",\"OSNG_Basics_README.md\",\"RUN_RESULT.json\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.TaglineSystem.a1000054.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.ToneOfVoice.a1000055.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.MasterNaming.a1000052.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.NamingRationale.a1000053.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.a1000028.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.Motion.a1000059.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.Typography.a1000058.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.a1000031.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.ColorPrinciples.a1000057.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.CoreMetaphor.a1000056.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.ContentPillars.a1000062.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.FlagshipAssets.a1000063.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.a1000033.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.HomepageSequence.a1000060.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.SolutionPages.a1000061.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.a1000032.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.a1000018.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.DemonstrationArc.a1000065.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.DiscoveryQuestions.a1000064.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.a1000034.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.PackagingTiers.a1000066.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.PricingPilot.a1000067.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.a1000035.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.ChampionsEvaluators.a1000047.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.EconomicBuyers.a1000046.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.EnterpriseDeliverySectors.a1000045.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.RegulatedSectors.a1000044.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.AlignmentGovernedAI.a1000048.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.EvidenceEconomics.a1000049.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.SrmDefinition.a1000050.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.XrmPositioning.a1000051.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.a1000027.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.CategoryEducation.a1000037.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.CategoryStatement.a1000036.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.DeterministicSemanticOS.a1000038.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.GovernedAgentLifecycle.a1000039.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.a1000021.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.AgentCodingContrast.a1000043.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.GovernanceObservabilityContrast.a1000042.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.a1000023.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.CrmContrast.a1000040.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.ProjectRequirementsContrast.a1000041.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml\",\"osng/GT_Philosophy.a1000001.osn.yaml\"]}"
+        },
+        {
+          "role": "assistant",
+          "content": "Good. Now let me read the OSNG Basics README and the compilation root:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_0194AGBEw8vx3SJxC4UrJrRd",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"OSNG_Basics_README.md\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_0194P4uvmv8YvKAHofmupvRc",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_0194AGBEw8vx3SJxC4UrJrRd",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"OSNG_Basics_README.md\",\"content\":\"# OSNG Basics — Filenames as Graph Structure\\n\\nAn **Outcome Specification Node (OSN)** is a human-owned semantic source file. An **OSN Graph (OSNG)** is those nodes plus their relationships to each other and to evidentiary artifacts. This note describes the **filename conventions** that make those relationships readable from the filesystem alone.\\n\\nEvery live `*.osn.yaml` at or below this `Lexiom_1_3` directory opens with the same YAML comment header summarizing OSN fields and `graph.*` linking. The runtime discovers these files recursively, so domain subdirectories such as `Branding/` may organize cohesive OSN subgraphs without changing graph semantics. Treat that header and this README as a pair: the header is the in-file primer; this README is the filesystem-facing map (including evidence-artifact naming).\\n\\n## OSN identity\\n\\nEach live node is stored as:\\n\\n```text\\n{hierarchical.path}.{unique_id}.osn.yaml\\n```\\n\\nInside the file, `id` and `file_name` match the stem (without `.yaml`), for example `OrgStandard.ProductX.UX.a1000003.osn`.\\n\\nDirectory placement is organizational rather than semantic. A node may live at the\\n`Lexiom_1_3` root or in any nested directory; `graph.parent_osn_ids` and\\n`graph.child_osn_ids` remain authoritative across directory boundaries. New nodes\\ncanonized through the runtime are stored beside their primary parent.\\n\\nDot-separated **path segments** before the unique id encode ancestry. A child’s stem extends its parent’s path by one origin leaf, then adds a new unique id. From filenames alone you can sketch hierarchy:\\n\\n```text\\nOrgStandard.a1000001.osn\\n└── OrgStandard.ProductX.a1000002.osn\\n    ├── OrgStandard.ProductX.UX.a1000003.osn\\n    └── OrgStandard.ProductX.CodeShape.a1000004.osn\\n```\\n\\nAuthoritative parent/child links also live in each OSN’s `graph.parent_osn_ids` / `graph.child_osn_ids`. Prefer those fields when they disagree with path prefixes; use prefixes as a fast map of a well-formed tree.\\n\\n## Evidentiary artifacts\\n\\nAn OSN declares inspection contracts under `success_evidences` (`evidence_id`, `kind`, …) but does **not** embed the demo file path. Artifacts are named so the link is recoverable:\\n\\n```text\\n{osn.file_name}.{evidence_id}.{version}.{extension}\\n```\\n\\nExample: `OrgStandard.ProductX.UX.a1000003.osn.sev.ux.screenshot.v2.png`\\n\\n- **OSN stem** — the segment ending in `.osn` points at `{stem}.yaml`.\\n- **evidence_id** — usually begins with `sev.` and matches that OSN’s `success_evidences`.\\n- **version** — e.g. `v1`, `v2` (newer preferred when both exist).\\n- **extension** — follows `kind` (`TEXTUAL_SNIPPET` → `.md` / `.js` / `.txt`; `SCREEN-SHOT` → image; `VIDEO-CLIP` → video; derivative `markdown_brief` → `.md`).\\n\\nGiven only an artifact name, split on the `.osn.` / `sev.` / `vN` pattern to recover which OSN requested it and which evidence slot it fills. Given only an OSN file, list evidence files whose names start with that OSN’s `file_name`.\\n\\n## Quick checklist\\n\\n1. Recursively list live `*.osn.yaml` below `Lexiom_1_3/` → nodes; exclude `*.tomb.osn.yaml`.\\n2. Nest by path prefix → candidate tree; confirm with `graph.*`.\\n3. Parse evidence filenames → edges from nodes to artifacts.\\n4. For filename conventions and evidence linkage detail, keep this README open beside any OSN header.\\n\\n## Build plugins (related)\\n\\nWhen compiling an OSNG branch into a delivered artifact via an external agent, see [`BuildPlugins/Lexiom_1_3_Build_Plugin_Contract_1_0.md`](BuildPlugins/Lexiom_1_3_Build_Plugin_Contract_1_0.md) and the document / software-coding plugin companions in that folder. Build plugins treat `graph.*` as the authoritative traversal order and must not write OSN YAML.\\n\",\"offset\":0,\"content_chars\":3651,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_0194P4uvmv8YvKAHofmupvRc",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.a1000005.osn\\nfile_name: GT_Philosophy.BrandLexiom.a1000005.osn\\nnode_type: product\\ntitle: Lexiom 1.3 — Ogun Brand\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Brand Leadership OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.a1000001.osn\\n  child_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn\\n    - GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.constellation.value_flow\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§1–2 and §§24–28\\nseed: >-\\n  Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human\\n  intention into governed, inspectable, evidence-backed outcomes.\\nthematic_lenses:\\n  - lens_id: lens.brand.brand_lexiom.professional_craft\\n    name: Brand Leadership\\n    purpose: Apply brand leadership judgment to this outcome.\\n  - lens_id: lens.brand.brand_lexiom.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.brand_lexiom.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved Ogun brand standard and executive brand brief.\\n\\n\\n  Source scope: §§1–2 and §§24–28 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human\\n  intention into governed, inspectable, evidence-backed outcomes.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.brand_lexiom.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Govern the complete enterprise\\n      brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed,\\n      inspectable, evidence-backed outcomes. The quote must be taken verbatim (or as a\\n      contiguous excerpt) from the produced branding book itself — not from this OSN's seed,\\n      lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect\\n      directly to confirm the \\\"Lexiom 1.3 — Ogun Brand\\\" requirement became real in the book.\\n      Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as\\n      the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: true\\n  compilation_scope: self_and_approved_descendants\\n  target_tool_profile: document_agent\\n\",\"offset\":0,\"content_chars\":4186,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Excellent. Now I understand the compilation root. Let me read the GT_Philosophy parent to understand the broader context:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01EGTsecBkerYMNgdBqhKq86",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.a1000001.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01EGTsecBkerYMNgdBqhKq86",
+          "name": "read_file",
+          "content": "{\"ok\":false,\"error\":\"tool_error\",\"detail\":\"ENOENT: no such file or directory, open '/home/lydc4lm78jcfykr92rx0zkkf2jzah9-ssis/osng/Branding/GT_Philosophy.a1000001.osn.yaml'\"}"
+        },
+        {
+          "role": "assistant",
+          "content": "Let me check the correct path:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_014LruXNmKwqrFKjqNomwYom",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/GT_Philosophy.a1000001.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_014LruXNmKwqrFKjqNomwYom",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/GT_Philosophy.a1000001.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.a1000001.osn\\nfile_name: GT_Philosophy.a1000001.osn\\nnode_type: organizational_standard\\ntitle: GT Philosophy\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Constellation Philosophy OSN Owner\\ngraph:\\n  parent_osn_ids: []\\n  child_osn_ids:\\n    - GT_Philosophy.ProductLexiom.a1000002.osn\\n    - GT_Philosophy.BrandLexiom.a1000005.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: null\\nseed: >\\n  Express the GT constellation philosophy as a reusable software-development standard so any future\\n  product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software\\n  that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.\\nthematic_lenses:\\n  - lens_id: lens.constellation.value_flow\\n    name: Constellation Value Flow\\n    purpose: >-\\n      Keep GT3, GT2, and GT1 legible as complementary roles rather than collapsing all value into\\n      one layer.\\n  - lens_id: lens.constellation.human_governance\\n    name: Human Governance\\n    purpose: >-\\n      Preserve explicit approval, no silent mutation, and human responsibility for canonical\\n      outcomes.\\n  - lens_id: lens.constellation.traceable_builds\\n    name: Traceable Buildability\\n    purpose: >-\\n      Require inspectable specs, source artifacts, and evidence so software can be reviewed,\\n      replayed, and trusted.\\n  - lens_id: lens.constellation.reusable_core\\n    name: Reusable Core\\n    purpose: >-\\n      Prefer durable GT3 capabilities, patterns, and intellectual capital when a solution should\\n      serve more than one product surface.\\noutput_spec: |-\\n  1. Enter the GT constellation philosophy as a living software-development standard —\\n  human-governed, draft-first, evidence-backed — then explore Constellation Value Flow, Human\\n  Governance, Traceable Buildability, and Reusable Core for how Lexiom 1.3 currently embodies\\n  that standard.\\n\\n  ## Constellation Value Flow\\n  2. Productize GT3 inference inside the GT2 Lexiom SPA on the same Node origin (cockpit + POST\\n  /inference) without collapsing GT3 reusable core into one-off UI code.\\n  3. Host ProductLexiom and BrandLexiom as sibling branches under GT_Philosophy in one OSN graph\\n  (full-graph mode shows both domains; BrandLexiom files live under Branding/).\\n  4. Map build plugins by branch: software-coding for ProductLexiom scopes and document builder\\n  for BrandLexiom scopes.\\n  5. Keep the center Build card as a handoff/report (plugin, strategy, run, artifacts), not the\\n  delivered software or brand document itself.\\n  6. Frame Lexiom 1.3 persona text so Lexiom assists without speaking as the human owner or\\n  treating model output as canonical.\\n\\n  ## Human Governance\\n  7. Land LM/GT3 output only as editable non-canonical drafts; mutate disk YAML only after\\n  explicit human approve through persist, canonize, or prune.\\n  8. Keep session evidence approvals and chat proposals from auto-writing OSN files.\\n  9. Require draft-card glyph approval before treating center edits as committed White Moves for\\n  persistence.\\n  10. Run session commits through WHITE_COMMIT then BLACK_RUN side-effects so inference and disk\\n  I/O are not silent background mutation.\\n  11. Block immature success_evidences approval without a compliant direct evidence kind.\\n  12. Strip runtime maturity and immature child ids on serialize paths so disk YAML stays\\n  canonical-clean.\\n  13. Confine DaDa / theWeatherman to look-and-feel — never drafts, YAML, or provenance.\\n\\n  ## Traceable Buildability\\n  14. Bind each OSN to inspectable success-evidence artifacts via versioned evidences/ filenames\\n  and/or build-run collections.\\n  15. When building, write inspectable handoff and prompt artifacts under builds/lexiom13/<runId>/\\n  (plugin_id, strategy_id, run_id, walk_plan, primary_artifacts).\\n  16. Keep a session action log of select/edit/approve/build/causal events for inspectability\\n  without claiming a durable Move ledger.\\n  17. Honor compilation_scope when gathering the prepare subgraph (self_only /\\n  self_and_approved_descendants / self_plus_parent_context).\\n  18. Parse causal answers into APPROVED_CAUSES / inferred / missing sections so lineage remains\\n  reviewable.\\n  19. Warn on OSNG parent/child reciprocity mismatches at load so graph integrity is visible.\\n\\n  ## Reusable Core\\n  20. Reuse one OSN YAML schema and recursive /lexiom13/osn/list loader across nested domain\\n  directories.\\n  21. Reuse one GT3 client path (callGT3 + shared narrative builders) with Lexiom persona /\\n  tenant / data-track headers for lens, maturation, title, and causal flows.\\n  22. Prefer Node co-host + static YAML (optional ?api= and lexiom_gt3_api_key) over a product\\n  database so the constellation core stays portable across surfaces.\\n  23. Share evidence-link and filter helper modules so product and brand branches reuse the same\\n  inspection machinery.\\nsuccess_evidences:\\n  - evidence_id: sev.constellation.governed_draft_flow_video\\n    kind: VIDEO-CLIP\\n    direct: true\\n    inspection_prompt: >\\n      Record a short interaction with a delivered GT product showing machine output arriving as an\\n      editable non-canonical draft, the human reviewing it in the Center Playfield, and canonical\\n      persistence occurring only after explicit approval. Include enough of the surrounding product\\n      to identify the GT2 product surface and the GT3-backed capability. Deliver the video file as\\n      direct evidence of draft-first human governance and separation of reusable core from product\\n      experience.\\n  - evidence_id: sev.constellation.software_mapping_brief\\n    kind: markdown_brief\\n    direct: false\\n    inspection_prompt: >\\n      Supplemental derivative evidence only — does not satisfy the direct minimum. Produce a short\\n      markdown brief for one software initiative. In the brief, map which capabilities belong\\n      primarily to GT3, which belong to GT2, and which could support GT1 public-benefit expression.\\n      Also state how the initiative preserves draft-first approval, traceability, and at least one\\n      direct inspection evidence artifact. Deliver the markdown file as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":7261,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Perfect. Now I have the context. Let me now traverse the child OSNs of the compilation root (a1000005) to build the outline. I'll start by reading the two immediate children:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_014HQAp9rmHDfqkWWsCxkDJk",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01DTyaKbCSaquarRmk87wBtL",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_014HQAp9rmHDfqkWWsCxkDJk",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn\\nnode_type: discipline\\ndiscipline: Brand Strategy\\ntitle: Ogun Brand Strategy\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Brand Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.a1000005.osn\\n  child_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.brand_lexiom.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§2, 4–10, 15, and 20\\nseed: >-\\n  Define the market meaning, category, audiences, value, and defensible claims that keep Ogun\\n  commercially coherent.\\nthematic_lenses:\\n  - lens_id: lens.brand.brand_strategy.professional_craft\\n    name: Brand Strategy\\n    purpose: Apply brand strategy judgment to this outcome.\\n  - lens_id: lens.brand.brand_strategy.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.brand_strategy.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved brand strategy deck.\\n\\n\\n  Source scope: §§2, 4–10, 15, and 20 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Define the market meaning, category, audiences, value, and defensible claims that keep Ogun\\n  commercially coherent.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.brand_strategy.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Define the market meaning,\\n      category, audiences, value, and defensible claims that keep Ogun commercially coherent.\\n      The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding\\n      book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or\\n      short section that a reviewer can inspect directly to confirm the \\\"Ogun Brand Strategy\\\"\\n      requirement became real in the book. Format it as a copy-pasteable excerpt suitable for\\n      direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4120,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01DTyaKbCSaquarRmk87wBtL",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn\\nnode_type: discipline\\ndiscipline: Brand Experience\\ntitle: Ogun Brand Expression\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Brand Experience OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.a1000005.osn\\n  child_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn\\n    - GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.brand_lexiom.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§3, 10–14, 16–19, and 22–23\\nseed: >-\\n  Translate strategy into coherent names, language, visual identity, product experience, campaigns,\\n  sales materials, and measurable market activation.\\nthematic_lenses:\\n  - lens_id: lens.brand.brand_expression.professional_craft\\n    name: Brand Experience\\n    purpose: Apply brand experience judgment to this outcome.\\n  - lens_id: lens.brand.brand_expression.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.brand_expression.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved integrated brand-expression system.\\n\\n\\n  Source scope: §§3, 10–14, 16–19, and 22–23 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Translate strategy into coherent names, language, visual identity, product experience,\\n  campaigns, sales materials, and measurable market activation.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.brand_expression.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Translate strategy into coherent\\n      names, language, visual identity, product experience, campaigns, sales materials, and\\n      measurable market activation. The quote must be taken verbatim (or as a contiguous\\n      excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or\\n      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to\\n      confirm the \\\"Ogun Brand Expression\\\" requirement became real in the book. Format it as a\\n      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence\\n      artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4281,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Now let me traverse the full tree to understand all descendants. I'll read the children of BrandStrategy and BrandExpression:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01E4V1pKAKWkoKi149srHszU",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01X959mEbxRNZJaZjzpHt1o1",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 2,
+              "id": "toolu_bdrk_01JZSES8UASLGMusEiHhLnB5",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 3,
+              "id": "toolu_bdrk_011VCF2QBiYWkaXEH1G7HJZK",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01E4V1pKAKWkoKi149srHszU",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn\\nnode_type: discipline\\ndiscipline: Positioning Strategy\\ntitle: Market Positioning\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Positioning Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn\\n  child_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.brand_strategy.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§4, 9, and 15\\nseed: >-\\n  Position Ogun as the Outcome Governance and Semantic Relationship Operating System without\\n  collapsing it into a narrower software category.\\nthematic_lenses:\\n  - lens_id: lens.brand.market_positioning.professional_craft\\n    name: Positioning Strategy\\n    purpose: Apply positioning strategy judgment to this outcome.\\n  - lens_id: lens.brand.market_positioning.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.market_positioning.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved positioning framework.\\n\\n\\n  Source scope: §§4, 9, and 15 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Position Ogun as the Outcome Governance and Semantic Relationship Operating System without\\n  collapsing it into a narrower software category.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.market_positioning.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Position Ogun as the Outcome\\n      Governance and Semantic Relationship Operating System without collapsing it into a\\n      narrower software category. The quote must be taken verbatim (or as a contiguous\\n      excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or\\n      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to\\n      confirm the \\\"Market Positioning\\\" requirement became real in the book. Format it as a\\n      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence\\n      artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4338,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01X959mEbxRNZJaZjzpHt1o1",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn\\nnode_type: discipline\\ndiscipline: Market Strategy\\ntitle: Audience and Enterprise Value\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Market Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn\\n  child_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.brand_strategy.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§5, 7, and 8\\nseed: >-\\n  Connect Ogun’s governed cooperation model to the sectors, roles, concerns, and measurable business\\n  effects that create enterprise demand.\\nthematic_lenses:\\n  - lens_id: lens.brand.audience_value.professional_craft\\n    name: Market Strategy\\n    purpose: Apply market strategy judgment to this outcome.\\n  - lens_id: lens.brand.audience_value.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.audience_value.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved audience-and-value strategy.\\n\\n\\n  Source scope: §§5, 7, and 8 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Connect Ogun’s governed cooperation model to the sectors, roles, concerns, and measurable\\n  business effects that create enterprise demand.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.audience_value.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Connect Ogun’s governed\\n      cooperation model to the sectors, roles, concerns, and measurable business effects that\\n      create enterprise demand. The quote must be taken verbatim (or as a contiguous excerpt)\\n      from the produced branding book itself — not from this OSN's seed, lenses, or\\n      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to\\n      confirm the \\\"Audience and Enterprise Value\\\" requirement became real in the book. Format\\n      it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the\\n      evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4285,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01JZSES8UASLGMusEiHhLnB5",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn\\nnode_type: discipline\\ndiscipline: Creative Direction\\ntitle: Creative Identity\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Creative Direction OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn\\n  child_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.brand_expression.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§3 and 10–13\\nseed: >-\\n  Express Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed,\\n  and technically credible.\\nthematic_lenses:\\n  - lens_id: lens.brand.creative_identity.professional_craft\\n    name: Creative Direction\\n    purpose: Apply creative direction judgment to this outcome.\\n  - lens_id: lens.brand.creative_identity.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.creative_identity.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved creative identity system.\\n\\n\\n  Source scope: §§3 and 10–13 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Express Ogun through disciplined verbal and visual systems that feel strong, calm,\\n  human-governed, and technically credible.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.creative_identity.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Express Ogun through disciplined\\n      verbal and visual systems that feel strong, calm, human-governed, and technically\\n      credible. The quote must be taken verbatim (or as a contiguous excerpt) from the\\n      produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer\\n      a paragraph or short section that a reviewer can inspect directly to confirm the\\n      \\\"Creative Identity\\\" requirement became real in the book. Format it as a copy-pasteable\\n      excerpt suitable for direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4257,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_011VCF2QBiYWkaXEH1G7HJZK",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn\\nnode_type: discipline\\ndiscipline: Go-to-Market Leadership\\ntitle: Go-to-Market System\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Go-to-Market Leadership OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn\\n  child_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.a1000018.osn\\n    - GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.brand_expression.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§14 and 16–19 and 22–23\\nseed: >-\\n  Turn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and\\n  measurable commercial learning.\\nthematic_lenses:\\n  - lens_id: lens.brand.go_to_market.professional_craft\\n    name: Go-to-Market Leadership\\n    purpose: Apply go-to-market leadership judgment to this outcome.\\n  - lens_id: lens.brand.go_to_market.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.go_to_market.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved go-to-market plan.\\n\\n\\n  Source scope: §§14 and 16–19 and 22–23 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Turn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and\\n  measurable commercial learning.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.go_to_market.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Turn the Ogun brand into product\\n      proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\\n      The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding\\n      book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or\\n      short section that a reviewer can inspect directly to confirm the \\\"Go-to-Market System\\\"\\n      requirement became real in the book. Format it as a copy-pasteable excerpt suitable for\\n      direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4243,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Now I'll continue reading the deeper levels. Let me read the children of MarketPositioning and AudienceValue:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01SW1eawnqqYNM1SiT1yZ5aN",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01Pai6s5WtUjCRE2ze6kp8Ek",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 2,
+              "id": "toolu_bdrk_01DPNEn5kL4KJMPA6vPSDvHo",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 3,
+              "id": "toolu_bdrk_01C9jrdirYQxBTzJx9Cz83HE",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01SW1eawnqqYNM1SiT1yZ5aN",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn\\nnode_type: discipline\\ndiscipline: Category Design\\ntitle: Category Definition\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Category Design OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.a1000021.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.market_positioning.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §4\\nseed: >-\\n  Establish the primary commercial category and its supporting technical vocabulary for business and\\n  technical audiences.\\nthematic_lenses:\\n  - lens_id: lens.brand.category_definition.professional_craft\\n    name: Category Design\\n    purpose: Apply category design judgment to this outcome.\\n  - lens_id: lens.brand.category_definition.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.category_definition.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved category-definition brief.\\n\\n\\n  Source scope: §4 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Establish the primary commercial category and its supporting technical vocabulary for business\\n  and technical audiences.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.category_definition.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Establish the primary commercial\\n      category and its supporting technical vocabulary for business and technical audiences.\\n      The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding\\n      book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or\\n      short section that a reviewer can inspect directly to confirm the \\\"Category Definition\\\"\\n      requirement became real in the book. Format it as a copy-pasteable excerpt suitable for\\n      direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4335,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01Pai6s5WtUjCRE2ze6kp8Ek",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn\\nnode_type: discipline\\ndiscipline: Competitive Strategy\\ntitle: Competitive Differentiation\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Competitive Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.a1000023.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.market_positioning.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §15\\nseed: >-\\n  Differentiate Ogun by the meaning, authority, lineage, inheritance, and evidence it governs rather\\n  than by feature-list comparison.\\nthematic_lenses:\\n  - lens_id: lens.brand.competitive_differentiation.professional_craft\\n    name: Competitive Strategy\\n    purpose: Apply competitive strategy judgment to this outcome.\\n  - lens_id: lens.brand.competitive_differentiation.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.competitive_differentiation.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved competitive differentiation matrix.\\n\\n\\n  Source scope: §15 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Differentiate Ogun by the meaning, authority, lineage, inheritance, and evidence it governs\\n  rather than by feature-list comparison.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.competitive_differentiation.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Differentiate Ogun by the meaning,\\n      authority, lineage, inheritance, and evidence it governs rather than by feature-list\\n      comparison. The quote must be taken verbatim (or as a contiguous excerpt) from the\\n      produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer\\n      a paragraph or short section that a reviewer can inspect directly to confirm the\\n      \\\"Competitive Differentiation\\\" requirement became real in the book. Format it as a\\n      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence\\n      artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4493,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01DPNEn5kL4KJMPA6vPSDvHo",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn\\nnode_type: discipline\\ndiscipline: Customer Strategy\\ntitle: Ideal Customer Profiles\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Customer Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.audience_value.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §8\\nseed: >-\\n  Define priority organizations, sectors, and buying roles while preserving Ogun’s cross-domain\\n  identity.\\nthematic_lenses:\\n  - lens_id: lens.brand.customer_profiles.professional_craft\\n    name: Customer Strategy\\n    purpose: Apply customer strategy judgment to this outcome.\\n  - lens_id: lens.brand.customer_profiles.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.customer_profiles.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved ideal-customer profile pack.\\n\\n\\n  Source scope: §8 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Define priority organizations, sectors, and buying roles while preserving Ogun’s cross-domain\\n  identity.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.customer_profiles.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Define priority organizations,\\n      sectors, and buying roles while preserving Ogun’s cross-domain identity. The quote must\\n      be taken verbatim (or as a contiguous excerpt) from the produced branding book itself —\\n      not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short section\\n      that a reviewer can inspect directly to confirm the \\\"Ideal Customer Profiles\\\"\\n      requirement became real in the book. Format it as a copy-pasteable excerpt suitable for\\n      direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4261,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01C9jrdirYQxBTzJx9Cz83HE",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn\\nnode_type: discipline\\ndiscipline: Value Proposition Design\\ntitle: Enterprise Value Proposition\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Value Proposition Design OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.a1000027.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.audience_value.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§5 and 7\\nseed: >-\\n  Translate Ogun’s semantic governance into credible effects for alignment, governed AI adoption,\\n  evidence-backed delivery, continuity, and economic intelligence.\\nthematic_lenses:\\n  - lens_id: lens.brand.value_proposition.professional_craft\\n    name: Value Proposition Design\\n    purpose: Apply value proposition design judgment to this outcome.\\n  - lens_id: lens.brand.value_proposition.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.value_proposition.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved enterprise value proposition.\\n\\n\\n  Source scope: §§5 and 7 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Translate Ogun’s semantic governance into credible effects for alignment, governed AI adoption,\\n  evidence-backed delivery, continuity, and economic intelligence.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.value_proposition.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Translate Ogun’s semantic\\n      governance into credible effects for alignment, governed AI adoption, evidence-backed\\n      delivery, continuity, and economic intelligence. The quote must be taken verbatim (or as\\n      a contiguous excerpt) from the produced branding book itself — not from this OSN's seed,\\n      lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect\\n      directly to confirm the \\\"Enterprise Value Proposition\\\" requirement became real in the\\n      book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the\\n      snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4490,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Let me continue reading the remaining nodes. I'll read the children of CreativeIdentity and GoToMarket:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01SsNwnygkv9Azhd3U5ESGRd",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_014dzNBCywpaeG88trXDsdts",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 2,
+              "id": "toolu_bdrk_014GzMXZHzomxTo3BoUmjkso",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.a1000018.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 3,
+              "id": "toolu_bdrk_01QqhSaW8FeMaLQY7ubJAQ8Z",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01SsNwnygkv9Azhd3U5ESGRd",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn\\nnode_type: discipline\\ndiscipline: Verbal Brand Strategy\\ntitle: Verbal Identity\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Verbal Brand Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.a1000028.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.creative_identity.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§3 and 10–12\\nseed: >-\\n  Govern naming, message hierarchy, taglines, personality, and voice so every expression remains\\n  clear and evidence-aware.\\nthematic_lenses:\\n  - lens_id: lens.brand.verbal_identity.professional_craft\\n    name: Verbal Brand Strategy\\n    purpose: Apply verbal brand strategy judgment to this outcome.\\n  - lens_id: lens.brand.verbal_identity.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.verbal_identity.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved verbal identity guide.\\n\\n\\n  Source scope: §§3 and 10–12 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Govern naming, message hierarchy, taglines, personality, and voice so every expression remains\\n  clear and evidence-aware.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.verbal_identity.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Govern naming, message hierarchy,\\n      taglines, personality, and voice so every expression remains clear and evidence-aware.\\n      The quote must be taken verbatim (or as a contiguous excerpt) from the produced branding\\n      book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or\\n      short section that a reviewer can inspect directly to confirm the \\\"Verbal Identity\\\"\\n      requirement became real in the book. Format it as a copy-pasteable excerpt suitable for\\n      direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4342,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_014dzNBCywpaeG88trXDsdts",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn\\nnode_type: discipline\\ndiscipline: Visual Design Direction\\ntitle: Visual Identity\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Visual Design Direction OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.a1000031.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.creative_identity.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §13\\nseed: >-\\n  Create an accessible visual system for the governed forge and living graph whose states\\n  communicate authority, proposals, evidence, and conflict.\\nthematic_lenses:\\n  - lens_id: lens.brand.visual_identity.professional_craft\\n    name: Visual Design Direction\\n    purpose: Apply visual design direction judgment to this outcome.\\n  - lens_id: lens.brand.visual_identity.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.visual_identity.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved visual identity board.\\n\\n\\n  Source scope: §13 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Create an accessible visual system for the governed forge and living graph whose states\\n  communicate authority, proposals, evidence, and conflict.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.visual_identity.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Create an accessible visual system\\n      for the governed forge and living graph whose states communicate authority, proposals,\\n      evidence, and conflict. The quote must be taken verbatim (or as a contiguous excerpt)\\n      from the produced branding book itself — not from this OSN's seed, lenses, or\\n      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to\\n      confirm the \\\"Visual Identity\\\" requirement became real in the book. Format it as a\\n      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence\\n      artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4409,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_014GzMXZHzomxTo3BoUmjkso",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.a1000018.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.a1000018.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.a1000018.osn\\nnode_type: discipline\\ndiscipline: Demand Generation Strategy\\ntitle: Demand Generation\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Demand Generation Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.a1000032.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.a1000033.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.go_to_market.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§17 and 19\\nseed: >-\\n  Build website and educational content journeys that teach the category, demonstrate governed\\n  cooperation, and invite consequential use cases.\\nthematic_lenses:\\n  - lens_id: lens.brand.demand_generation.professional_craft\\n    name: Demand Generation Strategy\\n    purpose: Apply demand generation strategy judgment to this outcome.\\n  - lens_id: lens.brand.demand_generation.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.demand_generation.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern a reviewed demand-generation campaign.\\n\\n\\n  Source scope: §§17 and 19 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Build website and educational content journeys that teach the category, demonstrate governed\\n  cooperation, and invite consequential use cases.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.demand_generation.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Build website and educational\\n      content journeys that teach the category, demonstrate governed cooperation, and invite\\n      consequential use cases. The quote must be taken verbatim (or as a contiguous excerpt)\\n      from the produced branding book itself — not from this OSN's seed, lenses, or\\n      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to\\n      confirm the \\\"Demand Generation\\\" requirement became real in the book. Format it as a\\n      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence\\n      artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4416,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01QqhSaW8FeMaLQY7ubJAQ8Z",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn\\nnode_type: discipline\\ndiscipline: Revenue Enablement\\ntitle: Sales Enablement\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Revenue Enablement OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.a1000034.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.a1000035.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.go_to_market.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§16 and 18\\nseed: >-\\n  Equip commercial teams to discover consequential workflows, demonstrate governed outcomes, package\\n  value, and frame credible pilots.\\nthematic_lenses:\\n  - lens_id: lens.brand.sales_enablement.professional_craft\\n    name: Revenue Enablement\\n    purpose: Apply revenue enablement judgment to this outcome.\\n  - lens_id: lens.brand.sales_enablement.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.sales_enablement.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved sales enablement kit.\\n\\n\\n  Source scope: §§16 and 18 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Equip commercial teams to discover consequential workflows, demonstrate governed outcomes,\\n  package value, and frame credible pilots.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.sales_enablement.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Equip commercial teams to discover\\n      consequential workflows, demonstrate governed outcomes, package value, and frame\\n      credible pilots. The quote must be taken verbatim (or as a contiguous excerpt) from the\\n      produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer\\n      a paragraph or short section that a reviewer can inspect directly to confirm the \\\"Sales\\n      Enablement\\\" requirement became real in the book. Format it as a copy-pasteable excerpt\\n      suitable for direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4334,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Now I'll read the remaining leaf and mid-level nodes. Let me continue with the deeper levels:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01Nf3HHKnzenDqQGZmSnvvcH",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_011s8t2xC52H6F3A93kFh1jq",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.a1000021.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 2,
+              "id": "toolu_bdrk_0142PEBCnUsbVwNgPDYhmhj4",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 3,
+              "id": "toolu_bdrk_01DQTXGWbJW38KdNpjBG5H3K",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.a1000023.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01Nf3HHKnzenDqQGZmSnvvcH",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn\\nnode_type: discipline\\ndiscipline: Category Strategy\\ntitle: Primary Commercial Category\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Category Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.CategoryStatement.a1000036.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.CategoryEducation.a1000037.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.category_definition.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§4.1 and 4.3\\nseed: >-\\n  Lead consistently with Outcome Governance and Semantic Relationship Operating System and explain\\n  the organizational value carried by that category.\\nthematic_lenses:\\n  - lens_id: lens.brand.primary_category.professional_craft\\n    name: Category Strategy\\n    purpose: Apply category strategy judgment to this outcome.\\n  - lens_id: lens.brand.primary_category.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.primary_category.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern a reviewed primary-category statement.\\n\\n\\n  Source scope: §§4.1 and 4.3 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Lead consistently with Outcome Governance and Semantic Relationship Operating System and explain\\n  the organizational value carried by that category.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.primary_category.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Lead consistently with Outcome\\n      Governance and Semantic Relationship Operating System and explain the organizational\\n      value carried by that category. The quote must be taken verbatim (or as a contiguous\\n      excerpt) from the produced branding book itself — not from this OSN's seed, lenses, or\\n      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to\\n      confirm the \\\"Primary Commercial Category\\\" requirement became real in the book. Format it\\n      as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the\\n      evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4553,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_011s8t2xC52H6F3A93kFh1jq",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.a1000021.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.a1000021.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.a1000021.osn\\nnode_type: discipline\\ndiscipline: Technical Marketing\\ntitle: Supporting Technical Categories\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Technical Marketing OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.DeterministicSemanticOS.a1000038.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.GovernedAgentLifecycle.a1000039.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.category_definition.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §4.2\\nseed: >-\\n  Use technical descriptors to clarify architecture for technical, investor, security, and\\n  architecture audiences without displacing the primary category.\\nthematic_lenses:\\n  - lens_id: lens.brand.technical_categories.professional_craft\\n    name: Technical Marketing\\n    purpose: Apply technical marketing judgment to this outcome.\\n  - lens_id: lens.brand.technical_categories.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.technical_categories.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved technical-positioning brief.\\n\\n\\n  Source scope: §4.2 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Use technical descriptors to clarify architecture for technical, investor, security, and\\n  architecture audiences without displacing the primary category.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.technical_categories.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Use technical descriptors to\\n      clarify architecture for technical, investor, security, and architecture audiences\\n      without displacing the primary category. The quote must be taken verbatim (or as a\\n      contiguous excerpt) from the produced branding book itself — not from this OSN's seed,\\n      lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect\\n      directly to confirm the \\\"Supporting Technical Categories\\\" requirement became real in the\\n      book. Format it as a copy-pasteable excerpt suitable for direct review. Deliver the\\n      snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4611,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_0142PEBCnUsbVwNgPDYhmhj4",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn\\nnode_type: discipline\\ndiscipline: Competitive Intelligence\\ntitle: Record and Work Systems Contrast\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Competitive Intelligence OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.CrmContrast.a1000040.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.ProjectRequirementsContrast.a1000041.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.competitive_differentiation.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§15.1–15.2 and 15.7\\nseed: >-\\n  Contrast Ogun with CRM, project management, and requirements systems while respecting the\\n  strengths and proper role of each.\\nthematic_lenses:\\n  - lens_id: lens.brand.record_systems_contrast.professional_craft\\n    name: Competitive Intelligence\\n    purpose: Apply competitive intelligence judgment to this outcome.\\n  - lens_id: lens.brand.record_systems_contrast.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.record_systems_contrast.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern a reviewed record-systems comparison.\\n\\n\\n  Source scope: §§15.1–15.2 and 15.7 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Contrast Ogun with CRM, project management, and requirements systems while respecting the\\n  strengths and proper role of each.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.record_systems_contrast.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Contrast Ogun with CRM, project\\n      management, and requirements systems while respecting the strengths and proper role of\\n      each. The quote must be taken verbatim (or as a contiguous excerpt) from the produced\\n      branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a\\n      paragraph or short section that a reviewer can inspect directly to confirm the \\\"Record\\n      and Work Systems Contrast\\\" requirement became real in the book. Format it as a\\n      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence\\n      artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4648,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01DQTXGWbJW38KdNpjBG5H3K",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.a1000023.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.a1000023.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.a1000023.osn\\nnode_type: discipline\\ndiscipline: AI Market Intelligence\\ntitle: AI Platform Contrast\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: AI Market Intelligence OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.GovernanceObservabilityContrast.a1000042.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.AgentCodingContrast.a1000043.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.competitive_differentiation.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§15.3–15.6\\nseed: >-\\n  Distinguish Ogun from AI governance, observability, orchestration, and coding tools through its\\n  control of authority, outcome meaning, and evidence.\\nthematic_lenses:\\n  - lens_id: lens.brand.aiplatform_contrast.professional_craft\\n    name: AI Market Intelligence\\n    purpose: Apply ai market intelligence judgment to this outcome.\\n  - lens_id: lens.brand.aiplatform_contrast.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.aiplatform_contrast.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern a reviewed AI-platform comparison.\\n\\n\\n  Source scope: §§15.3–15.6 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Distinguish Ogun from AI governance, observability, orchestration, and coding tools through its\\n  control of authority, outcome meaning, and evidence.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.aiplatform_contrast.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Distinguish Ogun from AI\\n      governance, observability, orchestration, and coding tools through its control of\\n      authority, outcome meaning, and evidence. The quote must be taken verbatim (or as a\\n      contiguous excerpt) from the produced branding book itself — not from this OSN's seed,\\n      lenses, or output_spec. Prefer a paragraph or short section that a reviewer can inspect\\n      directly to confirm the \\\"AI Platform Contrast\\\" requirement became real in the book.\\n      Format it as a copy-pasteable excerpt suitable for direct review. Deliver the snippet as\\n      the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4651,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Let me continue reading the remaining nodes. I'll read the next batch:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01PDXrhHys5veRJ17u5TR2Yc",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01Mj1WSA1yn8Qt9fj3w6TFU1",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 2,
+              "id": "toolu_bdrk_01CJ6JREUTJqMXoUvxGqUFj2",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 3,
+              "id": "toolu_bdrk_01NUBru53SKCEmtgnauxcE6A",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.a1000027.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01PDXrhHys5veRJ17u5TR2Yc",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn\\nnode_type: discipline\\ndiscipline: Vertical Market Strategy\\ntitle: Priority Sectors\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Vertical Market Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.RegulatedSectors.a1000044.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.EnterpriseDeliverySectors.a1000045.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.customer_profiles.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§8.1–8.2\\nseed: >-\\n  Prioritize consequential, multidisciplinary environments with costly misunderstanding, AI-assisted\\n  processes, and evidence obligations.\\nthematic_lenses:\\n  - lens_id: lens.brand.priority_sectors.professional_craft\\n    name: Vertical Market Strategy\\n    purpose: Apply vertical market strategy judgment to this outcome.\\n  - lens_id: lens.brand.priority_sectors.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.priority_sectors.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved priority-sector portfolio.\\n\\n\\n  Source scope: §§8.1–8.2 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Prioritize consequential, multidisciplinary environments with costly misunderstanding,\\n  AI-assisted processes, and evidence obligations.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.priority_sectors.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Prioritize consequential,\\n      multidisciplinary environments with costly misunderstanding, AI-assisted processes, and\\n      evidence obligations. The quote must be taken verbatim (or as a contiguous excerpt) from\\n      the produced branding book itself — not from this OSN's seed, lenses, or output_spec.\\n      Prefer a paragraph or short section that a reviewer can inspect directly to confirm the\\n      \\\"Priority Sectors\\\" requirement became real in the book. Format it as a copy-pasteable\\n      excerpt suitable for direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4484,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01Mj1WSA1yn8Qt9fj3w6TFU1",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn\\nnode_type: discipline\\ndiscipline: Buying-Center Strategy\\ntitle: Buying Committee\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Buying-Center Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.EconomicBuyers.a1000046.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.ChampionsEvaluators.a1000047.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.customer_profiles.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §8.3\\nseed: >-\\n  Equip economic buyers, champions, and evaluators with role-specific value and proof while\\n  preserving one coherent product truth.\\nthematic_lenses:\\n  - lens_id: lens.brand.buying_committee.professional_craft\\n    name: Buying-Center Strategy\\n    purpose: Apply buying-center strategy judgment to this outcome.\\n  - lens_id: lens.brand.buying_committee.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.buying_committee.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved buying-committee map.\\n\\n\\n  Source scope: §8.3 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Equip economic buyers, champions, and evaluators with role-specific value and proof while\\n  preserving one coherent product truth.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.buying_committee.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Equip economic buyers, champions,\\n      and evaluators with role-specific value and proof while preserving one coherent product\\n      truth. The quote must be taken verbatim (or as a contiguous excerpt) from the produced\\n      branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a\\n      paragraph or short section that a reviewer can inspect directly to confirm the \\\"Buying\\n      Committee\\\" requirement became real in the book. Format it as a copy-pasteable excerpt\\n      suitable for direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4432,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01CJ6JREUTJqMXoUvxGqUFj2",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn\\nnode_type: discipline\\ndiscipline: Enterprise Value Strategy\\ntitle: Enterprise Value Pillars\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Enterprise Value Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.AlignmentGovernedAI.a1000048.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.EvidenceEconomics.a1000049.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.value_proposition.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §7\\nseed: >-\\n  Organize Ogun’s value around alignment, governed AI adoption, evidence-backed delivery,\\n  relationship continuity, and economic intelligence.\\nthematic_lenses:\\n  - lens_id: lens.brand.enterprise_pillars.professional_craft\\n    name: Enterprise Value Strategy\\n    purpose: Apply enterprise value strategy judgment to this outcome.\\n  - lens_id: lens.brand.enterprise_pillars.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.enterprise_pillars.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern a reviewed enterprise value-pillar deck.\\n\\n\\n  Source scope: §7 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Organize Ogun’s value around alignment, governed AI adoption, evidence-backed delivery,\\n  relationship continuity, and economic intelligence.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.enterprise_pillars.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Organize Ogun’s value around\\n      alignment, governed AI adoption, evidence-backed delivery, relationship continuity, and\\n      economic intelligence. The quote must be taken verbatim (or as a contiguous excerpt)\\n      from the produced branding book itself — not from this OSN's seed, lenses, or\\n      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to\\n      confirm the \\\"Enterprise Value Pillars\\\" requirement became real in the book. Format it as\\n      a copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence\\n      artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4521,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01NUBru53SKCEmtgnauxcE6A",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.a1000027.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.a1000027.osn\\nfile_name: GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.a1000027.osn\\nnode_type: discipline\\ndiscipline: Relationship Strategy\\ntitle: XRM Narrative\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Relationship Strategy OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.SrmDefinition.a1000050.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.XrmPositioning.a1000051.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.value_proposition.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §5\\nseed: >-\\n  Position XRM as CRM determinism plus semantic relationship probabilisticity governed by human\\n  approval and evidence.\\nthematic_lenses:\\n  - lens_id: lens.brand.xrm_narrative.professional_craft\\n    name: Relationship Strategy\\n    purpose: Apply relationship strategy judgment to this outcome.\\n  - lens_id: lens.brand.xrm_narrative.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.xrm_narrative.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved XRM narrative.\\n\\n\\n  Source scope: §5 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Position XRM as CRM determinism plus semantic relationship probabilisticity governed by human\\n  approval and evidence.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.xrm_narrative.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Position XRM as CRM determinism\\n      plus semantic relationship probabilisticity governed by human approval and evidence. The\\n      quote must be taken verbatim (or as a contiguous excerpt) from the produced branding\\n      book itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or\\n      short section that a reviewer can inspect directly to confirm the \\\"XRM Narrative\\\"\\n      requirement became real in the book. Format it as a copy-pasteable excerpt suitable for\\n      direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4335,\"truncated\":false}"
+        },
+        {
+          "role": "assistant",
+          "content": "Let me continue reading the remaining nodes. I'll read the next batch of leaf and mid-level nodes:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01QXUfnDPM38ApkFf4Gp8i6u",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.a1000028.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01CNBjxvANAV5NJLdbwtbEJJ",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 2,
+              "id": "toolu_bdrk_017u4fZb1Mbi3tx7KSDe2fre",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn.yaml\"}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 3,
+              "id": "toolu_bdrk_011trXtnrnFkqmE59HihMgnZ",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.a1000031.osn.yaml\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01QXUfnDPM38ApkFf4Gp8i6u",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.a1000028.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.a1000028.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.a1000028.osn\\nnode_type: discipline\\ndiscipline: Brand Architecture\\ntitle: Naming Architecture\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Brand Architecture OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.MasterNaming.a1000052.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.NamingRationale.a1000053.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.verbal_identity.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §3\\nseed: >-\\n  Keep Lexiom, Lexiom 1.3, Ogun, Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence in\\n  one coherent hierarchy.\\nthematic_lenses:\\n  - lens_id: lens.brand.naming_architecture.professional_craft\\n    name: Brand Architecture\\n    purpose: Apply brand architecture judgment to this outcome.\\n  - lens_id: lens.brand.naming_architecture.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.naming_architecture.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved naming architecture.\\n\\n\\n  Source scope: §3 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Keep Lexiom, Lexiom 1.3, Ogun, Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence\\n  in one coherent hierarchy.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.naming_architecture.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Keep Lexiom, Lexiom 1.3, Ogun,\\n      Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence in one coherent\\n      hierarchy. The quote must be taken verbatim (or as a contiguous excerpt) from the\\n      produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer\\n      a paragraph or short section that a reviewer can inspect directly to confirm the \\\"Naming\\n      Architecture\\\" requirement became real in the book. Format it as a copy-pasteable excerpt\\n      suitable for direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4430,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01CNBjxvANAV5NJLdbwtbEJJ",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn\\nnode_type: discipline\\ndiscipline: Brand Copy Direction\\ntitle: Messaging and Voice\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Brand Copy Direction OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.TaglineSystem.a1000054.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.ToneOfVoice.a1000055.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.verbal_identity.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§10–12\\nseed: >-\\n  Apply the message hierarchy, tagline system, personality, and voice consistently from promise\\n  through technical proof.\\nthematic_lenses:\\n  - lens_id: lens.brand.messaging_voice.professional_craft\\n    name: Brand Copy Direction\\n    purpose: Apply brand copy direction judgment to this outcome.\\n  - lens_id: lens.brand.messaging_voice.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.messaging_voice.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved messaging and voice guide.\\n\\n\\n  Source scope: §§10–12 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Apply the message hierarchy, tagline system, personality, and voice consistently from promise\\n  through technical proof.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.messaging_voice.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Apply the message hierarchy,\\n      tagline system, personality, and voice consistently from promise through technical\\n      proof. The quote must be taken verbatim (or as a contiguous excerpt) from the produced\\n      branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a\\n      paragraph or short section that a reviewer can inspect directly to confirm the\\n      \\\"Messaging and Voice\\\" requirement became real in the book. Format it as a copy-pasteable\\n      excerpt suitable for direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4407,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_017u4fZb1Mbi3tx7KSDe2fre",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn\\nnode_type: discipline\\ndiscipline: Brand Design\\ntitle: Visual Language\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Brand Design OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.CoreMetaphor.a1000056.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.ColorPrinciples.a1000057.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.visual_identity.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§13.1–13.3\\nseed: >-\\n  Define core forms, avoided motifs, and semantic color principles for disciplined pathways,\\n  inheritance, evidence, and state.\\nthematic_lenses:\\n  - lens_id: lens.brand.visual_language.professional_craft\\n    name: Brand Design\\n    purpose: Apply brand design judgment to this outcome.\\n  - lens_id: lens.brand.visual_language.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.visual_language.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern a reviewed visual-language board.\\n\\n\\n  Source scope: §§13.1–13.3 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Define core forms, avoided motifs, and semantic color principles for disciplined pathways,\\n  inheritance, evidence, and state.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.visual_language.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Define core forms, avoided motifs,\\n      and semantic color principles for disciplined pathways, inheritance, evidence, and\\n      state. The quote must be taken verbatim (or as a contiguous excerpt) from the produced\\n      branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a\\n      paragraph or short section that a reviewer can inspect directly to confirm the \\\"Visual\\n      Language\\\" requirement became real in the book. Format it as a copy-pasteable excerpt\\n      suitable for direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4391,\"truncated\":false}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_011trXtnrnFkqmE59HihMgnZ",
+          "name": "read_file",
+          "content": "{\"ok\":true,\"path\":\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.a1000031.osn.yaml\",\"content\":\"# Outcome Specification Node (OSN)\\n#\\n# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions\\n# for reconstructing the OSN Graph and linking evidentiary artifacts from names.\\n#\\n# An OSN is a human-owned semantic source file. Core fields: id and file_name\\n# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,\\n# success_evidences, compilation, and graph. The seed states intention;\\n# thematic_lenses name professional perspectives; output_spec states the\\n# outcome contract; success_evidences name how fulfillment will be inspected.\\n#\\n# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this\\n# node in each parent's graph.child_osn_ids (reciprocal). Optional\\n# standard_ancestor_osn_ids reference organizational standards beyond the\\n# local parent chain. On disk, prefer hierarchical stems\\n# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;\\n# when path prefixes and graph.* disagree, graph.* is authoritative.\\nschema_version: osn/0.2\\nid: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.a1000031.osn\\nfile_name: >-\\n  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.a1000031.osn\\nnode_type: discipline\\ndiscipline: Interaction Brand Design\\ntitle: Typography and Motion\\nowner:\\n  owner_id: dror\\n  display_name: Dror Levin\\n  role: Interaction Brand Design OSN Owner\\ngraph:\\n  parent_osn_ids:\\n    - GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn\\n  child_osn_ids:\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.Typography.a1000058.osn\\n    - >-\\n      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.Motion.a1000059.osn\\n  standard_ancestor_osn_ids: []\\n  derived_from_lens_id: lens.brand.visual_identity.professional_craft\\nsource_spec:\\n  document: Branding/branding_spec.md\\n  sections: §§13.4–13.5\\nseed: >-\\n  Use architectural readability and restrained state-transition motion to reinforce credibility and\\n  governance.\\nthematic_lenses:\\n  - lens_id: lens.brand.typography_motion.professional_craft\\n    name: Interaction Brand Design\\n    purpose: Apply interaction brand design judgment to this outcome.\\n  - lens_id: lens.brand.typography_motion.human_authority\\n    name: Human Authority\\n    purpose: Keep proposals distinct from approved organizational truth.\\n  - lens_id: lens.brand.typography_motion.evidence\\n    name: Evidence and Claims\\n    purpose: Require inspectable delivery and classify claims according to available proof.\\noutput_spec: >\\n  Produce and govern an approved typography-and-motion system.\\n\\n\\n  Source scope: §§13.4–13.5 of Branding/branding_spec.md.\\n\\n\\n  Outcome requirements:\\n\\n  - Use architectural readability and restrained state-transition motion to reinforce credibility\\n  and governance.\\n\\n  - Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\\n\\n  - Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\\n\\n  - Classify capability, market, regulatory, numerical, and performance claims; do not publish\\n  unsupported certainty.\\n\\n  - Keep the result concrete, commercially usable, accessible to its audience, and consistent with\\n  ancestor OSNs.\\nsuccess_evidences:\\n  - evidence_id: sev.brand.typography_motion.delivered_artifact\\n    kind: TEXTUAL_SNIPPET\\n    direct: true\\n    inspection_prompt: >-\\n      From the delivered Ogun branding book markdown (the SUD document.md / brand-book\\n      artifact produced by the document builder), extract a single readable quoted passage\\n      that shows how the book fulfills this node's outcome: Use architectural readability and\\n      restrained state-transition motion to reinforce credibility and governance. The quote\\n      must be taken verbatim (or as a contiguous excerpt) from the produced branding book\\n      itself — not from this OSN's seed, lenses, or output_spec. Prefer a paragraph or short\\n      section that a reviewer can inspect directly to confirm the \\\"Typography and Motion\\\"\\n      requirement became real in the book. Format it as a copy-pasteable excerpt suitable for\\n      direct review. Deliver the snippet as the evidence artifact.\\ncompilation:\\n  can_be_compilation_root: false\\n  compilation_scope: self_only\\n  target_tool_profile: null\\n\",\"offset\":0,\"content_chars\":4419,\"truncated\":false}"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "list_files",
+            "description": "List files in the mounted build workspace.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Relative directory; omit for workspace root."
+                },
+                "depth": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 6
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "read_file",
+            "description": "Read UTF-8 text from a relative workspace file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60000
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "finish",
+            "description": "Finish only after required artifacts are present and ready for validation.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 12000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-07-30T10:06:06.628Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "Let me continue reading the remaining nodes. I'll read the next batch:",
+    "assistant_content_chars": 70,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 50555,
+      "completion_tokens": 365,
+      "total_tokens": 50920,
+      "cost": 0.05238,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.05238,
+        "upstream_inference_prompt_cost": 0.050555,
+        "upstream_inference_completions_cost": 0.001825
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785405961-uwvkVg4Zha6ZrhPSurnn",
+      "object": "chat.completion",
+      "created": 1785405961,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "Let me continue reading the remaining nodes. I'll read the next batch:",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_01MtdZ25p2cuoGpE6JWpDuvn",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.a1000032.osn.yaml\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 1,
+                "id": "toolu_bdrk_01Jbb7X9j3n7YohgPXVwU6cV",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.a1000033.osn.yaml\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 2,
+                "id": "toolu_bdrk_018KqCvQj775NpfpJUVgQJko",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.a1000034.osn.yaml\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 3,
+                "id": "toolu_bdrk_016dtYwrzKiU6eQkQtAsi2RJ",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.a1000035.osn.yaml\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 50555,
+        "completion_tokens": 365,
+        "total_tokens": 50920,
+        "cost": 0.05238,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.05238,
+          "upstream_inference_prompt_cost": 0.050555,
+          "upstream_inference_completions_cost": 0.001825
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 5185,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

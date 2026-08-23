@@ -1,0 +1,281 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "471a74b5-d1f9-41ab-9fd5-f7fd97786bb2",
+  "lane": "agent_broker",
+  "created_at": "2026-08-01T08:11:24.723Z",
+  "completed_at": "2026-08-01T08:11:27.389Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "msa3c0xw_861b3538",
+      "pass": "evidence",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-08-01T08:11:24.723Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 625
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 3990
+      }
+    ],
+    "message_count": 2,
+    "packet_chars": 6081,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 evidence-collection agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nFollow EVIDENCE_AGENT_PROMPT.md. Process every EVIDENCE_PLAN.json target.\nWrite only under ./evidences/ and EVIDENCE_MANIFEST.json (optional BUILD_REPORT.md notes).\nDo not rewrite primary deliverables (document.md, index.html, or the software tree).\nDo not fabricate screenshots or videos — use deferred with human-capture notes when needed.\nRequired completion artifact: EVIDENCE_MANIFEST.json\nCall finish only after EVIDENCE_MANIFEST.json covers every plan target_id."
+        },
+        {
+          "role": "user",
+          "content": "# Lexiom evidence-collection agent\n\n## Project setup (CA / Real Bolt)\n- Workspace root (cwd): `C:/Dror/GT3/builds/lexiom13/msa3c0xw_861b3538` — already synced into the CA WebContainer.\n- Frozen instruction snapshot (read-only): `./nodes/` (normalized JSON nodes).\n- OSNG primer: `./OSNG_Basics_README.md`\n- Evidence index (pointers only): `./EVIDENCE_PLAN.json`\n- Optional audit: `./HANDOFF.json` (run_id / plugin_id / membership).\n- Primary deliverables from the builder pass live at this project root — inspect them; do **not** rewrite them.\n- Tools: `list_files`, `read_file`, `write_file`, and explicit `finish`. No `run_command` in this pass.\n\n## Role and privileges\n- You are an **evidence collector** for this build run — not an OSN editor and not a second product author.\n- Read prepared OSN semantics only under `./nodes/` (do **not** modify `./nodes/`).\n- Write only under `./evidences/` and `./EVIDENCE_MANIFEST.json` (optional short evidence notes may be appended in `BUILD_REPORT.md`).\n- Do not invent OSN content; open the immutable snapshot files named in the plan.\n\n## Scope\n- plugin_id: lexiom13.document_builder\n- Targets in plan: 65 (direct: 64, derivative: 1)\n- Process **every** entry in `./EVIDENCE_PLAN.json` → `targets[]` independently (direct and derivative).\n\n## How to learn each target (authoritative — do not skip)\n1. Open `./EVIDENCE_PLAN.json` and take the next `targets[]` row.\n2. Open that row's `snapshot_path` under this project. Find the matching `success_evidences` entry by `evidence_id`.\n3. Read `kind`, `direct`, and `inspection_prompt` **from that immutable node entry** — do not rely on this prompt for those fields (they are intentionally not copied here).\n4. Write the artifact to exactly `expected_relative_path` from the plan (or record `failed` / `deferred` in the manifest if you cannot).\n5. Filename association: `{osn.file_name}.{evidence_id}.v1.{ext}` under `./evidences/` — recoverable from the name alone (see `./OSNG_Basics_README.md`).\n\n## Status vocabulary (manifest)\n- `collected` — file exists at the expected path (or an allowed primary-artifact reference is recorded); **not** owner approval.\n- `deferred` — cannot collect now; include concrete human-capture / follow-up notes.\n- `failed` — attempted but did not produce a usable artifact.\n- `not_applicable` — only when the delivered SUD truly cannot host this inspection (explain why).\n\n## Hard bans\n- Do not fabricate screenshots, videos, metrics, or passing test results.\n- Do not use OSN specification text (seed, lenses, output_spec, evidence definitions) as **direct** evidence.\n- Do not claim human approval or mutate canonical Lexiom state outside this build directory.\n- Do not paste or paraphrase OSN bodies into the manifest; point at paths and statuses.\n- Do not rewrite primary deliverables (`document.md`, `index.html`, or the software tree).\n\n## Plugin-specific capture hints\n- Document builder: for each `TEXTUAL_SNIPPET`, write a thin excerpt markdown at `expected_relative_path` quoting the delivered `document.md` (verbatim contiguous passage). Also list `document.md` in `source_artifact_paths` when that file is the SUD outcome.\n- Derivative briefs (e.g. markdown_brief): write under `./evidences/` only when the plan requests them; derive from the delivered document + OSNG, not from inventing claims.\n- `SCREEN-SHOT` / `VIDEO-CLIP`: mark `deferred` with a concrete human-capture procedure — do not invent media files.\n\n## Required output\n- Write `./EVIDENCE_MANIFEST.json` with schema `lexiom13-evidence-manifest/1` covering **every** `target_id` from the plan.\n- Top-level shape:\n  `{ \"schema_version\", \"run_id\", \"collected_at\" (ISO), \"entries\": [ ... ] }`\n- Each `entries[]` row: `target_id`, `osn_id`, `evidence_id`, `direct`, `kind`, `status`,\n  `artifact_paths` (relative to project root), `source_artifact_paths` (optional), `notes`, `collected_by: \"agent\"`.\n- Call `finish` only after `./EVIDENCE_MANIFEST.json` exists and covers every plan target.\n"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "list_files",
+            "description": "List files in the mounted build workspace.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Relative directory; omit for workspace root."
+                },
+                "depth": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 6
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "read_file",
+            "description": "Read UTF-8 text from a relative workspace file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60000
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "finish",
+            "description": "Finish only after required artifacts are present and ready for validation.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 12000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-08-01T08:11:27.383Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "I'll begin by reading the evidence plan and understanding the project structure, then systematically collect evidence for each target.",
+    "assistant_content_chars": 134,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 2172,
+      "completion_tokens": 182,
+      "total_tokens": 2354,
+      "cost": 0.003082,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.003082,
+        "upstream_inference_prompt_cost": 0.002172,
+        "upstream_inference_completions_cost": 0.00091
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785571883-FhgD6UJknEIpfZEVLFEk",
+      "object": "chat.completion",
+      "created": 1785571883,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "I'll begin by reading the evidence plan and understanding the project structure, then systematically collect evidence for each target.",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_01RpdYs3m3gjqsWrLATYejbf",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"./EVIDENCE_PLAN.json\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 1,
+                "id": "toolu_bdrk_01K8EAJTgLguRGz9hpQtDLYe",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"./OSNG_Basics_README.md\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 2,
+                "id": "toolu_bdrk_01N48V6CnSEgAzACqEPNu2ZY",
+                "function": {
+                  "name": "list_files",
+                  "arguments": "{\"path\": \".\", \"depth\": 2}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 2172,
+        "completion_tokens": 182,
+        "total_tokens": 2354,
+        "cost": 0.003082,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.003082,
+          "upstream_inference_prompt_cost": 0.002172,
+          "upstream_inference_completions_cost": 0.00091
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 2666,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

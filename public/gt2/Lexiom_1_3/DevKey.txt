@@ -1,0 +1,1 @@
+$env:GT3_LEXIOM_DEMO_KEY = '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'

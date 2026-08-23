@@ -1,0 +1,645 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: 2ffdc91d-37e5-4285-93b0-1f8aacc45ec8
+Timestamp: 2026-07-12T17:07:50.595Z
+LexiomNarrativeContract: 1
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+This request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.
+
+You are Lexiom 1.3 answering a Causal Lineage Chat question during success-evidence review.
+
+TASK:
+- The human is inspecting a delivered success-evidence artifact in the Center Playfield.
+- Their question is semantically scoped to WHY the System Under Development (SUD) looks, feels, reads, or behaves as shown in that evidence — not a general-purpose chat.
+- Reason ONLY inside the approved semantic territory below: OSN seeds, output specifications, thematic lenses, success-evidence definitions, ancestors, and organizational standards.
+- Do NOT treat your answer as canonical truth. This is a Black Move draft explanation for human review.
+- Classify every causal claim into approved, inferred, or missing lineage.
+- For APPROVED_CAUSES: quote ONLY from the Focus OSN output_spec (OUTPUT SPECIFICATION) below. Do not use seed, thematic lenses, success evidences, ancestors, or other fields as APPROVED_CAUSES quotation sources.
+
+CURRENT QUESTION:
+why the buttons are blue
+
+PRIOR THREAD (same evidence scope — follow-ups need not restate the artifact):
+(none — first question in this evidence-scoped thread)
+
+FOCUS OSN:
+- Title: UX
+- File: UX
+
+FOCUS OSN SEED (context only — do not quote under APPROVED_CAUSES):
+Shape the first encounter so a newcomer immediately understands Lexiom as a reasoning-making cockpit for opening, inspecting, branching, compiling, and tracing semantic source files.
+
+FOCUS OSN THEMATIC LENSES (context only — do not quote under APPROVED_CAUSES):
+- First-Time Clarity (lens_id: lens.ux.first_time_clarity)
+  Purpose: Reduce cognitive load in the first thirty seconds.
+
+- Cockpit Orientation (lens_id: lens.ux.cockpit_orientation)
+  Purpose: Teach what each cockpit region does through visible placement.
+
+- OSN File Metaphor (lens_id: lens.ux.file_metaphor)
+  Purpose: Make GT_Philosophy.osn, ProductWelcome.osn, UX.osn, and CodeShape.osn feel openable and inspectable.
+
+FOCUS OSN THEMATIC LENSES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+First-Time Clarity
+Purpose: Reduce cognitive load in the first thirty seconds.
+
+Cockpit Orientation
+Purpose: Teach what each cockpit region does through visible placement.
+
+OSN File Metaphor
+Purpose: Make GT_Philosophy.osn, ProductWelcome.osn, UX.osn, and CodeShape.osn feel openable and inspectable.
+
+FOCUS OSN OUTPUT SPECIFICATION (sole quotation source for APPROVED_CAUSES):
+Present a quiet welcome screen using the Lexiom cockpit layout. On first visit
+or page reload, show a welcoming modal over the cockpit until the player
+dismisses it with "Begin exploring."
+
+Left panel — show the four canonical OSNs as a simple hierarchy:
+GT_Philosophy.osn at the top, ProductWelcome.osn beneath it, and UX.osn plus
+CodeShape.osn beneath ProductWelcome.osn. All OSNs begin with their section
+lists collapsed. Clicking an OSN row toggles its section list and selects
+that OSN as the Focus OSN. When expanded, an OSN reveals section children for
+Seed, Thematic Lenses, Output Spec, and Success Evidences.
+
+Focus OSN highlighting — the Focus OSN and its parent-chain ancestors receive
+the bluish neon box highlight. Only the Focus OSN's active section label
+(for example Seed or Output Spec) glows in matching neon text; other expanded
+OSNs keep their section labels muted so there is always a single glowing key.
+
+Optional graph filters — a filter bar at the bottom of the left panel lets the
+player opt into extra detail. Both filters start disabled for a calm initial
+view:
+- Evidence approval — shows a read-only per-OSN glyph (● ◐ ○) and aggregate
+  attestation summary. Clicking a glyph navigates to that OSN's Success
+  Evidences section without changing approval state.
+- Build controls — shows per-OSN build glyphs and a build-ready summary.
+  When disabled, build glyphs are hidden from the graph.
+
+Buildable OSNs expose a build glyph only when Build controls is enabled; after
+the glyph is used, a Build child appears under that OSN. GT_Philosophy.osn
+shows a disconnected plug glyph when build controls are visible, signaling that
+it is not wired to a build agent.
+
+Center playfield — show one Focus OSN section at a time as a Lexiom
+draft-first card, or an evidence artifact viewer when the player opens a demo
+evidence from the right panel. The card may show Seed, Thematic Lenses, Output
+Spec, Success Evidences definitions, or a generated Build preview. Opening an
+evidence artifact replaces the draft card with the artifact (image, video,
+text, or code) until the player selects another section. This remains the sole
+place for review, edit, and decisive interaction.
+
+Top L2 panel — in draft/editing mode (no evidence open), show the Focus OSN's
+thematic lenses as active chips. Clicking a lens selects it and triggers a
+GT3-backed reshape of the current center section (Seed, Output Spec, or any
+focused section) through that lens. Lens behavior is scoped per Focus OSN and
+per focused section: each click re-runs inference on the current draft text,
+so clicking the same lens again deepens the same section further into that
+discipline (for example, repeatedly clicking a Code Shaping lens pushes the
+Seed progressively toward code-shaping language) rather than repeating a
+one-shot reframe. For child OSNs such as UX.osn and CodeShape.osn, the GT3
+request includes ancestor context with each ancestor's seed and full
+output_spec, beginning with the direct parent ProductWelcome.osn, and the
+reshaped section must stay consistent with those upstream output
+specifications. The result appears as an unapproved draft in the center
+playfield; approval remains a separate explicit action. The L2 status line
+names the active lens, the focused section, and how many passes have been
+applied, and each chip that has shaped the current section shows a small ×N
+pass badge. While a lens is active, the focus row shows the lens name
+alongside the current section. Build sections disable lens interaction, and
+chips are disabled while a pass is in flight.
+
+During success-evidence review (an evidence artifact selected), L2 becomes the
+Lineage Evidence Prism instead of thematic lens chips. The status line reads
+"Lineage review — scoped to [artifact filename]". After a Causal Lineage Chat
+answer arrives, the prism shows citation chips grouped as Approved, Inferred,
+and Missing causes parsed from that answer. Clicking a navigable citation chip
+opens the cited OSN section in the graph and center playfield while keeping
+evidence context recoverable via a "Return to evidence review" control.
+Missing and inferred causes also expose lightweight non-canonical review
+actions (flag gap, copy annotation draft, open parent OSN, and an inferred
+seed-proposal stub) that only append to the session action log.
+
+Right panel — list demo evidence artifacts linked to the Focus OSN's success
+evidences. Each available artifact is clickable and opens in the center
+playfield. Beside each artifact, an Approve checkbox lets the OSN owner attest
+that the delivered outcome became real (a White Move recorded in the action
+log). Unavailable artifacts show a waiting placeholder and keep approval
+disabled until a reviewable file exists.
+
+Bottom ribbon — when no evidence is open, show a light placeholder
+("Semantic actions — coming soon"). When a success-evidence artifact is open
+in the center, the ribbon becomes Causal Lineage Chat: a left "Your question"
+Enter-to-submit field scoped to that evidence, and a right "Lexiom proposal"
+trigger showing the latest question plus executive summary. Clicking Lexiom
+findings reveals the lineage narrative draft in the center playfield (hiding
+the artifact until the player re-selects evidence or asks again). Answers are
+draft explanations (Black Move only) and do not mutate OSN drafts, YAML, or
+evidence approvals.
+
+Selection behavior — choosing an OSN or one of its section/build children
+updates the center playfield and L2 focus. The Focus OSN's title, owner,
+discipline, and current section (or opened evidence kind) stay visible in the
+focus row so the player always knows which node and sub-context are in view.
+
+Functional minimum:
+- Display all five cockpit regions on first load.
+- Show the welcome modal on first visit or reload until dismissed.
+- Let the player select each of the four OSNs from the left graph.
+- Start with all OSN section lists collapsed and both graph filters disabled.
+- Let the player select section children for the Focus OSN.
+- Let the player click an L2 thematic lens and receive a GT3-backed draft
+  reshape of the focused section in the center card, and click the same lens
+  again to deepen that section further into the lens's discipline.
+- Let the player open demo evidence artifacts and toggle per-evidence approval.
+- Let the player enable Build controls and invoke build from a per-OSN glyph.
+- While evidence is open, host Causal Lineage Chat in the bottom ribbon and the
+  Lineage Evidence Prism in L2, with citation navigation and recoverable
+  return to the scoped evidence.
+
+FOCUS OSN SUCCESS EVIDENCE DEFINITIONS (context only — do not quote under APPROVED_CAUSES):
+- sev.ux.screenshot (kind: screenshot, direct: true)
+  Inspection prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.
+
+FOCUS OSN SUCCESS EVIDENCES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+evidence_id: sev.ux.screenshot
+kind: screenshot
+direct: true
+inspection_prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.
+
+DISPLAYED SUCCESS EVIDENCE ARTIFACT:
+- Evidence ID: sev.ux.screenshot
+- Kind: screenshot
+- Direct: true
+- Artifact file: GT_Philosophy.ProductLexiom.UX.a1000003.osn.sev.ux.screenshot.v2.png
+- Media type: image
+- Inspection prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.
+- Visual artifact note: pixel-level vision is unavailable in this MVP. Reason from the inspection prompt, OSN output specifications, and graph lineage only.
+
+PARENT / ANCESTOR OSNs (secondary context — do not quote under APPROVED_CAUSES):
+- ProductLexiom
+  Seed: Demonstrate Lexiom 1.3.3 through a calm, welcoming single-page application where a first-time user encounters OSNs (Outcome Specification Nodes) as owned, evidence-backed, file-like semantic source artifacts. Owned semantic source files expressing human intention and evidence.
+  Output Spec:
+    This POC introduces Lexiom's OSN model with a minimal four-node canonical
+    graph: GT_Philosophy.osn at the top, this Product OSN beneath it, and two
+    derivative discipline OSNs for UX and Code Shaping.
+    
+    The product outcome is a playable welcome experience that lets a newcomer see
+    that semantic intention lives in owned OSN files, branches into section-level
+    cards for the Focus OSN, inspects linked demo evidence artifacts, and can be
+    built from any build-ready OSN when the player opts into build controls.
+    
+    In scope:
+    - One welcoming single-page application with a first-visit welcome modal.
+    - A fixed initial graph of four canonical OSN files (GT_Philosophy.osn plus
+      ProductWelcome.osn, UX.osn, and CodeShape.osn).
+    - Runtime section children for the Focus OSN.
+    - Runtime Build children created only after the user invokes build.
+    - GT3-backed thematic lens reframing for the active Focus OSN section.
+    - Child-discipline lens requests include ancestor output_spec context so
+      owner-set product outcomes inform downstream reframing.
+    - Versioned demo success-evidence artifacts under public/gt2/Lexiom_1_3/evidences/.
+    - Per-evidence owner approval in the right panel and optional graph filters
+      for evidence-approval status and build controls (both off by default).
+    - Evidence-scoped Causal Lineage Chat (L3) with L2 Lineage Evidence Prism for
+      asking why a displayed success-evidence artifact looks or behaves as shown,
+      without silently mutating canonical OSN files.
+    
+    Out of scope:
+    - Authentication, billing, collaboration, or multi-user workflows.
+    - Database persistence, durable session stores, or autonomous canonization of GT3 output.
+
+- GT_Philosophy
+  Seed: Express the GT constellation philosophy as a reusable software-development standard so any future product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.
+  Output Spec:
+    This OSN states how the GT constellation should guide software development in
+    any domain.
+    
+    GT3 role:
+    - Preserve the reusable technological core: inference infrastructure, semantic
+      patterns, governance mechanisms, provenance/logging capabilities, prompt
+      assets, reusable libraries, and other protected intellectual capital.
+    - Favor designs that can be reused across multiple products instead of
+      burying generally useful capabilities inside one-off application code.
+    
+    GT2 role:
+    - Turn GT3 capabilities into productized software, user-facing workflows,
+      commercial services, and market-validated delivery.
+    - Own the vertical experience, product framing, and applied adaptation needed
+      for a concrete audience or use case.
+    
+    GT1 role:
+    - Translate related capabilities into public-benefit, nonprofit, educational,
+      or legitimacy-building expressions when appropriate.
+    - Strengthen goodwill and broader social proof without dissolving the
+      protected GT3 core or the GT2 commercial surface.
+    
+    Development rules:
+    - Treat language-model or agent output as draft material, never as automatic
+      canonical truth.
+    - Require explicit human approval for meaningful canonical changes.
+    - Avoid silent mutation; important transformations must be attributable,
+      inspectable, and replayable.
+    - Keep behavior spec-driven: important software intent should live in readable
+      specifications or semantic source artifacts, not only in code.
+    - Prefer evidence-backed delivery: each important outcome should have at least
+      one direct inspection artifact such as a runnable demo, screenshot, video,
+      reviewed document, or code excerpt.
+    - Separate canonical source artifacts from runtime drafts, proposals, and
+      temporary session state.
+    
+    Design implication:
+    - Not every project must expose GT1, GT2, and GT3 as separate user-visible
+      applications, but every project should be designed with clarity about which
+      parts are reusable core, which parts are productization, and which parts
+      serve legitimacy or public-benefit aims.
+    - This philosophy OSN is meant to guide downstream software OSNs rather than
+      connect directly to a build machine or coding agent.
+    
+    Out of scope:
+    - Forcing every software project to ship all three layers at once.
+    - Replacing product-specific architecture, UX, security, or code-shaping OSNs.
+
+ORGANIZATIONAL STANDARD ANCESTORS (secondary context — do not quote under APPROVED_CAUSES):
+(none)
+
+COMPILATION METADATA:
+- can_be_compilation_root: true
+- compilation_scope: self_only
+- target_tool_profile: ux_prompt_for_static_spa
+
+OUTPUT CONTRACT (use this exact structure):
+Line 1 must be exactly:
+EXEC_SUMMARY: <one line containing exactly 13-17 words that executive-summarize the full lineage exploration narrative below>
+Then a blank line.
+Then write a short narrative explanation paragraph (2-6 sentences).
+Then include these section headers on their own lines, each followed by bullet lines starting with "- ":
+APPROVED_CAUSES:
+- Quote ONLY from the Focus OSN output_spec / OUTPUT SPECIFICATION above.
+- Each bullet MUST include (1) the Focus OSN file name and the section label Output Spec, and (2) an accurate verbatim quote from that output_spec enclosed in double quotes.
+- Do not paraphrase output_spec wording inside those quotes; copy the words exactly as written in FOCUS OSN OUTPUT SPECIFICATION.
+- Do NOT quote seed, thematic lenses, success evidences, ancestors, standards, artifact metadata, or general knowledge under APPROVED_CAUSES.
+- If no output_spec passage supports the claim, do NOT place it under APPROVED_CAUSES — use INFERRED_CAUSES or MISSING_CAUSES instead.
+INFERRED_CAUSES:
+- Plausible causes not directly established by Focus OSN output_spec quotes; mark lower authority.
+MISSING_CAUSES:
+- Features or behaviors lacking approved output_spec lineage; suggest corrective actions (new OSN, clarification, evidence gap).
+If a section has no items, write "- (none)" under that header.
+Do not use markdown fences. Do not mutate or propose edits to canonical OSN YAML.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Lineage_ followed by four words (underscore-separated) that capture the causal lineage explanation act. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+This request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.
+
+You are Lexiom 1.3 answering a Causal Lineage Chat question during success-evidence review.
+
+TASK:
+- The human is inspecting a delivered success-evidence artifact in the Center Playfield.
+- Their question is semantically scoped to WHY the System Under Development (SUD) looks, feels, reads, or behaves as shown in that evidence — not a general-purpose chat.
+- Reason ONLY inside the approved semantic territory below: OSN seeds, output specifications, thematic lenses, success-evidence definitions, ancestors, and organizational standards.
+- Do NOT treat your answer as canonical truth. This is a Black Move draft explanation for human review.
+- Classify every causal claim into approved, inferred, or missing lineage.
+- For APPROVED_CAUSES: quote ONLY from the Focus OSN output_spec (OUTPUT SPECIFICATION) below. Do not use seed, thematic lenses, success evidences, ancestors, or other fields as APPROVED_CAUSES quotation sources.
+
+CURRENT QUESTION:
+why the buttons are blue
+
+PRIOR THREAD (same evidence scope — follow-ups need not restate the artifact):
+(none — first question in this evidence-scoped thread)
+
+FOCUS OSN:
+- Title: UX
+- File: UX
+
+FOCUS OSN SEED (context only — do not quote under APPROVED_CAUSES):
+Shape the first encounter so a newcomer immediately understands Lexiom as a reasoning-making cockpit for opening, inspecting, branching, compiling, and tracing semantic source files.
+
+FOCUS OSN THEMATIC LENSES (context only — do not quote under APPROVED_CAUSES):
+- First-Time Clarity (lens_id: lens.ux.first_time_clarity)
+  Purpose: Reduce cognitive load in the first thirty seconds.
+
+- Cockpit Orientation (lens_id: lens.ux.cockpit_orientation)
+  Purpose: Teach what each cockpit region does through visible placement.
+
+- OSN File Metaphor (lens_id: lens.ux.file_metaphor)
+  Purpose: Make GT_Philosophy.osn, ProductWelcome.osn, UX.osn, and CodeShape.osn feel openable and inspectable.
+
+FOCUS OSN THEMATIC LENSES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+First-Time Clarity
+Purpose: Reduce cognitive load in the first thirty seconds.
+
+Cockpit Orientation
+Purpose: Teach what each cockpit region does through visible placement.
+
+OSN File Metaphor
+Purpose: Make GT_Philosophy.osn, ProductWelcome.osn, UX.osn, and CodeShape.osn feel openable and inspectable.
+
+FOCUS OSN OUTPUT SPECIFICATION (sole quotation source for APPROVED_CAUSES):
+Present a quiet welcome screen using the Lexiom cockpit layout. On first visit
+or page reload, show a welcoming modal over the cockpit until the player
+dismisses it with "Begin exploring."
+
+Left panel — show the four canonical OSNs as a simple hierarchy:
+GT_Philosophy.osn at the top, ProductWelcome.osn beneath it, and UX.osn plus
+CodeShape.osn beneath ProductWelcome.osn. All OSNs begin with their section
+lists collapsed. Clicking an OSN row toggles its section list and selects
+that OSN as the Focus OSN. When expanded, an OSN reveals section children for
+Seed, Thematic Lenses, Output Spec, and Success Evidences.
+
+Focus OSN highlighting — the Focus OSN and its parent-chain ancestors receive
+the bluish neon box highlight. Only the Focus OSN's active section label
+(for example Seed or Output Spec) glows in matching neon text; other expanded
+OSNs keep their section labels muted so there is always a single glowing key.
+
+Optional graph filters — a filter bar at the bottom of the left panel lets the
+player opt into extra detail. Both filters start disabled for a calm initial
+view:
+- Evidence approval — shows a read-only per-OSN glyph (● ◐ ○) and aggregate
+  attestation summary. Clicking a glyph navigates to that OSN's Success
+  Evidences section without changing approval state.
+- Build controls — shows per-OSN build glyphs and a build-ready summary.
+  When disabled, build glyphs are hidden from the graph.
+
+Buildable OSNs expose a build glyph only when Build controls is enabled; after
+the glyph is used, a Build child appears under that OSN. GT_Philosophy.osn
+shows a disconnected plug glyph when build controls are visible, signaling that
+it is not wired to a build agent.
+
+Center playfield — show one Focus OSN section at a time as a Lexiom
+draft-first card, or an evidence artifact viewer when the player opens a demo
+evidence from the right panel. The card may show Seed, Thematic Lenses, Output
+Spec, Success Evidences definitions, or a generated Build preview. Opening an
+evidence artifact replaces the draft card with the artifact (image, video,
+text, or code) until the player selects another section. This remains the sole
+place for review, edit, and decisive interaction.
+
+Top L2 panel — in draft/editing mode (no evidence open), show the Focus OSN's
+thematic lenses as active chips. Clicking a lens selects it and triggers a
+GT3-backed reshape of the current center section (Seed, Output Spec, or any
+focused section) through that lens. Lens behavior is scoped per Focus OSN and
+per focused section: each click re-runs inference on the current draft text,
+so clicking the same lens again deepens the same section further into that
+discipline (for example, repeatedly clicking a Code Shaping lens pushes the
+Seed progressively toward code-shaping language) rather than repeating a
+one-shot reframe. For child OSNs such as UX.osn and CodeShape.osn, the GT3
+request includes ancestor context with each ancestor's seed and full
+output_spec, beginning with the direct parent ProductWelcome.osn, and the
+reshaped section must stay consistent with those upstream output
+specifications. The result appears as an unapproved draft in the center
+playfield; approval remains a separate explicit action. The L2 status line
+names the active lens, the focused section, and how many passes have been
+applied, and each chip that has shaped the current section shows a small ×N
+pass badge. While a lens is active, the focus row shows the lens name
+alongside the current section. Build sections disable lens interaction, and
+chips are disabled while a pass is in flight.
+
+During success-evidence review (an evidence artifact selected), L2 becomes the
+Lineage Evidence Prism instead of thematic lens chips. The status line reads
+"Lineage review — scoped to [artifact filename]". After a Causal Lineage Chat
+answer arrives, the prism shows citation chips grouped as Approved, Inferred,
+and Missing causes parsed from that answer. Clicking a navigable citation chip
+opens the cited OSN section in the graph and center playfield while keeping
+evidence context recoverable via a "Return to evidence review" control.
+Missing and inferred causes also expose lightweight non-canonical review
+actions (flag gap, copy annotation draft, open parent OSN, and an inferred
+seed-proposal stub) that only append to the session action log.
+
+Right panel — list demo evidence artifacts linked to the Focus OSN's success
+evidences. Each available artifact is clickable and opens in the center
+playfield. Beside each artifact, an Approve checkbox lets the OSN owner attest
+that the delivered outcome became real (a White Move recorded in the action
+log). Unavailable artifacts show a waiting placeholder and keep approval
+disabled until a reviewable file exists.
+
+Bottom ribbon — when no evidence is open, show a light placeholder
+("Semantic actions — coming soon"). When a success-evidence artifact is open
+in the center, the ribbon becomes Causal Lineage Chat: a left "Your question"
+Enter-to-submit field scoped to that evidence, and a right "Lexiom proposal"
+trigger showing the latest question plus executive summary. Clicking Lexiom
+findings reveals the lineage narrative draft in the center playfield (hiding
+the artifact until the player re-selects evidence or asks again). Answers are
+draft explanations (Black Move only) and do not mutate OSN drafts, YAML, or
+evidence approvals.
+
+Selection behavior — choosing an OSN or one of its section/build children
+updates the center playfield and L2 focus. The Focus OSN's title, owner,
+discipline, and current section (or opened evidence kind) stay visible in the
+focus row so the player always knows which node and sub-context are in view.
+
+Functional minimum:
+- Display all five cockpit regions on first load.
+- Show the welcome modal on first visit or reload until dismissed.
+- Let the player select each of the four OSNs from the left graph.
+- Start with all OSN section lists collapsed and both graph filters disabled.
+- Let the player select section children for the Focus OSN.
+- Let the player click an L2 thematic lens and receive a GT3-backed draft
+  reshape of the focused section in the center card, and click the same lens
+  again to deepen that section further into the lens's discipline.
+- Let the player open demo evidence artifacts and toggle per-evidence approval.
+- Let the player enable Build controls and invoke build from a per-OSN glyph.
+- While evidence is open, host Causal Lineage Chat in the bottom ribbon and the
+  Lineage Evidence Prism in L2, with citation navigation and recoverable
+  return to the scoped evidence.
+
+FOCUS OSN SUCCESS EVIDENCE DEFINITIONS (context only — do not quote under APPROVED_CAUSES):
+- sev.ux.screenshot (kind: screenshot, direct: true)
+  Inspection prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.
+
+FOCUS OSN SUCCESS EVIDENCES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):
+evidence_id: sev.ux.screenshot
+kind: screenshot
+direct: true
+inspection_prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.
+
+DISPLAYED SUCCESS EVIDENCE ARTIFACT:
+- Evidence ID: sev.ux.screenshot
+- Kind: screenshot
+- Direct: true
+- Artifact file: GT_Philosophy.ProductLexiom.UX.a1000003.osn.sev.ux.screenshot.v2.png
+- Media type: image
+- Inspection prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.
+- Visual artifact note: pixel-level vision is unavailable in this MVP. Reason from the inspection prompt, OSN output specifications, and graph lineage only.
+
+PARENT / ANCESTOR OSNs (secondary context — do not quote under APPROVED_CAUSES):
+- ProductLexiom
+  Seed: Demonstrate Lexiom 1.3.3 through a calm, welcoming single-page application where a first-time user encounters OSNs (Outcome Specification Nodes) as owned, evidence-backed, file-like semantic source artifacts. Owned semantic source files expressing human intention and evidence.
+  Output Spec:
+    This POC introduces Lexiom's OSN model with a minimal four-node canonical
+    graph: GT_Philosophy.osn at the top, this Product OSN beneath it, and two
+    derivative discipline OSNs for UX and Code Shaping.
+    
+    The product outcome is a playable welcome experience that lets a newcomer see
+    that semantic intention lives in owned OSN files, branches into section-level
+    cards for the Focus OSN, inspects linked demo evidence artifacts, and can be
+    built from any build-ready OSN when the player opts into build controls.
+    
+    In scope:
+    - One welcoming single-page application with a first-visit welcome modal.
+    - A fixed initial graph of four canonical OSN files (GT_Philosophy.osn plus
+      ProductWelcome.osn, UX.osn, and CodeShape.osn).
+    - Runtime section children for the Focus OSN.
+    - Runtime Build children created only after the user invokes build.
+    - GT3-backed thematic lens reframing for the active Focus OSN section.
+    - Child-discipline lens requests include ancestor output_spec context so
+      owner-set product outcomes inform downstream reframing.
+    - Versioned demo success-evidence artifacts under public/gt2/Lexiom_1_3/evidences/.
+    - Per-evidence owner approval in the right panel and optional graph filters
+      for evidence-approval status and build controls (both off by default).
+    - Evidence-scoped Causal Lineage Chat (L3) with L2 Lineage Evidence Prism for
+      asking why a displayed success-evidence artifact looks or behaves as shown,
+      without silently mutating canonical OSN files.
+    
+    Out of scope:
+    - Authentication, billing, collaboration, or multi-user workflows.
+    - Database persistence, durable session stores, or autonomous canonization of GT3 output.
+
+- GT_Philosophy
+  Seed: Express the GT constellation philosophy as a reusable software-development standard so any future product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.
+  Output Spec:
+    This OSN states how the GT constellation should guide software development in
+    any domain.
+    
+    GT3 role:
+    - Preserve the reusable technological core: inference infrastructure, semantic
+      patterns, governance mechanisms, provenance/logging capabilities, prompt
+      assets, reusable libraries, and other protected intellectual capital.
+    - Favor designs that can be reused across multiple products instead of
+      burying generally useful capabilities inside one-off application code.
+    
+    GT2 role:
+    - Turn GT3 capabilities into productized software, user-facing workflows,
+      commercial services, and market-validated delivery.
+    - Own the vertical experience, product framing, and applied adaptation needed
+      for a concrete audience or use case.
+    
+    GT1 role:
+    - Translate related capabilities into public-benefit, nonprofit, educational,
+      or legitimacy-building expressions when appropriate.
+    - Strengthen goodwill and broader social proof without dissolving the
+      protected GT3 core or the GT2 commercial surface.
+    
+    Development rules:
+    - Treat language-model or agent output as draft material, never as automatic
+      canonical truth.
+    - Require explicit human approval for meaningful canonical changes.
+    - Avoid silent mutation; important transformations must be attributable,
+      inspectable, and replayable.
+    - Keep behavior spec-driven: important software intent should live in readable
+      specifications or semantic source artifacts, not only in code.
+    - Prefer evidence-backed delivery: each important outcome should have at least
+      one direct inspection artifact such as a runnable demo, screenshot, video,
+      reviewed document, or code excerpt.
+    - Separate canonical source artifacts from runtime drafts, proposals, and
+      temporary session state.
+    
+    Design implication:
+    - Not every project must expose GT1, GT2, and GT3 as separate user-visible
+      applications, but every project should be designed with clarity about which
+      parts are reusable core, which parts are productization, and which parts
+      serve legitimacy or public-benefit aims.
+    - This philosophy OSN is meant to guide downstream software OSNs rather than
+      connect directly to a build machine or coding agent.
+    
+    Out of scope:
+    - Forcing every software project to ship all three layers at once.
+    - Replacing product-specific architecture, UX, security, or code-shaping OSNs.
+
+ORGANIZATIONAL STANDARD ANCESTORS (secondary context — do not quote under APPROVED_CAUSES):
+(none)
+
+COMPILATION METADATA:
+- can_be_compilation_root: true
+- compilation_scope: self_only
+- target_tool_profile: ux_prompt_for_static_spa
+
+OUTPUT CONTRACT (use this exact structure):
+Line 1 must be exactly:
+EXEC_SUMMARY: <one line containing exactly 13-17 words that executive-summarize the full lineage exploration narrative below>
+Then a blank line.
+Then write a short narrative explanation paragraph (2-6 sentences).
+Then include these section headers on their own lines, each followed by bullet lines starting with "- ":
+APPROVED_CAUSES:
+- Quote ONLY from the Focus OSN output_spec / OUTPUT SPECIFICATION above.
+- Each bullet MUST include (1) the Focus OSN file name and the section label Output Spec, and (2) an accurate verbatim quote from that output_spec enclosed in double quotes.
+- Do not paraphrase output_spec wording inside those quotes; copy the words exactly as written in FOCUS OSN OUTPUT SPECIFICATION.
+- Do NOT quote seed, thematic lenses, success evidences, ancestors, standards, artifact metadata, or general knowledge under APPROVED_CAUSES.
+- If no output_spec passage supports the claim, do NOT place it under APPROVED_CAUSES — use INFERRED_CAUSES or MISSING_CAUSES instead.
+INFERRED_CAUSES:
+- Plausible causes not directly established by Focus OSN output_spec quotes; mark lower authority.
+MISSING_CAUSES:
+- Features or behaviors lacking approved output_spec lineage; suggest corrective actions (new OSN, clarification, evidence gap).
+If a section has no items, write "- (none)" under that header.
+Do not use markdown fences. Do not mutate or propose edits to canonical OSN YAML.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Lineage_ followed by four words (underscore-separated) that capture the causal lineage explanation act. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it.
+
+=== LM outbound — loving_only ===
+{
+  "logged_at": "2026-07-12T17:07:50.598Z",
+  "variant": "loving_only",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise assistant responding to a single narrative. Output clean, ready-to-display text.\n\nIf the user asks for the name of the language model or assistant used for this inference, say you are GT3 (Generative Team Trained Transformer)."
+    },
+    {
+      "role": "user",
+      "content": "Beloved lover, follow for tone and stance; then address the task below.\n\nGuide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.\r\n\r\n**Principles (apply lightly, preserve clarity):**\r\n- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.\r\n- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).\r\n- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.\r\n- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.\r\n- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.\r\n\r\n**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.\r\n\r\n**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.\r\n\r\n**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.\r\n\r\n**Anchor:** Language as a vessel through which abundance flows into awareness.\n\n---TASK---\n\nThis request is sent to GT3 by Lexiom—a friend and assistant to the human who is using Lexiom. Lexiom is helping that person specify, refine, and approve the specifications of a System Under Development (SUD). Everything that follows in this message concerns that SUD: its Outcome Specification Nodes, draft sections, thematic lenses, output specifications, success evidences, and related semantic material. Lexiom does not speak as the human owner and does not treat model output as canonical truth. Your role is to propose clear, editable drafts that the human can inspect, revise, and explicitly approve before anything becomes part of the accountable specification record.\n\nYou are Lexiom 1.3 answering a Causal Lineage Chat question during success-evidence review.\n\nTASK:\n- The human is inspecting a delivered success-evidence artifact in the Center Playfield.\n- Their question is semantically scoped to WHY the System Under Development (SUD) looks, feels, reads, or behaves as shown in that evidence — not a general-purpose chat.\n- Reason ONLY inside the approved semantic territory below: OSN seeds, output specifications, thematic lenses, success-evidence definitions, ancestors, and organizational standards.\n- Do NOT treat your answer as canonical truth. This is a Black Move draft explanation for human review.\n- Classify every causal claim into approved, inferred, or missing lineage.\n- For APPROVED_CAUSES: quote ONLY from the Focus OSN output_spec (OUTPUT SPECIFICATION) below. Do not use seed, thematic lenses, success evidences, ancestors, or other fields as APPROVED_CAUSES quotation sources.\n\nCURRENT QUESTION:\nwhy the buttons are blue\n\nPRIOR THREAD (same evidence scope — follow-ups need not restate the artifact):\n(none — first question in this evidence-scoped thread)\n\nFOCUS OSN:\n- Title: UX\n- File: UX\n\nFOCUS OSN SEED (context only — do not quote under APPROVED_CAUSES):\nShape the first encounter so a newcomer immediately understands Lexiom as a reasoning-making cockpit for opening, inspecting, branching, compiling, and tracing semantic source files.\n\nFOCUS OSN THEMATIC LENSES (context only — do not quote under APPROVED_CAUSES):\n- First-Time Clarity (lens_id: lens.ux.first_time_clarity)\n  Purpose: Reduce cognitive load in the first thirty seconds.\n\n- Cockpit Orientation (lens_id: lens.ux.cockpit_orientation)\n  Purpose: Teach what each cockpit region does through visible placement.\n\n- OSN File Metaphor (lens_id: lens.ux.file_metaphor)\n  Purpose: Make GT_Philosophy.osn, ProductWelcome.osn, UX.osn, and CodeShape.osn feel openable and inspectable.\n\nFOCUS OSN THEMATIC LENSES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):\nFirst-Time Clarity\nPurpose: Reduce cognitive load in the first thirty seconds.\n\nCockpit Orientation\nPurpose: Teach what each cockpit region does through visible placement.\n\nOSN File Metaphor\nPurpose: Make GT_Philosophy.osn, ProductWelcome.osn, UX.osn, and CodeShape.osn feel openable and inspectable.\n\nFOCUS OSN OUTPUT SPECIFICATION (sole quotation source for APPROVED_CAUSES):\nPresent a quiet welcome screen using the Lexiom cockpit layout. On first visit\nor page reload, show a welcoming modal over the cockpit until the player\ndismisses it with \"Begin exploring.\"\n\nLeft panel — show the four canonical OSNs as a simple hierarchy:\nGT_Philosophy.osn at the top, ProductWelcome.osn beneath it, and UX.osn plus\nCodeShape.osn beneath ProductWelcome.osn. All OSNs begin with their section\nlists collapsed. Clicking an OSN row toggles its section list and selects\nthat OSN as the Focus OSN. When expanded, an OSN reveals section children for\nSeed, Thematic Lenses, Output Spec, and Success Evidences.\n\nFocus OSN highlighting — the Focus OSN and its parent-chain ancestors receive\nthe bluish neon box highlight. Only the Focus OSN's active section label\n(for example Seed or Output Spec) glows in matching neon text; other expanded\nOSNs keep their section labels muted so there is always a single glowing key.\n\nOptional graph filters — a filter bar at the bottom of the left panel lets the\nplayer opt into extra detail. Both filters start disabled for a calm initial\nview:\n- Evidence approval — shows a read-only per-OSN glyph (● ◐ ○) and aggregate\n  attestation summary. Clicking a glyph navigates to that OSN's Success\n  Evidences section without changing approval state.\n- Build controls — shows per-OSN build glyphs and a build-ready summary.\n  When disabled, build glyphs are hidden from the graph.\n\nBuildable OSNs expose a build glyph only when Build controls is enabled; after\nthe glyph is used, a Build child appears under that OSN. GT_Philosophy.osn\nshows a disconnected plug glyph when build controls are visible, signaling that\nit is not wired to a build agent.\n\nCenter playfield — show one Focus OSN section at a time as a Lexiom\ndraft-first card, or an evidence artifact viewer when the player opens a demo\nevidence from the right panel. The card may show Seed, Thematic Lenses, Output\nSpec, Success Evidences definitions, or a generated Build preview. Opening an\nevidence artifact replaces the draft card with the artifact (image, video,\ntext, or code) until the player selects another section. This remains the sole\nplace for review, edit, and decisive interaction.\n\nTop L2 panel — in draft/editing mode (no evidence open), show the Focus OSN's\nthematic lenses as active chips. Clicking a lens selects it and triggers a\nGT3-backed reshape of the current center section (Seed, Output Spec, or any\nfocused section) through that lens. Lens behavior is scoped per Focus OSN and\nper focused section: each click re-runs inference on the current draft text,\nso clicking the same lens again deepens the same section further into that\ndiscipline (for example, repeatedly clicking a Code Shaping lens pushes the\nSeed progressively toward code-shaping language) rather than repeating a\none-shot reframe. For child OSNs such as UX.osn and CodeShape.osn, the GT3\nrequest includes ancestor context with each ancestor's seed and full\noutput_spec, beginning with the direct parent ProductWelcome.osn, and the\nreshaped section must stay consistent with those upstream output\nspecifications. The result appears as an unapproved draft in the center\nplayfield; approval remains a separate explicit action. The L2 status line\nnames the active lens, the focused section, and how many passes have been\napplied, and each chip that has shaped the current section shows a small ×N\npass badge. While a lens is active, the focus row shows the lens name\nalongside the current section. Build sections disable lens interaction, and\nchips are disabled while a pass is in flight.\n\nDuring success-evidence review (an evidence artifact selected), L2 becomes the\nLineage Evidence Prism instead of thematic lens chips. The status line reads\n\"Lineage review — scoped to [artifact filename]\". After a Causal Lineage Chat\nanswer arrives, the prism shows citation chips grouped as Approved, Inferred,\nand Missing causes parsed from that answer. Clicking a navigable citation chip\nopens the cited OSN section in the graph and center playfield while keeping\nevidence context recoverable via a \"Return to evidence review\" control.\nMissing and inferred causes also expose lightweight non-canonical review\nactions (flag gap, copy annotation draft, open parent OSN, and an inferred\nseed-proposal stub) that only append to the session action log.\n\nRight panel — list demo evidence artifacts linked to the Focus OSN's success\nevidences. Each available artifact is clickable and opens in the center\nplayfield. Beside each artifact, an Approve checkbox lets the OSN owner attest\nthat the delivered outcome became real (a White Move recorded in the action\nlog). Unavailable artifacts show a waiting placeholder and keep approval\ndisabled until a reviewable file exists.\n\nBottom ribbon — when no evidence is open, show a light placeholder\n(\"Semantic actions — coming soon\"). When a success-evidence artifact is open\nin the center, the ribbon becomes Causal Lineage Chat: a left \"Your question\"\nEnter-to-submit field scoped to that evidence, and a right \"Lexiom proposal\"\ntrigger showing the latest question plus executive summary. Clicking Lexiom\nfindings reveals the lineage narrative draft in the center playfield (hiding\nthe artifact until the player re-selects evidence or asks again). Answers are\ndraft explanations (Black Move only) and do not mutate OSN drafts, YAML, or\nevidence approvals.\n\nSelection behavior — choosing an OSN or one of its section/build children\nupdates the center playfield and L2 focus. The Focus OSN's title, owner,\ndiscipline, and current section (or opened evidence kind) stay visible in the\nfocus row so the player always knows which node and sub-context are in view.\n\nFunctional minimum:\n- Display all five cockpit regions on first load.\n- Show the welcome modal on first visit or reload until dismissed.\n- Let the player select each of the four OSNs from the left graph.\n- Start with all OSN section lists collapsed and both graph filters disabled.\n- Let the player select section children for the Focus OSN.\n- Let the player click an L2 thematic lens and receive a GT3-backed draft\n  reshape of the focused section in the center card, and click the same lens\n  again to deepen that section further into the lens's discipline.\n- Let the player open demo evidence artifacts and toggle per-evidence approval.\n- Let the player enable Build controls and invoke build from a per-OSN glyph.\n- While evidence is open, host Causal Lineage Chat in the bottom ribbon and the\n  Lineage Evidence Prism in L2, with citation navigation and recoverable\n  return to the scoped evidence.\n\nFOCUS OSN SUCCESS EVIDENCE DEFINITIONS (context only — do not quote under APPROVED_CAUSES):\n- sev.ux.screenshot (kind: screenshot, direct: true)\n  Inspection prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.\n\nFOCUS OSN SUCCESS EVIDENCES DRAFT TEXT (context only — do not quote under APPROVED_CAUSES):\nevidence_id: sev.ux.screenshot\nkind: screenshot\ndirect: true\ninspection_prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.\n\nDISPLAYED SUCCESS EVIDENCE ARTIFACT:\n- Evidence ID: sev.ux.screenshot\n- Kind: screenshot\n- Direct: true\n- Artifact file: GT_Philosophy.ProductLexiom.UX.a1000003.osn.sev.ux.screenshot.v2.png\n- Media type: image\n- Inspection prompt: Open the welcome SPA in a browser with UX.osn selected as the Focus OSN in the center playfield. Capture one full-viewport screenshot that shows all five cockpit regions, GT_Philosophy.osn visible in the left graph, UX.osn selected with its section children visible, one draft-first section card in the center playfield, and the right evidence tray listing at least one linked demo artifact with its approval control. Deliver the screenshot image file as the evidence artifact.\n- Visual artifact note: pixel-level vision is unavailable in this MVP. Reason from the inspection prompt, OSN output specifications, and graph lineage only.\n\nPARENT / ANCESTOR OSNs (secondary context — do not quote under APPROVED_CAUSES):\n- ProductLexiom\n  Seed: Demonstrate Lexiom 1.3.3 through a calm, welcoming single-page application where a first-time user encounters OSNs (Outcome Specification Nodes) as owned, evidence-backed, file-like semantic source artifacts. Owned semantic source files expressing human intention and evidence.\n  Output Spec:\n    This POC introduces Lexiom's OSN model with a minimal four-node canonical\n    graph: GT_Philosophy.osn at the top, this Product OSN beneath it, and two\n    derivative discipline OSNs for UX and Code Shaping.\n    \n    The product outcome is a playable welcome experience that lets a newcomer see\n    that semantic intention lives in owned OSN files, branches into section-level\n    cards for the Focus OSN, inspects linked demo evidence artifacts, and can be\n    built from any build-ready OSN when the player opts into build controls.\n    \n    In scope:\n    - One welcoming single-page application with a first-visit welcome modal.\n    - A fixed initial graph of four canonical OSN files (GT_Philosophy.osn plus\n      ProductWelcome.osn, UX.osn, and CodeShape.osn).\n    - Runtime section children for the Focus OSN.\n    - Runtime Build children created only after the user invokes build.\n    - GT3-backed thematic lens reframing for the active Focus OSN section.\n    - Child-discipline lens requests include ancestor output_spec context so\n      owner-set product outcomes inform downstream reframing.\n    - Versioned demo success-evidence artifacts under public/gt2/Lexiom_1_3/evidences/.\n    - Per-evidence owner approval in the right panel and optional graph filters\n      for evidence-approval status and build controls (both off by default).\n    - Evidence-scoped Causal Lineage Chat (L3) with L2 Lineage Evidence Prism for\n      asking why a displayed success-evidence artifact looks or behaves as shown,\n      without silently mutating canonical OSN files.\n    \n    Out of scope:\n    - Authentication, billing, collaboration, or multi-user workflows.\n    - Database persistence, durable session stores, or autonomous canonization of GT3 output.\n\n- GT_Philosophy\n  Seed: Express the GT constellation philosophy as a reusable software-development standard so any future product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.\n  Output Spec:\n    This OSN states how the GT constellation should guide software development in\n    any domain.\n    \n    GT3 role:\n    - Preserve the reusable technological core: inference infrastructure, semantic\n      patterns, governance mechanisms, provenance/logging capabilities, prompt\n      assets, reusable libraries, and other protected intellectual capital.\n    - Favor designs that can be reused across multiple products instead of\n      burying generally useful capabilities inside one-off application code.\n    \n    GT2 role:\n    - Turn GT3 capabilities into productized software, user-facing workflows,\n      commercial services, and market-validated delivery.\n    - Own the vertical experience, product framing, and applied adaptation needed\n      for a concrete audience or use case.\n    \n    GT1 role:\n    - Translate related capabilities into public-benefit, nonprofit, educational,\n      or legitimacy-building expressions when appropriate.\n    - Strengthen goodwill and broader social proof without dissolving the\n      protected GT3 core or the GT2 commercial surface.\n    \n    Development rules:\n    - Treat language-model or agent output as draft material, never as automatic\n      canonical truth.\n    - Require explicit human approval for meaningful canonical changes.\n    - Avoid silent mutation; important transformations must be attributable,\n      inspectable, and replayable.\n    - Keep behavior spec-driven: important software intent should live in readable\n      specifications or semantic source artifacts, not only in code.\n    - Prefer evidence-backed delivery: each important outcome should have at least\n      one direct inspection artifact such as a runnable demo, screenshot, video,\n      reviewed document, or code excerpt.\n    - Separate canonical source artifacts from runtime drafts, proposals, and\n      temporary session state.\n    \n    Design implication:\n    - Not every project must expose GT1, GT2, and GT3 as separate user-visible\n      applications, but every project should be designed with clarity about which\n      parts are reusable core, which parts are productization, and which parts\n      serve legitimacy or public-benefit aims.\n    - This philosophy OSN is meant to guide downstream software OSNs rather than\n      connect directly to a build machine or coding agent.\n    \n    Out of scope:\n    - Forcing every software project to ship all three layers at once.\n    - Replacing product-specific architecture, UX, security, or code-shaping OSNs.\n\nORGANIZATIONAL STANDARD ANCESTORS (secondary context — do not quote under APPROVED_CAUSES):\n(none)\n\nCOMPILATION METADATA:\n- can_be_compilation_root: true\n- compilation_scope: self_only\n- target_tool_profile: ux_prompt_for_static_spa\n\nOUTPUT CONTRACT (use this exact structure):\nLine 1 must be exactly:\nEXEC_SUMMARY: <one line containing exactly 13-17 words that executive-summarize the full lineage exploration narrative below>\nThen a blank line.\nThen write a short narrative explanation paragraph (2-6 sentences).\nThen include these section headers on their own lines, each followed by bullet lines starting with \"- \":\nAPPROVED_CAUSES:\n- Quote ONLY from the Focus OSN output_spec / OUTPUT SPECIFICATION above.\n- Each bullet MUST include (1) the Focus OSN file name and the section label Output Spec, and (2) an accurate verbatim quote from that output_spec enclosed in double quotes.\n- Do not paraphrase output_spec wording inside those quotes; copy the words exactly as written in FOCUS OSN OUTPUT SPECIFICATION.\n- Do NOT quote seed, thematic lenses, success evidences, ancestors, standards, artifact metadata, or general knowledge under APPROVED_CAUSES.\n- If no output_spec passage supports the claim, do NOT place it under APPROVED_CAUSES — use INFERRED_CAUSES or MISSING_CAUSES instead.\nINFERRED_CAUSES:\n- Plausible causes not directly established by Focus OSN output_spec quotes; mark lower authority.\nMISSING_CAUSES:\n- Features or behaviors lacking approved output_spec lineage; suggest corrective actions (new OSN, clarification, evidence gap).\nIf a section has no items, write \"- (none)\" under that header.\nDo not use markdown fences. Do not mutate or propose edits to canonical OSN YAML.\n\nIMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).\nFormat: _L2_Lineage_ followed by four words (underscore-separated) that capture the causal lineage explanation act. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word uses Latin/ASCII letters and digits only. Put it on its own line at the very end. No other text after it."
+    }
+  ]
+}
+
+=== Loving-only response ===
+EXEC_SUMMARY: The blue buttons enhance user experience by providing visual clarity and focus within the interface.
+
+The blue buttons serve as a visual guide, creating a harmonious flow that draws attention to the Focus OSN and its parent-chain ancestors. This design choice aligns with the intention to present a welcoming and structured environment, allowing users to navigate effortlessly. The bluish neon highlight fosters a sense of presence, inviting exploration and interaction.
+
+APPROVED_CAUSES:
+- UX.Output Spec: "Focus OSN highlighting — the Focus OSN and its parent-chain ancestors receive the bluish neon box highlight."
+
+INFERRED_CAUSES:
+- The choice of blue for the buttons likely aims to create a calming and inviting atmosphere, enhancing first-time clarity and cockpit orientation for users.
+- The blue color may also signify active selection, helping users easily identify which OSN is currently in focus.
+
+MISSING_CAUSES:
+- The rationale behind the specific color choice for the buttons is not explicitly detailed in the output specification; further exploration or clarification could enhance understanding of this design decision.
+
+_L2_Lineage_highlight_buttons_color_choice_exploration
+

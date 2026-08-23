@@ -1,0 +1,83 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: WebAppSecurity.AccessControl.Authentication.a1000103.osn
+file_name: WebAppSecurity.AccessControl.Authentication.a1000103.osn
+node_type: discipline
+discipline: Authentication
+title: Authentication
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Authentication OSN Owner
+graph:
+  parent_osn_ids:
+    - WebAppSecurity.AccessControl.a1000101.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.security.access_control.professional_craft
+seed: >-
+  Prove who is acting in the web application with credentials and session
+  handling that resist theft, guessing, fixation, and silent reuse.
+thematic_lenses:
+  - lens_id: lens.security.authentication.professional_craft
+    name: Authentication
+    purpose: Apply authentication judgment to this outcome.
+  - lens_id: lens.security.authentication.session_integrity
+    name: Session Integrity
+    purpose: Keep login, logout, and session lifecycle trustworthy end to end.
+  - lens_id: lens.security.authentication.evidence
+    name: Evidence and Claims
+    purpose: Require inspectable delivery and classify claims according to available proof.
+output_spec: |-
+  1. Come explore how Lexiom 1.3 currently proves who is acting — then explore Authentication,
+  Session Integrity, and Evidence and Claims below for the code-backed rebuild contract.
+  
+  ## Authentication
+  2. Live as navigable AccessControl leaf YAML under security/ with reciprocal parent link to
+  AccessControl.
+  3. Do not invent a Lexiom cockpit login form, password verifier, MFA challenge, or account
+  enumeration flow — the current SPA has none.
+  4. Treat optional OpenRouter/OpenAI key material (`?or_key=` / localStorage lexiom_gt3_api_key)
+  and X-GT3-Tenant / Consent / Persona headers as request credentials for GT3 inference, not as
+  proof of a human end-user identity.
+  
+  ## Session Integrity
+  5. Do not invent Secure/HttpOnly/SameSite session cookies, logout invalidation, or idle/absolute
+  session lifetimes in the Lexiom 1.3 SPA — those surfaces are not implemented.
+  6. Keep CA workspace/heartbeat fetches capability-token gated where the run path supplies one,
+  without promoting that token into a product login session.
+  
+  ## Evidence and Claims
+  7. Inspect fulfillment via TEXTUAL_SNIPPET evidence quoted from a delivered authentication
+  review or hardening artifact (SUD), never from this OSN's own seed, lenses, or output_spec.
+success_evidences:
+  - evidence_id: sev.security.authentication.delivered_artifact
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered authentication review or hardening artifact (SUD), extract
+      a single readable quoted passage that shows how the application fulfills this
+      node's outcome: Prove who is acting in the web application with credentials and
+      session handling that resist theft, guessing, fixation, and silent reuse. The
+      quote must come from the delivered artifact itself — not from this OSN's seed,
+      lenses, or output_spec. Deliver the snippet as the evidence artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

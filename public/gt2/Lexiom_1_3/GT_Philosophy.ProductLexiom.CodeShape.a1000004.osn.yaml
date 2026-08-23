@@ -1,0 +1,151 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.ProductLexiom.CodeShape.a1000004.osn
+file_name: GT_Philosophy.ProductLexiom.CodeShape.a1000004.osn
+node_type: discipline
+discipline: Code Shaping
+title: Welcoming SPA Code Shape
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Code Shaping OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.ProductLexiom.a1000002.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.product.code_shape
+seed: >
+  Shape the implementation as a deterministic, inspectable single-page app on the GT3 Node server
+  whose canonical OSNs live as YAML files on disk, are listed and loaded by the SPA at runtime, and
+  are rewritten only through explicit White Move approval paths (persist, canonize, prune) — never
+  by silent background mutation of semantic source.
+thematic_lenses:
+  - lens_id: lens.code.server_osn_files
+    name: Server-Hosted OSN Files
+    purpose: >-
+      Keep canonical OSNs as real files at or below public/gt2/Lexiom_1_3/,
+      recursively discover domain subdirectories, and store newly canonized
+      children beside their primary parent.
+  - lens_id: lens.code.action_log
+    name: Append-Only Action Log
+    purpose: Record user actions in session memory without requiring a visible action-log panel.
+  - lens_id: lens.code.section_navigation
+    name: Section-Level Graph Navigation
+    purpose: >-
+      Let the Focus OSN expose section glyphs in a center playfield strip and
+      runtime Build children after build invocation, place Focus near the top
+      quarter of a clipped graph viewport with always-reserved sibling slots,
+      remember the active core section key across Focus OSN moves (including
+      arrow-key navigation), and preserve the outer OSN graph including immature
+      branch nodes until canonized or pruned.
+  - lens_id: lens.code.gt3_cohosted
+    name: GT3 Co-Hosted
+    purpose: >-
+      Serve the SPA and OSN files from the same local Node server; call GT3 POST /inference for lens
+      reframing, maturation proposals, cockpit-title proposal, and evidence-scoped causal lineage /
+      player-ask narratives; use Lexiom 1.3 OSN list/save routes for graph discovery and explicit
+      disk writes, with no external database.
+output_spec: |-
+  1. Dive into how Lexiom 1.3 stays a deterministic, inspectable SPA on the GT3 Node server —
+  OSNs as YAML on disk, loaded at runtime, rewritten only through explicit White Move paths —
+  then explore Server-Hosted OSN Files, Append-Only Action Log, Section-Level Graph Navigation,
+  and GT3 Co-Hosted below.
+
+  ## Server-Hosted OSN Files
+  2. On startup call GET /lexiom13/osn/list (exclude tombstones), fetch each YAML under
+  /gt2/Lexiom_1_3/, parse with jsyaml, and fall back to the hard-coded ProductLexiom quartet.
+  3. Persist via POST /lexiom13/osn/save for create (canonize), update (approved edits / identity
+  remount), and prune (tombstone subtree via collectBranchSubtreeIds); write new children beside
+  the primary parent.
+  4. Keep id === file_name hierarchical identity; treat graph.* as authoritative across nested
+  directories (including Branding/); warn on parent/child reciprocity mismatches.
+  5. Promote NewBranch_* placeholder leaves to matured title slugs before first canonize create;
+  normalizeLoadedOsn attaches runtime maturity for immature shells.
+  6. Discover bundled evidences via versioned filename probes (v2 then v1) under evidences/.
+
+  ## Append-Only Action Log
+  7. Append navigation, edit, approve, welcome, filter, build, branch, prune, canonize/persist,
+  and causal actions to in-memory state.actionLog with timestamps (including typed failures such
+  as persist_failed / approval_blocked); no visible action-log panel.
+  8. Keep the log and evidenceApprovalByKey session-only — no durable Move ledger or replay
+  reconstruction in the current POC.
+  9. Preserve causalAskDraftByKey across ribbon remounts during evidence-collection poll refresh.
+
+  ## Section-Level Graph Navigation
+  10. Hold selectedOsnId and selectedSectionKey; default section output_spec; remember only core
+  OSN_SECTION_DEFS keys across Focus moves; render section glyphs in #lexiom-osn-section-strip
+  and append Bud when hasOpenableBud.
+  11. fitGraphViewport with ~25% ancestor / ~75% descendant budget; clip Focus mode (no left
+  scrollbar); keep immature shells until canonize/prune.
+  12. resolveSelectableSectionKey refuses locked immature sections; create Build children only
+  after prepare/run; support virtual meta keys owner / title / osn_file_name; keep Bud distinct
+  from the Build handoff card.
+  13. Store draftCardsByOsnId, lens drafts/intensity, causal maps, buildPreviewsByOsnId, and
+  buildLifecycleByOsnId in SPA memory; ensureDraftCardState starts canonical sections approved,
+  immature unapproved, and Bud/Build cards unapproved.
+  14. On first changing keystroke of an approved card, clear card.approved and capture
+  editBaselineText; clear green insert diffs on glyph approval; cascade immature lock resets when
+  earlier gates are re-edited.
+  15. Remount OSN identity across osnsById and draft maps when an approved OSN name rewrite
+  changes hierarchical id/file_name.
+  16. Provide the draft editor as gutter + Markdown lite highlight + Tab→spaces while textarea
+  remains the source of truth; Bud draft loads the delivered artifact without rewriting intention
+  fields.
+
+  ## GT3 Co-Hosted
+  17. Call POST /inference through gt3-client.js with Lexiom 1.3 persona headers (and optional
+  API-key / ?api= overrides) for lens reframe, maturation, cockpit-title, and causal /
+  player-ask narratives.
+  18. Use L24 for default reframes and L2_LINEAGE for causal/player-ask; strip in-band tails and
+  parse APPROVED_CAUSES / inferred sections; advance lens pass intensity per osn+section+lens.
+  19. Run POST /lexiom13/build/prepare then /run when a profile maps to a plugin; package OSNG
+  snapshot, HANDOFF, EVIDENCE_PLAN, and agent prompts under builds/lexiom13/<runId>/.
+  20. On running + ca_session, boot browser CA (Hanuman) via bolt_webcontainer WebContainer:
+  document_builder → phased document.md orchestration; otherwise software tool loop
+  (list/read/write/run_command/finish) with workspace policy.
+  21. Refuse browser-CA evidence Jobs (host quote-span only); after success applyBudFromRunResult
+  so bud unlocks the Center Bud section for the requesting OSN.
+  22. Poll GET /lexiom13/evidence/collections?osn_id= every 5s (pause when document.hidden);
+  overlay evidenceBuildResolvedByKey without changing approvals.
+  23. Guard concurrent work with lens/maturation/persist/prune/causal in-flight flags; honor
+  compilation_scope for prepare subgraphs; drive rounds through dispatchWhiteMove → white reduce
+  → black side-effects.
+success_evidences:
+  - evidence_id: sev.code.direct_snippet_review
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >
+      From the welcome SPA source, produce a single readable code snippet that shows how the app
+      resolves OSN paths via /lexiom13/osn/list (with quartet fallback), fetches and parses OSN YAML
+      from /gt2/Lexiom_1_3/, links versioned demo evidence artifacts through osn-evidence-links.js,
+      applies optional graph filters through osn-filtering.js, composes the fitted Focus-centered
+      ancestor / Focus / descendant viewport with always-reserved sibling arrows, arrow-key Focus
+      moves, top-quarter Focus placement (1fr/3fr fit), and resize refitting, remembers the active
+      core section key via getRememberedSectionKey across OSN navigation, renders section glyphs in
+      the center playfield strip, branches immature OSNs and canonizes/persists/prunes through
+      /lexiom13/osn/save, walks ancestor output_spec into lens GT3 narratives, handles the per-OSN
+      build glyph when Build controls is enabled (prepare → run plugin handoff, including OSNG
+      snapshot and evidence-plan packaging), generates runtime Build children, and records
+      interactions through appendAction. Format it as a copy-pasteable excerpt suitable for direct
+      review. Deliver the snippet as the evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_plus_parent_context
+  target_tool_profile: cursor_static_spa_prompt

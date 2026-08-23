@@ -1,0 +1,130 @@
+# Outcome Specification Node (OSN)
+#
+# See also: ../OSNG_Basics_README.md — filename conventions for reconstructing
+# the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.a2000001.osn
+file_name: GT_Philosophy.a2000001.osn
+node_type: organizational_standard
+title: GT Philosophy
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Constellation Philosophy OSN Owner
+graph:
+  parent_osn_ids: []
+  child_osn_ids:
+    - GT_Philosophy.Lexiom.a2000002.osn
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: null
+seed: >
+  Express the GT constellation philosophy as a reusable software-development standard so any future
+  product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software
+  that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.
+thematic_lenses:
+  - lens_id: lens.constellation.value_flow
+    name: Constellation Value Flow
+    purpose: >-
+      Keep GT3, GT2, and GT1 legible as complementary roles rather than collapsing all value into
+      one layer.
+  - lens_id: lens.constellation.human_governance
+    name: Human Governance
+    purpose: >-
+      Preserve explicit approval, no silent mutation, and human responsibility for canonical
+      outcomes.
+  - lens_id: lens.constellation.traceable_builds
+    name: Traceable Buildability
+    purpose: >-
+      Require inspectable specs, source artifacts, and evidence so software can be reviewed,
+      replayed, and trusted.
+  - lens_id: lens.constellation.reusable_core
+    name: Reusable Core
+    purpose: >-
+      Prefer durable GT3 capabilities, patterns, and intellectual capital when a solution should
+      serve more than one product surface.
+output_spec: |
+  This OSN states how the GT constellation should guide software development in
+  any domain.
+
+  GT3 role:
+  - Preserve the reusable technological core: inference infrastructure, semantic
+    patterns, governance mechanisms, provenance/logging capabilities, prompt
+    assets, reusable libraries, and other protected intellectual capital.
+  - Favor designs that can be reused across multiple products instead of
+    burying generally useful capabilities inside one-off application code.
+
+  GT2 role:
+  - Turn GT3 capabilities into productized software, user-facing workflows,
+    commercial services, and market-validated delivery.
+  - Own the vertical experience, product framing, and applied adaptation needed
+    for a concrete audience or use case.
+
+  GT1 role:
+  - Translate related capabilities into public-benefit, nonprofit, educational,
+    or legitimacy-building expressions when appropriate.
+  - Strengthen goodwill and broader social proof without dissolving the
+    protected GT3 core or the GT2 commercial surface.
+
+  Development rules:
+  - Treat language-model or agent output as draft material, never as automatic
+    canonical truth.
+  - Require explicit human approval for meaningful canonical changes.
+  - Avoid silent mutation; important transformations must be attributable,
+    inspectable, and replayable.
+  - Keep behavior spec-driven: important software intent should live in readable
+    specifications or semantic source artifacts, not only in code.
+  - Prefer evidence-backed delivery: each important outcome should have at least
+    one direct inspection artifact such as a runnable demo, screenshot, video,
+    reviewed document, or code excerpt.
+  - Separate canonical source artifacts from runtime drafts, proposals, and
+    temporary session state.
+
+  Design implication:
+  - Not every project must expose GT1, GT2, and GT3 as separate user-visible
+    applications, but every project should be designed with clarity about which
+    parts are reusable core, which parts are productization, and which parts
+    serve legitimacy or public-benefit aims.
+  - This philosophy OSN is meant to guide downstream software OSNs rather than
+    connect directly to a build machine or coding agent.
+  - Downstream product graphs may segment by professional domain or by
+    cross-domain product features; either segmentation remains governed by
+    these same draft-first and evidence rules.
+
+  Out of scope:
+  - Forcing every software project to ship all three layers at once.
+  - Replacing product-specific feature or discipline OSNs.
+success_evidences:
+  - evidence_id: sev.constellation.welcome_modal_screenshot
+    kind: screenshot
+    direct: true
+    inspection_prompt: >
+      Open the product SPA as a first-time user so the welcoming message modal is presented over the
+      cockpit. Capture one screenshot that clearly shows the welcome modal and its greeting to a
+      newcomer. Deliver the screenshot image file as the evidence artifact. This inspects a delivered
+      UI outcome downstream of the specification — not the OSN specification text itself.
+  - evidence_id: sev.constellation.software_mapping_brief
+    kind: markdown_brief
+    direct: false
+    inspection_prompt: >
+      Supplemental derivative evidence only — does not satisfy the direct minimum. Produce a short
+      markdown brief for one software initiative. In the brief, map which capabilities belong
+      primarily to GT3, which belong to GT2, and which could support GT1 public-benefit expression.
+      Also state how the initiative preserves draft-first approval, traceability, and at least one
+      direct inspection evidence artifact. Deliver the markdown file as the evidence artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

@@ -1,0 +1,133 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.ProductLexiom.UX.a1000003.osn
+file_name: GT_Philosophy.ProductLexiom.UX.a1000003.osn
+node_type: discipline
+discipline: UX
+title: Welcoming SPA User Experience
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: UX OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.ProductLexiom.a1000002.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.product.ux
+seed: >
+  Shape the first encounter so a newcomer immediately understands Lexiom as a reasoning-making
+  cockpit for opening, inspecting, branching, compiling, and tracing semantic source files.
+thematic_lenses:
+  - lens_id: lens.ux.first_time_clarity
+    name: First-Time Clarity
+    purpose: Reduce cognitive load in the first thirty seconds.
+  - lens_id: lens.ux.cockpit_orientation
+    name: Cockpit Orientation
+    purpose: Teach what each cockpit region does through visible placement.
+  - lens_id: lens.ux.file_metaphor
+    name: OSN File Metaphor
+    purpose: >-
+      Make GT_Philosophy, ProductLexiom, UX, and CodeShape feel openable and inspectable as
+      hierarchical OSN files.
+output_spec: |-
+  1. Come explore how Lexiom teaches a newcomer — in the first encounter — that this is a
+  reasoning-making cockpit for opening, inspecting, branching, compiling, and tracing semantic
+  source files; First-Time Clarity, Cockpit Orientation, and OSN File Metaphor below are the
+  rebuild map.
+
+  ## First-Time Clarity
+  2. Show a welcome modal that orients left graph, center playfield, and right evidences, dismissed
+  with Begin exploring, on first visit, reload, or ?welcome=1|force|true.
+  3. Include welcome copy that machine drafts and illuminates while the human decides what becomes
+  canonical.
+  4. Label regions clearly (Outcome Specifications, Owned by:, Success Evidences) so the cabinet
+  reads without a tutorial tour.
+  5. Hide Top HUD by default until the Top bar filter is enabled; keep the cockpit title hidden
+  (not offered as a selectable filter); keep the filter bar visible with the three filters unchecked.
+  6. Use calm loading copy (“Loading OSN graph…”, lenses, semantic source files) and document title
+  “Lexiom 1.3.3 — Welcome” during first paint.
+
+  ## Cockpit Orientation
+  7. Layout a three-panel cabinet: left Focus graph, center section strip + draft card + bottom
+  ribbon, right success-evidence tray.
+  8. Compose the left graph Focus-centered (ancestors above, Focus near the top quarter, descendants
+  below), always reserve sibling ◀/▶ slots (lit only when available), clip rather than scroll, and
+  refit via ResizeObserver.
+  9. Provide full-graph mode from the left-corner toggle with Side view (cabinet-wide indented
+  tree) and Top view / OSNG Garden (radial multi-tree; solid native / dashed cross-tree arrows)
+  kinds; center/right hidden; navigation-only chrome; Escape or toggle exits; selecting an OSN
+  returns to cockpit.
+  10. Wire arrow-key Focus moves (Left/Right siblings, Up parent, Down first child), ignored while
+  typing, welcome open, or full-graph active; remember the active core section key across OSN moves.
+  11. Keep the Focus meta strip to “Owned by:” plus the owner cell only (no title in the strip).
+  12. When Top bar is enabled, show L2 thematic lens chips with ×N pass badges; when evidence is
+  open, host Causal Lineage Chat in the bottom ribbon; when Evidence approval and Build controls
+  are both on, render the dual node status rail without crowding the leaf label.
+  13. When Focus itself declares standard_ancestor_osn_ids (not via native-parent walk-up), show a
+  PlaneShift shadow beside the native plane-zero ancestor closest to Focus; the shadow opens a
+  thematic-plane radio picker (native first and highlighted; checked radio = active plane; 7–9-word
+  influence descriptions on hover/focus; plane changes only when the player picks a radio option).
+  Do not companion ProductLexiom with a shadow when UX (or any child without its own alternate
+  links) is Focus. Keep the chosen plane session-locked across Focus moves that remain on that
+  plane; on an additional plane, present the inheriting Focus OSN as a peer under trunk S beside
+  S's children (◀/▶ and ArrowUp to S), with a detached shadow return control and left-panel
+  alternate-plane chrome until another radio is chosen.
+  14. Drive #lexiom-left-panel-title from the active plane name and fade ancestor/descendant rows
+  on plane switch while keeping the Focus OSN spatially fixed (instant swap under
+  prefers-reduced-motion).
+
+  ## OSN File Metaphor
+  15. Render graph rows as origin-leaf labels; on hover show seed content above the OSN name
+  (seed omitted when empty).
+  16. Place the Focus OSN monochrome section glyphs (Seed, Thematic Lenses, Output Spec, Success
+  Evidences, plus Bud when hasOpenableBud) in #lexiom-osn-section-strip — not on left rows.
+  17. Open Focus owner from the Owned by cell and OSN name from the Focus-row pencil into
+  draft-first center cards (no separate player-opened OSN Title card).
+  18. Echo the selected section glyph + label on the draft-card header so the open file section
+  is obvious.
+  19. List Focus OSN success-evidence artifacts in the right tray for open/inspect/approve, and
+  open image/video/text/code in the center evidence viewer host.
+  20. When Bud is selected, open the delivered SUD in Center as a draft-first review card
+  (software live preview link or document artifact host) without rewriting intention fields and
+  without counting as evidence approval.
+  21. Show Focus-only square + / × controls and, when Build controls is on, a lit build bulb for
+  compilation roots (plug when not buildable); keep the Build handoff child distinct from Bud.
+  22. Mark immature nodes with dashed is-immature styling and locked section glyphs as disabled
+  is-locked so file maturity is visible.
+  23. Apply edge-fill (lexiom-13-edge-fill) when the cockpit title is hidden so the cabinet reads
+  as a full-bleed file workspace.
+  24. Keep Cursor/VS Code Dark Modern (and light prefers-color-scheme) tokens so the editor-like
+  metaphor stays consistent across panels.
+success_evidences:
+  - evidence_id: sev.ux.screenshot
+    kind: SCREEN-SHOT
+    direct: true
+    inspection_prompt: >
+      Open the welcome SPA in a browser with UX selected as the Focus OSN. Capture one full-viewport
+      screenshot showing all five cockpit regions, UX near the top quarter of the clipped left graph
+      with its fitted ancestor chain above, the lit ▶ sibling glyph that reaches CodeShape, and the
+      four section glyphs in the center playfield strip below the owner strip. Also show one
+      draft-first section card in the center playfield and the right evidence tray listing at least
+      one linked demo artifact with its approval control. Deliver the screenshot image file as the
+      evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_only
+  target_tool_profile: ux_prompt_for_static_spa

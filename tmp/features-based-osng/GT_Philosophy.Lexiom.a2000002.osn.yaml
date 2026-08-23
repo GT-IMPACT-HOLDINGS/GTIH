@@ -1,0 +1,102 @@
+# Outcome Specification Node (OSN)
+#
+# See also: ../OSNG_Basics_README.md — filename conventions for reconstructing
+# the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.Lexiom.a2000002.osn
+file_name: GT_Philosophy.Lexiom.a2000002.osn
+node_type: product
+title: Lexiom
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Product OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.a2000001.osn
+  child_osn_ids:
+    - GT_Philosophy.Lexiom.Cockpit.a2000003.osn
+    - GT_Philosophy.Lexiom.CockpitChat.a2000004.osn
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: null
+seed: >
+  Demonstrate Lexiom through a calm, welcoming single-page application where a first-time user
+  encounters OSNs as owned, evidence-backed, file-like semantic source artifacts, segmented by
+  cross-domain product features (Cockpit shell and Cockpit Chat) rather than by professional domain.
+thematic_lenses:
+  - lens_id: lens.product.cockpit
+    name: Cockpit
+    purpose: Keep the cabinet shell, graph, drafts, evidences tray, and build affordances coherent.
+  - lens_id: lens.product.cockpit_chat
+    name: Cockpit Chat
+    purpose: Keep evidence-scoped causal ask/proposal flows clear, draft-first, and non-mutating.
+output_spec: |
+  This product OSN introduces Lexiom's OSN model with a four-node feature-based
+  canonical graph: GT_Philosophy at the top, this Lexiom product OSN beneath it,
+  and two feature OSNs — Cockpit and CockpitChat — as siblings under Lexiom.
+  Leaf labels in the graph read GT_Philosophy, Lexiom, Cockpit, CockpitChat.
+
+  Transformation note (relative to a domain-segmented graph): content that once
+  lived under separate UX and Code Shaping discipline nodes is re-sliced here by
+  user-visible capability. Cockpit owns the five-region shell, OSN graph,
+  draft-first center cards, evidence tray, lenses, branching/maturation/build,
+  disk persist/canonize, and the former CodeShape shell implementation contracts
+  (load, list/save routes, shell state, rendering modules, lens/maturation round
+  loop, evidence linking). CockpitChat owns the evidence-scoped Causal Lineage
+  Chat ribbon, question/executive-summary proposal links, glyph-approved lineage
+  drafts, player-ask unlock, optional output_spec change proposals, and the
+  former CodeShape chat inference/state contracts.
+
+  The product outcome is a playable welcome experience that lets a newcomer see
+  that semantic intention lives in owned OSN files, navigates a Focus-centered
+  clipped graph viewport, opens section-level cards through inline glyphs on the
+  Focus OSN, inspects linked demo evidence artifacts, branches new immature
+  OSNs, matures and canonizes them onto disk, builds from build-ready nodes when
+  filters allow, and — when an evidence artifact is open — asks why the System
+  Under Development looks as shown through Cockpit Chat.
+
+  In scope:
+  - One welcoming SPA with a welcome modal on first visit, reload, or ?welcome=1.
+  - A starting feature-based quartet of OSN YAML files (this experimental graph).
+  - Inline section glyphs on the Focus OSN; Build children only after build is invoked.
+  - Focus centered with fitted ancestors above, indented descendants below,
+    ◀ / ▶ sibling navigation, and no graph-row scrolling beyond the viewport.
+  - Focus-only branch (+) and prune (×), maturation gates, and explicit persist/canonize.
+  - GT3-backed thematic lens reframing with ancestor seed/output_spec context.
+  - Editable Focus meta fields; optional GT3-proposed cockpit shell title.
+  - Versioned demo success-evidence artifacts and per-evidence approval.
+  - Evidence-scoped Cockpit Chat as specified by the CockpitChat child OSN.
+
+  Out of scope:
+  - Authentication, billing, collaboration, or multi-user workflows.
+  - Database persistence beyond OSN YAML files and welcome-seen localStorage.
+  - Autonomous canonization of GT3 draft output without human approval.
+  - Treating this subdirectory graph as the live SPA load set unless wired later.
+success_evidences:
+  - evidence_id: sev.product.osn_navigation_video
+    kind: video_clip
+    direct: true
+    inspection_prompt: >
+      Open the welcome SPA in a browser. Record a short screen-capture video. In the recording,
+      select Lexiom and then Cockpit using left-graph leaf labels; from Cockpit, use the ▶ sibling
+      glyph to move to CockpitChat. Show that Focus remains centered with fitted ancestors above
+      and descendants below. Use at least one inline section glyph on a Focus OSN, then enable the
+      Build controls filter and click one build glyph so a Build child appears and its build card
+      opens in the center playfield. Deliver the video file as the evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_and_approved_descendants
+  target_tool_profile: static_spa_coding_agent

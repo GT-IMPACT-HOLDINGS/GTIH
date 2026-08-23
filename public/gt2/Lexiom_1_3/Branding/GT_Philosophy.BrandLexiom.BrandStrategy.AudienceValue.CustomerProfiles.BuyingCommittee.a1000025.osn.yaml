@@ -1,0 +1,89 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: >-
+  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn
+file_name: >-
+  GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn
+node_type: discipline
+discipline: Buying-Center Strategy
+title: Buying Committee
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Buying-Center Strategy OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn
+  child_osn_ids:
+    - >-
+      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.EconomicBuyers.a1000046.osn
+    - >-
+      GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.ChampionsEvaluators.a1000047.osn
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.brand.customer_profiles.professional_craft
+source_spec:
+  document: Branding/branding_spec.md
+  sections: §8.3
+seed: >-
+  Equip economic buyers, champions, and evaluators with role-specific value and proof while
+  preserving one coherent product truth.
+thematic_lenses:
+  - lens_id: lens.brand.buying_committee.professional_craft
+    name: Buying-Center Strategy
+    purpose: Apply buying-center strategy judgment to this outcome.
+  - lens_id: lens.brand.buying_committee.human_authority
+    name: Human Authority
+    purpose: Keep proposals distinct from approved organizational truth.
+  - lens_id: lens.brand.buying_committee.evidence
+    name: Evidence and Claims
+    purpose: Require inspectable delivery and classify claims according to available proof.
+output_spec: |-
+  1. Enter the living brand intention — Equip economic buyers, champions, and evaluators
+  with role-specific value and proof while preserving one coherent product truth — then
+  explore Buying-Center Strategy and Evidence and Claims below for the code-backed rebuild
+  contract.
+
+  ## Buying-Center Strategy
+  2. Live as navigable BrandLexiom-descendant YAML under Branding/ so this node's approved
+  sections can enter BrandLexiom document-builder compiles when compilation_scope includes
+  approved descendants.
+  3. Hold the approved child branch for Buying Committee in graph.child_osn_ids so
+  full-graph and Focus navigation keep the brand tree reciprocal and inspectable.
+
+  ## Evidence and Claims
+  4. Inspect fulfillment via TEXTUAL_SNIPPET evidence quoted from the delivered
+  branding-book document.md (SUD), never from this OSN's own seed, lenses, or output_spec.
+success_evidences:
+  - evidence_id: sev.brand.buying_committee.delivered_artifact
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered Ogun branding book markdown (the SUD document.md / brand-book
+      artifact produced by the document builder), extract a single readable quoted passage
+      that shows how the book fulfills this node's outcome: Equip economic buyers, champions,
+      and evaluators with role-specific value and proof while preserving one coherent product
+      truth. The quote must be taken verbatim (or as a contiguous excerpt) from the produced
+      branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer a
+      paragraph or short section that a reviewer can inspect directly to confirm the "Buying
+      Committee" requirement became real in the book. Format it as a copy-pasteable excerpt
+      suitable for direct review. Deliver the snippet as the evidence artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

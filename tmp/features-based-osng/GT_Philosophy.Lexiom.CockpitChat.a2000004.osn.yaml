@@ -1,0 +1,161 @@
+# Outcome Specification Node (OSN)
+#
+# See also: ../OSNG_Basics_README.md — filename conventions for reconstructing
+# the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.Lexiom.CockpitChat.a2000004.osn
+file_name: GT_Philosophy.Lexiom.CockpitChat.a2000004.osn
+node_type: feature
+feature: CockpitChat
+title: Cockpit Causal Lineage Chat
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Cockpit Chat Feature OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.Lexiom.a2000002.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.product.cockpit_chat
+seed: >
+  Shape evidence-scoped Causal Lineage Chat as a cross-domain cockpit feature on the GT3-cohosted
+  SPA: ask why a displayed success-evidence artifact looks or behaves as shown, keep answers
+  draft-first via White/Black/Stability, unlock further player asks after lineage approval, and
+  optionally propose Output Spec changes without silently mutating YAML or evidence-approval state.
+thematic_lenses:
+  - lens_id: lens.chat.evidence_scope
+    name: Evidence Scope
+    purpose: Keep every ask and proposal bound to the currently opened evidence artifact.
+  - lens_id: lens.chat.draft_first
+    name: Draft-First Exposition
+    purpose: Treat lineage narratives and change proposals as Black Move drafts until glyph approval.
+  - lens_id: lens.chat.approved_causes
+    name: Approved Causes Discipline
+    purpose: Quote only Focus OSN output_spec text for APPROVED_CAUSES bullets.
+  - lens_id: lens.chat.non_mutation
+    name: Non-Mutation Safety
+    purpose: Ensure chat never writes OSN YAML or evidenceApprovalByKey by itself.
+  - lens_id: lens.code.gt3_cohosted_chat
+    name: GT3 Co-Hosted Chat Inference
+    purpose: >-
+      Call GT3 POST /inference for evidence-scoped L2_LINEAGE causal lineage and player-ask /
+      output_spec-change narratives through gt3-client.js and inference-narratives.js, with no
+      chat-specific server routes or external database.
+output_spec: |
+  Collected from prior UX ribbon / lineage sections and Code Shaping causal-state
+  / inference sections, now owned as one feature that activates when the Cockpit
+  evidence tray opens an artifact.
+
+  --- Experience ---
+
+  Bottom ribbon — when a success-evidence artifact is open in the center, replace
+  the shell placeholder with Causal Lineage Chat: a left ask field scoped to that
+  evidence, and a right "Lexiom proposal" surface showing the latest question plus
+  executive summary as a navigation link, not an approval surface. Opening the
+  proposal reveals the lineage narrative draft (or an output_spec change
+  proposal) in the center playfield as an editable draft-first card with a glyph
+  approval control.
+
+  Player-ask unlock — approving a lineage narrative unlocks continued asks in the
+  same ribbon. Imperative change language may force an output_spec change
+  proposal. Approving that proposal copies text into the Focus OSN Output Spec
+  draft only; separate Output Spec approval / persist (Cockpit feature) is still
+  required before YAML write.
+
+  Shell coordination — L2 thematic chips remain visible but disabled while
+  evidence is open (Cockpit). Chat does not replace L2 with a citation prism.
+  Selecting another OSN section clears evidence review and returns ribbon
+  control to the Cockpit placeholder until another artifact is opened.
+
+  --- Code shaping (from prior CodeShape.osn, chat-scoped) ---
+
+  Session state — keep causalThreadsByEvidenceKey (Map keyed by osnId::evidenceId),
+  causalExecSummaryByEvidenceKey, causalNarrativeRevealedByEvidenceKey,
+  playerAskUnlockedByEvidenceKey, outputSpecChangeByEvidenceKey,
+  outputSpecChangeRevealedByEvidenceKey, and ui flags causalInferencePending,
+  causalInferenceError, pendingCausalLineage / pendingPlayerAsk. Causal threads,
+  player-ask unlock, and output_spec change proposals are session-only and are
+  not written back to YAML or provenance files. evidenceApprovalByKey remains
+  owned by Cockpit; chat must not mutate it.
+
+  Round loop — Causal Lineage Chat uses the same White/Black/Stability loop as
+  the shell: SUBMIT_CAUSAL_QUESTION records the user question on the
+  evidence-scoped thread, publishes aiBusEvent causal_lineage_question, and sets
+  ui.pendingCausalLineage. After Black, buildCausalLineageNarrative assembles
+  Focus OSN drafts, evidence metadata, artifact text when available, and ancestor
+  context; gt3-client.js calls POST /inference with inference type L2_LINEAGE;
+  APPLY_CAUSAL_ANSWER stores the assistant reply with parsed causeTags
+  (execSummary, narrative, approved, inferred, missing). The L2_LINEAGE narrative
+  instructs APPROVED_CAUSES bullets to quote only the Focus OSN output_spec;
+  ancestors, seed, lenses, and success-evidence definitions remain context for
+  inferred or missing causes. Approving a lineage narrative
+  unlocks player asks (SUBMIT_PLAYER_ASK / player_ask); imperative change
+  language may force an output_spec change proposal
+  (APPLY_OUTPUT_SPEC_CHANGE_ANSWER). Assistant output remains non-canonical until
+  glyph approval; it must not mutate draftCardsByOsnId except via the explicit
+  output_spec-change approval path into the Focus Output Spec draft, and must not
+  mutate YAML files, graph structure, or evidenceApprovalByKey. The 1.3 client
+  uses reasoning-making persona framing only; it does not import Lexiom 1.0
+  legal-making profile or representation voice behavior. No Lexiom 1.3
+  chat-specific server routes are required beyond shared POST /inference.
+
+  Evidence activation — when Cockpit opens a linked demo file from the right
+  panel (osn-evidence-links.js resolution), this feature activates Causal Lineage
+  Chat in the ribbon and may reveal lineage / change cards in the center
+  playfield. Chat does not own evidence file naming or approval checkboxes.
+
+  Suggestions — any generated lineage or change-proposal content stays in a
+  separate draft layer until a recorded user action promotes it (glyph approval,
+  then Cockpit persist for Output Spec if applicable).
+
+  Functional minimum:
+  - While evidence is open, host Causal Lineage Chat in the bottom ribbon.
+  - Show the question and executive summary as a ribbon proposal link; show the
+    lineage narrative or output_spec change as the glyph-approved center draft.
+  - Unlock player asks after lineage-narrative approval.
+  - Support optional output_spec change proposals that remain draft until
+    separately approved into the Focus Output Spec path.
+  - Implement the chat code-shaping contracts above (state Maps, L2_LINEAGE /
+    player-ask round loop, non-mutation).
+  - Never mutate YAML or evidence-approval maps from chat alone.
+
+  Out of scope for this feature OSN:
+  - Graph layout, filters, build glyphs, maturation gates, OSN load list, and
+    /lexiom13/osn/save persist/canonize/prune (see Cockpit).
+success_evidences:
+  - evidence_id: sev.chat.lineage_session_video
+    kind: video_clip
+    direct: true
+    inspection_prompt: >
+      Open the welcome SPA, open a linked demo evidence artifact from the right tray, submit one
+      causal question in the bottom ribbon, open the Lexiom proposal so the lineage narrative appears
+      in the center, approve the lineage narrative glyph, then submit one follow-up player ask.
+      Record a short screen-capture video of that sequence. Deliver the video as the evidence artifact.
+  - evidence_id: sev.chat.lineage_snippet_review
+    kind: direct_code_snippet
+    direct: true
+    inspection_prompt: >
+      From the welcome SPA source, produce a single readable code snippet that shows evidence-scoped
+      causal thread state, SUBMIT_CAUSAL_QUESTION / pendingCausalLineage, buildCausalLineageNarrative
+      plus gt3-client L2_LINEAGE inference, APPLY_CAUSAL_ANSWER causeTags parsing, lineage-narrative
+      glyph approval unlocking player asks, and APPLY_OUTPUT_SPEC_CHANGE_ANSWER copying into the Focus
+      Output Spec draft without writing YAML. Format it as a copy-pasteable excerpt suitable for
+      direct review. Deliver the snippet as the evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_plus_parent_context
+  target_tool_profile: cursor_static_spa_prompt

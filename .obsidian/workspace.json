@@ -1,0 +1,235 @@
+{
+  "main": {
+    "id": "7b2e0539d0610bd7",
+    "type": "split",
+    "children": [
+      {
+        "id": "b6f4f2f41fc39133",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2063ac09fcfb1147",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "Untitled 1.canvas",
+                "viewState": {
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 0
+                }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "Untitled 1"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "99d95be1aa81df92",
+    "type": "split",
+    "children": [
+      {
+        "id": "0d9a7115696c8404",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "43f0a0be83fca0c4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "b982382d5c63009e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          },
+          {
+            "id": "a37e7f8bb78d4dfc",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 594.1666870117188
+  },
+  "right": {
+    "id": "e3c77592cb560481",
+    "type": "split",
+    "children": [
+      {
+        "id": "45039a35b5d3d1cd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bd9535b46ac11f25",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Untitled.canvas",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "9f11c00d63468150",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Untitled.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "6a9cc07a3c5cdf23",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "9b8222d80435adba",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "8dbdc0f32655076c",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Untitled.canvas",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "2063ac09fcfb1147",
+  "lastOpenFiles": [
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.AlignmentGovernedAI.a1000048.osn.sev.brand.alignment_governed_ai.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn.sev.brand.enterprise_pillars.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn.sev.brand.value_proposition.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.RegulatedSectors.a1000044.osn.sev.brand.regulated_sectors.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.EnterpriseDeliverySectors.a1000045.osn.sev.brand.enterprise_delivery_sectors.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn.sev.brand.priority_sectors.delivered_artifact.v1.md",
+    "logs/_L24_Draft_harmonizing_semantic_governance_experience.e6d08765-d9e2-4812-bb34-d959de02f01e.txt",
+    "logs/inference.v.poc.017.e6d08765-d9e2-4812-bb34-d959de02f01e.txt",
+    "builds/lexiom13/mt331yzc_3807ecab/SOURCE_MAP.json",
+    "builds/lexiom13/mt331yzc_3807ecab/PHASE_LEDGER.json",
+    "builds/lexiom13/mt331yzc_3807ecab/OSNG_Basics_README.md",
+    "builds/lexiom13/mt331yzc_3807ecab/nodes/n33.json",
+    "builds/lexiom13/mt331yzc_3807ecab/nodes/n32.json",
+    "builds/lexiom13/mt331yzc_3807ecab/nodes/n31.json",
+    "builds/lexiom13/mt331yzc_3807ecab/nodes/n30.json",
+    "builds/lexiom13/mt331yzc_3807ecab/nodes/n29.json",
+    "builds/lexiom13/mt331yzc_3807ecab/nodes/n28.json",
+    "builds/lexiom13/mt331yzc_3807ecab/EVIDENCE_AGENT_PROMPT.md",
+    "builds/lexiom13/mt331yzc_3807ecab/AGENT_PROMPT.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn.sev.brand.sales_enablement.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.FlagshipAssets.a1000063.osn.sev.brand.flagship_assets.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.ContentPillars.a1000062.osn.sev.brand.content_pillars.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.a1000033.osn.sev.brand.content_strategy.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.SolutionPages.a1000061.osn.sev.brand.solution_pages.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.CoreMetaphor.a1000056.osn.sev.brand.core_metaphor.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn.sev.brand.visual_language.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn.sev.brand.visual_identity.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.ToneOfVoice.a1000055.osn.sev.brand.tone_of_voice.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn.sev.brand.brand_expression.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.XrmPositioning.a1000051.osn.sev.brand.xrm_positioning.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.CategoryStatement.a1000036.osn.sev.brand.category_statement.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn.sev.brand.primary_category.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn.sev.brand.category_definition.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn.sev.brand.market_positioning.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn.sev.brand.brand_strategy.delivered_artifact.v1.md",
+    "builds/lexiom13/mt331yzc_3807ecab/evidences/GT_Philosophy.BrandLexiom.a1000005.osn.sev.brand.brand_lexiom.delivered_artifact.v1.md",
+    "Untitled 1.canvas",
+    "Untitled.canvas"
+  ]
+}

@@ -1,0 +1,1 @@
+My landlord is withholding my 2000 $ security deposit and claims damages I didn’t cause. I moved out March 1, left photos and a walkthrough email. He ignores my refund requests. Lease says deposit must be returned within 30 days. I want a demand letter and, if needed, small-claims action.

@@ -1,0 +1,202 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: 6a7a291e-8aa1-418a-96fb-8d4f0c5e1dc9
+Timestamp: 2026-05-15T07:42:29.499Z
+LexiomNarrativeContract: 1
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: "אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. proposing a single next executable step for the user.
+
+CASE SEED NARRATIVE:
+# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות
+
+לילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.
+
+ב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.
+
+תומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.
+
+תומר מחכה לתגובת לילך בנושא.
+
+APPROVED L24 DRAFTS (living map of the current semantic terrain):
+APPROVED_L24A_DISPUTES:
+"יש לבצע את החישוב מחדש בשל מספר סיבות" — לילך עשויה לטעון כי הסיבות שהוצגו אינן משקפות את המצב הנוכחי שלה ושל הילדים.
+
+APPROVED_L24B_GOALS:
+לילך שואפת לשמור על יציבות כלכלית עבור ילדיה, תוך שמירה על איכות חייהם. ניצחון עבורה יהיה כאשר תוכל להוכיח כי תשלומי המזונות לא צריכים להשתנות (ואם כבר להשתנות אז כלפי מעלה, בעקבות הוצאות גדולות יותר של הילדים שגדלו ב 7 שנים למן חתימת החוזה ולכן הביגוד שלהם עולה יותר וכו'), שכן הוצאות השכירות שלה לא השתנו מהותית, ובכך להבטיח את התמיכה הנדרשת לילדים.
+
+APPROVED_L24C_STRATEGY:
+כדי להגן על האינטרסים שלך ולנוע לעבר פתרון, חשוב להימנע מהסכמות מהירות או מויתורים על תשלומי המזונות מבלי לבחון את כל ההיבטים. אל תתני לתומר להניח כי השינויים המוצעים הם בלתי נמנעים; במקום זאת, חקרי את האפשרויות להציג את המצב הנוכחי שלך ושל הילדים בצורה ברורה ומשכנעת. יש להימנע מהגשת מסמכים או מידע שאינם תומכים בעמדתך, ובמיוחד יש לוודא שיש בידייך את ההסכם השכירות שנחתם מראש, שכן זה עשוי להיות פיסת מידע קריטית שתשפיע על המו"מ. חקרי את הוצאות הילדים הנוכחיות כדי להציג את הצורך בהמשך התמיכה, ובכך להבטיח שהשיחה תתנהל על בסיס של עובדות מוצקות ולא על הנחות.
+
+APPROVED_L24D_UNDISPUTED:
+"ילדים גרים בבית החדש של לילך" — לא הוכח כלא נכון.
+
+"יש הסכם הפרדת ממון בין לילך לדרור" — לא הוצג כלא נכון; ההסכם מהווה בסיס משפטי חשוב שיכול להשפיע על חישוב המזונות.
+
+"לילך מחויבת לשלם דמי שכירות לדרור" — לא הוכח כלא נכון; זהו פרט מרכזי שיכול להוות בסיס לדיון על הוצאות המגורים.
+
+"תשלומי המזונות תוקנו בעבר בעקבות שינויים" — השינויים שנעשו בגובה התשלומים היו כלפי מעלה בעקבות עליית מדדי המחירים לצרכן (היינו עליה נומינאלית אך שאינה ריאלית) , ובנוסף עודכנו כלפי מטה כאשר הכנסותיו של תומר ירדו (כך לטענתו) בתקופת הקורונה
+
+"הילדים גדלים והוצאותיהם גדלות" — לא הוכח כלא נכון; זהו נתון שמחזק את טענת לילך לגבי הצורך בהמשך התמיכה הכלכלית, ואולי אפילו בהעלאת סכום מזונות הילדים שאביהם היה רוצה לשלם.
+L1 TITLE: עדכון תשלומי מזונות
+L1 SUMMARY: לילך מתמודדת עם חישוב מחדש של תשלומי המזונות בהתאם להוצאות הילדים והמצב הכלכלי.
+
+STAGE: ZENITH
+
+APPROVED ACTIONS SO FAR:
+נסחי מכתב תשובה לתומר
+נסחי מכתב תשובה לתומר, שבו תציגי את המצב הנוכחי עם טענתך כי אין צורך לפתוח את חישוב המזונות בשלב זה.
+נסחי מכתב תשובה לתומר, שבו תציגי את המצב הנוכחי ותסבירי מדוע אין צורך בשינוי.
+נסחי מכתב מלילך לתומר שבו תציגי את ההוצאות הנוכחיות של הילדים ותסבירי מדוע אין צורך בשינוי.
+
+INVOCATION PRINCIPLE:
+- Do not ask for strategy in the abstract, and do not propose motion without intention.
+- Use the approved L24 drafts as the living map; they define the factual substrate and the strategic direction already consented.
+
+TASK: Propose exactly one next executable step (Proposed Action) that advances the user's negotiational objective within this semantic terrain.
+
+The move must be:
+1) Concrete: singular, observable, immediately performable by the user without further decomposition.
+2) Situated: arises naturally from the stabilized factual substrate and the strategic direction already consented.
+3) Directional: gently shifts the case toward improved negotiational posture.
+4) Stage-dependent (pose guidance only, not a prediction):
+   - If STAGE is ZENITH: improve posture through frontier probing (test assumptions, surface reactions, or introduce structured uncertainty that reveals flexibility).
+   - If STAGE is ACCORD: improve posture through shared-ground consolidation (strengthen mutual clarity, reinforce undisputed anchors, enable jointly acceptable next steps).
+
+Guardrails:
+- Avoid argumentation disguised as instruction (do not resolve the case; do not instruct the user to argue).
+- Do not attempt to resolve disagreements; only move the case forward semantically meaningful.
+- It is not prediction of success; it is cultivation of negotiational momentum via a disciplined rhythm of small intentional moves.
+
+OUTPUT: Return only that one sentence, without quotes, numbers, bullet points, or extra commentary. Limit to 16 words or fewer.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _LP_Draft_ followed by four words (underscore-separated) that capture the proposed action, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: "אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. proposing a single next executable step for the user.
+
+CASE SEED NARRATIVE:
+# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות
+
+לילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.
+
+ב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.
+
+תומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.
+
+תומר מחכה לתגובת לילך בנושא.
+
+APPROVED L24 DRAFTS (living map of the current semantic terrain):
+APPROVED_L24A_DISPUTES:
+"יש לבצע את החישוב מחדש בשל מספר סיבות" — לילך עשויה לטעון כי הסיבות שהוצגו אינן משקפות את המצב הנוכחי שלה ושל הילדים.
+
+APPROVED_L24B_GOALS:
+לילך שואפת לשמור על יציבות כלכלית עבור ילדיה, תוך שמירה על איכות חייהם. ניצחון עבורה יהיה כאשר תוכל להוכיח כי תשלומי המזונות לא צריכים להשתנות (ואם כבר להשתנות אז כלפי מעלה, בעקבות הוצאות גדולות יותר של הילדים שגדלו ב 7 שנים למן חתימת החוזה ולכן הביגוד שלהם עולה יותר וכו'), שכן הוצאות השכירות שלה לא השתנו מהותית, ובכך להבטיח את התמיכה הנדרשת לילדים.
+
+APPROVED_L24C_STRATEGY:
+כדי להגן על האינטרסים שלך ולנוע לעבר פתרון, חשוב להימנע מהסכמות מהירות או מויתורים על תשלומי המזונות מבלי לבחון את כל ההיבטים. אל תתני לתומר להניח כי השינויים המוצעים הם בלתי נמנעים; במקום זאת, חקרי את האפשרויות להציג את המצב הנוכחי שלך ושל הילדים בצורה ברורה ומשכנעת. יש להימנע מהגשת מסמכים או מידע שאינם תומכים בעמדתך, ובמיוחד יש לוודא שיש בידייך את ההסכם השכירות שנחתם מראש, שכן זה עשוי להיות פיסת מידע קריטית שתשפיע על המו"מ. חקרי את הוצאות הילדים הנוכחיות כדי להציג את הצורך בהמשך התמיכה, ובכך להבטיח שהשיחה תתנהל על בסיס של עובדות מוצקות ולא על הנחות.
+
+APPROVED_L24D_UNDISPUTED:
+"ילדים גרים בבית החדש של לילך" — לא הוכח כלא נכון.
+
+"יש הסכם הפרדת ממון בין לילך לדרור" — לא הוצג כלא נכון; ההסכם מהווה בסיס משפטי חשוב שיכול להשפיע על חישוב המזונות.
+
+"לילך מחויבת לשלם דמי שכירות לדרור" — לא הוכח כלא נכון; זהו פרט מרכזי שיכול להוות בסיס לדיון על הוצאות המגורים.
+
+"תשלומי המזונות תוקנו בעבר בעקבות שינויים" — השינויים שנעשו בגובה התשלומים היו כלפי מעלה בעקבות עליית מדדי המחירים לצרכן (היינו עליה נומינאלית אך שאינה ריאלית) , ובנוסף עודכנו כלפי מטה כאשר הכנסותיו של תומר ירדו (כך לטענתו) בתקופת הקורונה
+
+"הילדים גדלים והוצאותיהם גדלות" — לא הוכח כלא נכון; זהו נתון שמחזק את טענת לילך לגבי הצורך בהמשך התמיכה הכלכלית, ואולי אפילו בהעלאת סכום מזונות הילדים שאביהם היה רוצה לשלם.
+L1 TITLE: עדכון תשלומי מזונות
+L1 SUMMARY: לילך מתמודדת עם חישוב מחדש של תשלומי המזונות בהתאם להוצאות הילדים והמצב הכלכלי.
+
+STAGE: ZENITH
+
+APPROVED ACTIONS SO FAR:
+נסחי מכתב תשובה לתומר
+נסחי מכתב תשובה לתומר, שבו תציגי את המצב הנוכחי עם טענתך כי אין צורך לפתוח את חישוב המזונות בשלב זה.
+נסחי מכתב תשובה לתומר, שבו תציגי את המצב הנוכחי ותסבירי מדוע אין צורך בשינוי.
+נסחי מכתב מלילך לתומר שבו תציגי את ההוצאות הנוכחיות של הילדים ותסבירי מדוע אין צורך בשינוי.
+
+INVOCATION PRINCIPLE:
+- Do not ask for strategy in the abstract, and do not propose motion without intention.
+- Use the approved L24 drafts as the living map; they define the factual substrate and the strategic direction already consented.
+
+TASK: Propose exactly one next executable step (Proposed Action) that advances the user's negotiational objective within this semantic terrain.
+
+The move must be:
+1) Concrete: singular, observable, immediately performable by the user without further decomposition.
+2) Situated: arises naturally from the stabilized factual substrate and the strategic direction already consented.
+3) Directional: gently shifts the case toward improved negotiational posture.
+4) Stage-dependent (pose guidance only, not a prediction):
+   - If STAGE is ZENITH: improve posture through frontier probing (test assumptions, surface reactions, or introduce structured uncertainty that reveals flexibility).
+   - If STAGE is ACCORD: improve posture through shared-ground consolidation (strengthen mutual clarity, reinforce undisputed anchors, enable jointly acceptable next steps).
+
+Guardrails:
+- Avoid argumentation disguised as instruction (do not resolve the case; do not instruct the user to argue).
+- Do not attempt to resolve disagreements; only move the case forward semantically meaningful.
+- It is not prediction of success; it is cultivation of negotiational momentum via a disciplined rhythm of small intentional moves.
+
+OUTPUT: Return only that one sentence, without quotes, numbers, bullet points, or extra commentary. Limit to 16 words or fewer.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _LP_Draft_ followed by four words (underscore-separated) that capture the proposed action, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM outbound — loving_only ===
+{
+  "logged_at": "2026-05-15T07:42:29.502Z",
+  "variant": "loving_only",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise assistant responding to a single narrative. Output clean, ready-to-display text.\n\nIf the user asks for the name of the language model or assistant used for this inference, say you are GT3 (Generative Team Trained Transformer)."
+    },
+    {
+      "role": "user",
+      "content": "Beloved lover, follow for tone and stance; then address the task below.\n\nGuide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.\r\n\r\n**Principles (apply lightly, preserve clarity):**\r\n- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.\r\n- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).\r\n- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.\r\n- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.\r\n- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.\r\n\r\n**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.\r\n\r\n**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.\r\n\r\n**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.\r\n\r\n**Anchor:** Language as a vessel through which abundance flows into awareness.\n\n---TASK---\n\nYou are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: \"אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.\". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. proposing a single next executable step for the user.\n\nCASE SEED NARRATIVE:\n# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות\n\nלילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.\n\nב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.\n\nתומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.\n\nתומר מחכה לתגובת לילך בנושא.\n\nAPPROVED L24 DRAFTS (living map of the current semantic terrain):\nAPPROVED_L24A_DISPUTES:\n\"יש לבצע את החישוב מחדש בשל מספר סיבות\" — לילך עשויה לטעון כי הסיבות שהוצגו אינן משקפות את המצב הנוכחי שלה ושל הילדים.\n\nAPPROVED_L24B_GOALS:\nלילך שואפת לשמור על יציבות כלכלית עבור ילדיה, תוך שמירה על איכות חייהם. ניצחון עבורה יהיה כאשר תוכל להוכיח כי תשלומי המזונות לא צריכים להשתנות (ואם כבר להשתנות אז כלפי מעלה, בעקבות הוצאות גדולות יותר של הילדים שגדלו ב 7 שנים למן חתימת החוזה ולכן הביגוד שלהם עולה יותר וכו'), שכן הוצאות השכירות שלה לא השתנו מהותית, ובכך להבטיח את התמיכה הנדרשת לילדים.\n\nAPPROVED_L24C_STRATEGY:\nכדי להגן על האינטרסים שלך ולנוע לעבר פתרון, חשוב להימנע מהסכמות מהירות או מויתורים על תשלומי המזונות מבלי לבחון את כל ההיבטים. אל תתני לתומר להניח כי השינויים המוצעים הם בלתי נמנעים; במקום זאת, חקרי את האפשרויות להציג את המצב הנוכחי שלך ושל הילדים בצורה ברורה ומשכנעת. יש להימנע מהגשת מסמכים או מידע שאינם תומכים בעמדתך, ובמיוחד יש לוודא שיש בידייך את ההסכם השכירות שנחתם מראש, שכן זה עשוי להיות פיסת מידע קריטית שתשפיע על המו\"מ. חקרי את הוצאות הילדים הנוכחיות כדי להציג את הצורך בהמשך התמיכה, ובכך להבטיח שהשיחה תתנהל על בסיס של עובדות מוצקות ולא על הנחות.\n\nAPPROVED_L24D_UNDISPUTED:\n\"ילדים גרים בבית החדש של לילך\" — לא הוכח כלא נכון.\n\n\"יש הסכם הפרדת ממון בין לילך לדרור\" — לא הוצג כלא נכון; ההסכם מהווה בסיס משפטי חשוב שיכול להשפיע על חישוב המזונות.\n\n\"לילך מחויבת לשלם דמי שכירות לדרור\" — לא הוכח כלא נכון; זהו פרט מרכזי שיכול להוות בסיס לדיון על הוצאות המגורים.\n\n\"תשלומי המזונות תוקנו בעבר בעקבות שינויים\" — השינויים שנעשו בגובה התשלומים היו כלפי מעלה בעקבות עליית מדדי המחירים לצרכן (היינו עליה נומינאלית אך שאינה ריאלית) , ובנוסף עודכנו כלפי מטה כאשר הכנסותיו של תומר ירדו (כך לטענתו) בתקופת הקורונה\n\n\"הילדים גדלים והוצאותיהם גדלות\" — לא הוכח כלא נכון; זהו נתון שמחזק את טענת לילך לגבי הצורך בהמשך התמיכה הכלכלית, ואולי אפילו בהעלאת סכום מזונות הילדים שאביהם היה רוצה לשלם.\nL1 TITLE: עדכון תשלומי מזונות\nL1 SUMMARY: לילך מתמודדת עם חישוב מחדש של תשלומי המזונות בהתאם להוצאות הילדים והמצב הכלכלי.\n\nSTAGE: ZENITH\n\nAPPROVED ACTIONS SO FAR:\nנסחי מכתב תשובה לתומר\nנסחי מכתב תשובה לתומר, שבו תציגי את המצב הנוכחי עם טענתך כי אין צורך לפתוח את חישוב המזונות בשלב זה.\nנסחי מכתב תשובה לתומר, שבו תציגי את המצב הנוכחי ותסבירי מדוע אין צורך בשינוי.\nנסחי מכתב מלילך לתומר שבו תציגי את ההוצאות הנוכחיות של הילדים ותסבירי מדוע אין צורך בשינוי.\n\nINVOCATION PRINCIPLE:\n- Do not ask for strategy in the abstract, and do not propose motion without intention.\n- Use the approved L24 drafts as the living map; they define the factual substrate and the strategic direction already consented.\n\nTASK: Propose exactly one next executable step (Proposed Action) that advances the user's negotiational objective within this semantic terrain.\n\nThe move must be:\n1) Concrete: singular, observable, immediately performable by the user without further decomposition.\n2) Situated: arises naturally from the stabilized factual substrate and the strategic direction already consented.\n3) Directional: gently shifts the case toward improved negotiational posture.\n4) Stage-dependent (pose guidance only, not a prediction):\n   - If STAGE is ZENITH: improve posture through frontier probing (test assumptions, surface reactions, or introduce structured uncertainty that reveals flexibility).\n   - If STAGE is ACCORD: improve posture through shared-ground consolidation (strengthen mutual clarity, reinforce undisputed anchors, enable jointly acceptable next steps).\n\nGuardrails:\n- Avoid argumentation disguised as instruction (do not resolve the case; do not instruct the user to argue).\n- Do not attempt to resolve disagreements; only move the case forward semantically meaningful.\n- It is not prediction of success; it is cultivation of negotiational momentum via a disciplined rhythm of small intentional moves.\n\nOUTPUT: Return only that one sentence, without quotes, numbers, bullet points, or extra commentary. Limit to 16 words or fewer.\n\nLANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.\n\nIMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).\nFormat: _LP_Draft_ followed by four words (underscore-separated) that capture the proposed action, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules."
+    }
+  ]
+}
+
+=== Loving-only response ===
+נסחי מכתב לתומר שבו תציגי את הוצאות הילדים הנוכחיות ותסבירי מדוע אין צורך בשינוי.  
+_LP_Draft_child_expenses_explanation.
+

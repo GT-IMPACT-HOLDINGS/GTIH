@@ -1,0 +1,46 @@
+{
+  "case_id": "sess_63840fc29de45272a176",
+  "state": "CanonicalSigned",
+  "package": {
+    "package_id": "rp_d58f310b462b",
+    "status": "completed",
+    "profile": "document",
+    "artifact": {
+      "artifact_id": "art_aeda89bcb481",
+      "media_kind": "document",
+      "content_type": "text/markdown",
+      "file_name": "document.md",
+      "uri": "/lexiom14/v1/artifacts/art_aeda89bcb481"
+    },
+    "success_evidences": [
+      {
+        "evidence_id": "ev_1b6705372fc2",
+        "kind": "TEXTUAL_SNIPPET",
+        "direct": true,
+        "label": "Opening of delivered document.md",
+        "uri": "/lexiom14/v1/evidences/ev_1b6705372fc2",
+        "structure_node_id": "node_evidence"
+      }
+    ],
+    "provenance": {
+      "provenance_id": "prov_3f24f50faaf8ea7f",
+      "session_id": "sess_63840fc29de45272a176",
+      "profile": "document",
+      "started_at": "2026-08-18T16:01:30.089Z",
+      "completed_at": "2026-08-18T16:01:30.228Z",
+      "agent_label": "lexiom14-document-poc"
+    },
+    "metering_ids": [
+      "mtr_61f703225d3c478d"
+    ],
+    "structure_revision": "rev_1"
+  },
+  "evidence_approvals": {
+    "ev_1b6705372fc2": true
+  },
+  "attestation": {
+    "at": "2026-08-18T16:01:30.269Z",
+    "by": "e2e_actor",
+    "kind": "attestation_record_poc"
+  }
+}

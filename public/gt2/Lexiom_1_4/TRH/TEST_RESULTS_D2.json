@@ -1,0 +1,119 @@
+{
+  "ran_at": "2026-08-18T16:01:30.337Z",
+  "gt3": "http://127.0.0.1:8080",
+  "trh": "http://127.0.0.1:4173",
+  "results": [
+    {
+      "id": "D2.coop_coep",
+      "ok": true,
+      "detail": "same-origin / require-corp"
+    },
+    {
+      "id": "D2.trh_sdk_same_origin",
+      "ok": true,
+      "detail": "sdk 200 from TRH"
+    },
+    {
+      "id": "D2.cors_preflight",
+      "ok": true,
+      "detail": "http://localhost:4173"
+    },
+    {
+      "id": "D2.mint",
+      "ok": true,
+      "detail": "credential issued"
+    },
+    {
+      "id": "D2.session",
+      "ok": true,
+      "detail": "sess_63840fc29de45272a176"
+    },
+    {
+      "id": "D2.no_trh_api_host",
+      "ok": true,
+      "detail": "API on GT3"
+    },
+    {
+      "id": "D2.osn_yaml",
+      "ok": true,
+      "detail": "opaque YAML present"
+    },
+    {
+      "id": "D2.build_ready",
+      "ok": true,
+      "detail": "both hemispheres ready after generateOsn"
+    },
+    {
+      "id": "D2.structure_disclosure",
+      "ok": true,
+      "detail": "3 nodes"
+    },
+    {
+      "id": "D2.realization_package",
+      "ok": true,
+      "detail": "rp_d58f310b462b"
+    },
+    {
+      "id": "D2.persist_not_canonical",
+      "ok": true,
+      "detail": "EvidenceReview after persist"
+    },
+    {
+      "id": "D2.artifact_fetch",
+      "ok": true,
+      "detail": "bytes=741 corp=cross-origin"
+    },
+    {
+      "id": "D2.direct_evidences",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "id": "D2.human_approved",
+      "ok": true,
+      "detail": "all directs approved"
+    },
+    {
+      "id": "D2.pre_sign_not_canonical",
+      "ok": true,
+      "detail": "HumanApproved"
+    },
+    {
+      "id": "D2.canonical_signed",
+      "ok": true,
+      "detail": "2026-08-18T16:01:30.269Z"
+    },
+    {
+      "id": "D2.metering_no_pii",
+      "ok": true,
+      "detail": "events=52"
+    },
+    {
+      "id": "D2.realization_failed_guard",
+      "ok": true,
+      "detail": "not_build_ready without corrupt package"
+    },
+    {
+      "id": "D2.failed_no_package",
+      "ok": true,
+      "detail": "clean"
+    },
+    {
+      "id": "D2.ca_isolation_ready",
+      "ok": true,
+      "detail": "TRH COOP/COEP present; document Realization is server-composed (Known divergence vs full in-page WebContainer CA)"
+    },
+    {
+      "id": "D3.lexiom13_loads",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "id": "D3.lexiom13_tree_present",
+      "ok": true,
+      "detail": "app.js exists"
+    }
+  ],
+  "passed": 22,
+  "failed": 0
+}

@@ -1,0 +1,1180 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="gt3-file-uuid" content="327385f4-6c86-46bf-a7bc-8e19e7d242e5" />
+  <title>QuoteMe v1</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../gt2-logo-small.png" />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #fafafa;
+    }
+    .quote-me-primary {
+      color: #2F6BFF;
+    }
+    .quote-me-approved {
+      color: #00B8D9;
+    }
+    .btn-primary {
+      background-color: #2F6BFF;
+      border-color: #2F6BFF;
+    }
+    .btn-primary:hover {
+      background-color: #1a5ae6;
+      border-color: #1a5ae6;
+    }
+    .btn-outline-success.approved {
+      background-color: #00B8D9;
+      border-color: #00B8D9;
+      color: white;
+    }
+    .gt2-logo {
+      height: 28px;
+      width: auto;
+      cursor: pointer;
+    }
+    .sidebar {
+      min-height: 100vh;
+      background: #f8f9fa;
+      border-right: 1px solid #dee2e6;
+    }
+    .main-content {
+      padding: 2rem;
+    }
+    .opportunity-card {
+      transition: transform 0.2s;
+    }
+    .opportunity-card:hover {
+      transform: translateY(-2px);
+    }
+    /* Onboarding Modal Styles */
+    .onboarding-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: background-color 1s ease-in-out;
+    }
+    .onboarding-modal-overlay.fade-to-white {
+      background: white;
+    }
+    .onboarding-modal {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transition: opacity 1s ease-in-out;
+    }
+    .onboarding-modal.fade-out {
+      opacity: 0;
+    }
+    .onboarding-modal.fade-in {
+      opacity: 1;
+    }
+    .onboarding-draft-card-mock {
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      margin: 1.5rem 0;
+      background: #f8f9fa;
+    }
+    .onboarding-draft-card-mock .label-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .onboarding-draft-card-mock .glyph {
+      font-size: 1.2rem;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .onboarding-draft-card-mock .glyph:hover {
+      transform: scale(1.1);
+    }
+    .onboarding-draft-card-mock .glyph:focus {
+      outline: 2px solid #2F6BFF;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    .onboarding-celebration {
+      position: absolute;
+      pointer-events: none;
+      font-size: 1.5rem;
+      animation: sparkle 0.7s ease-out;
+    }
+    @keyframes sparkle {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.8) rotate(360deg);
+      }
+    }
+    .onboarding-step {
+      display: none;
+    }
+    .onboarding-step.active {
+      display: block;
+    }
+    .onboarding-instruction {
+      text-align: center;
+      color: #6c757d;
+      margin-top: 1rem;
+      min-height: 1.5rem;
+    }
+    /* Draft-First Onboarding Modal Styles */
+    #draft-first-onboarding-modal .modal-content {
+      border: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    .onboarding-pulse-border {
+      animation: pulse-border 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-border {
+      0%, 100% {
+        border-color: #dee2e6;
+        box-shadow: 0 0 0 0 rgba(47, 107, 255, 0);
+      }
+      50% {
+        border-color: #2F6BFF;
+        box-shadow: 0 0 0 3px rgba(47, 107, 255, 0.2);
+      }
+    }
+    .onboarding-glyph-pulse {
+      animation: glyph-pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes glyph-pulse {
+      0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0 rgba(47, 107, 255, 0));
+      }
+      50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 8px rgba(47, 107, 255, 0.6));
+      }
+    }
+    .onboarding-glyph-glow {
+      animation: glow-pulse 0.3s ease-out;
+    }
+    @keyframes glow-pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(47, 107, 255, 0);
+      }
+      50% {
+        box-shadow: 0 0 10px 5px rgba(47, 107, 255, 0.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Landing Page (shown when profile is null) -->
+  <div id="landing-page" class="container py-5" style="display: none;">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="text-center mb-4">
+          <h1 class="quote-me-primary">QuoteMe</h1>
+          <p class="text-muted">Create your sales proposal workspace</p>
+        </div>
+        
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h5 class="card-title mb-4">Profile Setup</h5>
+            <form id="profile-form">
+              <!-- Name and Role/Title (side by side) -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="roleTitle" class="form-label">Role/Title</label>
+                  <input type="text" class="form-control" id="roleTitle" placeholder="Optional">
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="companyName" class="form-label">Company Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="companyName" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="industrySegment" class="form-label">Industry/Segment <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="industrySegment" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="geography" class="form-label">Geography <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="geography" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="productServiceCategory" class="form-label">Product/Service Category <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="productServiceCategory" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="companyDescription" class="form-label">Company Description</label>
+                <textarea class="form-control" id="companyDescription" rows="4" placeholder="Optional: Provide a general description of your company"></textarea>
+              </div>
+              
+              <div id="profile-form-error" class="alert alert-danger d-none" role="alert"></div>
+              
+              <button type="submit" class="btn btn-primary w-100">Create my QuoteMe workspace</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Shell (shown when profile exists) -->
+  <div id="main-shell" style="display: none;">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar p-3">
+          <div class="mb-4">
+            <img src="../gt2-logo-small.png" alt="GT2 logo" class="gt2-logo mb-2" id="gt2-logo" style="cursor: pointer;">
+            <h5 class="quote-me-primary">QuoteMe</h5>
+          </div>
+          
+          <nav class="nav flex-column">
+            <a class="nav-link active" href="#" data-route="opportunities">Opportunities</a>
+            <a class="nav-link" href="#" data-route="pa">Proposal Anatomy</a>
+            <a class="nav-link" href="#" data-route="profile">Profile</a>
+            <a class="nav-link" href="admin.html">Admin</a>
+          </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-10 main-content">
+          <div id="route-content">
+            <!-- Opportunities List View -->
+            <div id="opportunities-view">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Opportunities</h2>
+                <button id="btn-create-opportunity" class="btn btn-primary">Create Opportunity</button>
+              </div>
+              
+              <div id="opportunities-list">
+                <div class="text-center text-muted py-5">
+                  <p>No opportunities yet. Create your first one.</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- PA View -->
+            <div id="pa-view" style="display: none;">
+              <div class="card shadow-sm">
+                <div class="card-body p-4">
+                  <div id="pa-draft-field-container">
+                    <!-- Draft field component will be inserted here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Profile View -->
+            <div id="profile-view" style="display: none;">
+              <h2>Profile</h2>
+              <div class="card shadow-sm">
+                <div class="card-body p-4">
+                  <form id="profile-edit-form">
+                    <!-- Name and Role/Title (side by side) -->
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label for="profile-name" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="profile-name" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="profile-roleTitle" class="form-label">Role/Title</label>
+                        <input type="text" class="form-control" id="profile-roleTitle" placeholder="Optional">
+                      </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="profile-companyName" class="form-label">Company Name <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="profile-companyName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="profile-industrySegment" class="form-label">Industry/Segment <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="profile-industrySegment" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="profile-geography" class="form-label">Geography <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="profile-geography" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="profile-productServiceCategory" class="form-label">Product/Service Category <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="profile-productServiceCategory" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="profile-companyDescription" class="form-label">Company Description</label>
+                      <textarea class="form-control" id="profile-companyDescription" rows="4" placeholder="Optional: Provide a general description of your company"></textarea>
+                    </div>
+                    
+                    <div id="profile-edit-error" class="alert alert-danger d-none" role="alert"></div>
+                    <div id="profile-edit-success" class="alert alert-success d-none" role="alert"></div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Profile</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Admin View (placeholder) -->
+            <div id="admin-view" style="display: none;">
+              <h2>Admin</h2>
+              <p class="text-muted">Admin diagnostics will be implemented in Phase 6</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Sidebar (Offcanvas) -->
+  <div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="settings-offcanvas"
+    aria-labelledby="settings-offcanvas-label"
+  >
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="settings-offcanvas-label">GT3 Settings</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body small">
+      <p class="mb-2 text-muted">
+        Enter your GT3 API key here. The key is stored in browser localStorage only
+        and sent with every inference request to GT3.
+      </p>
+
+      <div class="mb-3">
+        <label for="settings-api-key" class="form-label">GT3 API Key</label>
+        <input
+          type="password"
+          id="settings-api-key"
+          class="form-control form-control-sm"
+          placeholder="Paste your API key here"
+        />
+        <div class="form-text">
+          Key is stored in browser localStorage only.
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="button" id="settings-api-clear" class="btn btn-outline-danger btn-sm">
+          Clear Key
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Draft-First Onboarding Modal -->
+  <div id="draft-first-onboarding-modal" class="modal fade" tabindex="-1" aria-labelledby="draft-first-onboarding-title" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body p-4">
+          <h4 id="draft-first-onboarding-title" class="text-center mb-3">AI drafts. You're in control.</h4>
+          <p class="text-center mb-4">Every AI output is a draft — editable right where it appears.</p>
+          
+          <!-- Mini glyph legend -->
+          <div class="d-flex justify-content-center gap-4 mb-4 small text-muted">
+            <div class="text-center">
+              <div style="font-size: 2rem; line-height: 1.2;">◯</div>
+              <div>AI draft</div>
+            </div>
+            <div class="text-center">
+              <div style="font-size: 2rem; line-height: 1.2;">◉</div>
+              <div>You shaped it</div>
+            </div>
+            <div class="text-center">
+              <div style="font-size: 2rem; line-height: 1.2; position: relative; display: inline-block; width: 2rem; height: 2rem;">
+                <span style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; line-height: 2rem;">◯</span>
+                <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 1rem; line-height: 1; color: #00B8D9;">✓</span>
+              </div>
+              <div>Approved</div>
+            </div>
+          </div>
+
+          <!-- Draft-First textarea for approval -->
+          <div id="onboarding-draft-field-container">
+            <!-- Draft field component will be inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Storage module -->
+  <script type="module">
+    import {
+      loadQuoteMeData,
+      saveQuoteMeData,
+      validateProfile,
+      createProfile,
+      updateProfile,
+      createOpportunity,
+      createPA,
+      updatePA,
+      approvePA,
+      listOpportunities,
+      deleteOpportunity
+    } from './storage.js';
+    import { callGT3, setApiKey, getApiKey } from './gt3-client.js';
+    import { buildPANarrative } from './inference-narratives.js';
+    import { createDraftField, updateDraftField } from '../utilities/draft-field.js';
+    import { showErrorToast, showSuccessToast, showWarningToast } from './toast-utils.js';
+    import { setButtonLoading, removeButtonLoading, showLoadingOverlay, removeLoadingOverlay } from './loading-utils.js';
+
+    // ---------- State ----------
+    let currentData = loadQuoteMeData();
+    let currentRoute = 'opportunities';
+
+    // ---------- Routing ----------
+    function showLanding() {
+      document.getElementById('landing-page').style.display = 'block';
+      document.getElementById('main-shell').style.display = 'none';
+    }
+
+    function showMainShell() {
+      document.getElementById('landing-page').style.display = 'none';
+      document.getElementById('main-shell').style.display = 'block';
+      renderRoute();
+    }
+
+    function renderRoute() {
+      // Update nav active state
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.route === currentRoute) {
+          link.classList.add('active');
+        }
+      });
+
+      // Show/hide views
+      document.getElementById('opportunities-view').style.display = 
+        currentRoute === 'opportunities' ? 'block' : 'none';
+      document.getElementById('pa-view').style.display = 
+        currentRoute === 'pa' ? 'block' : 'none';
+      document.getElementById('profile-view').style.display = 
+        currentRoute === 'profile' ? 'block' : 'none';
+      document.getElementById('admin-view').style.display = 
+        currentRoute === 'admin' ? 'block' : 'none';
+
+      // Render current view
+      if (currentRoute === 'opportunities') {
+        renderOpportunitiesList();
+      } else if (currentRoute === 'profile') {
+        renderProfileView();
+      } else if (currentRoute === 'pa') {
+        renderPAView();
+      }
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        // If link has an href that's not "#", allow normal navigation (e.g., admin.html)
+        if (link.getAttribute('href') && link.getAttribute('href') !== '#') {
+          return; // Allow normal navigation
+        }
+        
+        e.preventDefault();
+        currentRoute = link.dataset.route;
+        renderRoute();
+      });
+    });
+
+    // ---------- Profile Form ----------
+    const profileForm = document.getElementById('profile-form');
+    const profileFormError = document.getElementById('profile-form-error');
+
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      profileFormError.classList.add('d-none');
+
+      // Collect form data
+      const fields = {
+        name: document.getElementById('name').value.trim(),
+        roleTitle: document.getElementById('roleTitle').value.trim() || null,
+        companyName: document.getElementById('companyName').value.trim(),
+        industrySegment: document.getElementById('industrySegment').value.trim(),
+        geography: document.getElementById('geography').value.trim(),
+        productServiceCategory: document.getElementById('productServiceCategory').value.trim(),
+        companyDescription: document.getElementById('companyDescription').value.trim() || null
+      };
+
+      // Validate
+      const profile = createProfile(fields);
+      const validation = validateProfile(profile);
+      
+      if (!validation.valid) {
+        profileFormError.textContent = validation.errors.join(', ');
+        profileFormError.classList.remove('d-none');
+        return;
+      }
+
+      // Save profile
+      currentData.profile = profile;
+      if (!saveQuoteMeData(currentData)) {
+        profileFormError.textContent = 'Failed to save profile. Please try again.';
+        profileFormError.classList.remove('d-none');
+        return;
+      }
+
+      // Trigger PA generation
+      profileFormError.classList.add('d-none');
+      const submitBtn = profileForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating your proposal structure…';
+
+      try {
+        const narrative = buildPANarrative(profile);
+        const result = await callGT3(narrative);
+
+        if (result.ok && result.text) {
+          // Save PA (fromLM = true since generated from GT3)
+          currentData.pa = createPA(result.text, true);
+          if (saveQuoteMeData(currentData)) {
+            currentData = loadQuoteMeData();
+            // Show main shell and render PA view first
+            showMainShell();
+            currentRoute = 'pa';
+            renderRoute();
+            
+            // Wait for PA to be rendered, then show onboarding modal if needed
+            setTimeout(() => {
+              if (shouldShowOnboarding(currentData)) {
+                showDraftFirstOnboardingModal();
+              }
+            }, 100);
+          } else {
+            throw new Error('Failed to save PA');
+          }
+        } else {
+          // PA generation failed, but user still enters app
+          currentData = loadQuoteMeData();
+          showMainShell();
+          
+          // Show banner with retry option
+          const banner = document.createElement('div');
+          banner.className = 'alert alert-warning alert-dismissible fade show';
+          banner.innerHTML = `
+            <strong>PA not created yet — retry.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="mt-2">
+              <button class="btn btn-sm btn-outline-primary" id="retry-pa-btn">Retry</button>
+              <details class="mt-2">
+                <summary class="small">Error details</summary>
+                <pre class="small mt-2">${result.error || 'Unknown error'}</pre>
+              </details>
+            </div>
+          `;
+          document.querySelector('.main-content').prepend(banner);
+          
+          // Retry button
+          document.getElementById('retry-pa-btn').addEventListener('click', async () => {
+            banner.remove();
+            const retryResult = await callGT3(narrative);
+            if (retryResult.ok && retryResult.text) {
+              currentData.pa = createPA(retryResult.text, true);
+              if (saveQuoteMeData(currentData)) {
+                currentData = loadQuoteMeData();
+                // Show success message
+                const successBanner = document.createElement('div');
+                successBanner.className = 'alert alert-success alert-dismissible fade show';
+                successBanner.innerHTML = `
+                  <strong>PA created successfully!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.main-content').prepend(successBanner);
+                setTimeout(() => successBanner.remove(), 3000);
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.error('[PA generation] Error:', err);
+        // Still enter app, show error banner
+        currentData = loadQuoteMeData();
+        showMainShell();
+        const errorBanner = document.createElement('div');
+        errorBanner.className = 'alert alert-danger alert-dismissible fade show';
+        errorBanner.innerHTML = `
+          <strong>PA generation failed.</strong> ${String(err)}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.main-content').prepend(errorBanner);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+    });
+
+    // ---------- Opportunities List ----------
+    function renderOpportunitiesList() {
+      const listEl = document.getElementById('opportunities-list');
+      const opportunities = currentData.opportunities || [];
+
+      if (opportunities.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-center text-muted py-5">
+            <p>No opportunities yet. Create your first one.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Sort by updatedAt descending
+      const sorted = [...opportunities].sort((a, b) => {
+        const ta = Date.parse(a.updatedAt || a.createdAt || '');
+        const tb = Date.parse(b.updatedAt || b.createdAt || '');
+        return tb - ta;
+      });
+
+      listEl.innerHTML = sorted.map(opp => {
+        const updated = new Date(opp.updatedAt || opp.createdAt);
+        return `
+          <div class="card shadow-sm opportunity-card mb-3" data-opportunity-id="${opp.id}">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 class="card-title mb-1">${opp.title || 'Untitled Opportunity'}</h5>
+                  <small class="text-muted">Updated: ${updated.toLocaleString()}</small>
+                </div>
+                <a href="opportunity.html?id=${opp.id}" class="btn btn-outline-primary btn-sm">Open</a>
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteOpportunityHandler('${opp.id}')">Delete</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Create Opportunity button
+    document.getElementById('btn-create-opportunity').addEventListener('click', () => {
+      const opp = createOpportunity();
+      currentData.opportunities.push(opp);
+      if (saveQuoteMeData(currentData)) {
+        currentData = loadQuoteMeData();
+        // Navigate to opportunity detail page
+        window.location.href = `opportunity.html?id=${opp.id}`;
+      }
+    });
+
+    // Helper to escape HTML
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Delete Opportunity handler
+    window.deleteOpportunityHandler = function(opportunityId) {
+      if (confirm('Are you sure you want to delete this opportunity?')) {
+        if (deleteOpportunity(currentData, opportunityId)) {
+          currentData = loadQuoteMeData();
+          renderOpportunitiesList();
+        }
+      }
+    };
+
+    // ---------- PA View ----------
+    let paDraftFieldContainer = null;
+
+    function renderPAView() {
+      const containerEl = document.getElementById('pa-draft-field-container');
+      if (!containerEl) return;
+
+      // Clear existing content
+      containerEl.innerHTML = '';
+
+      if (!currentData.pa || !currentData.pa.text) {
+        containerEl.innerHTML = `
+          <p class="text-muted">No Proposal Anatomy created yet.</p>
+          <p class="small text-muted">PA will be generated after Profile submission.</p>
+        `;
+        paDraftFieldContainer = null;
+        return;
+      }
+
+      const pa = currentData.pa;
+      
+      // Create draft field component
+      paDraftFieldContainer = createDraftField({
+        label: 'Proposal Anatomy (PA)',
+        text: pa.text || '',
+        approved: pa.paApproved || false,
+        hasLmDraft: pa.hasLmDraft !== undefined ? pa.hasLmDraft : true, // Default to true for existing PAs
+        hasUserEdits: pa.hasUserEdits || false,
+        readOnly: false,
+        placeholder: 'Proposal Anatomy will appear here after Profile submission...',
+        onTextChange: (newText, userHasEdited) => {
+          // Auto-save on change (debounced or immediate)
+          const updatedPA = updatePA(pa, newText, userHasEdited);
+          currentData.pa = updatedPA;
+          saveQuoteMeData(currentData);
+          currentData = loadQuoteMeData();
+          
+          // Update glyph if approval was revoked OR if user edits state changed
+          if (paDraftFieldContainer && 
+              (updatedPA.paApproved !== pa.paApproved || 
+               updatedPA.hasUserEdits !== pa.hasUserEdits)) {
+            updateDraftField(paDraftFieldContainer, {
+              text: updatedPA.text,
+              approved: updatedPA.paApproved,
+              hasLmDraft: updatedPA.hasLmDraft,
+              hasUserEdits: updatedPA.hasUserEdits
+            });
+          }
+        },
+        onApproveToggle: (isApproved) => {
+          // Get current PA state (may have changed since component creation)
+          const currentPA = currentData.pa;
+          if (!currentPA) return;
+          
+          // Toggle approval
+          let updatedPA;
+          if (isApproved) {
+            updatedPA = approvePA(currentPA);
+          } else {
+            // Unapprove: preserve all state including hasUserEdits
+            updatedPA = { 
+              ...currentPA, 
+              paApproved: false, 
+              paApprovedAt: null 
+            };
+          }
+          currentData.pa = updatedPA;
+          if (saveQuoteMeData(currentData)) {
+            currentData = loadQuoteMeData();
+            // Update glyph with preserved state (hasUserEdits should be preserved)
+            if (paDraftFieldContainer) {
+              updateDraftField(paDraftFieldContainer, {
+                text: updatedPA.text,
+                approved: updatedPA.paApproved,
+                hasLmDraft: updatedPA.hasLmDraft,
+                hasUserEdits: updatedPA.hasUserEdits
+              });
+            }
+          }
+        },
+        onRegenerate: async () => {
+          if (!currentData.profile) {
+            alert('Profile not found. Cannot regenerate PA.');
+            return;
+          }
+
+          const confirmed = confirm(
+            'Regenerate PA from Profile? This will overwrite the current PA and revoke approval. Continue?'
+          );
+          
+          if (!confirmed) return;
+
+          try {
+            const narrative = buildPANarrative(currentData.profile);
+            const result = await callGT3(narrative);
+
+            if (result.ok && result.text) {
+              // Overwrite PA and revoke approval (per StateMachineSpec)
+              const newPA = createPA(result.text, true); // fromLM = true
+              newPA.paApproved = false;
+              newPA.paApprovedAt = null;
+              
+              currentData.pa = newPA;
+              if (saveQuoteMeData(currentData)) {
+                currentData = loadQuoteMeData();
+                // Re-render PA view
+                renderPAView();
+              } else {
+                throw new Error('Failed to save regenerated PA');
+              }
+            } else {
+              throw new Error(result.error || 'PA generation failed');
+            }
+          } catch (err) {
+            console.error('[PA regeneration] Error:', err);
+            alert(`Regeneration failed: ${String(err)}`);
+          }
+        }
+      });
+
+      containerEl.appendChild(paDraftFieldContainer);
+    }
+
+    // ---------- Profile View ----------
+    function renderProfileView() {
+      if (!currentData.profile) {
+        // Should not happen (Profile view only shown when profile exists)
+        return;
+      }
+
+      const profile = currentData.profile;
+      
+      // Populate form fields
+      document.getElementById('profile-name').value = profile.name || '';
+      document.getElementById('profile-roleTitle').value = profile.roleTitle || '';
+      document.getElementById('profile-companyName').value = profile.companyName || '';
+      document.getElementById('profile-industrySegment').value = profile.industrySegment || '';
+      document.getElementById('profile-geography').value = profile.geography || '';
+      document.getElementById('profile-productServiceCategory').value = profile.productServiceCategory || '';
+      document.getElementById('profile-companyDescription').value = profile.companyDescription || '';
+    }
+
+    // Profile edit form
+    const profileEditForm = document.getElementById('profile-edit-form');
+    const profileEditError = document.getElementById('profile-edit-error');
+    const profileEditSuccess = document.getElementById('profile-edit-success');
+
+    profileEditForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      profileEditError.classList.add('d-none');
+      profileEditSuccess.classList.add('d-none');
+
+      // Collect form data
+      const fields = {
+        name: document.getElementById('profile-name').value.trim(),
+        roleTitle: document.getElementById('profile-roleTitle').value.trim() || null,
+        companyName: document.getElementById('profile-companyName').value.trim(),
+        industrySegment: document.getElementById('profile-industrySegment').value.trim(),
+        geography: document.getElementById('profile-geography').value.trim(),
+        productServiceCategory: document.getElementById('profile-productServiceCategory').value.trim(),
+        companyDescription: document.getElementById('profile-companyDescription').value.trim() || null
+      };
+
+      // Validate
+      const updatedProfile = createProfile(fields);
+      const validation = validateProfile(updatedProfile);
+      
+      if (!validation.valid) {
+        profileEditError.textContent = validation.errors.join(', ');
+        profileEditError.classList.remove('d-none');
+        return;
+      }
+
+      // Check if profile actually changed
+      const originalProfile = currentData.profile;
+      const hasChanges = 
+        originalProfile.name !== updatedProfile.name ||
+        originalProfile.roleTitle !== updatedProfile.roleTitle ||
+        originalProfile.companyName !== updatedProfile.companyName ||
+        originalProfile.industrySegment !== updatedProfile.industrySegment ||
+        originalProfile.geography !== updatedProfile.geography ||
+        originalProfile.productServiceCategory !== updatedProfile.productServiceCategory ||
+        originalProfile.companyDescription !== updatedProfile.companyDescription;
+
+      // Save profile
+      currentData.profile = updateProfile(originalProfile, fields);
+      
+      if (saveQuoteMeData(currentData)) {
+        profileEditSuccess.textContent = 'Profile saved successfully.';
+        profileEditSuccess.classList.remove('d-none');
+        
+        // If profile changed and PA exists, prompt for regeneration
+        if (hasChanges && currentData.pa) {
+          const shouldRegenerate = confirm('Profile changed—regenerate PA?');
+          if (shouldRegenerate) {
+            // TODO: Phase 2 - Trigger PA regeneration
+            // For now, just show message
+            alert('PA regeneration will be implemented in Phase 2. PA approval will be revoked when regeneration is triggered.');
+          }
+        }
+        
+        // Reload data to get updated timestamps
+        currentData = loadQuoteMeData();
+      } else {
+        profileEditError.textContent = 'Failed to save profile. Please try again.';
+        profileEditError.classList.remove('d-none');
+      }
+    });
+
+    // ---------- Settings Panel ----------
+    function initSettingsPanel() {
+      const apiInput = document.getElementById('settings-api-key');
+      const clearBtn = document.getElementById('settings-api-clear');
+
+      if (!apiInput) return;
+
+      // Load existing key
+      apiInput.value = getApiKey();
+
+      // Save on input
+      apiInput.addEventListener('input', () => {
+        setApiKey(apiInput.value.trim());
+      });
+
+      // Clear button
+      clearBtn?.addEventListener('click', () => {
+        setApiKey('');
+        apiInput.value = '';
+      });
+    }
+
+    // Logo click → open settings sidebar
+    const logoEl = document.getElementById('gt2-logo');
+    if (logoEl) {
+      logoEl.addEventListener('click', () => {
+        const offcanvasEl = document.getElementById('settings-offcanvas');
+        if (!offcanvasEl || typeof bootstrap === 'undefined') return;
+        const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+        offcanvas.show();
+      });
+    }
+
+    // ---------- Draft-First Onboarding Modal ----------
+    let onboardingStep1Complete = false;
+    let initialPAText = '';
+    let onboardingDraftFieldContainer = null;
+
+    function shouldShowOnboarding(data) {
+      // Check if onboarding has been completed (per spec: draftFirstSeen flag)
+      return !data.onboarding || !data.onboarding.draftFirstSeen;
+    }
+
+    function showDraftFirstOnboardingModal() {
+      // Reset state
+      onboardingStep1Complete = false;
+      
+      // Get the actual PA text (initial GT3-filled value)
+      const pa = currentData.pa;
+      if (!pa || !pa.text) {
+        console.error('[onboarding] PA not found');
+        showMainShell();
+        return;
+      }
+      
+      initialPAText = pa.text;
+      
+      // Get modal elements
+      const modalEl = document.getElementById('draft-first-onboarding-modal');
+      const onboardingDraftFieldContainerEl = document.getElementById('onboarding-draft-field-container');
+      
+      if (!onboardingDraftFieldContainerEl) {
+        console.error('[onboarding] Draft field container not found');
+        return;
+      }
+      
+      // Clear container
+      onboardingDraftFieldContainerEl.innerHTML = '';
+      
+      // Show modal (Bootstrap modal)
+      if (typeof bootstrap !== 'undefined') {
+        const modal = new bootstrap.Modal(modalEl, {
+          backdrop: 'static',
+          keyboard: false
+        });
+        modal.show();
+      } else {
+        modalEl.style.display = 'block';
+      }
+      
+      // Get the actual PA draft-field container
+      const paContainer = document.getElementById('pa-draft-field-container');
+      if (!paContainer) {
+        console.error('[onboarding] PA container not found');
+        return;
+      }
+      
+      // Find the textarea in the PA draft-field
+      const paTextarea = paContainer.querySelector('textarea');
+      if (!paTextarea) {
+        console.error('[onboarding] PA textarea not found');
+        return;
+      }
+      
+      // Add pulse to PA textarea initially (for Step 1)
+      paTextarea.classList.add('onboarding-pulse-border');
+      
+      // Step 1: Monitor PA textarea for user edits
+      function checkStep1() {
+        const currentText = paTextarea.value;
+        // Check if text differs from initial by >= 1 character
+        if (currentText !== initialPAText && currentText.length >= initialPAText.length - 1) {
+          // User has edited
+          if (!onboardingStep1Complete) {
+            onboardingStep1Complete = true;
+            
+            // Remove pulse from textarea
+            paTextarea.classList.remove('onboarding-pulse-border');
+            
+            // Add pulse to onboarding draft-field glyph
+            const onboardingGlyph = onboardingDraftFieldContainer?.querySelector('[role="button"][aria-label*="approve"]') ||
+                                    onboardingDraftFieldContainer?.querySelector('[role="button"][title*="approve"]');
+            if (onboardingGlyph) {
+              onboardingGlyph.classList.add('onboarding-glyph-pulse');
+            }
+          }
+        } else {
+          // User deleted back to original or empty - reset Step 1
+          if (onboardingStep1Complete) {
+            onboardingStep1Complete = false;
+            
+            // Re-add pulse to textarea
+            paTextarea.classList.add('onboarding-pulse-border');
+            
+            // Remove pulse from onboarding glyph
+            const onboardingGlyph = onboardingDraftFieldContainer?.querySelector('[role="button"][aria-label*="approve"]') ||
+                                    onboardingDraftFieldContainer?.querySelector('[role="button"][title*="approve"]');
+            if (onboardingGlyph) {
+              onboardingGlyph.classList.remove('onboarding-glyph-pulse');
+            }
+          }
+        }
+      }
+      
+      // Monitor PA textarea for changes
+      const textareaHandler = () => checkStep1();
+      paTextarea.addEventListener('input', textareaHandler);
+      
+      // Create greeting text with company name
+      const companyName = currentData.profile?.companyName || 'Company';
+      const greetingText = `Hello ${companyName} user`;
+      
+      // Create draft-field component in onboarding modal
+      onboardingDraftFieldContainer = createDraftField({
+        label: '← click to approve',
+        text: greetingText, // Greeting text simulating GT3 draft
+        approved: false,
+        hasLmDraft: true, // Simulate GT3 draft (hollow ring glyph ◯)
+        hasUserEdits: false,
+        readOnly: false,
+        placeholder: '',
+        onTextChange: (newText, userHasEdited) => {
+          // Text changes don't affect onboarding flow
+        },
+        onApproveToggle: async (isApproved) => {
+          if (isApproved) {
+            try {
+              // Glyph has already updated to approved state (◯✓) immediately via draft-field component
+              // Wait 1 second so user can see the approved glyph before navigation
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              
+              // Store draftFirstSeen flag
+              currentData = loadQuoteMeData();
+              if (!currentData.onboarding) {
+                currentData.onboarding = {};
+              }
+              currentData.onboarding.draftFirstSeen = true;
+              saveQuoteMeData(currentData);
+              
+              // Clean up
+              if (paTextarea) {
+                paTextarea.removeEventListener('input', textareaHandler);
+                paTextarea.classList.remove('onboarding-pulse-border');
+              }
+              
+              // Close modal
+              if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) {
+                  modal.hide();
+                } else {
+                  // Fallback: try to create instance and hide
+                  const newModal = new bootstrap.Modal(modalEl);
+                  newModal.hide();
+                }
+              } else {
+                // Fallback: hide directly
+                modalEl.style.display = 'none';
+                modalEl.classList.remove('show');
+                document.body.classList.remove('modal-open');
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                  backdrop.remove();
+                }
+              }
+              
+              // Navigate to Opportunities
+              currentRoute = 'opportunities';
+              renderRoute();
+            } catch (err) {
+              console.error('[Onboarding] Error during approval:', err);
+              // Still try to close modal on error
+              if (modalEl) {
+                modalEl.style.display = 'none';
+                modalEl.classList.remove('show');
+              }
+            }
+          }
+        }
+      });
+      
+      onboardingDraftFieldContainerEl.appendChild(onboardingDraftFieldContainer);
+      
+      // Add pulse to onboarding glyph if Step 1 is already complete
+      if (onboardingStep1Complete) {
+        const onboardingGlyph = onboardingDraftFieldContainer.querySelector('[role="button"][aria-label*="approve"]') ||
+                                onboardingDraftFieldContainer.querySelector('[role="button"][title*="approve"]');
+        if (onboardingGlyph) {
+          onboardingGlyph.classList.add('onboarding-glyph-pulse');
+        }
+      }
+      
+      // Focus trap (accessibility)
+      modalEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+          const focusableElements = modalEl.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+          
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      });
+    }
+
+    // ---------- Initialization ----------
+    initSettingsPanel();
+    
+    if (currentData.profile) {
+      showMainShell();
+    } else {
+      showLanding();
+    }
+  </script>
+</body>
+</html>

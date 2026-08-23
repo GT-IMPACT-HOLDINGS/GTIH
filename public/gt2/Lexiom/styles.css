@@ -1,0 +1,1076 @@
+:root {
+  --lexiom-font-title: 1.05rem;
+  --lexiom-font-content: 0.91875rem;
+  /* Single typeface for all UI copy (headings + body). */
+  --lexiom-font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --lexiom-font-family-title: var(--lexiom-font-family);
+  --lexiom-font-family-content: var(--lexiom-font-family);
+
+  /* One “title voice” everywhere (Hebrew looked like different fonts when weights/tracking diverged). */
+  --lexiom-title-font-weight: 700;
+  --lexiom-title-letter-spacing: 0.02em;
+
+  /* Theme variables (Material-like palette + CRT arcade vibe).
+     Dark/Light is adaptive to user OS/browser preferences via prefers-color-scheme. */
+  --lexiom-body-bg: #050608;
+  --lexiom-text: #E6F1FF;
+  --lexiom-frame: #3F51B5; /* Material indigo */
+  --lexiom-frame-rgba: rgba(63, 81, 181, 0.35);
+
+  --lexiom-highlight-bg: rgba(63, 81, 181, 0.18);
+  --lexiom-highlight-strong: rgba(63, 81, 181, 0.45);
+  --lexiom-error-bg: rgba(63, 81, 181, 0.10);
+  --lexiom-placeholder-bg: rgba(63, 81, 181, 0.55);
+  --lexiom-selection-bg: rgba(63, 81, 181, 0.45);
+
+  --lexiom-surface-bg: rgba(0, 0, 0, 0.35);
+  --lexiom-overlay-bg: rgba(0, 0, 0, 0.5);
+
+  --lexiom-intro-bg: #000000;
+  --lexiom-cabinet-bg: radial-gradient(
+    circle at top center,
+    #1A237E 0,
+    #0A0D12 55%,
+    #000000 100%
+  );
+
+  /* Subtle texture tuning */
+  --lexiom-scanline-opacity: 0.18;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Light mode: white surfaces across the Lexiom UI. */
+    --lexiom-body-bg: #FFFFFF;
+    --lexiom-text: #0D1B2A;
+    --lexiom-frame: #1E88E5; /* Material blue */
+    --lexiom-frame-rgba: rgba(30, 136, 229, 0.32);
+
+    --lexiom-highlight-bg: #FFFFFF;
+    --lexiom-highlight-strong: #FFFFFF;
+    --lexiom-error-bg: #FFFFFF;
+    --lexiom-placeholder-bg: #FFFFFF;
+    --lexiom-selection-bg: rgba(30, 136, 229, 0.25);
+
+    --lexiom-surface-bg: #FFFFFF;
+    --lexiom-overlay-bg: #FFFFFF;
+
+    --lexiom-intro-bg: #FFFFFF;
+    --lexiom-cabinet-bg: #FFFFFF;
+
+    --lexiom-scanline-opacity: 0;
+  }
+}
+
+html {
+  /* Tell the browser we support both schemes (helps default form controls). */
+  color-scheme: light dark;
+}
+
+body.lexiom-body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--lexiom-body-bg);
+  color: var(--lexiom-text);
+  font-family: var(--lexiom-font-family);
+  font-size: var(--lexiom-font-content);
+  line-height: 1.35;
+}
+
+/* Cockpit-specific palette override (matches case-creation slide dark/light schemes). */
+body.lexiom-cockpit-mode {
+  --lexiom-body-bg: #030416;
+  --lexiom-text: #efe6ff;
+  --lexiom-frame: #9d7bff;
+  --lexiom-frame-rgba: rgba(157, 123, 255, 0.5);
+  --lexiom-highlight-bg: rgba(120, 92, 255, 0.26);
+  --lexiom-highlight-strong: rgba(167, 133, 255, 0.5);
+  --lexiom-error-bg: rgba(130, 104, 255, 0.16);
+  --lexiom-placeholder-bg: rgba(121, 88, 255, 0.44);
+  --lexiom-selection-bg: rgba(155, 120, 255, 0.4);
+  --lexiom-surface-bg: rgba(24, 14, 52, 0.62);
+  --lexiom-overlay-bg: rgba(8, 4, 20, 0.68);
+  --lexiom-cabinet-bg: radial-gradient(circle at 50% 12%, #2c1d6b 0%, #130a33 48%, #050316 100%);
+}
+
+@media (prefers-color-scheme: light) {
+  body.lexiom-cockpit-mode {
+    --lexiom-body-bg: #f7f5fb;
+    --lexiom-text: #2f2a3f;
+    --lexiom-frame: #7a6c9e;
+    --lexiom-frame-rgba: rgba(122, 108, 158, 0.5);
+    --lexiom-highlight-bg: rgba(197, 187, 223, 0.42);
+    --lexiom-highlight-strong: rgba(172, 156, 208, 0.48);
+    --lexiom-error-bg: rgba(208, 198, 230, 0.34);
+    --lexiom-placeholder-bg: rgba(207, 197, 226, 0.5);
+    --lexiom-selection-bg: rgba(170, 152, 209, 0.32);
+    --lexiom-surface-bg: rgba(255, 255, 255, 0.84);
+    --lexiom-overlay-bg: rgba(247, 245, 251, 0.95);
+    --lexiom-cabinet-bg: radial-gradient(circle at 50% 12%, #f1ecf8 0%, #ece6f5 58%, #e2d9ef 100%);
+  }
+}
+
+/* One font everywhere (override Bootstrap heading stacks on Lexiom pages). */
+body.lexiom-body h1,
+body.lexiom-body h2,
+body.lexiom-body h3,
+body.lexiom-body h4,
+body.lexiom-body h5,
+body.lexiom-body h6 {
+  font-family: var(--lexiom-font-family);
+}
+
+/* Intro overlay: Lexiom title only — fade-in 2s, hold 2s, fade-out 2s, then cockpit */
+.lexiom-main-wrap {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}
+
+.lexiom-main-wrap.lexiom-intro-done {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* First-session gradual cockpit: 2.5s opacity fades */
+.lexiom-reveal-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 2.5s ease-in-out, visibility 0s linear 2.5s;
+}
+
+.lexiom-reveal-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 2.5s ease-in-out, visibility 0s linear 0s;
+}
+
+/* L2 quartet: fixed four-column grid (stable positions with or without gradual reveal wrappers) */
+#lexiom-top-hud-l2 > .lexiom-l2-btn-reveal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  min-width: 0;
+}
+
+#lexiom-top-hud-l2 > .lexiom-l2-btn-reveal .lexiom-l2-btn {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lexiom-reveal-hidden,
+  .lexiom-reveal-visible {
+    transition-duration: 0.01ms;
+    transition-delay: 0s !important;
+  }
+}
+
+.lexiom-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--lexiom-intro-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.lexiom-intro.lexiom-intro-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}
+
+.lexiom-intro-image {
+  position: absolute;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  inset: 0;
+  margin: auto;
+}
+
+.lexiom-intro-placeholder {
+  animation: lexiom-intro-fade 6s ease-in-out forwards;
+}
+
+.lexiom-intro-title {
+  animation: lexiom-intro-fade 6s ease-in-out forwards;
+}
+
+@keyframes lexiom-intro-fade {
+  0% {
+    opacity: 0;
+  }
+  33.33% {
+    opacity: 1;
+  }
+  66.67% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Round / Stage transition overlay (home-run -> selection -> instructions -> next cockpit) */
+.lexiom-main-wrap.lexiom-transitioning {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lexiom-round-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: var(--lexiom-intro-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.lexiom-round-transition.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lexiom-round-transition.lexiom-thinking-scope {
+  background: transparent;
+  pointer-events: none;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.lexiom-round-transition-content {
+  width: min(860px, 92vw);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  height: min(760px, 92vh);
+  max-height: 92vh;
+  position: relative;
+  isolation: isolate;
+  background: var(--lexiom-cabinet-bg);
+  border: 2px solid var(--lexiom-frame-rgba);
+  box-shadow: 0 0 20px var(--lexiom-frame-rgba);
+  filter: contrast(1.05) saturate(1.03);
+  box-sizing: border-box;
+}
+
+.lexiom-round-transition-content.lexiom-thinking-mode {
+  position: fixed;
+  max-height: none;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  filter: none;
+  background: var(--lexiom-intro-bg);
+}
+
+.lexiom-round-transition-content.lexiom-thinking-mode::after {
+  display: none;
+}
+
+.lexiom-round-transition-content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0px,
+    rgba(0, 0, 0, 0) 2px
+  );
+  opacity: var(--lexiom-scanline-opacity);
+}
+
+.lexiom-round-transition-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lexiom-transition-title {
+  font-size: var(--lexiom-font-title);
+  text-align: center;
+  font-weight: var(--lexiom-title-font-weight);
+  letter-spacing: var(--lexiom-title-letter-spacing);
+}
+
+.lexiom-transition-body {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.lexiom-transition-linkbox {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid rgba(63, 81, 181, 0.35);
+  padding: 10px;
+  border-radius: 6px;
+  background: var(--lexiom-surface-bg);
+}
+
+.lexiom-transition-link-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 6px;
+}
+
+.lexiom-transition-link-value {
+  word-break: break-word;
+  /* Make the actual shared resource link visually subordinate. */
+  font-size: calc(var(--lexiom-font-content) * 0.7);
+  opacity: 1;
+  color: rgba(128, 128, 128, 0.85);
+  text-align: center;
+}
+
+/* Theme-aware gray for the shared link. */
+@media (prefers-color-scheme: dark) {
+  #lexiom-transition-accord-link-value {
+    color: rgba(230, 241, 255, 0.55);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  #lexiom-transition-accord-link-value {
+    color: rgba(13, 27, 42, 0.55);
+  }
+}
+
+/* Theme-aware text brightness for Copy / Email buttons. */
+@media (prefers-color-scheme: dark) {
+  #lexiom-transition-accord-btn-copy,
+  #lexiom-transition-accord-btn-mailto {
+    color: rgba(255, 255, 255, 0.95);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  #lexiom-transition-accord-btn-copy,
+  #lexiom-transition-accord-btn-mailto {
+    color: rgba(13, 27, 42, 0.85);
+  }
+}
+
+.lexiom-transition-actions .lexiom-transition-btn {
+  min-width: 260px;
+}
+
+.lexiom-transition-btn {
+  border: 2px solid var(--lexiom-frame);
+  background: transparent;
+  color: inherit;
+  padding: 4px 12px;
+  font-size: var(--lexiom-font-content);
+  border-radius: 8px;
+}
+
+/* Ensure chosen transition buttons remain visibly highlighted even when locked/disabled. */
+.lexiom-transition-btn.lexiom-active,
+.lexiom-transition-btn.lexiom-active:disabled {
+  background-color: var(--lexiom-highlight-bg);
+  border-color: var(--lexiom-frame);
+  color: inherit;
+  opacity: 1;
+}
+
+#lexiom-transition-accord-btn-mailto.lexiom-transition-btn {
+  text-decoration: none;
+}
+
+.lexiom-transition-screen-transitory {
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lexiom-transition-screen-thinking {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lexiom-transition-thinking-word {
+  font-family: "Press Start 2P", "Inter", "Segoe UI", Arial, sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  width: 50%;
+  white-space: nowrap;
+  text-align: center;
+  opacity: 0;
+}
+
+@keyframes lexiom-thinking-fade-full {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  40% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes lexiom-thinking-fade-short {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.lexiom-transition-thinking-word.lexiom-thinking-word-full {
+  animation: lexiom-thinking-fade-full 10s ease-in-out forwards;
+}
+
+.lexiom-transition-thinking-word.lexiom-thinking-word-short {
+  animation: lexiom-thinking-fade-short 5s ease-in-out forwards;
+}
+
+/* Stack the Accord transient steps into 3 stacked panels. */
+#lexiom-transition-screen-selection,
+#lexiom-transition-screen-accord-positioning,
+#lexiom-transition-screen-instructions-accord {
+  width: 100%;
+  border: 2px solid var(--lexiom-frame-rgba);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: var(--lexiom-surface-bg);
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+/* Wizard vertical proportions */
+#lexiom-transition-screen-selection {
+  flex: 1 1 0;
+}
+
+#lexiom-transition-screen-accord-positioning {
+  flex: 1 1 0;
+}
+
+#lexiom-transition-screen-instructions-accord {
+  flex: 2 1 0;
+}
+
+/* Keep panel slots reserved while "closed". */
+.lexiom-transition-panel-inactive {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.lexiom-transition-panel-disabled {
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.lexiom-transition-image {
+  max-width: 90vw;
+  max-height: 62vh;
+  object-fit: contain;
+}
+
+/* Accord positioning selection (ally/foe x direct/mediated) */
+#lexiom-transition-screen-accord-positioning .lexiom-transition-btn {
+  min-width: 240px;
+}
+
+.lexiom-undisputed-gate-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10010;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lexiom-overlay-bg);
+}
+
+.lexiom-undisputed-gate-card {
+  width: min(680px, 92vw);
+  max-height: 80vh;
+  overflow: auto;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.lexiom-undisputed-gate-list {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.lexiom-undisputed-gate-item {
+  margin-bottom: 8px;
+}
+
+#lexiom-cabinet,
+#lexiom-cabinet * {
+  font-family: var(--lexiom-font-family) !important;
+}
+
+#lexiom-cabinet {
+  width: 80vw;
+  height: 80vh;
+  max-width: 80vw;
+  max-height: 80vh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-color: var(--lexiom-frame) !important;
+  box-shadow: 0 0 20px var(--lexiom-frame-rgba);
+  background: var(--lexiom-cabinet-bg);
+  position: relative;
+  isolation: isolate;
+  /* Slight CRT feel without changing layout geometry. */
+  filter: contrast(1.05) saturate(1.03);
+}
+
+#lexiom-cabinet > * {
+  position: relative;
+  z-index: 1;
+}
+
+#lexiom-cabinet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* Scanlines hint (early arcade monitor vibe). */
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0px,
+    rgba(0, 0, 0, 0) 2px
+  );
+  opacity: var(--lexiom-scanline-opacity);
+}
+
+.lexiom-top-hud {
+  flex-shrink: 0;
+  border-bottom: 2px solid var(--lexiom-frame);
+  padding-bottom: 12px;
+}
+
+.lexiom-bottom-ribbon {
+  padding-top: 12px;
+  min-height: 72px;
+  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.lexiom-main {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+}
+
+/* Keep physical panel geometry stable in RTL:
+   Left panel stays on left, center in middle, right panel on right. */
+[dir="rtl"] .lexiom-main {
+  flex-direction: row-reverse;
+}
+
+.lexiom-panel {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  border-inline-end: 2px solid var(--lexiom-frame);
+  padding: 8px 10px;
+}
+
+#lexiom-left-panel {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#lexiom-right-panel {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#lexiom-center-playfield {
+  flex: 2;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Center playfield: flex column in chat mode so L24 can consume remaining space */
+#lexiom-center-playfield.lexiom-center-chat #lexiom-center-activity {
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#lexiom-center-playfield.lexiom-center-chat #lexiom-center-activity > *:not(.lexiom-draft-card) {
+  flex-shrink: 0;
+}
+
+#lexiom-center-playfield.lexiom-center-playfield-active {
+  background-color: var(--lexiom-highlight-bg);
+}
+
+.lexiom-panel:last-child {
+  border-inline-end: none;
+}
+
+.lexiom-panel-title,
+.lexiom-top-hud-l1 {
+  font-size: var(--lexiom-font-title);
+  font-weight: var(--lexiom-title-font-weight);
+  letter-spacing: var(--lexiom-title-letter-spacing);
+}
+
+.lexiom-panel-title {
+  margin-bottom: 6px;
+}
+
+.lexiom-chat-header-title {
+  font-weight: normal;
+}
+
+.lexiom-top-hud-l1 {
+  margin-bottom: 4px;
+}
+
+.lexiom-l1-title {
+  font-size: var(--lexiom-font-title);
+  font-weight: var(--lexiom-title-font-weight);
+  letter-spacing: var(--lexiom-title-letter-spacing);
+}
+
+.lexiom-l1-summary {
+  font-size: var(--lexiom-font-content);
+  font-weight: normal;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+#lexiom-top-hud-l2 {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+  justify-items: stretch;
+  padding-inline-start: 1ch;
+  padding-inline-end: 1ch;
+  flex-wrap: unset;
+}
+
+#lexiom-top-hud-l2 > .lexiom-l2-btn {
+  min-width: 0;
+}
+
+.lexiom-l2-btn,
+.lexiom-bottom-ribbon button {
+  border: 2px solid var(--lexiom-frame);
+  background: transparent;
+  color: inherit;
+  padding: 4px 12px;
+  font-size: var(--lexiom-font-content);
+}
+
+.lexiom-l2-btn {
+  width: 100%;
+  min-width: 0;
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  /* Match L3 behavior: consistent height across all L2 buttons */
+  min-height: 56px;
+  max-height: 56px;
+  overflow: hidden;
+}
+
+.lexiom-l2-btn-l21 {
+  font-weight: bold;
+}
+
+.lexiom-l2-btn-l22 {
+  font-weight: normal;
+}
+
+.lexiom-bottom-ribbon button {
+  min-width: 0;
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.3;
+  padding: 6px 10px;
+  flex: 1 1 0;
+  max-width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.lexiom-stage-tower {
+  font-size: var(--lexiom-font-content);
+  margin-bottom: 0.5rem;
+}
+
+.lexiom-center-activity {
+  margin-top: 4px;
+}
+
+.lexiom-error-banner {
+  font-size: var(--lexiom-font-content);
+  border: 2px solid var(--lexiom-frame);
+  background-color: var(--lexiom-error-bg);
+  color: var(--lexiom-text);
+  padding: 6px 8px;
+  margin-bottom: 8px;
+}
+
+.lexiom-loading-indicator {
+  font-size: var(--lexiom-font-content);
+  opacity: 0.8;
+  padding: 6px 0;
+}
+
+.lexiom-center-idle {
+  font-size: var(--lexiom-font-content);
+  opacity: 0.8;
+}
+
+.lexiom-private-artifacts {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.lexiom-private-artifact-card {
+  border: none;
+  padding: 0;
+  margin-bottom: 4px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.lexiom-artifact-share-btn {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  padding: 2px 4px;
+  margin: 0;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.85;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.lexiom-artifact-share-btn .lexiom-artifact-share-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.lexiom-artifact-share-btn:hover {
+  opacity: 1;
+}
+
+.lexiom-private-artifact-title {
+  font-size: var(--lexiom-font-content);
+  font-weight: normal;
+  font-style: italic;
+  margin-bottom: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.lexiom-draft-card {
+  border: 2px solid var(--lexiom-frame);
+  padding: 6px 8px;
+  margin-top: 4px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* L24 (draft-first) widget consumes remaining center playfield space */
+#lexiom-center-playfield.lexiom-center-chat .lexiom-draft-card {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.lexiom-draft-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--lexiom-frame);
+  gap: 0.25rem 0;
+}
+
+/* Share link: center playfield only (Third-Party Artifact Reception §4 / §9) */
+.lexiom-draft-card-share-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lexiom-draft-card-share-btn {
+  opacity: 0.9;
+}
+
+.lexiom-draft-card-glyph {
+  width: 2ch;
+  flex-shrink: 0;
+  align-self: flex-end;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  margin-inline-start: 2ch;
+  text-align: start;
+  cursor: pointer;
+}
+
+.lexiom-draft-card-glyph-approved {
+  position: relative;
+}
+
+.lexiom-draft-card-glyph-approved::after {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lexiom-draft-card-label {
+  font-size: var(--lexiom-font-title);
+  font-weight: normal;
+  letter-spacing: var(--lexiom-title-letter-spacing);
+  flex: 1 1 0%;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.lexiom-draft-card-text {
+  width: 100%;
+  flex: 1 1 0;
+  min-height: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  color: inherit;
+  padding: 4px;
+  font-family: inherit;
+  font-size: var(--lexiom-font-content);
+  resize: none;
+  overflow-y: auto;
+}
+
+.lexiom-draft-card-text:focus {
+  outline: none;
+  border-color: var(--lexiom-frame);
+  color: var(--lexiom-text);
+  caret-color: var(--lexiom-text);
+  background: transparent;
+}
+
+.lexiom-draft-card-text::selection {
+  background: var(--lexiom-selection-bg);
+  color: var(--lexiom-text);
+}
+
+.lexiom-draft-card-view {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.lexiom-disputes-formatted {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lexiom-dispute-item {
+  display: block;
+}
+
+.lexiom-dispute-item strong {
+  font-weight: bold;
+  display: block;
+}
+
+.lexiom-dispute-basis {
+  font-weight: normal;
+  margin-top: 2px;
+  margin-inline-start: 0;
+}
+
+.lexiom-placeholder {
+  background: var(--lexiom-placeholder-bg);
+  color: var(--lexiom-frame);
+}
+
+.lexiom-clickable {
+  cursor: pointer;
+}
+
+.lexiom-active {
+  background-color: var(--lexiom-highlight-bg);
+}
+
+.lexiom-chat-transcript {
+  margin-top: 4px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.lexiom-chat-line {
+  font-size: var(--lexiom-font-content);
+  margin-bottom: 2px;
+  white-space: pre-wrap;
+}
+
+.lexiom-chat-typing {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.lexiom-chat-input {
+  margin-top: 4px;
+  gap: 4px;
+}
+
+.lexiom-chat-input-field {
+  flex: 1 1 0;
+  min-width: 0;
+  background: transparent;
+  border: 1px solid var(--lexiom-frame);
+  color: var(--lexiom-text);
+  font-size: var(--lexiom-font-content);
+  padding: 2px 4px;
+}
+
+.lexiom-chat-input-field:focus {
+  outline: none;
+  border-color: var(--lexiom-text);
+  color: var(--lexiom-text);
+  caret-color: var(--lexiom-text);
+}
+
+.lexiom-chat-send-btn {
+  border: 2px solid var(--lexiom-frame);
+  background: transparent;
+  color: inherit;
+  padding: 2px 8px;
+  font-size: var(--lexiom-font-content);
+}
+
+/* Alignment rules (spec binding) */
+#lexiom-top-hud,
+#lexiom-top-hud-l1,
+#lexiom-top-hud-l2 {
+  text-align: center;
+}
+
+#lexiom-bottom-ribbon {
+  text-align: center;
+}
+
+#lexiom-left-panel,
+#lexiom-center-playfield,
+#lexiom-right-panel {
+  text-align: start;
+}
+
+/* RTL: override Bootstrap .text-start (text-align: left !important) so panels align right in Hebrew */
+[dir="rtl"] #lexiom-left-panel,
+[dir="rtl"] #lexiom-center-playfield,
+[dir="rtl"] #lexiom-right-panel {
+  text-align: start !important;
+}
+
+.lexiom-panel,
+.lexiom-panel * {
+  border-radius: 0 !important;
+}
+

@@ -1,0 +1,86 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: WebAppSecurity.DataProtection.a1000102.osn
+file_name: WebAppSecurity.DataProtection.a1000102.osn
+node_type: discipline
+discipline: Data Protection
+title: Data Protection
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Data Protection OSN Owner
+graph:
+  parent_osn_ids:
+    - WebAppSecurity.a1000100.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.security.web_app.professional_craft
+seed: >-
+  Keep sensitive web-application data confidential and intact in transit, at rest,
+  and in logs — so exposure is prevented by design, not hoped away after the fact.
+thematic_lenses:
+  - lens_id: lens.security.data_protection.professional_craft
+    name: Data Protection
+    purpose: Apply data-protection judgment to this outcome.
+  - lens_id: lens.security.data_protection.transport_and_storage
+    name: Transport and Storage
+    purpose: Bind confidentiality and integrity to concrete channels and stores.
+  - lens_id: lens.security.data_protection.evidence
+    name: Evidence and Claims
+    purpose: Require inspectable delivery and classify claims according to available proof.
+output_spec: |-
+  1. Come explore how Lexiom 1.3 currently keeps sensitive data confidential and intact — then
+  explore Data Protection, Transport and Storage, and Evidence and Claims below for the
+  code-backed rebuild contract.
+  
+  ## Data Protection
+  2. Live as navigable WebAppSecurity-descendant YAML under security/ with empty child_osn_ids
+  until further protection leaves are authored.
+  3. Treat broker/API keys, CA capability tokens, and OSN draft text as sensitive player-side
+  material; do not invent a product secrets vault or password store in this POC.
+  4. Keep LM drafts and evidence approvals session-scoped in SPA memory so they do not silently
+  rewrite disk YAML without White Move approve.
+  
+  ## Transport and Storage
+  5. Send inference and Lexiom 1.3 build/evidence calls to the GT3 Node origin; optional
+  `?api=` may retarget inference — do not invent a separate Lexiom TLS stack in the SPA.
+  6. Persist optional keys only in localStorage (lexiom_gt3_api_key) when the player supplies
+  `?or_key=` or setApiKey — never embed recoverable passwords in client bundles or OSN YAML.
+  7. Keep build lifecycle pointers in localStorage (lexiom13.buildLifecycle.v1) distinct from
+  canonical OSN files so run telemetry does not become semantic source.
+  
+  ## Evidence and Claims
+  8. Inspect fulfillment via TEXTUAL_SNIPPET evidence quoted from a delivered data-protection
+  review or hardening artifact (SUD), never from this OSN's own seed, lenses, or output_spec.
+success_evidences:
+  - evidence_id: sev.security.data_protection.delivered_artifact
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered data-protection review or hardening artifact (SUD), extract
+      a single readable quoted passage that shows how the application fulfills this
+      node's outcome: Keep sensitive web-application data confidential and intact in
+      transit, at rest, and in logs — so exposure is prevented by design, not hoped
+      away after the fact. The quote must come from the delivered artifact itself —
+      not from this OSN's seed, lenses, or output_spec. Deliver the snippet as the
+      evidence artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

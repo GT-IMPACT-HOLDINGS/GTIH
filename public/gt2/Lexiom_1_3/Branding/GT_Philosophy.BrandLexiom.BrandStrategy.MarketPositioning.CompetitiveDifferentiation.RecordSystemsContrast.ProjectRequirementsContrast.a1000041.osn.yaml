@@ -1,0 +1,85 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: >-
+  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.ProjectRequirementsContrast.a1000041.osn
+file_name: >-
+  GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.ProjectRequirementsContrast.a1000041.osn
+node_type: discipline
+discipline: Work Management Analysis
+title: Project and Requirements Contrast
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Work Management Analysis OSN Owner
+graph:
+  parent_osn_ids:
+    - >-
+      GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.brand.record_systems_contrast.professional_craft
+source_spec:
+  document: Branding/branding_spec.md
+  sections: §§15.2 and 15.7
+seed: >-
+  Show that work and requirements tools track activity or specifications while Ogun governs why work
+  exists and what proves success.
+thematic_lenses:
+  - lens_id: lens.brand.project_requirements_contrast.professional_craft
+    name: Work Management Analysis
+    purpose: Apply work management analysis judgment to this outcome.
+  - lens_id: lens.brand.project_requirements_contrast.human_authority
+    name: Human Authority
+    purpose: Keep proposals distinct from approved organizational truth.
+  - lens_id: lens.brand.project_requirements_contrast.evidence
+    name: Evidence and Claims
+    purpose: Require inspectable delivery and classify claims according to available proof.
+output_spec: |-
+  1. Enter the living brand intention — Show that work and requirements tools track
+  activity or specifications while Ogun governs why work exists and what proves success —
+  then explore Work Management Analysis and Evidence and Claims below for the code-backed
+  rebuild contract.
+
+  ## Work Management Analysis
+  2. Live as navigable BrandLexiom-descendant YAML under Branding/ so this node's approved
+  sections can enter BrandLexiom document-builder compiles when compilation_scope includes
+  approved descendants.
+
+  ## Evidence and Claims
+  3. Inspect fulfillment via TEXTUAL_SNIPPET evidence quoted from the delivered
+  branding-book document.md (SUD), never from this OSN's own seed, lenses, or output_spec.
+success_evidences:
+  - evidence_id: sev.brand.project_requirements_contrast.delivered_artifact
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered Ogun branding book markdown (the SUD document.md / brand-book
+      artifact produced by the document builder), extract a single readable quoted passage
+      that shows how the book fulfills this node's outcome: Show that work and requirements
+      tools track activity or specifications while Ogun governs why work exists and what
+      proves success. The quote must be taken verbatim (or as a contiguous excerpt) from the
+      produced branding book itself — not from this OSN's seed, lenses, or output_spec. Prefer
+      a paragraph or short section that a reviewer can inspect directly to confirm the
+      "Project and Requirements Contrast" requirement became real in the book. Format it as a
+      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence
+      artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

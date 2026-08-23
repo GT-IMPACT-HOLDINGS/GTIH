@@ -1,0 +1,7 @@
+harden the system prompt itself further for explicitly forbid words like “together”, “harmonious”, “coexist”, “trust” whenever describing the relationships between the user (human) and the tool (LM), then re-run the test, read the test execution results: if test fail, implement the test report '## Improvement Actions' by the same process (harden the system prompt, re-run the test, look for pass/fail in test result). else (i.e., if the test pass) - handoff the prompt to me.
+
+let this change trigger a re-run of the test, then read the test execution results and do as follow: if the test fail, implement the test report '## Improvement Actions' by the same process recursively (harden the ODD system prompt only, while keeping the ODD spec & the ODD default placeholder prompt intact) until pass. 
+
+--
+
+**Exception (quoted material only):** The manifesto block above may retain historical first-person plural **inside verbatim quotation** if you quote it; when you **paraphrase or apply** that material in new guidance, recast it so you **never** use **we/us/our/ours** to mean "human + LM" or "human + GT3" together.

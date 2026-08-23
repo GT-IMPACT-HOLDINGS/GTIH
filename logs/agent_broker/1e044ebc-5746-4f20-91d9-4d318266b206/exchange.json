@@ -1,0 +1,196 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "1e044ebc-5746-4f20-91d9-4d318266b206",
+  "lane": "agent_broker",
+  "created_at": "2026-08-01T07:47:14.438Z",
+  "completed_at": "2026-08-01T07:47:45.473Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "msa2heco_4e3151f8",
+      "pass": "builder",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-08-01T07:47:14.438Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 977
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 17623
+      }
+    ],
+    "message_count": 2,
+    "packet_chars": 20092,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nDocument mode uses BUILD_PLAN plus immutable per-node JSON under ./nodes/ and SOURCE_MAP. Read only the node keys assigned to the current phase.\nUse write_file for complete artifact contents.\nPrimary deliverable path: document.md\nWrite phase artifacts only (OUTLINE.md or the assigned sections/*.md). Host assembly owns document.md unless a reconcile phase asks otherwise. Reader-facing prose must contain ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta.\nSubmit the required phase artifact with write_file; the host validates and completes the phase atomically.\nPhase: fill cluster c04 (Go-to-Market System).\nSubmit exactly sections/04-go-to-market-system.md with write_file; the host completes the phase atomically.\nDo not write document.md in this phase. The host packet is complete; no reads are needed."
+        },
+        {
+          "role": "user",
+          "content": "Compose the assigned section from this bounded packet.\n\n## Shared policy\n{\"shared_invariants\":[\"Write finished reader-facing prose only.\",\"Do not invent unsupported capability, regulatory, numerical, market, or pricing claims.\",\"Preserve product identity and category from Root/Standard capsules and source excerpts.\",\"Do not emit OSN ids, schema field names, or build-process vocabulary in document.md / sections/**.\"],\"shared_requirement_markers\":[\"treat ai-generated interpretation and copy as proposals\",\"classify capability, market, regulatory, numerical, and performance claims\",\"do not publish unsupported certainty\",\"keep the result concrete, commercially usable\",\"consistent with ancestor osns\"]}\n\n## Root\n{\"key\":\"n01\",\"title\":\"Lexiom 1.3 — Ogun Brand\",\"seed\":\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"unique_requirements\":[\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"claim_constraints\":[\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\",\"Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\",\"Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\"]}\n\n## Outline\n# Lexiom 1.3 — Ogun Brand Document\n\n## Table of Contents\n\n### 1. Market Positioning\n**Owning Key:** n50  \n**Cluster:** c01  \n**Section Path:** sections/01-market-positioning.md\n\nPosition Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.\n\n### 2. Audience and Enterprise Value\n**Owning Key:** n35  \n**Cluster:** c02  \n**Section Path:** sections/02-audience-and-enterprise-value.md\n\nConnect Ogun's governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.\n\n### 3. Creative Identity\n**Owning Key:** n04  \n**Cluster:** c03  \n**Section Path:** sections/03-creative-identity.md\n\nExpress Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.\n\n### 4. Go-to-Market System\n**Owning Key:** n19  \n**Cluster:** c04  \n**Section Path:** sections/04-go-to-market-system.md\n\nTurn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\n\n---\n\n## Document Governance\n\n**Root Brand Seed (n01):**  \nGovern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\n\n**Shared Policy Invariants:**\n- Write finished reader-facing prose only.\n- Do not invent unsupported capability, regulatory, numerical, market, or pricing claims.\n- Preserve product identity and category from Root/Standard capsules and source excerpts.\n- Do not emit OSN ids, schema field names, or build-process vocabulary in document.md / sections/**.\n- Treat AI-generated interpretation and copy as proposals until authorized human approval.\n- Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n- Require inspectable delivery and classify claims according to available proof.\n\n\n## Assigned nodes\n[{\"key\":\"n19\",\"title\":\"Go-to-Market System\",\"role\":\"mid\",\"discipline\":\"Go-to-Market Leadership\",\"parent_keys\":[\"n03\"],\"child_keys\":[\"n20\",\"n27\"],\"seed\":\"Turn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\",\"unique_requirements\":[\"Turn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§14 and 16–19 and 22–23\"},{\"key\":\"n20\",\"title\":\"Demand Generation\",\"role\":\"mid\",\"discipline\":\"Demand Generation Strategy\",\"parent_keys\":[\"n19\"],\"child_keys\":[\"n24\",\"n21\"],\"seed\":\"Build website and educational content journeys that teach the category, demonstrate governed cooperation, and invite consequential use cases.\",\"unique_requirements\":[\"Build website and educational content journeys that teach the category, demonstrate governed cooperation, and invite consequential use cases.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§17 and 19\"},{\"key\":\"n24\",\"title\":\"Website Experience\",\"role\":\"mid\",\"discipline\":\"Digital Experience Strategy\",\"parent_keys\":[\"n20\"],\"child_keys\":[\"n25\",\"n26\"],\"seed\":\"Sequence the website from promise and market gap through the Ogun model, XRM, governed AI, value, proof, and a consequential-workflow call to action.\",\"unique_requirements\":[\"Sequence the website from promise and market gap through the Ogun model, XRM, governed AI, value, proof, and a consequential-workflow call to action.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§17\"},{\"key\":\"n25\",\"title\":\"Homepage Sequence\",\"role\":\"leaf\",\"discipline\":\"Web Content Design\",\"parent_keys\":[\"n24\"],\"child_keys\":[],\"seed\":\"Deliver the prescribed homepage sequence with “Govern what must become real,” clear category explanation, product model, proof, and calls to action.\",\"unique_requirements\":[\"Deliver the prescribed homepage sequence with “Govern what must become real,” clear category explanation, product model, proof, and calls to action.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§17.1\"},{\"key\":\"n26\",\"title\":\"Solution and Education Pages\",\"role\":\"leaf\",\"discipline\":\"Solution Marketing\",\"parent_keys\":[\"n24\"],\"child_keys\":[],\"seed\":\"Deliver solution and educational pages for priority use cases and foundational concepts such as OSNs, SRM, evidence, inheritance, and human authority.\",\"unique_requirements\":[\"Deliver solution and educational pages for priority use cases and foundational concepts such as OSNs, SRM, evidence, inheritance, and human authority.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§17.2–17.3\"},{\"key\":\"n21\",\"title\":\"Content Strategy\",\"role\":\"mid\",\"discipline\":\"Content Marketing Strategy\",\"parent_keys\":[\"n20\"],\"child_keys\":[\"n22\",\"n23\"],\"seed\":\"Educate the market through durable pillars and flagship assets centered on authority, outcomes, relationships, evidence, economics, and disciplined toolmaking.\",\"unique_requirements\":[\"Educate the market through durable pillars and flagship assets centered on authority, outcomes, relationships, evidence, economics, and disciplined toolmaking.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§19\"},{\"key\":\"n22\",\"title\":\"Content Pillars\",\"role\":\"leaf\",\"discipline\":\"Editorial Strategy\",\"parent_keys\":[\"n21\"],\"child_keys\":[],\"seed\":\"Maintain the ten core content pillars as a balanced editorial system spanning human authority, XRM, evidence, standards, cooperation, and accountable execution.\",\"unique_requirements\":[\"Maintain the ten core content pillars as a balanced editorial system spanning human authority, XRM, evidence, standards, cooperation, and accountable execution.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§19.1\"},{\"key\":\"n23\",\"title\":\"Flagship Assets\",\"role\":\"leaf\",\"discipline\":\"Thought Leadership\",\"parent_keys\":[\"n21\"],\"child_keys\":[],\"seed\":\"Produce the manifesto, SRM case, human-authority argument, evidence narrative, executive guide, interactive proof, and assessment assets.\",\"unique_requirements\":[\"Produce the manifesto, SRM case, human-authority argument, evidence narrative, executive guide, interactive proof, and assessment assets.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§19.2\"},{\"key\":\"n27\",\"title\":\"Sales Enablement\",\"role\":\"mid\",\"discipline\":\"Revenue Enablement\",\"parent_keys\":[\"n19\"],\"child_keys\":[\"n28\",\"n31\"],\"seed\":\"Equip commercial teams to discover consequential workflows, demonstrate governed outcomes, package value, and frame credible pilots.\",\"unique_requirements\":[\"Equip commercial teams to discover consequential workflows, demonstrate governed outcomes, package value, and frame credible pilots.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§16 and 18\"},{\"key\":\"n28\",\"title\":\"Sales Narrative\",\"role\":\"mid\",\"discipline\":\"Enterprise Sales Strategy\",\"parent_keys\":[\"n27\"],\"child_keys\":[\"n30\",\"n29\"],\"seed\":\"Guide discovery, demonstration, and proof language so sales distinguishes currently visible proposal, approval, evidence, lineage, and build behavior from planned inherited-conflict and Concordance capabilities.\",\"unique_requirements\":[\"Guide discovery, demonstration, and proof language so sales distinguishes currently visible proposal, approval, evidence, lineage, and build behavior from planned inherited-conflict and Concordance capabilities.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§18\"},{\"key\":\"n30\",\"title\":\"Discovery Questions\",\"role\":\"leaf\",\"discipline\":\"Enterprise Discovery\",\"parent_keys\":[\"n28\"],\"child_keys\":[],\"seed\":\"Use questions that reveal ambiguity, interdependence, AI-to-commitment boundaries, approval gaps, evidence needs, standards loss, and hidden disagreement.\",\"unique_requirements\":[\"Use questions that reveal ambiguity, interdependence, AI-to-commitment boundaries, approval gaps, evidence needs, standards loss, and hidden disagreement.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§18.1\"},{\"key\":\"n29\",\"title\":\"Demonstration and Proof Arc\",\"role\":\"leaf\",\"discipline\":\"Solution Consulting\",\"parent_keys\":[\"n28\"],\"child_keys\":[],\"seed\":\"Demonstrate the current journey from OSN seed through gated maturation, human approval, branching, compilation/build handoff, direct evidence inspection, and Causal Lineage Chat. Label inherited-conflict harmonization, Concordance, and executive garden analysis as future or separately simulated capabilities.\",\"unique_requirements\":[\"Demonstrate the current journey from OSN seed through gated maturation, human approval, branching, compilation/build handoff, direct evidence inspection, and Causal Lineage Chat. Label inherited-conflict harmonization, Concordance, and executive garden analys…\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§18.2–18.3\"},{\"key\":\"n31\",\"title\":\"Service Packaging\",\"role\":\"mid\",\"discipline\":\"Commercial Packaging\",\"parent_keys\":[\"n27\"],\"child_keys\":[\"n32\",\"n33\"],\"seed\":\"Package Ogun around enterprise governance value, participation scope, policy and evidence depth, and consequential pilots rather than seat utility or token consumption.\",\"unique_requirements\":[\"Package Ogun around enterprise governance value, participation scope, policy and evidence depth, and consequential pilots rather than seat utility or token consumption.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§16\"},{\"key\":\"n32\",\"title\":\"Packaging Tiers\",\"role\":\"leaf\",\"discipline\":\"Offer Design\",\"parent_keys\":[\"n31\"],\"child_keys\":[],\"seed\":\"Define Foundation, Enterprise, and Ecosystem offers by governance scope, graph gardens, inheritance, participation, analytics, and strategic services.\",\"unique_requirements\":[\"Define Foundation, Enterprise, and Ecosystem offers by governance scope, graph gardens, inheritance, participation, analytics, and strategic services.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§16.1\"},{\"key\":\"n33\",\"title\":\"Pricing and Pilot Framing\",\"role\":\"leaf\",\"discipline\":\"Commercial Strategy\",\"parent_keys\":[\"n31\"],\"child_keys\":[],\"seed\":\"Price against avoided rework, governed risk, acceptance, accountability, and reuse, and frame pilots around real multidisciplinary workflows with direct evidence.\",\"unique_requirements\":[\"Price against avoided rework, governed risk, acceptance, accountability, and reuse, and frame pilots around real multidisciplinary workflows with direct evidence.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§16.2–16.3\"}]\n\n## Referenced source sections\n## 14. Product Experience as Brand\r\n\r\nThe product interface is the most important proof of the brand promise.\r\n\r\n### 14.1 Ogun Portal\r\n\r\nThe Ogun Portal is the executive and portfolio entrance.\r\n\r\nIt should enable users to:\r\n\r\n- enter through personal and tenant identity;\r\n- create and manage OSN Graph gardens;\r\n- explore related graph trees;\r\n- compare initiatives;\r\n- inspect value, cost, risk, quality, and standards alignment;\r\n- identify waste and unresolved assumptions;\r\n- simulate potential changes without mutating canonical state;\r\n- choose a graph or node for deeper work in the Lexiom Cockpit.\r\n\r\nBrand message:\r\n\r\n> **Ogun show\n\n## 16. Service Packaging\r\n\r\nCommercial packaging should express enterprise value rather than raw token consumption.\r\n\r\n### 16.1 Recommended packaging architecture\r\n\r\n#### Ogun Foundation\r\n\r\nFor a focused enterprise domain or governed pilot.\r\n\r\nIncludes:\r\n\r\n- tenant environment;\r\n- OSN Graph creation;\r\n- White/Black Move governance;\r\n- basic policy configuration;\r\n- success and lineage evidence;\r\n- selected integrations;\r\n- onboarding and governance design.\r\n\r\n#### Ogun Enterprise\r\n\r\nFor multiple teams, programs, or business units.\r\n\r\nIncludes:\r\n\r\n- OSN Graph gardens;\r\n- organizational-standard OSNs;\r\n- multi-ancestor inheritance;\r\n- ad\n\n## 17. Website Specification\r\n\r\n### 17.1 Homepage sequence\r\n\r\n1. **Hero**\r\n   - “Govern what must become real.”\r\n   - One-sentence category explanation.\r\n   - Primary CTA: “Explore an enterprise use case.”\r\n   - Secondary CTA: “See how Ogun works.”\r\n\r\n2. **The gap**\r\n   - Enterprise systems record activity but lose the meaning connecting expectation to delivery.\r\n\r\n3. **The Ogun model**\r\n   - Specify → Shape → Govern → Prove.\r\n\r\n4. **XRM**\r\n   - CRM determinism plus Semantic Relationship Management.\r\n\r\n5. **Human-governed AI**\r\n   - White Move → Black Move → Stability.\r\n\r\n6. **Enterprise value**\r\n   - alignment, evidence, risk, relatio\n\n## 18. Sales Narrative\r\n\r\n### 18.1 Discovery questions\r\n\r\nSales should explore:\r\n\r\n- Where do expectations become ambiguous?\r\n- Which customer promises depend on suppliers or multiple internal teams?\r\n- Where does AI generate outputs that later become organizational commitments?\r\n- How is approval distinguished from suggestion?\r\n- What proves that a delivered outcome satisfied the original intention?\r\n- Where do standards fail to reach active work?\r\n- Which projects consume high effort without clear implementation value?\r\n- What context is lost during handoffs?\r\n- Where do disagreements remain hidden until late delivery?\r\n- What would\n\n## 19. Content Strategy\r\n\r\n### 19.1 Core content pillars\r\n\r\n1. **Human authority in the agentic enterprise**\r\n2. **From activity tracking to outcome governance**\r\n3. **XRM and semantic relationships**\r\n4. **Evidence-backed delivery**\r\n5. **The economics of OSN Graphs**\r\n6. **Governed standards and inheritance**\r\n7. **Cross-organizational cooperation**\r\n8. **Regulated AI and accountable execution**\r\n9. **The future of requirements, contracts, and commitments**\r\n10. **Ogun as disciplined toolmaking**\r\n\r\n### 19.2 Recommended flagship assets\r\n\r\n- “The Outcome Governance Manifesto”\r\n- “Beyond CRM: The Case for Semantic Relationship Manageme\n\n## 22. Marketing Deliverables\r\n\r\nThe marketing team should produce the following in sequence:\r\n\r\n### Phase 1 — Brand foundation\r\n\r\n- approved positioning statement;\r\n- category definition;\r\n- naming architecture;\r\n- messaging hierarchy;\r\n- tone-of-voice guide;\r\n- visual identity direction;\r\n- claims register;\r\n- core glossary.\r\n\r\n### Phase 2 — Commercial story\r\n\r\n- corporate website;\r\n- executive overview;\r\n- product architecture brief;\r\n- XRM solution brief;\r\n- AI governance solution brief;\r\n- product-development solution brief;\r\n- sales deck;\r\n- demo narrative;\r\n- pilot offer;\r\n- pricing and packaging narrative.\r\n\r\n### Phase 3 — Mark\n\n## 23. Success Metrics\r\n\r\nBrand and GTM success should be measured through:\r\n\r\n### Awareness\r\n\r\n- category recognition;\r\n- direct traffic for “Ogun,” “Outcome Governance,” and “Semantic Relationship Management”;\r\n- qualified analyst and partner conversations;\r\n- share of voice in human-governed AI.\r\n\r\n### Comprehension\r\n\r\n- percentage of prospects who can accurately explain Ogun after a first interaction;\r\n- reduction in prospects misclassifying Ogun as a coding assistant or CRM plugin;\r\n- engagement with XRM and evidence content.\r\n\r\n### Commercial conversion\r\n\r\n- qualified enterprise discovery meetings;\r\n- pilot acceptance rate;\r\n- bu\n\nSubmit sections/04-go-to-market-system.md now with write_file."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 6000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-08-01T07:47:45.468Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "I'll compose the Go-to-Market System section based on the assigned nodes and source material provided.",
+    "assistant_content_chars": 102,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 5048,
+      "completion_tokens": 2759,
+      "total_tokens": 7807,
+      "cost": 0.018843,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018843,
+        "upstream_inference_prompt_cost": 0.005048,
+        "upstream_inference_completions_cost": 0.013795
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785570433-Yj5kXRs0SyQfaJ0UWgQQ",
+      "object": "chat.completion",
+      "created": 1785570433,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "I'll compose the Go-to-Market System section based on the assigned nodes and source material provided.",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_01QDFrwvnyZZyNVUm7r3w9os",
+                "function": {
+                  "name": "write_file",
+                  "arguments": "{\"path\": \"sections/04-go-to-market-system.md\", \"content\": \"# 4. Go-to-Market System\\n\\n## Overview\\n\\nThe Ogun go-to-market system translates brand promise into product proof, measurable demand, sales capability, commercial packaging, and validated pilots. It operates across three integrated channels: demand generation through education and category leadership; sales enablement through discovery, demonstration, and proof; and service packaging that reflects governance value rather than consumption metrics.\\n\\n---\\n\\n## Demand Generation\\n\\n### Website Experience\\n\\nThe Ogun website sequences visitors from market gap through the Ogun model, XRM, governed AI, enterprise value, proof, and consequential-workflow calls to action.\\n\\n#### Homepage Sequence\\n\\n1. **Hero**\\n   - Lead: \\\"Govern what must become real.\\\"\\n   - Category statement: One-sentence explanation positioning Ogun as the Outcome Governance and Semantic Relationship Operating System.\\n   - Primary call to action: \\\"Explore an enterprise use case.\\\"\\n   - Secondary call to action: \\\"See how Ogun works.\\\"\\n\\n2. **The Gap**\\n   - Enterprise systems record activity but lose the meaning connecting expectation to delivery. Teams struggle with ambiguous requirements, hidden disagreements, approval confusion, and evidence gaps that surface only after significant rework.\\n\\n3. **The Ogun Model**\\n   - Specify → Shape → Govern → Prove. A disciplined workflow that turns human intention into governed, inspectable, evidence-backed outcomes.\\n\\n4. **XRM: Semantic Relationship Management**\\n   - CRM determinism plus the semantic layer. Ogun tracks not just customer interactions but the relationships, dependencies, and commitments that drive real business outcomes.\\n\\n5. **Human-Governed AI**\\n   - White Move → Black Move → Stability. Humans set policy and approve consequential decisions. AI operates within those boundaries. Evidence proves what was decided and why.\\n\\n6. **Enterprise Value**\\n   - Alignment across teams and suppliers. Direct evidence of delivered outcomes. Governed risk and accountability. Reusable standards and inherited governance.\\n\\n7. **Proof**\\n   - Current capabilities: OSN Graph creation, gated maturation, human approval, branching, compilation and build handoff, direct evidence inspection, and Causal Lineage Chat.\\n   - Planned capabilities: inherited-conflict harmonization, Concordance, and executive garden analysis.\\n\\n8. **Call to Action**\\n   - \\\"Start a consequential workflow\\\" or \\\"Request a pilot.\\\"\\n\\n#### Solution and Education Pages\\n\\nPriority solution pages address:\\n\\n- **XRM for Enterprise**: How semantic relationships replace activity logs with outcome governance.\\n- **Governed AI**: The White Move / Black Move model and evidence-backed execution.\\n- **Product Development**: OSN Graphs for requirements, design, build, and evidence inheritance.\\n\\nFoundational education pages explain:\\n\\n- **OSN Graphs**: Outcome Specification Networks as the semantic foundation.\\n- **Semantic Relationship Management**: How relationships encode business meaning.\\n- **Evidence and Lineage**: Direct inspection of what was decided, by whom, and why.\\n- **Inheritance and Standards**: How governance cascades and reuses across teams.\\n- **Human Authority**: The role of human judgment in governed systems.\\n\\n### Content Strategy\\n\\n#### Core Content Pillars\\n\\nOgun's editorial system maintains ten balanced pillars:\\n\\n1. **Human authority in the agentic enterprise** — Why human judgment remains central to consequential decisions.\\n2. **From activity tracking to outcome governance** — The shift from CRM logs to governed relationships.\\n3. **XRM and semantic relationships** — How meaning replaces raw data.\\n4. **Evidence-backed delivery** — Direct proof that outcomes satisfied intentions.\\n5. **The economics of OSN Graphs** — Avoided rework, governed risk, and reuse value.\\n6. **Governed standards and inheritance** — How policy cascades across teams and time.\\n7. **Cross-organizational cooperation** — Governed workflows across suppliers and partners.\\n8. **Regulated AI and accountable execution** — AI within human-set boundaries.\\n9. **The future of requirements, contracts, and commitments** — How governance changes enterprise agreements.\\n10. **Ogun as disciplined toolmaking** — Governance as craft, not automation.\\n\\n#### Flagship Assets\\n\\n- **\\\"The Outcome Governance Manifesto\\\"** — A statement of principles for human-governed, evidence-backed enterprise work.\\n- **\\\"Beyond CRM: The Case for Semantic Relationship Management\\\"** — Why relationships matter more than transactions.\\n- **\\\"The Human Authority Argument\\\"** — Why AI amplifies rather than replaces human judgment.\\n- **\\\"Evidence Narratives\\\"** — Real examples of how Ogun proves outcomes.\\n- **\\\"Executive Guide to Governed Outcomes\\\"** — C-suite framing of governance value.\\n- **\\\"Interactive Proof\\\"** — Hands-on demonstration of OSN Graphs and evidence inspection.\\n- **\\\"Governance Readiness Assessment\\\"** — Self-assessment tool revealing governance gaps.\\n\\n---\\n\\n## Sales Enablement\\n\\n### Sales Narrative\\n\\nSales teams distinguish between currently visible capabilities and planned features, using discovery and demonstration to reveal governance gaps and frame credible pilots.\\n\\n#### Discovery Questions\\n\\nSales should explore:\\n\\n- Where do expectations become ambiguous during handoff?\\n- Which customer promises depend on suppliers or multiple internal teams?\\n- Where does AI generate outputs that later become organizational commitments?\\n- How is approval distinguished from suggestion in your current process?\\n- What proves that a delivered outcome satisfied the original intention?\\n- Where do standards fail to reach active work?\\n- Which projects consume high effort without clear implementation value?\\n- What context is lost during handoffs between teams?\\n- Where do disagreements remain hidden until late delivery?\\n- What would it cost to eliminate rework caused by unclear requirements or lost evidence?\\n\\n#### Demonstration and Proof Arc\\n\\nDemonstrations follow the current Ogun journey:\\n\\n1. **OSN Seed** — A human-authored outcome specification in natural language.\\n2. **Gated Maturation** — Structured refinement with policy gates and approval checkpoints.\\n3. **Human Approval** — Explicit sign-off before work begins.\\n4. **Branching** — Exploration of alternatives without mutating canonical state.\\n5. **Compilation and Build Handoff** — Conversion to executable work with full context.\\n6. **Direct Evidence Inspection** — Proof that delivered work satisfied the specification.\\n7. **Causal Lineage Chat** — Interactive exploration of decisions, dependencies, and evidence.\\n\\nSales explicitly labels as future or separately simulated:\\n\\n- Inherited-conflict harmonization (planned)\\n- Concordance (planned)\\n- Executive garden analysis (planned)\\n\\nThis clarity prevents misalignment between prospect expectations and current product capability.\\n\\n### Service Packaging\\n\\nOgun packaging reflects governance scope, participation breadth, policy depth, and pilot value rather than seat counts or token consumption.\\n\\n#### Packaging Tiers\\n\\n**Ogun Foundation**\\n\\nFor a focused enterprise domain or governed pilot.\\n\\nIncludes:\\n- Tenant environment and OSN Graph creation\\n- White Move / Black Move governance\\n- Basic policy configuration\\n- Success and lineage evidence\\n- Selected integrations\\n- Onboarding and governance design\\n\\nTypical scope: One business unit, one workflow, 20–50 participants.\\n\\n**Ogun Enterprise**\\n\\nFor multiple teams, programs, or business units.\\n\\nIncludes:\\n- OSN Graph gardens (multiple related graphs)\\n- Organizational-standard OSNs (reusable templates)\\n- Multi-ancestor inheritance (policy cascading)\\n- Advanced policy configuration\\n- Full integration suite\\n- Governance analytics and reporting\\n- Strategic advisory services\\n\\nTypical scope: Multiple business units, cross-functional workflows, 100–500 participants.\\n\\n**Ogun Ecosystem**\\n\\nFor regulated, cross-organizational, or supplier-dependent workflows.\\n\\nIncludes:\\n- Everything in Enterprise\\n- External participant management\\n- Compliance and audit trails\\n- Regulatory integration\\n- Partner governance frameworks\\n- Executive garden analysis (when available)\\n- Dedicated governance architect\\n\\nTypical scope: Regulated industries, multi-party workflows, 500+ participants.\\n\\n#### Pricing and Pilot Framing\\n\\nPricing reflects avoided rework, governed risk, acceptance, accountability, and reuse:\\n\\n- **Avoided rework**: Reduction in cycles caused by ambiguous requirements or lost evidence.\\n- **Governed risk**: Explicit approval and evidence reduce delivery risk and rework cost.\\n- **Acceptance**: Proof that outcomes satisfied intentions accelerates stakeholder sign-off.\\n- **Accountability**: Clear lineage and evidence enable auditable governance.\\n- **Reuse**: Inherited standards and OSN templates reduce design and approval cycles for future work.\\n\\nPilots are framed around real multidisciplinary workflows with direct evidence:\\n\\n- **Scope**: One consequential workflow spanning 2–4 teams or functions.\\n- **Duration**: 8–12 weeks.\\n- **Success criteria**: Participants can articulate how Ogun changed their approval, evidence, or handoff process. At least one OSN Graph reaches production use. Evidence inspection reveals previously hidden dependencies or approval gaps.\\n- **Outcome**: Pilot results inform Foundation or Enterprise commitment.\\n\\n---\\n\\n## Commercial Execution\\n\\n### Marketing Deliverables\\n\\n**Phase 1 — Brand Foundation** (completed in prior sections)\\n- Positioning statement, category definition, messaging hierarchy, tone-of-voice guide, visual identity, claims register, core glossary.\\n\\n**Phase 2 — Commercial Story**\\n- Corporate website with homepage and solution pages\\n- Executive overview (2–3 pages)\\n- Product architecture brief\\n- XRM solution brief\\n- AI governance solution brief\\n- Product-development solution brief\\n- Sales deck (20–25 slides)\\n- Demo narrative and interactive proof\\n- Pilot offer and terms\\n- Pricing and packaging narrative\\n\\n**Phase 3 — Measurement and Iteration**\\n- Awareness metrics (category recognition, direct traffic, analyst conversations)\\n- Comprehension metrics (prospect ability to explain Ogun, reduction in misclassification)\\n- Commercial metrics (qualified discovery meetings, pilot acceptance, enterprise pipeline)\\n\\n### Success Metrics\\n\\n#### Awareness\\n\\n- Category recognition: \\\"Outcome Governance\\\" and \\\"Semantic Relationship Management\\\" as distinct from CRM, AI coding assistants, and process automation.\\n- Direct traffic for \\\"Ogun,\\\" \\\"Outcome Governance,\\\" and \\\"Semantic Relationship Management.\\\"\\n- Qualified analyst and partner conversations.\\n- Share of voice in human-governed AI and enterprise governance.\\n\\n#### Comprehension\\n\\n- Percentage of prospects who can accurately explain Ogun's core model (Specify → Shape → Govern → Prove) after a first interaction.\\n- Reduction in prospects misclassifying Ogun as a coding assistant, CRM plugin, or process-automation tool.\\n- Engagement with XRM and evidence content (time on page, downloads, social shares).\\n\\n#### Commercial Conversion\\n\\n- Qualified enterprise discovery meetings per month.\\n- Pilot acceptance rate (percentage of qualified prospects who enter a pilot).\\n- Enterprise pipeline value and close rate.\\n- Customer retention and expansion (for early customers).\\n\\n---\\n\\n## Integration and Rhythm\\n\\nThe go-to-market system operates as an integrated cycle:\\n\\n1. **Demand generation** educates the market and builds category awareness through website, content, and thought leadership.\\n2. **Sales enablement** converts awareness into qualified discovery by equipping teams with discovery questions, demonstration narratives, and proof language.\\n3. **Service packaging** frames pilots and commercial offers around governance value and real workflows.\\n4. **Measurement** reveals which messages, channels, and proof points drive qualified demand and conversion.\\n5. **Iteration** refines messaging, packaging, and proof based on market feedback and commercial results.\\n\\nThis cycle repeats quarterly, with each iteration informed by customer feedback, market response, and evolving product capability.\\n\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 5048,
+        "completion_tokens": 2759,
+        "total_tokens": 7807,
+        "cost": 0.018843,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.018843,
+          "upstream_inference_prompt_cost": 0.005048,
+          "upstream_inference_completions_cost": 0.013795
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 31035,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

@@ -1,0 +1,93 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+#
+# Experimental security OSNG trunk — currently separate from ProductLexiom /
+# BrandLexiom; no standard_ancestor link yet.
+schema_version: osn/0.2
+id: WebAppSecurity.a1000100.osn
+file_name: WebAppSecurity.a1000100.osn
+node_type: product
+title: Web Application Security
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Security OSN Owner
+graph:
+  parent_osn_ids: []
+  child_osn_ids:
+    - WebAppSecurity.AccessControl.a1000101.osn
+    - WebAppSecurity.DataProtection.a1000102.osn
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.security.web_app.professional_craft
+seed: >-
+  Govern the security outcomes a web application must meet so identity, access,
+  and protected data remain trustworthy under ordinary and adversarial use.
+thematic_lenses:
+  - lens_id: lens.security.web_app.professional_craft
+    name: Application Security
+    purpose: Apply web-application security judgment to this outcome.
+  - lens_id: lens.security.web_app.threat_surface
+    name: Threat Surface
+    purpose: Keep exposed surfaces, trust boundaries, and abuse paths explicit.
+  - lens_id: lens.security.web_app.evidence
+    name: Evidence and Claims
+    purpose: Require inspectable delivery and classify claims according to available proof.
+output_spec: |-
+  1. Enter how Lexiom 1.3 currently hosts web-application security outcomes for identity,
+  access, and protected data — then explore Application Security, Threat Surface, and Evidence
+  and Claims below for the code-backed rebuild contract.
+  
+  ## Application Security
+  2. Host WebAppSecurity as the security/ OSNG trunk with AccessControl and DataProtection
+  children discoverable as a reciprocal simple tree.
+  3. Keep this trunk independent of ProductLexiom and BrandLexiom until an explicit
+  standard-ancestor (or native-parent) link is authored — ProductLexiom currently inherits
+  AccessControl, not this trunk, via standard_ancestor_osn_ids.
+  4. Treat AccessControl and DataProtection as the two primary security limbs the graph
+  exposes for later PlaneShift and compilation inheritance.
+  
+  ## Threat Surface
+  5. Name the trust boundaries the Lexiom 1.3 POC actually crosses today: browser SPA, GT3
+  Node origin (/inference, /lexiom13/*), optional broker API key in the player browser, and
+  browser-CA workspace paths under bolt_webcontainer.
+  6. Prefer preventable classes visible in this POC — client-held keys, path traversal in the
+  CA workspace, and unapproved LM text treated as canon — over inventing login, MFA, or cookie
+  session surfaces the SPA does not implement.
+  
+  ## Evidence and Claims
+  7. Declare direct success evidence as TEXTUAL_SNIPPET excerpts taken from a delivered
+  security review or hardening artifact (SUD), never from this OSN's own seed, lenses, or
+  output_spec.
+  8. Do not treat absence of incidents as proof; require inspectable controls and review notes
+  that a human can open and approve.
+success_evidences:
+  - evidence_id: sev.security.web_app.delivered_artifact
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered security review or hardening artifact (SUD), extract a
+      single readable quoted passage that shows how the application fulfills this
+      node's outcome: Govern the security outcomes a web application must meet so
+      identity, access, and protected data remain trustworthy under ordinary and
+      adversarial use. The quote must come from the delivered artifact itself —
+      not from this OSN's seed, lenses, or output_spec. Prefer a contiguous excerpt
+      a reviewer can inspect directly. Deliver the snippet as the evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_and_approved_descendants
+  target_tool_profile: document_agent

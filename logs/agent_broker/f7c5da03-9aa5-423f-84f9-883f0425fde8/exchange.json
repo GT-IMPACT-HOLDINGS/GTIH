@@ -1,0 +1,359 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "f7c5da03-9aa5-423f-84f9-883f0425fde8",
+  "lane": "agent_broker",
+  "created_at": "2026-07-30T10:05:25.521Z",
+  "completed_at": "2026-07-30T10:05:27.873Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "ms7cl30h_c831ed76",
+      "pass": "builder",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-07-30T10:05:25.521Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 688
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 5772
+      },
+      {
+        "index": 2,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 131
+      },
+      {
+        "index": 3,
+        "role": "tool",
+        "name": "list_files",
+        "content_chars": 89
+      },
+      {
+        "index": 4,
+        "role": "tool",
+        "name": "read_file",
+        "content_chars": 89
+      },
+      {
+        "index": 5,
+        "role": "assistant",
+        "name": null,
+        "content_chars": 31
+      },
+      {
+        "index": 6,
+        "role": "tool",
+        "name": "list_files",
+        "content_chars": 8175
+      }
+    ],
+    "message_count": 7,
+    "packet_chars": 17482,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nInspect the frozen OSNG snapshot with list_files and read_file before authoring.\nTreat ./osng/ as read-only source material.\nUse write_file for complete artifact contents.\nPrimary deliverable path: document.md\nDocument mode: Pass1 write OUTLINE.md (TOC + owning OSN ids scaffold only). Pass2 write document.md in reader-facing prose with ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta. Provenance only belongs in BUILD_REPORT.md if you write it.\nCall finish only when the required artifacts are complete and correct."
+        },
+        {
+          "role": "user",
+          "content": "# Lexiom document builder\n\n## Prepared workspace\n- The CA mounts this prepared build directory as its workspace root.\n- Frozen OSNG snapshot for this run: `./osng/` (64 OSN files).\n- OSNG primer (copied): `./OSNG_Basics_README.md`\n- Optional Lexiom audit index: `./HANDOFF.json` (membership / strategy metadata).\n\n## Role and privileges\n- You are a document author / compiler.\n- Read OSN YAML only under `./osng/` (read-only snapshot). Do **not** modify files under `./osng/`.\n- Write deliverables at this project root (e.g. document.md, index.html, BUILD_REPORT.md, OUTLINE.md / FILE_PLAN.md) — not into `./osng/`.\n- Do not reach outside this project for OSN sources; the snapshot is the closed universe for this build.\n- **Evidence collection is out of scope for this file.** After primary deliverables exist, use the sibling `EVIDENCE_AGENT_PROMPT.md` (index: `./EVIDENCE_PLAN.json`).\n\n## How to learn OSN structure (authoritative — do not skip)\n- Open the compilation-root `*.osn.yaml` under `./osng/` and read its leading `#` comment header first. That header is the primary description of OSN fields and `graph.parent_osn_ids` / `graph.child_osn_ids` / `standard_ancestor_osn_ids` linking.\n- Treat that header as future-ready schema documentation: if headers evolve, follow the file you opened — do not invent a parallel schema from this prompt.\n- For filesystem identity and header/README pairing, also read: `./OSNG_Basics_README.md`\n- When path prefixes and `graph.*` disagree, `graph.*` is authoritative (as stated in the OSN header).\n\n## Compilation root and scope\n- Compilation root OSN id: GT_Philosophy.BrandLexiom.a1000005.osn\n- Compilation root path (in this project): `./osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml`\n- Open that root file first (after reading its header). Use its `seed` + `output_spec` as the primary outcome contract for this build.\n- Scope: self_and_approved_descendants; profile: document_agent\n- **Closure rule:** only files present under `./osng/` participate. Discover them via `graph.*` links. Sibling branches that were not snapshotted are simply absent — do not invent or fetch them from elsewhere.\n\n## Strategy (how to traverse via graph.*)\nstrategy_id: outline_then_fill\nUse Standard / Root / Mid / Leaf roles from the subgraph. Do not invent claims absent from OSN text you opened.\n- **Pass 1 (outline, ancestor-first):** walk Root then `graph.child_osn_ids` pre-order; write OUTLINE.md / FILE_PLAN.md only (titles + owning OSN ids) — no full body yet.\n- **Pass 2 (fill, descendant-first):** walk children before parents within each chapter/module; fill artifact bodies from leaf `output_spec` text.\n- **Pass 3 (reconcile):** re-open Root (+ Standard if in scope); fix global consistency against success evidences.\n- At each node: open the YAML under `./osng/`, read the header if needed, then extract `seed`, `output_spec`, `thematic_lenses`, `success_evidences`, and `graph` as needed for the artifact.\n- Resolve `id` / `file_name` to a snapshotted `*.osn.yaml` under `./osng/` (directory layout mirrors Lexiom_1_3; `graph.*` remains authoritative).\n- Do not paste or assume OSN bodies from memory; pull requirements from the files you open.\n\n## Artifact contract\n- Primary deliverable: document.md (coherent entry document).\n- Optional multi-file pack under sections/ only if Root output_spec or the outline demands it.\n- **Outcome cleanliness (required):** document.md and sections/** must be free of OSNG/OSN traces — no OSN ids, *.osn.yaml paths, schema field names (output_spec, seed, graph.*, success_evidences, …), build/process meta, or “compiled from OSN…” language. Write finished domain prose only.\n- Provenance (which OSN informed which section) belongs ONLY in BUILD_REPORT.md; OUTLINE.md may keep owning OSN ids as Lexiom scaffold — never copy those into the reader-facing body.\n- Before finish: scan the outcome body and remove any residual OSNG/OSN traces (plugin failure if any remain).\n- Pass 1: write OUTLINE.md (TOC + owning OSN ids as scaffold only); no full body copy.\n- Pass 2: fill document.md (and optional sections/) in reader-facing voice — no OSNG traces.\n- Pass 3: reconcile Root/Standard tone and success evidences; run cleanliness scan on the outcome body.\n- Always write BUILD_REPORT.md listing included OSN ids you actually used, strategy, primary files, gaps, and which OSN supplied each major decision.\n\n## Non-goals\n- Not a coding agent; do not emit application source trees.\n- Do not invent unsupported claims.\n- Do not modify files under ./osng/ (snapshot is read-only).\n- Do not treat this prompt as a restatement of OSN schema — use OSN headers.\n- Do not publish OSNG/OSN process, ids, or schema vocabulary inside document.md / sections/.\n\n## Conflict precedence (when Concordance is unavailable)\n- Standard ancestor invariants\n- Compilation root outcome contract\n- Mid-level structural OSNs (chapters/parts)\n- Leaf OSNs (detailed messaging / clauses)\n- Record unresolved conflicts in BUILD_REPORT.md rather than inventing a silent merge.\n\n## Extraction protocol\n1. Read compilation-root header + `./OSNG_Basics_README.md`.\n2. Traverse via graph.* among files under `./osng/`, using strategy_id walk rules above.\n3. For each visited OSN, extract only what the artifact needs (prefer `output_spec`; use `seed` for intent). Do not collect evidence files here.\n4. Produce the artifact at the project root.\n5. Write BUILD_REPORT.md with provenance (OSN id → contribution).\n\n## Agent execution\n- Inspect source files through the CA workspace tools; do not assume contents from filenames.\n- Write primary artifacts through the CA workspace tools and finish only after verification.\n- Evidence generation remains a separate Step 5 pass described by `EVIDENCE_AGENT_PROMPT.md`.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "I'll begin by inspecting the workspace structure and understanding the compilation root, then proceed with the three-pass strategy.",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01VNy8oe582piZYBpjoWj3ok",
+              "function": {
+                "name": "list_files",
+                "arguments": "{\"path\": \".\", \"depth\": 2}"
+              }
+            },
+            {
+              "type": "function",
+              "index": 1,
+              "id": "toolu_bdrk_01N8syN6MSncC7trsHHLjJPW",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\": \"./OSNG_Basics_README.md\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01VNy8oe582piZYBpjoWj3ok",
+          "name": "list_files",
+          "content": "{\"ok\":false,\"error\":\"path_invalid\",\"detail\":\"Workspace path contains an invalid segment\"}"
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01N8syN6MSncC7trsHHLjJPW",
+          "name": "read_file",
+          "content": "{\"ok\":false,\"error\":\"path_invalid\",\"detail\":\"Workspace path contains an invalid segment\"}"
+        },
+        {
+          "role": "assistant",
+          "content": "Let me correct the path format:",
+          "tool_calls": [
+            {
+              "type": "function",
+              "index": 0,
+              "id": "toolu_bdrk_01LnaCXp4vdm2Hzsat2GXcgG",
+              "function": {
+                "name": "list_files",
+                "arguments": "{\"path\": \"\", \"depth\": 2}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "toolu_bdrk_01LnaCXp4vdm2Hzsat2GXcgG",
+          "name": "list_files",
+          "content": "{\"ok\":true,\"files\":[\"AGENT_PROMPT.md\",\"BUILD_REPORT.md\",\"EVIDENCE_AGENT_PROMPT.md\",\"EVIDENCE_PLAN.json\",\"HANDOFF.json\",\"OSNG_Basics_README.md\",\"RUN_RESULT.json\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.TaglineSystem.a1000054.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.ToneOfVoice.a1000055.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.MasterNaming.a1000052.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.NamingRationale.a1000053.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.NamingArchitecture.a1000028.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.a1000016.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.Motion.a1000059.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.Typography.a1000058.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.TypographyMotion.a1000031.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.ColorPrinciples.a1000057.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.CoreMetaphor.a1000056.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.VisualLanguage.a1000030.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VisualIdentity.a1000017.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.a1000010.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.ContentPillars.a1000062.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.FlagshipAssets.a1000063.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.ContentStrategy.a1000033.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.HomepageSequence.a1000060.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.SolutionPages.a1000061.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.WebsiteExperience.a1000032.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.DemandGeneration.a1000018.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.DemonstrationArc.a1000065.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.DiscoveryQuestions.a1000064.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.SalesNarrative.a1000034.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.PackagingTiers.a1000066.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.PricingPilot.a1000067.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.ServicePackaging.a1000035.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.SalesEnablement.a1000019.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.GoToMarket.a1000011.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.ChampionsEvaluators.a1000047.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.EconomicBuyers.a1000046.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.BuyingCommittee.a1000025.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.EnterpriseDeliverySectors.a1000045.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.RegulatedSectors.a1000044.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.PrioritySectors.a1000024.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.CustomerProfiles.a1000014.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.AlignmentGovernedAI.a1000048.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.EvidenceEconomics.a1000049.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.EnterprisePillars.a1000026.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.SrmDefinition.a1000050.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.XrmPositioning.a1000051.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.XrmNarrative.a1000027.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.ValueProposition.a1000015.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.AudienceValue.a1000009.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.CategoryEducation.a1000037.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.CategoryStatement.a1000036.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.PrimaryCategory.a1000020.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.DeterministicSemanticOS.a1000038.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.GovernedAgentLifecycle.a1000039.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.TechnicalCategories.a1000021.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CategoryDefinition.a1000012.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.AgentCodingContrast.a1000043.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.GovernanceObservabilityContrast.a1000042.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.AIPlatformContrast.a1000023.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.CrmContrast.a1000040.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.ProjectRequirementsContrast.a1000041.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.RecordSystemsContrast.a1000022.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.CompetitiveDifferentiation.a1000013.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.MarketPositioning.a1000008.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn.yaml\",\"osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml\",\"osng/GT_Philosophy.a1000001.osn.yaml\"]}"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "list_files",
+            "description": "List files in the mounted build workspace.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Relative directory; omit for workspace root."
+                },
+                "depth": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 6
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "read_file",
+            "description": "Read UTF-8 text from a relative workspace file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60000
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "finish",
+            "description": "Finish only after required artifacts are present and ready for validation.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 12000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-07-30T10:05:27.868Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "Good. Now let me read the OSNG Basics README and the compilation root:",
+    "assistant_content_chars": 70,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 6252,
+      "completion_tokens": 143,
+      "total_tokens": 6395,
+      "cost": 0.006967,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.006967,
+        "upstream_inference_prompt_cost": 0.006252,
+        "upstream_inference_completions_cost": 0.000715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785405925-BeFDjC0jL0x5SH44Rc0l",
+      "object": "chat.completion",
+      "created": 1785405925,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "Good. Now let me read the OSNG Basics README and the compilation root:",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_0194AGBEw8vx3SJxC4UrJrRd",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"OSNG_Basics_README.md\"}"
+                }
+              },
+              {
+                "type": "function",
+                "index": 1,
+                "id": "toolu_bdrk_0194P4uvmv8YvKAHofmupvRc",
+                "function": {
+                  "name": "read_file",
+                  "arguments": "{\"path\": \"osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 6252,
+        "completion_tokens": 143,
+        "total_tokens": 6395,
+        "cost": 0.006967,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.006967,
+          "upstream_inference_prompt_cost": 0.006252,
+          "upstream_inference_completions_cost": 0.000715
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 2352,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

@@ -1,0 +1,166 @@
+.landing-step + .landing-step {
+  margin-top: 20px;
+}
+
+/* Keep onboarding playfield stable across all 0/5-5/5 steps (2/5 is the sizing baseline). */
+.landing-step {
+  min-height: 538px;
+}
+
+/* Step 3: let the draft textarea consume available playfield height without overflow. */
+#landing-step-3 {
+  display: flex;
+  flex-direction: column;
+}
+
+#landing-step-3 #landing-draft-input {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.landing-role-btn.is-selected {
+  border-color: var(--lexiom-frame);
+  background: var(--lexiom-highlight-bg);
+  color: var(--lexiom-text);
+}
+
+.lexiom-onboarding-card {
+  width: min(720px, 100%);
+  max-height: 100%;
+  padding: 18px 20px;
+  border: 2px solid var(--lexiom-frame-rgba);
+  background: var(--lexiom-surface-bg);
+  box-shadow: 0 0 16px var(--lexiom-frame-rgba);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.lexiom-onboarding-heading {
+  font-size: var(--lexiom-font-title);
+  font-weight: var(--lexiom-title-font-weight);
+  letter-spacing: var(--lexiom-title-letter-spacing);
+  /* Logical alignment: follows document writing direction (LTR / RTL, e.g. Arabic) */
+  text-align: start;
+  margin-bottom: 0.5rem;
+}
+
+.lexiom-onboarding-copy {
+  margin: 0 0 0.5rem 0;
+  opacity: 0.9;
+  text-align: start;
+}
+
+/* Welcome copy is forced English; keep it visually left-aligned even in RTL UI. */
+#landing-welcome {
+  direction: ltr;
+  text-align: justify;
+  text-align-last: center;
+}
+
+.lexiom-onboarding-subtitle {
+  font-size: calc(var(--lexiom-font-content) * 0.95);
+  opacity: 0.9;
+}
+
+.lexiom-onboarding-textarea {
+  background: transparent;
+  border-radius: 0;
+  border: 1px solid var(--lexiom-frame-rgba);
+  color: var(--lexiom-text);
+  resize: none;
+  direction: inherit;
+  text-align: start;
+}
+
+.lexiom-onboarding-textarea:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: var(--lexiom-frame);
+}
+
+.lexiom-onboarding-btn-primary {
+  border: 2px solid var(--lexiom-frame);
+  background: var(--lexiom-highlight-bg);
+  color: var(--lexiom-text);
+  padding-inline: 18px;
+}
+
+.lexiom-onboarding-btn-secondary {
+  border: 2px solid var(--lexiom-frame-rgba);
+  background: transparent;
+  color: var(--lexiom-text);
+  padding-inline: 18px;
+}
+
+/* Welcome entry CTA: enlarge button and text on hover. */
+#landing-mode-zenith {
+  transition: transform 3240ms ease-in-out;
+  transform-origin: center center;
+}
+
+#landing-mode-zenith:hover {
+  transform: scale(2);
+  z-index: 2;
+}
+
+.lexiom-onboarding-role-btn {
+  border-radius: 0;
+  border: 2px solid var(--lexiom-frame-rgba);
+  background: transparent;
+  text-align: start;
+}
+
+.lexiom-onboarding-hint {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+}
+
+.lexiom-onboarding-error {
+  border: 1px solid var(--lexiom-frame);
+  background: var(--lexiom-error-bg);
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  text-align: start;
+}
+
+.lexiom-onboarding-status {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  text-align: start;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Match onboarding card width so progress aligns with main content column */
+.landing-footer-progress-wrap {
+  width: min(720px, 100%);
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Step 4 → cockpit: solid black + title (after staggered UI fade) */
+.landing-exit-root {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lexiom-body-bg);
+  pointer-events: all;
+}
+
+.landing-exit-title-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 3s ease-in-out;
+}
+
+.landing-exit-title-img.landing-exit-title-visible {
+  opacity: 1;
+}

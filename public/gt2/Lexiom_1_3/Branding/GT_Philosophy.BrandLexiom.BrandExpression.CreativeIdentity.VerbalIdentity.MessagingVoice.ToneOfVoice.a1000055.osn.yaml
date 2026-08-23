@@ -1,0 +1,85 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: >-
+  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.ToneOfVoice.a1000055.osn
+file_name: >-
+  GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.ToneOfVoice.a1000055.osn
+node_type: discipline
+discipline: Editorial Direction
+title: Tone of Voice
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Editorial Direction OSN Owner
+graph:
+  parent_osn_ids:
+    - >-
+      GT_Philosophy.BrandLexiom.BrandExpression.CreativeIdentity.VerbalIdentity.MessagingVoice.a1000029.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: lens.brand.messaging_voice.professional_craft
+source_spec:
+  document: Branding/branding_spec.md
+  sections: §12
+seed: >-
+  Use declarative clarity, active verbs, restrained metaphor, and human language while avoiding hype
+  and probabilistic claims presented as fact.
+thematic_lenses:
+  - lens_id: lens.brand.tone_of_voice.professional_craft
+    name: Editorial Direction
+    purpose: Apply editorial direction judgment to this outcome.
+  - lens_id: lens.brand.tone_of_voice.human_authority
+    name: Human Authority
+    purpose: Keep proposals distinct from approved organizational truth.
+  - lens_id: lens.brand.tone_of_voice.evidence
+    name: Evidence and Claims
+    purpose: Require inspectable delivery and classify claims according to available proof.
+output_spec: |-
+  1. Enter the living brand intention — Use declarative clarity, active verbs, restrained
+  metaphor, and human language while avoiding hype and probabilistic claims presented as
+  fact — then explore Editorial Direction and Evidence and Claims below for the
+  code-backed rebuild contract.
+
+  ## Editorial Direction
+  2. Live as navigable BrandLexiom-descendant YAML under Branding/ so this node's approved
+  sections can enter BrandLexiom document-builder compiles when compilation_scope includes
+  approved descendants.
+
+  ## Evidence and Claims
+  3. Inspect fulfillment via TEXTUAL_SNIPPET evidence quoted from the delivered
+  branding-book document.md (SUD), never from this OSN's own seed, lenses, or output_spec.
+success_evidences:
+  - evidence_id: sev.brand.tone_of_voice.delivered_artifact
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered Ogun branding book markdown (the SUD document.md / brand-book
+      artifact produced by the document builder), extract a single readable quoted passage
+      that shows how the book fulfills this node's outcome: Use declarative clarity, active
+      verbs, restrained metaphor, and human language while avoiding hype and probabilistic
+      claims presented as fact. The quote must be taken verbatim (or as a contiguous excerpt)
+      from the produced branding book itself — not from this OSN's seed, lenses, or
+      output_spec. Prefer a paragraph or short section that a reviewer can inspect directly to
+      confirm the "Tone of Voice" requirement became real in the book. Format it as a
+      copy-pasteable excerpt suitable for direct review. Deliver the snippet as the evidence
+      artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

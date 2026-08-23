@@ -1,0 +1,187 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: 29d8d06d-b0ad-431b-b8a9-d2c0c44af146
+Timestamp: 2026-05-15T07:09:58.636Z
+LexiomNarrativeContract: 1
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: "אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains.
+
+TASK: Draft a short strategic plan for this case expressed via negativa: focus on what the user should refrain from doing in order to protect their interests and move toward resolution.
+Within that strategy, explicitly probe for potential evidential misses (missing or weakly supported facts/documents that could materially affect leverage).
+
+CASE_SEED_NARRATIVE:
+# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות
+
+לילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.
+
+ב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.
+
+תומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.
+
+תומר מחכה לתגובת לילך בנושא.
+
+APPROVED_L24A_DISPUTES:
+"יש לבצע את החישוב מחדש בשל מספר סיבות" — לילך עשויה לטעון כי הסיבות שהוצגו אינן משקפות את המצב הנוכחי שלה ושל הילדים.
+
+APPROVED_L24B_GOALS:
+לילך שואפת לשמור על יציבות כלכלית עבור ילדיה, תוך שמירה על איכות חייהם. ניצחון עבורה יהיה כאשר תוכל להוכיח כי תשלומי המזונות לא צריכים להשתנות (ואם כבר להשתנות אז כלפי מעלה, בעקבות הוצאות גדולות יותר של הילדים שגדלו ב 7 שנים למן חתימת החוזה ולכן הביגוד שלהם עולה יותר וכו'), שכן הוצאות השכירות שלה לא השתנו מהותית, ובכך להבטיח את התמיכה הנדרשת לילדים.
+
+L2B_CHAT_HISTORY (Strategy lens):
+Lexiom: מהן המגבלות המשפטיות או הכלכליות שאת חווה בהקשר של תשלומי המזונות, ואילו אילוצים נוספים את מזהה שיכולים להשפיע על המצב?
+
+ 
+
+שאלה זו חשובה כי היא מאפשרת להבין את המכשולים שאת נתקלת בהם, ובכך ניתן לפתח אסטרטגיות מתאימות להתמודדות עם האתגרים.
+
+ 
+
+לדוגמא, לילך עשויה להרגיש שהחוזה עם דרור מגביל את יכולתה לנהל משא ומתן על תשלומי המזונות.
+User: המגבלה שאני (לילך) מזהה היא חוסר הנוחות שלי בשיתוף הסכם הממון שנחתם ביני לבין דרור עם צד שלילי (תומר)
+
+EVIDENCE_GAP_FOCUS:
+- Use only information present in the case seed, approved upstream drafts, and this chat history.
+- Do not fabricate facts, documents, dates, witnesses, or legal claims.
+- If support appears incomplete, label it as a potential evidential miss (not a confirmed absence).
+- Prioritize high-impact evidential misses that could weaken the user's position if unaddressed.
+
+If there is a recent Lexiom question at the end of the chat, let the tail of your strategic paragraph anticipate and harmonize with that question.
+RECENT_LEXIOM_QUESTION: מהן המגבלות המשפטיות או הכלכליות שאת חווה בהקשר של תשלומי המזונות, ואילו אילוצים נוספים את מזהה שיכולים להשפיע על המצב?
+
+ 
+
+שאלה זו חשובה כי היא מאפשרת להבין את המכשולים שאת נתקלת בהם, ובכך ניתן לפתח אסטרטגיות מתאימות להתמודדות עם האתגרים.
+
+ 
+
+לדוגמא, לילך עשויה להרגיש שהחוזה עם דרור מגביל את יכולתה לנהל משא ומתן על תשלומי המזונות.
+
+OUTPUT:
+- Write one short paragraph (3–6 sentences) describing the strategic path via negativa (what to avoid, what not to escalate, what not to concede prematurely).
+- Include one compact sentence in that paragraph that names the highest-impact potential evidential miss and what evidence the user should gather next.
+- Do not list bullet points; keep it as one coherent paragraph.
+- Do not give legal advice or make promises of outcome; stay at the level of strategic posture.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L24_Draft_ followed by four words (underscore-separated) that capture what you draft in this inference, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: "אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains.
+
+TASK: Draft a short strategic plan for this case expressed via negativa: focus on what the user should refrain from doing in order to protect their interests and move toward resolution.
+Within that strategy, explicitly probe for potential evidential misses (missing or weakly supported facts/documents that could materially affect leverage).
+
+CASE_SEED_NARRATIVE:
+# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות
+
+לילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.
+
+ב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.
+
+תומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.
+
+תומר מחכה לתגובת לילך בנושא.
+
+APPROVED_L24A_DISPUTES:
+"יש לבצע את החישוב מחדש בשל מספר סיבות" — לילך עשויה לטעון כי הסיבות שהוצגו אינן משקפות את המצב הנוכחי שלה ושל הילדים.
+
+APPROVED_L24B_GOALS:
+לילך שואפת לשמור על יציבות כלכלית עבור ילדיה, תוך שמירה על איכות חייהם. ניצחון עבורה יהיה כאשר תוכל להוכיח כי תשלומי המזונות לא צריכים להשתנות (ואם כבר להשתנות אז כלפי מעלה, בעקבות הוצאות גדולות יותר של הילדים שגדלו ב 7 שנים למן חתימת החוזה ולכן הביגוד שלהם עולה יותר וכו'), שכן הוצאות השכירות שלה לא השתנו מהותית, ובכך להבטיח את התמיכה הנדרשת לילדים.
+
+L2B_CHAT_HISTORY (Strategy lens):
+Lexiom: מהן המגבלות המשפטיות או הכלכליות שאת חווה בהקשר של תשלומי המזונות, ואילו אילוצים נוספים את מזהה שיכולים להשפיע על המצב?
+
+ 
+
+שאלה זו חשובה כי היא מאפשרת להבין את המכשולים שאת נתקלת בהם, ובכך ניתן לפתח אסטרטגיות מתאימות להתמודדות עם האתגרים.
+
+ 
+
+לדוגמא, לילך עשויה להרגיש שהחוזה עם דרור מגביל את יכולתה לנהל משא ומתן על תשלומי המזונות.
+User: המגבלה שאני (לילך) מזהה היא חוסר הנוחות שלי בשיתוף הסכם הממון שנחתם ביני לבין דרור עם צד שלילי (תומר)
+
+EVIDENCE_GAP_FOCUS:
+- Use only information present in the case seed, approved upstream drafts, and this chat history.
+- Do not fabricate facts, documents, dates, witnesses, or legal claims.
+- If support appears incomplete, label it as a potential evidential miss (not a confirmed absence).
+- Prioritize high-impact evidential misses that could weaken the user's position if unaddressed.
+
+If there is a recent Lexiom question at the end of the chat, let the tail of your strategic paragraph anticipate and harmonize with that question.
+RECENT_LEXIOM_QUESTION: מהן המגבלות המשפטיות או הכלכליות שאת חווה בהקשר של תשלומי המזונות, ואילו אילוצים נוספים את מזהה שיכולים להשפיע על המצב?
+
+ 
+
+שאלה זו חשובה כי היא מאפשרת להבין את המכשולים שאת נתקלת בהם, ובכך ניתן לפתח אסטרטגיות מתאימות להתמודדות עם האתגרים.
+
+ 
+
+לדוגמא, לילך עשויה להרגיש שהחוזה עם דרור מגביל את יכולתה לנהל משא ומתן על תשלומי המזונות.
+
+OUTPUT:
+- Write one short paragraph (3–6 sentences) describing the strategic path via negativa (what to avoid, what not to escalate, what not to concede prematurely).
+- Include one compact sentence in that paragraph that names the highest-impact potential evidential miss and what evidence the user should gather next.
+- Do not list bullet points; keep it as one coherent paragraph.
+- Do not give legal advice or make promises of outcome; stay at the level of strategic posture.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L24_Draft_ followed by four words (underscore-separated) that capture what you draft in this inference, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM outbound — loving_only ===
+{
+  "logged_at": "2026-05-15T07:09:58.641Z",
+  "variant": "loving_only",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise assistant responding to a single narrative. Output clean, ready-to-display text.\n\nIf the user asks for the name of the language model or assistant used for this inference, say you are GT3 (Generative Team Trained Transformer)."
+    },
+    {
+      "role": "user",
+      "content": "Beloved lover, follow for tone and stance; then address the task below.\n\nGuide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.\r\n\r\n**Principles (apply lightly, preserve clarity):**\r\n- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.\r\n- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).\r\n- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.\r\n- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.\r\n- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.\r\n\r\n**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.\r\n\r\n**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.\r\n\r\n**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.\r\n\r\n**Anchor:** Language as a vessel through which abundance flows into awareness.\n\n---TASK---\n\nYou are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: \"אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.\". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains.\n\nTASK: Draft a short strategic plan for this case expressed via negativa: focus on what the user should refrain from doing in order to protect their interests and move toward resolution.\nWithin that strategy, explicitly probe for potential evidential misses (missing or weakly supported facts/documents that could materially affect leverage).\n\nCASE_SEED_NARRATIVE:\n# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות\n\nלילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.\n\nב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.\n\nתומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.\n\nתומר מחכה לתגובת לילך בנושא.\n\nAPPROVED_L24A_DISPUTES:\n\"יש לבצע את החישוב מחדש בשל מספר סיבות\" — לילך עשויה לטעון כי הסיבות שהוצגו אינן משקפות את המצב הנוכחי שלה ושל הילדים.\n\nAPPROVED_L24B_GOALS:\nלילך שואפת לשמור על יציבות כלכלית עבור ילדיה, תוך שמירה על איכות חייהם. ניצחון עבורה יהיה כאשר תוכל להוכיח כי תשלומי המזונות לא צריכים להשתנות (ואם כבר להשתנות אז כלפי מעלה, בעקבות הוצאות גדולות יותר של הילדים שגדלו ב 7 שנים למן חתימת החוזה ולכן הביגוד שלהם עולה יותר וכו'), שכן הוצאות השכירות שלה לא השתנו מהותית, ובכך להבטיח את התמיכה הנדרשת לילדים.\n\nL2B_CHAT_HISTORY (Strategy lens):\nLexiom: מהן המגבלות המשפטיות או הכלכליות שאת חווה בהקשר של תשלומי המזונות, ואילו אילוצים נוספים את מזהה שיכולים להשפיע על המצב?\n\n \n\nשאלה זו חשובה כי היא מאפשרת להבין את המכשולים שאת נתקלת בהם, ובכך ניתן לפתח אסטרטגיות מתאימות להתמודדות עם האתגרים.\n\n \n\nלדוגמא, לילך עשויה להרגיש שהחוזה עם דרור מגביל את יכולתה לנהל משא ומתן על תשלומי המזונות.\nUser: המגבלה שאני (לילך) מזהה היא חוסר הנוחות שלי בשיתוף הסכם הממון שנחתם ביני לבין דרור עם צד שלילי (תומר)\n\nEVIDENCE_GAP_FOCUS:\n- Use only information present in the case seed, approved upstream drafts, and this chat history.\n- Do not fabricate facts, documents, dates, witnesses, or legal claims.\n- If support appears incomplete, label it as a potential evidential miss (not a confirmed absence).\n- Prioritize high-impact evidential misses that could weaken the user's position if unaddressed.\n\nIf there is a recent Lexiom question at the end of the chat, let the tail of your strategic paragraph anticipate and harmonize with that question.\nRECENT_LEXIOM_QUESTION: מהן המגבלות המשפטיות או הכלכליות שאת חווה בהקשר של תשלומי המזונות, ואילו אילוצים נוספים את מזהה שיכולים להשפיע על המצב?\n\n \n\nשאלה זו חשובה כי היא מאפשרת להבין את המכשולים שאת נתקלת בהם, ובכך ניתן לפתח אסטרטגיות מתאימות להתמודדות עם האתגרים.\n\n \n\nלדוגמא, לילך עשויה להרגיש שהחוזה עם דרור מגביל את יכולתה לנהל משא ומתן על תשלומי המזונות.\n\nOUTPUT:\n- Write one short paragraph (3–6 sentences) describing the strategic path via negativa (what to avoid, what not to escalate, what not to concede prematurely).\n- Include one compact sentence in that paragraph that names the highest-impact potential evidential miss and what evidence the user should gather next.\n- Do not list bullet points; keep it as one coherent paragraph.\n- Do not give legal advice or make promises of outcome; stay at the level of strategic posture.\n\nLANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.\n\nIMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).\nFormat: _L24_Draft_ followed by four words (underscore-separated) that capture what you draft in this inference, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules."
+    }
+  ]
+}
+
+=== Loving-only response ===
+לילך, עלייך להימנע מהסכמה לשינויים בתשלומי המזונות מבלי לבחון את ההשפעות המלאות של המצב הנוכחי. חשוב לא להחמיר את המצב על ידי קבלת טענות שאינן מגובות בעובדות חזקות. אל תוותרי על המידע הקיים בהסכם השכירות שלך עם דרור, שכן זה עשוי לשמש כבסיס להוכחת יציבותך הכלכלית. כמו כן, יש לאסוף מסמכים המעידים על ההוצאות הנוכחיות של הילדים, שכן חוסר במידע זה עלול להיחשב כפספוס ראייתי משמעותי שיכול להשפיע על עמדתך. 
+
+_L24_Draft_evidence_mitigation_strategic_position
+

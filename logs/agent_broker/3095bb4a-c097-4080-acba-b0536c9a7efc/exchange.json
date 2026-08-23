@@ -1,0 +1,196 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "3095bb4a-c097-4080-acba-b0536c9a7efc",
+  "lane": "agent_broker",
+  "created_at": "2026-08-02T08:47:21.681Z",
+  "completed_at": "2026-08-02T08:47:49.711Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "msbk3lvr_2a2433c0",
+      "pass": "builder",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-08-02T08:47:21.681Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 997
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 16481
+      }
+    ],
+    "message_count": 2,
+    "packet_chars": 18847,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nDocument mode uses BUILD_PLAN plus immutable per-node JSON under ./nodes/ and SOURCE_MAP. Read only the node keys assigned to the current phase.\nUse write_file for complete artifact contents.\nPrimary deliverable path: document.md\nWrite phase artifacts only (OUTLINE.md or the assigned sections/*.md). Host assembly owns document.md unless a reconcile phase asks otherwise. Reader-facing prose must contain ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta.\nSubmit the required phase artifact with write_file; the host validates and completes the phase atomically.\nPhase: fill cluster c02 (Audience and Enterprise Value).\nSubmit exactly sections/02-audience-and-enterprise-value.md with write_file; the host completes the phase atomically.\nDo not write document.md in this phase. The host packet is complete; no reads are needed."
+        },
+        {
+          "role": "user",
+          "content": "Compose the assigned section from this bounded packet.\n\n## Shared policy\n{\"shared_invariants\":[\"Write finished reader-facing prose only.\",\"Do not invent unsupported capability, regulatory, numerical, market, or pricing claims.\",\"Preserve product identity and category from Root/Standard capsules and source excerpts.\",\"Do not emit OSN ids, schema field names, or build-process vocabulary in document.md / sections/**.\"],\"shared_requirement_markers\":[]}\n\n## Root\n{\"key\":\"n01\",\"title\":\"Lexiom 1.3 — Ogun Brand\",\"seed\":\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"unique_requirements\":[\"1. Enter how Lexiom currently holds the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes — then explore Brand Leadership, Human Authority, and Evidence and Claims be…\"],\"claim_constraints\":[\"1. Enter how Lexiom currently holds the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes — then explore Brand Leadership, Human Authority, and Evidence and Claims be…\",\"Require inspectable delivery and classify claims according to available proof.\"]}\n\n## Outline\n# Lexiom 1.3 — Ogun Brand\n\n## Table of Contents\n\n### 1. Market Positioning\n**Owning Key:** n50  \n**Cluster:** c01  \n**Section Path:** sections/01-market-positioning.md\n\nPosition Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.\n\n### 2. Audience and Enterprise Value\n**Owning Key:** n35  \n**Cluster:** c02  \n**Section Path:** sections/02-audience-and-enterprise-value.md\n\nConnect Ogun's governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.\n\n### 3. Creative Identity\n**Owning Key:** n04  \n**Cluster:** c03  \n**Section Path:** sections/03-creative-identity.md\n\nExpress Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.\n\n### 4. Go-to-Market System\n**Owning Key:** n19  \n**Cluster:** c04  \n**Section Path:** sections/04-go-to-market-system.md\n\nTurn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\n\n---\n\n## Document Governance\n\n**Root Node:** n01 (Lexiom 1.3 — Ogun Brand)  \n**Standard Node:** n02 (GT Philosophy)  \n**Brand Strategy Parent:** n34 (Ogun Brand Strategy)  \n**Brand Expression Parent:** n03 (Ogun Brand Expression)\n\nThis outline scaffolds the complete brand documentation for Lexiom 1.3 — Ogun, organized as a coherent system of market positioning, audience value, creative expression, and commercial activation.\n\n\n## Assigned nodes\n[{\"key\":\"n35\",\"title\":\"Audience and Enterprise Value\",\"role\":\"mid\",\"discipline\":\"Market Strategy\",\"parent_keys\":[\"n34\"],\"child_keys\":[\"n36\",\"n43\"],\"seed\":\"Connect Ogun’s governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.\",\"unique_requirements\":[\"1. Enter the living brand intention — Connect Ogun’s governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand — then explore Market Strategy and Evidence and Claims below for the code-backed reb…\"],\"source_sections\":\"§§5, 7, and 8\"},{\"key\":\"n36\",\"title\":\"Ideal Customer Profiles\",\"role\":\"mid\",\"discipline\":\"Customer Strategy\",\"parent_keys\":[\"n35\"],\"child_keys\":[\"n40\",\"n37\"],\"seed\":\"Define priority organizations, sectors, and buying roles while preserving Ogun’s cross-domain identity.\",\"unique_requirements\":[\"1. Come explore how Lexiom currently carries priority organizations, sectors, and buying roles while preserving Ogun’s cross-domain identity — then explore Customer Strategy and Evidence and Claims below for the code-backed rebuild contract. ## Customer Strat…\"],\"source_sections\":\"§8\"},{\"key\":\"n40\",\"title\":\"Priority Sectors\",\"role\":\"mid\",\"discipline\":\"Vertical Market Strategy\",\"parent_keys\":[\"n36\"],\"child_keys\":[\"n42\",\"n41\"],\"seed\":\"Prioritize consequential, multidisciplinary environments with costly misunderstanding, AI-assisted processes, and evidence obligations.\",\"unique_requirements\":[\"1. Enter the living brand intention — Prioritize consequential, multidisciplinary environments with costly misunderstanding, AI-assisted processes, and evidence obligations — then explore Vertical Market Strategy and Evidence and Claims below for the code-bac…\"],\"source_sections\":\"§§8.1–8.2\"},{\"key\":\"n42\",\"title\":\"Regulated Sectors\",\"role\":\"leaf\",\"discipline\":\"Regulated Industry Marketing\",\"parent_keys\":[\"n40\"],\"child_keys\":[],\"seed\":\"Adapt the Ogun narrative for financial services, healthcare, government, legal services, and regulated manufacturing without making unsupported compliance claims.\",\"unique_requirements\":[\"1. Enter the living brand intention — Adapt the Ogun narrative for financial services, healthcare, government, legal services, and regulated manufacturing without making unsupported compliance claims — then explore Regulated Industry Marketing and Evidence an…\"],\"source_sections\":\"§8.2\"},{\"key\":\"n41\",\"title\":\"Enterprise Delivery Sectors\",\"role\":\"leaf\",\"discipline\":\"Enterprise Market Development\",\"parent_keys\":[\"n40\"],\"child_keys\":[],\"seed\":\"Adapt the narrative for enterprise software, professional services, systems integration, procurement, construction, and telecommunications.\",\"unique_requirements\":[\"1. Enter the living brand intention — Adapt the narrative for enterprise software, professional services, systems integration, procurement, construction, and telecommunications — then explore Enterprise Market Development and Evidence and Claims below for the…\"],\"source_sections\":\"§§5.5 and 8.2\"},{\"key\":\"n37\",\"title\":\"Buying Committee\",\"role\":\"mid\",\"discipline\":\"Buying-Center Strategy\",\"parent_keys\":[\"n36\"],\"child_keys\":[\"n39\",\"n38\"],\"seed\":\"Equip economic buyers, champions, and evaluators with role-specific value and proof while preserving one coherent product truth.\",\"unique_requirements\":[\"1. Enter the living brand intention — Equip economic buyers, champions, and evaluators with role-specific value and proof while preserving one coherent product truth — then explore Buying-Center Strategy and Evidence and Claims below for the code-backed rebui…\"],\"source_sections\":\"§8.3\"},{\"key\":\"n39\",\"title\":\"Economic Buyers\",\"role\":\"leaf\",\"discipline\":\"Executive Marketing\",\"parent_keys\":[\"n37\"],\"child_keys\":[],\"seed\":\"Address executive concerns about failed outcomes, uncontrolled AI, delivery risk, rework, accountability, and portfolio visibility.\",\"unique_requirements\":[\"1. Enter the living brand intention — Address executive concerns about failed outcomes, uncontrolled AI, delivery risk, rework, accountability, and portfolio visibility — then explore Executive Marketing and Evidence and Claims below for the code-backed rebui…\"],\"source_sections\":\"§8.3\"},{\"key\":\"n38\",\"title\":\"Champions and Evaluators\",\"role\":\"leaf\",\"discipline\":\"Technical Buyer Marketing\",\"parent_keys\":[\"n37\"],\"child_keys\":[],\"seed\":\"Address champion and evaluator concerns about alignment, ambiguity, handoffs, proving completion, security, legal, compliance, and operations.\",\"unique_requirements\":[\"1. Enter the living brand intention — Address champion and evaluator concerns about alignment, ambiguity, handoffs, proving completion, security, legal, compliance, and operations — then explore Technical Buyer Marketing and Evidence and Claims below for the …\"],\"source_sections\":\"§8.3\"},{\"key\":\"n43\",\"title\":\"Enterprise Value Proposition\",\"role\":\"mid\",\"discipline\":\"Value Proposition Design\",\"parent_keys\":[\"n35\"],\"child_keys\":[\"n44\",\"n47\"],\"seed\":\"Translate Ogun’s semantic governance into credible effects for alignment, governed AI adoption, evidence-backed delivery, continuity, and economic intelligence.\",\"unique_requirements\":[\"1. Enter the living brand intention — Translate Ogun’s semantic governance into credible effects for alignment, governed AI adoption, evidence-backed delivery, continuity, and economic intelligence — then explore Value Proposition Design and Evidence and Clai…\"],\"source_sections\":\"§§5 and 7\"},{\"key\":\"n44\",\"title\":\"Enterprise Value Pillars\",\"role\":\"mid\",\"discipline\":\"Enterprise Value Strategy\",\"parent_keys\":[\"n43\"],\"child_keys\":[\"n45\",\"n46\"],\"seed\":\"Organize Ogun’s value around alignment, governed AI adoption, evidence-backed delivery, relationship continuity, and economic intelligence.\",\"unique_requirements\":[\"1. Enter the living brand intention — Organize Ogun’s value around alignment, governed AI adoption, evidence-backed delivery, relationship continuity, and economic intelligence — then explore Enterprise Value Strategy and Evidence and Claims below for the cod…\"],\"source_sections\":\"§7\"},{\"key\":\"n45\",\"title\":\"Alignment and Governed AI\",\"role\":\"leaf\",\"discipline\":\"AI Transformation Strategy\",\"parent_keys\":[\"n44\"],\"child_keys\":[],\"seed\":\"Show how explicit ownership and approval reduce ambiguity and unauthorized drift while enabling faster AI-assisted work.\",\"unique_requirements\":[\"1. Enter the living brand intention — Show how explicit ownership and approval reduce ambiguity and unauthorized drift while enabling faster AI-assisted work — then explore AI Transformation Strategy and Evidence and Claims below for the code-backed rebuild c…\"],\"source_sections\":\"§§7.1A–7.1B\"},{\"key\":\"n46\",\"title\":\"Evidence and Economic Intelligence\",\"role\":\"leaf\",\"discipline\":\"Value Engineering\",\"parent_keys\":[\"n44\"],\"child_keys\":[],\"seed\":\"Show how direct evidence, relationship continuity, and graph-garden intelligence improve confidence and resource allocation.\",\"unique_requirements\":[\"1. Enter the living brand intention — Show how direct evidence, relationship continuity, and graph-garden intelligence improve confidence and resource allocation — then explore Value Engineering and Evidence and Claims below for the code-backed rebuild contra…\"],\"source_sections\":\"§§7.1C–7.1E\"},{\"key\":\"n47\",\"title\":\"XRM Narrative\",\"role\":\"mid\",\"discipline\":\"Relationship Strategy\",\"parent_keys\":[\"n43\"],\"child_keys\":[\"n48\",\"n49\"],\"seed\":\"Position XRM as CRM determinism plus semantic relationship probabilisticity governed by human approval and evidence.\",\"unique_requirements\":[\"1. Enter the living brand intention — Position XRM as CRM determinism plus semantic relationship probabilisticity governed by human approval and evidence — then explore Relationship Strategy and Evidence and Claims below for the code-backed rebuild contract. …\"],\"source_sections\":\"§5\"},{\"key\":\"n48\",\"title\":\"Semantic Relationship Management\",\"role\":\"leaf\",\"discipline\":\"Relationship Management Strategy\",\"parent_keys\":[\"n47\"],\"child_keys\":[],\"seed\":\"Define SRM as management of evolving intentions, interpretations, commitments, risks, dependencies, evidence, and context.\",\"unique_requirements\":[\"1. Come explore how Lexiom currently carries SRM as management of evolving intentions, interpretations, commitments, risks, dependencies, evidence, and context — then explore Relationship Management Strategy and Evidence and Claims below for the code-backed r…\"],\"source_sections\":\"§5.2\"},{\"key\":\"n49\",\"title\":\"XRM Positioning\",\"role\":\"leaf\",\"discipline\":\"XRM Category Strategy\",\"parent_keys\":[\"n47\"],\"child_keys\":[],\"seed\":\"Show how Ogun extends relationship systems from stable records to governed outcome relationships across organizations.\",\"unique_requirements\":[\"1. Enter the living brand intention — Show how Ogun extends relationship systems from stable records to governed outcome relationships across organizations — then explore XRM Category Strategy and Evidence and Claims below for the code-backed rebuild contract…\"],\"source_sections\":\"§§5.3–5.5 and 9.4\"}]\n\n## Referenced source sections\n## 5. CRM, SRM, and XRM Brand Narrative\r\n\r\n### 5.1 Legacy CRM\r\n\r\nLegacy Customer Relationship Management systems are deterministic systems of record. They reliably manage:\r\n\r\n- accounts;\r\n- contacts;\r\n- opportunities;\r\n- pipeline stages;\r\n- service cases;\r\n- activities;\r\n- transactions;\r\n- contractual facts;\r\n- ownership fields; and\r\n- predefined workflows.\r\n\r\nTheir strength is administrative certainty. Their limitation is semantic shallowness.\r\n\r\nA CRM can record that an opportunity moved to “proposal sent.” It usually cannot govern:\r\n\r\n- what the customer truly expects;\r\n- which interpretation of the request was approved;\r\n- which assumptions remain unresolved;\r\n- what internal and supplier capabilities are required;\r\n- how conflicts among stakeholders were reconciled;\r\n- which evidence will demonstrate success; or\r\n- why the delivered outcome took its final form.\r\n\r\n### 5.2 SRM — Semantic Relationship Management\r\n\r\nWithin the Ogun brand, **SRM means Semantic Relationship Management**.\r\n\r\nSRM manages the evolving meaning of a relationship. It represents:\r\n\r\n- intentions;\r\n- expectations;\r\n- interpretations\n\n## 7. B2B Value Proposition\r\n\r\n### 7.1 Enterprise value pillars\r\n\r\n#### A. Alignment\r\n\r\nOgun makes expected outcomes explicit and owned before execution energy compounds around ambiguity.\r\n\r\n**Business effect:** fewer misunderstandings, fewer late-stage reversals, and stronger alignment among customer, supplier, business, product, engineering, compliance, and operations teams.\r\n\r\n#### B. Governed AI adoption\r\n\r\nOgun enables organizations to use generative and agentic systems without surrendering authority over canonical commitments.\r\n\r\n**Business effect:** faster AI-assisted work with reduced risk of unauthorized drift, silent mutation, and unreviewed output promotion.\r\n\r\n#### C. Evidence-backed delivery\r\n\r\nEvery approved outcome carries evidence of fulfillment and lineage.\r\n\r\n**Business effect:** stronger acceptance, auditability, customer trust, regulatory readiness, and executive confidence.\r\n\r\n#### D. Relationship continuity\r\n\r\nOgun preserves how meaning develops across customer, supplier, partner, and internal relationships.\r\n\r\n**Business effect:** reduced loss of context across handoffs, personnel chan\n\n## 8. Ideal Customer Profiles\r\n\r\n### 8.1 Primary ICP\r\n\r\nOrganizations with:\r\n\r\n- complex, multi-disciplinary delivery;\r\n- more than one accountable stakeholder group;\r\n- significant cost of misunderstanding or rework;\r\n- AI-assisted or agentic processes;\r\n- customer and supplier interdependence;\r\n- audit, regulatory, contractual, safety, or reputational exposure;\r\n- reusable organizational standards;\r\n- and a need to prove achievement rather than merely report activity.\r\n\r\n### 8.2 Priority sectors\r\n\r\nInitial commercial priority may include:\r\n\r\n- financial services and insurance;\r\n- healthcare and medical software;\r\n- government and defense;\r\n- aerospace and critical infrastructure;\r\n- enterprise software;\r\n- professional services;\r\n- legal services;\r\n- systems integration;\r\n- construction and engineering;\r\n- regulated manufacturing;\r\n- telecommunications;\r\n- and large-scale procurement ecosystems.\r\n\r\nMarketing must preserve the wider cross-domain identity even when campaigns focus on a particular vertical.\r\n\r\n### 8.3 Buying committee\r\n\r\n#### Economic buyer\r\n\r\nLikely roles:\r\n\r\n- Chief Operating Officer;\r\n- Ch\n\n## 9. Positioning Framework\r\n\r\n### 9.1 Primary positioning statement\r\n\r\n> For enterprises that must coordinate complex human and AI-assisted work, Lexiom 1.3 — Ogun is an Outcome Governance and Semantic Relationship Operating System that turns intentions, standards, and commitments into human-approved outcome graphs with direct evidence of achievement. Unlike CRM, project-management, AI-governance, or agent-orchestration tools, Ogun governs meaning from expectation through delivery.\r\n\r\n### 9.2 Executive positioning\r\n\r\n> Ogun gives leaders a governed view of what the organization is trying to achieve, who owns each part, where meaning is drifting, what AI is proposing, and what evidence proves success.\r\n\r\n### 9.3 Technology positioning\r\n\r\n> Ogun is the deterministic semantic control layer between probabilistic AI generation and canonical enterprise state.\r\n\r\n### 9.4 XRM positioning\r\n\r\n> Ogun joins CRM’s reliable records with Semantic Relationship Management, allowing enterprises to govern the meaning, commitments, and outcomes that live between customers, suppliers, partners, and internal teams.\r\n\r\n### 9.5 So\n\nSubmit sections/02-audience-and-enterprise-value.md now with write_file."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 6000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-08-02T08:47:49.701Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "I'll compose the assigned section on Audience and Enterprise Value for Lexiom 1.3 — Ogun, drawing from the bounded packet and source materials provided.",
+    "assistant_content_chars": 152,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 4663,
+      "completion_tokens": 2503,
+      "total_tokens": 7166,
+      "cost": 0.017178,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017178,
+        "upstream_inference_prompt_cost": 0.004663,
+        "upstream_inference_completions_cost": 0.012515
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785660440-LKSMExgV7wxvxpSSrpQj",
+      "object": "chat.completion",
+      "created": 1785660440,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "I'll compose the assigned section on Audience and Enterprise Value for Lexiom 1.3 — Ogun, drawing from the bounded packet and source materials provided.",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_01Hi3Rgr4MxRJkiCGMxiykFL",
+                "function": {
+                  "name": "write_file",
+                  "arguments": "{\"path\": \"sections/02-audience-and-enterprise-value.md\", \"content\": \"# 2. Audience and Enterprise Value\\n\\n## Overview\\n\\nOgun's governed cooperation model creates measurable business effects for organizations that coordinate complex, multidisciplinary work across internal teams, customers, suppliers, and AI-assisted processes. This section connects Ogun's semantic governance capabilities to the sectors, roles, concerns, and enterprise outcomes that drive demand.\\n\\n---\\n\\n## Ideal Customer Profiles\\n\\n### Primary ICP Characteristics\\n\\nOrganizations that benefit most from Ogun share these traits:\\n\\n- **Complex, multidisciplinary delivery** — work that spans product, engineering, compliance, operations, customer success, and external partners\\n- **Multiple accountable stakeholders** — decisions and approvals required from different teams and organizations\\n- **Significant cost of misunderstanding** — rework, regulatory exposure, customer dissatisfaction, or safety risk when meaning drifts\\n- **AI-assisted or agentic processes** — generative systems and autonomous agents embedded in delivery workflows\\n- **Customer and supplier interdependence** — outcomes depend on coordinated action across organizational boundaries\\n- **Audit, regulatory, contractual, safety, or reputational exposure** — need to prove achievement and maintain evidence trails\\n- **Reusable organizational standards** — repeatable processes, templates, and governance rules that scale across projects\\n- **Evidence-backed acceptance** — stakeholders require proof of completion, not merely activity reports\\n\\n### Priority Sectors\\n\\nOgun's initial commercial focus targets sectors where these characteristics are most acute:\\n\\n**Regulated and high-consequence industries:**\\n- Financial services and insurance\\n- Healthcare and medical software\\n- Government and defense\\n- Aerospace and critical infrastructure\\n\\n**Enterprise delivery and systems:**\\n- Enterprise software development and deployment\\n- Professional services and consulting\\n- Legal services\\n- Systems integration\\n- Construction and engineering\\n- Regulated manufacturing\\n- Telecommunications\\n- Large-scale procurement ecosystems\\n\\nAcross all sectors, Ogun preserves its cross-domain identity. Vertical campaigns emphasize sector-specific concerns while maintaining the unified brand narrative of governed outcome relationships.\\n\\n---\\n\\n## Buying Committee and Role-Specific Value\\n\\n### Economic Buyers\\n\\n**Typical roles:** Chief Operating Officer, Chief Financial Officer, Chief Technology Officer, VP of Delivery, VP of Operations\\n\\n**Core concerns:**\\n- Failed outcomes and late-stage reversals that consume budget and delay revenue\\n- Uncontrolled AI adoption creating unauthorized drift and liability\\n- Delivery risk, rework cycles, and accountability gaps\\n- Portfolio visibility — inability to see what the organization is actually trying to achieve\\n- Confidence in executive decision-making when outcomes are ambiguous\\n\\n**Ogun's value to economic buyers:**\\n- Explicit ownership and approval reduce misunderstandings before execution energy compounds\\n- Governed AI adoption enables faster work without surrendering authority over canonical commitments\\n- Direct evidence of achievement improves stakeholder confidence and regulatory readiness\\n- Relationship continuity preserves context across personnel changes and organizational transitions\\n- Economic intelligence from outcome graphs informs resource allocation and portfolio decisions\\n\\n### Champions and Evaluators\\n\\n**Typical roles:** Delivery lead, product manager, compliance officer, legal counsel, operations manager, technical architect, quality assurance lead\\n\\n**Core concerns:**\\n- Alignment — ensuring all stakeholders understand the same outcome\\n- Ambiguity and hidden assumptions that surface late in delivery\\n- Handoffs between teams, organizations, and systems\\n- Proving completion and demonstrating compliance\\n- Security, legal, and operational risk\\n- Audit trails and evidence for regulatory or contractual requirements\\n\\n**Ogun's value to champions and evaluators:**\\n- Explicit commitments and approved interpretations eliminate ambiguity before work begins\\n- Semantic relationship management captures intentions, dependencies, and evidence in one governed system\\n- Handoff clarity — each team sees what they own, what they depend on, and what evidence proves success\\n- Compliance and audit readiness through direct evidence and relationship lineage\\n- Operational continuity when personnel or vendors change\\n\\n---\\n\\n## Enterprise Value Proposition\\n\\n### Five Value Pillars\\n\\n#### 1. Alignment\\n\\n**What it means:** Ogun makes expected outcomes explicit and owned before execution energy compounds around ambiguity.\\n\\n**Business effect:** Fewer misunderstandings, fewer late-stage reversals, and stronger alignment among customer, supplier, business, product, engineering, compliance, and operations teams.\\n\\n**Evidence of value:**\\n- Reduced rework cycles and scope creep\\n- Faster approval and sign-off from stakeholders\\n- Fewer escalations due to conflicting interpretations\\n- Improved customer satisfaction and retention\\n\\n#### 2. Governed AI Adoption\\n\\n**What it means:** Ogun enables organizations to use generative and agentic systems without surrendering authority over canonical commitments.\\n\\n**Business effect:** Faster AI-assisted work with reduced risk of unauthorized drift, silent mutation, and unreviewed output promotion.\\n\\n**Evidence of value:**\\n- AI-generated proposals and recommendations remain subject to human approval\\n- Audit trails show which AI suggestions were accepted, rejected, or modified\\n- Reduced liability from AI-driven decisions that bypass governance\\n- Faster delivery cycles while maintaining control and accountability\\n\\n#### 3. Evidence-Backed Delivery\\n\\n**What it means:** Every approved outcome carries evidence of fulfillment and lineage.\\n\\n**Business effect:** Stronger acceptance, auditability, customer trust, regulatory readiness, and executive confidence.\\n\\n**Evidence of value:**\\n- Regulatory compliance demonstrated through direct evidence, not assertion\\n- Customer disputes resolved through documented commitments and proof of delivery\\n- Audit readiness — evidence trails support financial, operational, and compliance reviews\\n- Reduced customer churn from acceptance disputes\\n\\n#### 4. Relationship Continuity\\n\\n**What it means:** Ogun preserves how meaning develops across customer, supplier, partner, and internal relationships.\\n\\n**Business effect:** Reduced loss of context across handoffs, personnel changes, and organizational transitions.\\n\\n**Evidence of value:**\\n- New team members onboard faster with full context of commitments and evidence\\n- Supplier transitions preserve institutional knowledge of what was promised and why\\n- Customer relationships survive personnel changes because meaning is explicit and governed\\n- Reduced rework when teams or vendors change\\n\\n#### 5. Economic Intelligence\\n\\n**What it means:** Outcome graphs and relationship data enable organizations to see what they are actually trying to achieve, who owns each part, where meaning is drifting, and what evidence proves success.\\n\\n**Business effect:** Better resource allocation, portfolio visibility, and strategic decision-making.\\n\\n**Evidence of value:**\\n- Portfolio dashboards show real status, not activity reports\\n- Resource conflicts surface early when commitments are explicit\\n- Strategic decisions informed by evidence of what actually delivers value\\n- Reduced waste on low-value or misaligned initiatives\\n\\n---\\n\\n## Semantic Relationship Management and XRM\\n\\n### From CRM to Semantic Relationship Management\\n\\nLegacy Customer Relationship Management systems excel at administrative certainty — managing accounts, contacts, opportunities, pipeline stages, and transactions. Their limitation is semantic shallowness. A CRM records that an opportunity moved to \\\"proposal sent,\\\" but it cannot govern:\\n\\n- What the customer truly expects\\n- Which interpretation of the request was approved\\n- Which assumptions remain unresolved\\n- What internal and supplier capabilities are required\\n- How conflicts among stakeholders were reconciled\\n- Which evidence will demonstrate success\\n- Why the delivered outcome took its final form\\n\\n**Semantic Relationship Management (SRM)** extends CRM's deterministic records with governance of evolving meaning. SRM manages:\\n\\n- Intentions — what each stakeholder is trying to achieve\\n- Expectations — what success looks like from each perspective\\n- Interpretations — which understanding of the request was approved\\n- Commitments — who owns each part and what they are accountable for\\n- Dependencies — what each outcome depends on from other teams or organizations\\n- Evidence — what proof demonstrates that each commitment was fulfilled\\n- Context — why decisions were made and what assumptions underlie them\\n\\n### XRM: Extending Relationship Systems to Governed Outcomes\\n\\n**XRM (Extended Relationship Management)** positions Ogun as the evolution of relationship systems from stable records to governed outcome relationships.\\n\\nTraditional CRM manages relationships as stable records — accounts, contacts, transactions. XRM extends this to manage relationships as governed outcome graphs. Each relationship carries:\\n\\n- Explicit commitments and approvals\\n- Semantic clarity about what is expected and why\\n- Evidence of achievement and lineage\\n- Continuity across personnel changes and organizational transitions\\n- Governed integration of AI-assisted work\\n\\nXRM is CRM's deterministic records plus semantic relationship probabilisticity governed by human approval and evidence. It allows enterprises to govern the meaning, commitments, and outcomes that live between customers, suppliers, partners, and internal teams — turning intentions into inspectable, evidence-backed results.\\n\\n---\\n\\n## Cross-Domain Identity and Vertical Adaptation\\n\\nWhile Ogun's value proposition applies across sectors, marketing and sales must adapt the narrative to sector-specific concerns without fragmenting the brand.\\n\\n### Regulated Sectors\\n\\nIn financial services, healthcare, government, and legal services, Ogun's value centers on:\\n\\n- Regulatory compliance through direct evidence and audit trails\\n- Risk mitigation from governed AI adoption and explicit commitments\\n- Audit readiness and reduced compliance burden\\n- Contractual clarity and dispute prevention\\n\\nMarketing emphasizes evidence-backed delivery and relationship continuity as compliance and risk-management tools.\\n\\n### Enterprise Delivery Sectors\\n\\nIn enterprise software, professional services, systems integration, and construction, Ogun's value centers on:\\n\\n- Delivery certainty and reduced rework\\n- Stakeholder alignment across complex, multidisciplinary teams\\n- Faster delivery cycles through governed AI adoption\\n- Portfolio visibility and resource optimization\\n\\nMarketing emphasizes alignment, governed AI, and economic intelligence as delivery and efficiency tools.\\n\\n### Cross-Sector Consistency\\n\\nAll vertical campaigns preserve the core brand narrative: Ogun turns human intention into governed, inspectable, evidence-backed outcomes. Sector-specific messaging highlights which value pillars matter most to that industry, but the unified product truth remains constant.\\n\\n---\\n\\n## Summary\\n\\nOgun's audience comprises organizations with complex, multidisciplinary delivery, multiple accountable stakeholders, significant cost of misunderstanding, and evidence obligations. Across regulated sectors, enterprise delivery, and large-scale procurement, Ogun creates measurable business effects:\\n\\n- **Alignment** reduces misunderstandings and late-stage reversals\\n- **Governed AI adoption** enables faster work without surrendering authority\\n- **Evidence-backed delivery** improves compliance, customer trust, and executive confidence\\n- **Relationship continuity** preserves context across handoffs and personnel changes\\n- **Economic intelligence** informs resource allocation and strategic decisions\\n\\nBy connecting semantic governance to these enterprise outcomes, Ogun positions itself as essential infrastructure for organizations that must coordinate human intention, AI-assisted work, and evidence-backed results across internal teams, customers, and suppliers.\\n\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 4663,
+        "completion_tokens": 2503,
+        "total_tokens": 7166,
+        "cost": 0.017178,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.017178,
+          "upstream_inference_prompt_cost": 0.004663,
+          "upstream_inference_completions_cost": 0.012515
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 28031,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

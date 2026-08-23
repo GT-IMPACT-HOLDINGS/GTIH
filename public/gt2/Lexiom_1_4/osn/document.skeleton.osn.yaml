@@ -1,0 +1,34 @@
+# Lexiom 1.4 document-profile OSN skeleton (osn/0.2).
+# Owned by GTIH/Lexiom — not by TRH. Verticals send an outcome description;
+# Lexiom fills seed, output_spec, and at least one direct TEXTUAL_SNIPPET.
+schema_version: osn/0.2
+id: TRH.Outcome.placeholder.osn
+file_name: TRH.Outcome.placeholder.osn
+node_type: document
+title: Untitled outcome
+owner:
+  owner_id: vertical_session
+  display_name: Vertical session owner
+  role: Outcome OSN Owner
+graph:
+  parent_osn_ids: []
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: null
+seed: ''
+thematic_lenses:
+  - lens_id: lens.document.outcome
+    name: Document
+    purpose: Realize a human-inspectable document from the stated outcome.
+output_spec: ''
+success_evidences:
+  - evidence_id: sev.document.opening_snippet
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      Open the delivered document.md. Confirm the opening states the intended
+      outcome in readable prose that a human can approve as Success Evidence.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self
+  target_tool_profile: document_builder

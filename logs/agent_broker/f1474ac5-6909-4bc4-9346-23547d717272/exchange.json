@@ -1,0 +1,97 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "f1474ac5-6909-4bc4-9346-23547d717272",
+  "lane": "agent_broker",
+  "created_at": "2026-07-29T20:10:25.175Z",
+  "completed_at": "2026-07-29T20:10:25.197Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": null,
+      "run_id": null,
+      "pass": null,
+      "plugin_id": null,
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "localhost_lm",
+      "label": "Local LM",
+      "transport": "openai_compatible_http",
+      "locality": "localhost",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "test/model"
+  },
+  "request": {
+    "captured_at": "2026-07-29T20:10:25.175Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 32
+      }
+    ],
+    "message_count": 1,
+    "packet_chars": 113,
+    "packet": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "Brand naming specification: Ogun"
+        }
+      ],
+      "model": "test/model",
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-07-29T20:10:25.195Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "Ogun naming specification received.",
+    "assistant_content_chars": 35,
+    "assistant_content_truncated": false,
+    "finish_reason": "stop",
+    "usage": {
+      "prompt_tokens": 12,
+      "completion_tokens": 5
+    },
+    "packet": {
+      "id": "mock-response",
+      "model": "local/mock",
+      "choices": [
+        {
+          "message": {
+            "role": "assistant",
+            "content": "Ogun naming specification received."
+          },
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 12,
+        "completion_tokens": 5
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 23,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

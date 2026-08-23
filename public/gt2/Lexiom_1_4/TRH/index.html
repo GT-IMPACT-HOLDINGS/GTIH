@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TheReasoningHub</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-name">TheReasoningHub</div>
+        <div class="brand-tag">Intention → structure → realization → evidence → trust</div>
+      </div>
+      <div class="header-actions">
+        <span id="statePill" class="state-pill" data-state="Draft">Draft</span>
+        <button type="button" class="secondary" id="btnSettings">Settings</button>
+        <button type="button" id="btnRealize" disabled>Realize</button>
+        <button type="button" id="btnCanonical" hidden disabled>Mark Canonical / Signed</button>
+      </div>
+    </header>
+
+    <div id="settings" class="settings">
+      <label for="baseUrl">Lexiom / GT3 base URL (separate origin)</label>
+      <input id="baseUrl" type="url" placeholder="http://localhost:8080" />
+      <p style="font-size: 0.8rem; color: #3d4a57; margin: 0.5rem 0 0">
+        TRH should be served from a different origin (e.g. port 4173 with COOP/COEP). Capabilities
+        are invoked through the Lexiom 1.4 SDK — not shown as a separate product.
+      </p>
+    </div>
+
+    <section id="welcome" class="welcome">
+      <h2>What should become real?</h2>
+      <p>
+        Describe the desired outcome in a single prompt. TheReasoningHub will ask Lexiom to shape
+        Output Specifications and Success Evidences, then you Realize a document package and approve
+        evidence before anything becomes canonical.
+      </p>
+      <label class="sr-only" for="outcomeInput">Outcome description</label>
+      <textarea
+        id="outcomeInput"
+        rows="5"
+        placeholder="e.g. A concise governance memo explaining how a vertical portal consumes Lexiom as embedded SaaS…"
+      ></textarea>
+      <button type="button" id="btnStart">Begin</button>
+      <p id="welcomeError" class="welcome-error" hidden></p>
+    </section>
+
+    <div id="main" hidden>
+      <div id="layout" class="layout">
+        <section class="panel">
+          <nav id="viewNav" class="view-nav" aria-label="Case views">
+            <button type="button" data-view="conversation" class="active">Conversation</button>
+            <button type="button" data-view="structure">Structure</button>
+            <button type="button" data-view="realization">Realization</button>
+            <button type="button" data-view="evidence">Evidence</button>
+            <button type="button" data-view="canonical">Canonical</button>
+            <button type="button" data-view="cockpit">Cockpit</button>
+          </nav>
+
+          <div class="panel-body">
+            <div id="view-conversation">
+              <div id="chatLog" class="chat-log" aria-live="polite"></div>
+              <div class="composer">
+                <textarea
+                  id="messageInput"
+                  rows="2"
+                  placeholder="Optional follow-up (not required after the first prompt)…"
+                ></textarea>
+                <button type="button" id="btnSend">Send</button>
+              </div>
+            </div>
+
+            <div id="view-structure" hidden>
+              <h3>Outcome structure</h3>
+              <p style="color: #3d4a57; font-size: 0.9rem">
+                Progressive disclosure of Output Specifications and Success Evidences.
+              </p>
+              <div id="structureDetail"></div>
+            </div>
+
+            <div id="view-realization" hidden>
+              <h3>Realization</h3>
+              <p style="color: #3d4a57; font-size: 0.9rem">
+                Progress is shown in plain language. Where the agent runs is an implementation
+                detail.
+              </p>
+              <ul id="progressList" class="progress-list"></ul>
+            </div>
+
+            <div id="view-evidence" hidden>
+              <h3>Evidence review</h3>
+              <p style="color: #3d4a57; font-size: 0.9rem">
+                Approve each required direct evidence. Canonical status only after all are approved
+                and you sign.
+              </p>
+              <div id="evidenceList"></div>
+            </div>
+
+            <div id="view-canonical" hidden>
+              <h3>Canonical artifact</h3>
+              <div id="canonicalBody"></div>
+            </div>
+
+            <div id="view-cockpit" hidden>
+              <h3>Cockpit</h3>
+              <div class="cockpit-planes">
+                <button type="button" class="secondary active" data-plane="semantic">Semantic</button>
+                <button type="button" class="secondary" data-plane="spatial">Spatial</button>
+                <button type="button" class="secondary" data-plane="temporal">Temporal</button>
+              </div>
+              <p id="cockpitPlaneLabel" style="color: #3d4a57; font-size: 0.85rem"></p>
+              <ul id="cockpitNodes" class="node-list"></ul>
+            </div>
+          </div>
+        </section>
+
+        <aside id="structurePanel" class="panel structure-card" hidden>
+          <div class="panel-body">
+            <h3>Emerging graph</h3>
+            <div id="hemiOutput" class="hemi">
+              <div class="label">Output Specifications</div>
+              <div class="body">…</div>
+            </div>
+            <div id="hemiEvidence" class="hemi">
+              <div class="label">Success Evidences</div>
+              <div class="body">…</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <p class="footer-note">
+      Agent delegation (scoped external actors) — Follow-up. Voice entry — Follow-up.
+    </p>
+
+    <script src="./sor.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

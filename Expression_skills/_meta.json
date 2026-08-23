@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "skills": {
+    "shefa": {
+      "label": "Shefa (abundance)",
+      "full_spec_ref": "GT3_Expression_specs/Shefa_expression_spec.md"
+    },
+    "legal_professional_expression": {
+      "label": "Legal professional",
+      "full_spec_ref": "GT3_Expression_specs/Legal Professional Expression.md"
+    }
+  }
+}

@@ -1,0 +1,103 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. Optional post-build bud is a
+# bloom pointer written only by Lexiom/GT3 after a successful VAL run — never
+# by agents. The seed states intention; thematic_lenses name professional
+# perspectives; output_spec states the outcome contract; success_evidences
+# name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.ProductLexiom.a1000002.osn
+file_name: GT_Philosophy.ProductLexiom.a1000002.osn
+node_type: product
+title: the Lexiom Application
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Product OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.a1000001.osn
+  child_osn_ids:
+    - GT_Philosophy.ProductLexiom.UX.a1000003.osn
+    - GT_Philosophy.ProductLexiom.CodeShape.a1000004.osn
+    - GT_Philosophy.ProductLexiom.GameificationFlow.4efab5ba.osn
+  standard_ancestor_osn_ids:
+    - WebAppSecurity.AccessControl.a1000101.osn
+  derived_from_lens_id: null
+seed: >
+  Demonstrate Lexiom 1.3.3 through a calm, welcoming single-page application where a first-time user
+  encounters OSNs (Outcome Specification Nodes) as owned, evidence-backed, file-like semantic source
+  artifacts. Owned semantic source files expressing human intention and evidence.
+thematic_lenses:
+  - lens_id: lens.product.ux
+    name: UX
+    purpose: Make the first encounter clear, quiet, and self-explanatory.
+  - lens_id: lens.product.code_shape
+    name: Code Shaping
+    purpose: Keep the POC deterministic, simple, inspectable, and buildable as one SPA.
+output_spec: |-
+  1. Step into Lexiom 1.3.3 as a calm, welcoming SPA where newcomers meet OSNs as owned,
+  evidence-backed, file-like semantic artifacts — then explore UX and Code Shaping below for how
+  to rebuild that product surface.
+  
+  ## UX
+  2. Ship one welcoming single-page cockpit that presents the OSN graph as playable semantic
+  source, with default Focus on ProductLexiom and default section Output Spec.
+  3. Keep ProductLexiom discipline children (UX, CodeShape, GameificationFlow) and sibling
+  BrandLexiom discoverable in the same graph so the product outcome stays graph-native.
+  4. Orient the product narrative so machine output arrives as draft and only human approval
+  makes semantic source canonical — without auth, billing, or multi-user product flows.
+  5. Expose the product encounter as left Outcome Specifications, center owned sections, and
+  right Success Evidences; leave panel choreography, PlaneShift, Garden, and draft-card chrome
+  to the UX discipline child.
+  6. After a successful build bloom, let newcomers open Bud in Center to review the delivered SUD
+  without treating Bud as evidence approval.
+  
+  ## Code Shaping
+  7. Implement Lexiom 1.3 as one inspectable SPA co-hosted on the GT3 Node server beside
+  canonical OSN YAML under public/gt2/Lexiom_1_3/ (recursive list with ProductLexiom quartet
+  fallback).
+  8. Persist canonical changes only through explicit approve to /lexiom13/osn/save create,
+  update, or prune; keep drafts, evidence approvals, filters, and action history session-only.
+  9. Drive mutations through dispatchWhiteMove → white reduce → black side-effects so LM and
+  disk writes stay non-silent.
+  10. When Build controls is enabled, map ProductLexiom / UX / CodeShape to the software-coding
+  builder and BrandLexiom to the document builder; show a Build handoff/report child, not the
+  delivered artifact; attach bud after successful VAL.
+  11. Poll Focus-closure evidence collections (default 5s) and overlay build-collected artifacts
+  on bundled demos without auto-approving them.
+  12. Support GT3-backed lens reframing, maturation proposals, optional cockpit title, and
+  evidence-scoped causal asks via POST /inference without silent canonization of LM text.
+  13. Document known POC limits: session-only action log, no durable Move ledger, browser CA
+  evidence Jobs host-only, and current side-panel branch/prune/build/lens/evidence actions as
+  center-only execution divergences.
+  14. Do not invent authentication, billing, collaboration, or a product database in this POC
+  rebuild scope.
+success_evidences:
+  - evidence_id: sev.product.osn_navigation_video
+    kind: VIDEO-CLIP
+    direct: true
+    inspection_prompt: >-
+      Open the welcome SPA in a browser. Record a short screen-capture video. In the recording,
+      select ProductLexiom and then UX using left-graph leaf labels; from UX, use the ▶ sibling
+      glyph to move to CodeShape. Show that each selected OSN sits near the top quarter of the
+      clipped left graph with fitted ancestors above and descendants below. Use at least one section
+      glyph from the center section strip on a Focus OSN, then enable the Build controls filter and
+      click one build glyph so a Build child appears and its build handoff/report card opens in the
+      center playfield. Deliver the video file as the evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_and_approved_descendants
+  target_tool_profile: static_spa_coding_agent

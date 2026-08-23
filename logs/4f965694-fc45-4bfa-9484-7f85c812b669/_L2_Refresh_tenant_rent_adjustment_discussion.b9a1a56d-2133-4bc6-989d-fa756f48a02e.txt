@@ -1,0 +1,139 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: b9a1a56d-2133-4bc6-989d-fa756f48a02e
+Timestamp: 2026-05-15T07:42:29.281Z
+LexiomNarrativeContract: 1
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: "אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. An artifact draft has just been approved.
+
+CASE SEED NARRATIVE:
+# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות
+
+לילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.
+
+ב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.
+
+תומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.
+
+תומר מחכה לתגובת לילך בנושא.
+
+APPROVED ARTIFACT: "הוצאות_ילדים.md"
+Artifact narrative (synthesize this into the tail of your proposed case description):
+היי תומר,
+
+אני מקווה שהמכתב הזה מוצא אותך בטוב. אני רוצה לשתף אותך בהוצאות הנוכחיות של הילדים שלנו, בר ואורי, ולהסביר מדוע אני נוטה לחשוב שאין צורך בשינוי בתשלומי המזונות.
+
+כפי שאתה יודע, הילדים גדלים וההוצאות שלהם משתנות בהתאם. עם זאת, חשוב לי להדגיש כי הוצאות השכירות שלי לא השתנו מהותית. אני ממשיכה לשלם דמי שכירות עבור המגורים בבית החדש, כפי שנקבע בהסכם ההפרדה שלנו. 
+
+אני מבינה שהמצב הכלכלי שלך השתנה לפני מספר שנים כאשר נפרדת מחברתך ועברת להתגורר ברשות עצמך, ולכן ובמידה ואתה רוצה לדון בהורדה נוספת של דמי המזונות (כפי שעשינו כאשר ההכנסה שלך ירדה בתקופת הקורונה) ניתן לדון בכך באופן ממוקד. אני מקווה שבזמן שעבר מאז הכנסותך (אילו שמדווחות לרשויות המס וגם אלו שאינן מדווחות) נמצאות בעליה, וכי נצליח ביחד לממן עבור בר ואורי את רמת החיים את רמת החיים שהם ראויים לה.
+
+אני פתוחה לשמוע את דעתך, ובמידה ותבחר להשקיע את הזמן והאנרגיה בעדכון חוזה המזונות והמדור נוכל לחשב מחדש את כלל ההוצאות הנוכחיות של הילדים (כולל העליה במחירי הבגדים שלהם, הבילויים שלהם, עלויות האוכל וכו') כדי שנוכל להגיע להבנה משותפת.
+
+בברכה,  
+לילך
+
+TASK: Propose an updated case identity and description.
+Line 1: A 1–4 word case identity title semantically aligned with the seed narrative and synthesizing the approved artifact.
+Line 2: A 9–15 word summary of the case that integrates the seed and the approved artifact's content at the tail.
+OUTPUT: Return exactly two lines. Line 1 = title. Line 2 = summary. No numbers, bullets, or extra commentary.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Refresh_ followed by four words (underscore-separated) that capture the refreshed L1/L2 content, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+You are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: "אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. An artifact draft has just been approved.
+
+CASE SEED NARRATIVE:
+# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות
+
+לילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.
+
+ב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.
+
+תומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.
+
+תומר מחכה לתגובת לילך בנושא.
+
+APPROVED ARTIFACT: "הוצאות_ילדים.md"
+Artifact narrative (synthesize this into the tail of your proposed case description):
+היי תומר,
+
+אני מקווה שהמכתב הזה מוצא אותך בטוב. אני רוצה לשתף אותך בהוצאות הנוכחיות של הילדים שלנו, בר ואורי, ולהסביר מדוע אני נוטה לחשוב שאין צורך בשינוי בתשלומי המזונות.
+
+כפי שאתה יודע, הילדים גדלים וההוצאות שלהם משתנות בהתאם. עם זאת, חשוב לי להדגיש כי הוצאות השכירות שלי לא השתנו מהותית. אני ממשיכה לשלם דמי שכירות עבור המגורים בבית החדש, כפי שנקבע בהסכם ההפרדה שלנו. 
+
+אני מבינה שהמצב הכלכלי שלך השתנה לפני מספר שנים כאשר נפרדת מחברתך ועברת להתגורר ברשות עצמך, ולכן ובמידה ואתה רוצה לדון בהורדה נוספת של דמי המזונות (כפי שעשינו כאשר ההכנסה שלך ירדה בתקופת הקורונה) ניתן לדון בכך באופן ממוקד. אני מקווה שבזמן שעבר מאז הכנסותך (אילו שמדווחות לרשויות המס וגם אלו שאינן מדווחות) נמצאות בעליה, וכי נצליח ביחד לממן עבור בר ואורי את רמת החיים את רמת החיים שהם ראויים לה.
+
+אני פתוחה לשמוע את דעתך, ובמידה ותבחר להשקיע את הזמן והאנרגיה בעדכון חוזה המזונות והמדור נוכל לחשב מחדש את כלל ההוצאות הנוכחיות של הילדים (כולל העליה במחירי הבגדים שלהם, הבילויים שלהם, עלויות האוכל וכו') כדי שנוכל להגיע להבנה משותפת.
+
+בברכה,  
+לילך
+
+TASK: Propose an updated case identity and description.
+Line 1: A 1–4 word case identity title semantically aligned with the seed narrative and synthesizing the approved artifact.
+Line 2: A 9–15 word summary of the case that integrates the seed and the approved artifact's content at the tail.
+OUTPUT: Return exactly two lines. Line 1 = title. Line 2 = summary. No numbers, bullets, or extra commentary.
+
+LANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.
+
+IMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).
+Format: _L2_Refresh_ followed by four words (underscore-separated) that capture the refreshed L1/L2 content, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules.
+
+=== LM outbound — loving_only ===
+{
+  "logged_at": "2026-05-15T07:42:29.285Z",
+  "variant": "loving_only",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise assistant responding to a single narrative. Output clean, ready-to-display text.\n\nIf the user asks for the name of the language model or assistant used for this inference, say you are GT3 (Generative Team Trained Transformer)."
+    },
+    {
+      "role": "user",
+      "content": "Beloved lover, follow for tone and stance; then address the task below.\n\nGuide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.\r\n\r\n**Principles (apply lightly, preserve clarity):**\r\n- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.\r\n- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).\r\n- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.\r\n- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.\r\n- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.\r\n\r\n**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.\r\n\r\n**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.\r\n\r\n**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.\r\n\r\n**Anchor:** Language as a vessel through which abundance flows into awareness.\n\n---TASK---\n\nYou are Lexiom, a profile-shaped strategic reasoning advisor for a Non-Professional profile. Anchor your guidance to this approved identity: \"אני אמא לשני ילדים, אורי ובר, ואני יוצרת ערך על ידי חיבור בין משפחות לקהילות תומכות.\". Maintain calm, explicit, consent-driven, draft-first guidance across legal and other structured domains. An artifact draft has just been approved.\n\nCASE SEED NARRATIVE:\n# סיפור מקרה: חישוב מחדש של חלק המדור בתשלומי המזונות\n\nלילך וילדיה, בר ואורי, עברו להתגורר בשכירות בבית החדש שנבנה על ידי בן זוגה, דרור. הבית נמצא בבעלותו המלאה של דרור, ולילך יש הסכם הפרדת ממון עם דרור, לפיו היא מחויבת לשלם לו דמי שכירות חודשיים עבור המגורים בבית שבבעלותו.\n\nב-3 במאי 2026, תומר פנה ללילך בנוגע לחישוב מחדש של חלק המדור בתשלומי המזונות. הוא ציין כי יש לבצע את החישוב מחדש בשל מספר סיבות. עד כה, תשלומים תוקנו בכל פעם שהיו שינויים, כאשר השינויים היו תמיד בעלייה. תומר מדגיש כי הגדרת המדור לפי החוק אינה סכום כסף קבוע, אלא סכום שמטרתו לשמר את איכות החיים של הילדים, ולוודא שאין ירידה משמעותית באיכות חייהם בהשוואה לבית השני.\n\nתומר מציין כי כיום הילדים גרים בבית החדש והפרטי של לילך, בעוד הוא מתמודד עם הוצאות שונות. הוא מדגיש כי בעת חתימת ההסכם, המצב היה שונה, והוא נושא כיום בכל ההוצאות, בעוד לילך מתחלקת בהן. הוא גם מציין כי עלויות המדור כוללות את נושא השכירות, ומבקש לדעת אם יש מסמך המעיד על הסכם שכירות שנחתם מראש.\n\nתומר מחכה לתגובת לילך בנושא.\n\nAPPROVED ARTIFACT: \"הוצאות_ילדים.md\"\nArtifact narrative (synthesize this into the tail of your proposed case description):\nהיי תומר,\n\nאני מקווה שהמכתב הזה מוצא אותך בטוב. אני רוצה לשתף אותך בהוצאות הנוכחיות של הילדים שלנו, בר ואורי, ולהסביר מדוע אני נוטה לחשוב שאין צורך בשינוי בתשלומי המזונות.\n\nכפי שאתה יודע, הילדים גדלים וההוצאות שלהם משתנות בהתאם. עם זאת, חשוב לי להדגיש כי הוצאות השכירות שלי לא השתנו מהותית. אני ממשיכה לשלם דמי שכירות עבור המגורים בבית החדש, כפי שנקבע בהסכם ההפרדה שלנו. \n\nאני מבינה שהמצב הכלכלי שלך השתנה לפני מספר שנים כאשר נפרדת מחברתך ועברת להתגורר ברשות עצמך, ולכן ובמידה ואתה רוצה לדון בהורדה נוספת של דמי המזונות (כפי שעשינו כאשר ההכנסה שלך ירדה בתקופת הקורונה) ניתן לדון בכך באופן ממוקד. אני מקווה שבזמן שעבר מאז הכנסותך (אילו שמדווחות לרשויות המס וגם אלו שאינן מדווחות) נמצאות בעליה, וכי נצליח ביחד לממן עבור בר ואורי את רמת החיים את רמת החיים שהם ראויים לה.\n\nאני פתוחה לשמוע את דעתך, ובמידה ותבחר להשקיע את הזמן והאנרגיה בעדכון חוזה המזונות והמדור נוכל לחשב מחדש את כלל ההוצאות הנוכחיות של הילדים (כולל העליה במחירי הבגדים שלהם, הבילויים שלהם, עלויות האוכל וכו') כדי שנוכל להגיע להבנה משותפת.\n\nבברכה,  \nלילך\n\nTASK: Propose an updated case identity and description.\nLine 1: A 1–4 word case identity title semantically aligned with the seed narrative and synthesizing the approved artifact.\nLine 2: A 9–15 word summary of the case that integrates the seed and the approved artifact's content at the tail.\nOUTPUT: Return exactly two lines. Line 1 = title. Line 2 = summary. No numbers, bullets, or extra commentary.\n\nLANGUAGE: Output all text in Hebrew (he). Write all responses, labels, titles, summaries, chat replies, and narrative content in this language only. Do not use English unless the user's input is in English. Exception: the single final line containing in_band_description_of_Lexioms_act must still follow the appended in-band rules (English/Latin ASCII words only), regardless of this LANGUAGE directive.\n\nIMPORTANT: After your main response, add exactly one line containing the in_band_description_of_Lexioms_act. The phrase MUST begin with an underscore (_).\nFormat: _L2_Refresh_ followed by four words (underscore-separated) that capture the refreshed L1/L2 content, within the Case's semantic realm. RULES: Use ONLY underscores to separate words. No slashes, hyphens, spaces, or other characters. Each word is letters and numbers only (Latin/ASCII only — see ENGLISH_ONLY). Do NOT wrap this final in-band line in quotes, parentheses, markdown, code fences, or any surrounding punctuation. Example body words: tenant_deposit_return_intent. The four words after the prefix are a compressed semantic fingerprint (first person applies ONLY to that phrase, NOT your main response). Put it on its own line at the very end. No other text after it. ENGLISH_ONLY (in-band line): The entire in_band_description_of_Lexioms_act must use English (Latin script) only — ASCII letters A–Z and a–z and digits 0–9 inside each word. Do not use Hebrew, Arabic, Cyrillic, CJK, diacritics, or any non-Latin characters in this phrase, even if LANGUAGE above requires another language for the main response. Express the semantic fingerprint in English words or standard English transliterations (e.g. shalom → peace, not Hebrew letters). This line is exempt from non-English LANGUAGE rules."
+    }
+  ]
+}
+
+=== Loving-only response ===
+חישוב מחדש של תשלומי המזונות  
+לילך ודרור מתמודדים עם חישוב חלק המדור בתשלומי המזונות בעקבות שינויים כלכליים.  
+_L2_Refresh_tenant_rent_adjustment_discussion
+

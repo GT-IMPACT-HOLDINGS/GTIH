@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ODD — GT3</title>
+  <!-- Lexiom-aligned palette + typography (see public/gt2/Lexiom/styles.css) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;800&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* Mirror Lexiom :root tokens for Material indigo / CRT cabinet (dark + light). */
+    :root {
+      --lexiom-font-title: 1.05rem;
+      --lexiom-font-content: 0.91875rem;
+      --lexiom-font-family-title: "Manrope", "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --lexiom-font-family-content: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+      --lexiom-body-bg: #050608;
+      --lexiom-text: #e6f1ff;
+      --lexiom-frame: #3f51b5;
+      --lexiom-frame-rgba: rgba(63, 81, 181, 0.35);
+
+      --lexiom-highlight-bg: rgba(63, 81, 181, 0.18);
+      --lexiom-highlight-strong: rgba(63, 81, 181, 0.45);
+      --lexiom-error-bg: rgba(63, 81, 181, 0.1);
+      --lexiom-placeholder-bg: rgba(63, 81, 181, 0.55);
+      --lexiom-selection-bg: rgba(63, 81, 181, 0.45);
+
+      --lexiom-intro-bg: #000000;
+      --lexiom-cabinet-bg: radial-gradient(
+        circle at top center,
+        #1a237e 0,
+        #0a0d12 55%,
+        #000000 100%
+      );
+
+      --odd-panel-bg: rgba(0, 0, 0, 0.35);
+      --odd-field-bg: transparent;
+      --odd-reply-bg: rgba(0, 0, 0, 0.22);
+
+      --odd-input-min-height: 6.5rem;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --lexiom-body-bg: #f3f5f8;
+        --lexiom-text: #0d1b2a;
+        --lexiom-frame: #1e88e5;
+        --lexiom-frame-rgba: rgba(30, 136, 229, 0.32);
+
+        --lexiom-highlight-bg: rgba(30, 136, 229, 0.14);
+        --lexiom-highlight-strong: rgba(30, 136, 229, 0.28);
+        --lexiom-error-bg: rgba(30, 136, 229, 0.1);
+        --lexiom-placeholder-bg: rgba(30, 136, 229, 0.26);
+        --lexiom-selection-bg: rgba(30, 136, 229, 0.25);
+
+        --lexiom-intro-bg: #ffffff;
+        --lexiom-cabinet-bg: radial-gradient(
+          circle at top center,
+          #ffffff 0,
+          #eaf0f8 55%,
+          #f3f5f8 100%
+        );
+
+        --odd-panel-bg: rgba(255, 255, 255, 0.92);
+        --odd-field-bg: rgba(255, 255, 255, 0.65);
+        --odd-reply-bg: rgba(255, 255, 255, 0.85);
+      }
+    }
+
+    html {
+      color-scheme: light dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    ::selection {
+      background: var(--lexiom-selection-bg);
+    }
+
+    body.odd-body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--lexiom-font-family-content);
+      font-size: var(--lexiom-font-content);
+      line-height: 1.35;
+      background: var(--lexiom-cabinet-bg);
+      background-color: var(--lexiom-body-bg);
+      color: var(--lexiom-text);
+    }
+
+    .odd-shell {
+      max-width: min(42rem, 100%);
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .odd-panel {
+      padding: 1.25rem 1.35rem;
+      border: 2px solid var(--lexiom-frame-rgba);
+      background: var(--odd-panel-bg);
+      box-shadow: 0 0 16px var(--lexiom-frame-rgba);
+    }
+
+    h1 {
+      font-family: var(--lexiom-font-family-title);
+      font-size: calc(var(--lexiom-font-title) * 1.35);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin: 0 0 0.35rem;
+      text-align: start;
+      color: var(--lexiom-text);
+    }
+
+    .sub {
+      font-size: calc(var(--lexiom-font-content) * 0.95);
+      opacity: 0.9;
+      margin: 0 0 1.15rem;
+      text-align: start;
+    }
+
+    .sub code {
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 0.9em;
+      padding: 0.1em 0.35em;
+      border: 1px solid var(--lexiom-frame-rgba);
+      background: var(--lexiom-highlight-bg);
+    }
+
+    label {
+      display: block;
+      font-family: var(--lexiom-font-family-title);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      color: var(--lexiom-text);
+      margin-bottom: 0.35rem;
+      text-align: start;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: var(--odd-input-min-height);
+      padding: 0.65rem 0.75rem;
+      border-radius: 0;
+      border: 1px solid var(--lexiom-frame-rgba);
+      font: inherit;
+      resize: vertical;
+      background: var(--odd-field-bg);
+      color: var(--lexiom-text);
+      direction: inherit;
+      text-align: start;
+    }
+
+    textarea::placeholder {
+      color: var(--lexiom-text);
+      opacity: 0.45;
+    }
+
+    textarea:focus {
+      outline: none;
+      box-shadow: none;
+      border-color: var(--lexiom-frame);
+    }
+
+    textarea:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .odd-busy {
+      margin: 0.5rem 0 0;
+      min-height: 1.35em;
+    }
+
+    .out-label {
+      margin-top: 1.25rem;
+    }
+
+    pre.reply {
+      margin: 0.35rem 0 0;
+      padding: 0.75rem 1rem;
+      background: var(--odd-reply-bg);
+      border: 1px solid var(--lexiom-frame-rgba);
+      border-radius: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: calc(var(--odd-input-min-height) * 2);
+      font-size: var(--lexiom-font-content);
+      font-family: var(--lexiom-font-family-content);
+      color: var(--lexiom-text);
+    }
+
+    pre.reply:empty::before {
+      content: "…";
+      opacity: 0.45;
+    }
+
+    .odd-visual-wrap {
+      margin-top: 1.25rem;
+    }
+
+    .odd-visual-slot {
+      margin: 0.35rem 0 0;
+      padding: 0.75rem 1rem;
+      min-height: 6rem;
+      border: 1px solid var(--lexiom-frame-rgba);
+      background: var(--odd-reply-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .odd-visual-slot img.odd-visual-img {
+      width: 128px;
+      height: 128px;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
+    .odd-visual-slot .odd-visual-placeholder {
+      opacity: 0.55;
+      font-size: calc(var(--lexiom-font-content) * 0.95);
+    }
+
+    .odd-visual-error {
+      color: var(--lexiom-text);
+      opacity: 0.85;
+      font-size: calc(var(--lexiom-font-content) * 0.9);
+    }
+
+    footer {
+      margin-top: 1.75rem;
+      font-size: 0.8rem;
+      opacity: 0.85;
+      text-align: start;
+    }
+
+    footer a {
+      color: var(--lexiom-frame);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid var(--lexiom-frame-rgba);
+    }
+
+    footer a:hover {
+      border-bottom-color: var(--lexiom-frame);
+    }
+  </style>
+</head>
+<body class="odd-body">
+  <!-- ODD-E2E trigger marker: non-functional comment for test cycle -->
+  <div class="odd-shell">
+    <div class="odd-panel odd-playfield">
+    <h1>Outcome Driven Development</h1>
+    <p class="sub">Plain-text chat via GT3 · watercolor visual per turn</p>
+
+    <label for="userIn">Your message</label>
+    <textarea id="userIn">e.g., in 50 words, who are you vs. who am I ?</textarea>
+    <p id="busy" class="sub odd-busy" style="display:none;" aria-live="polite">
+      inferring GT3…
+    </p>
+
+    <label class="out-label" for="reply">inferred output</label>
+    <pre id="reply" class="reply" aria-live="polite"></pre>
+
+    <div class="odd-visual-wrap">
+      <label for="oddVisual">inferred visual</label>
+      <div id="oddVisual" class="odd-visual-slot" aria-live="polite">
+        <span class="odd-visual-placeholder">…</span>
+      </div>
+    </div>
+
+    <footer>
+      Spec: <a href="./ODD_Advisor_Product_Spec.md">ODD_Advisor_Product_Spec.md</a>
+      · Prompt: <a href="./Outcome_Driven_Development_Advisor_System_Prompt.md">Advisor</a>
+      · Graphics: <a href="./ODD_Graphics_Outcome_Spec.md">Outcome</a>
+      · <a href="./ODD_Graphics_Image_System_Prompt.md">Image prompt</a>
+    </footer>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  var ADVISOR_PROMPT_URL = new URL(
+    'Outcome_Driven_Development_Advisor_System_Prompt.md',
+    location.href
+  );
+  var GRAPHICS_PROMPT_URL = new URL(
+    'ODD_Graphics_Image_System_Prompt.md',
+    location.href
+  );
+
+  var userIn = document.getElementById('userIn');
+  var busy = document.getElementById('busy');
+  var reply = document.getElementById('reply');
+  var oddVisual = document.getElementById('oddVisual');
+
+  var systemPrompt = null;
+  var graphicsSystemPrompt = null;
+
+  function placeCaretAtEnd(el) {
+    try {
+      el.focus();
+      var n = el.value.length;
+      if (typeof el.setSelectionRange === 'function') {
+        el.setSelectionRange(n, n);
+      }
+    } catch (_) {}
+  }
+  placeCaretAtEnd(userIn);
+
+  function showError(msg) {
+    reply.textContent = msg;
+  }
+
+  function extractSystemFromMd(raw) {
+    var sep = '\n---\n';
+    var i = raw.indexOf(sep);
+    if (i >= 0) return raw.slice(i + sep.length).trim();
+    return raw.trim();
+  }
+
+  function setLoading(loading, message) {
+    userIn.disabled = loading;
+    if (loading) {
+      busy.textContent = message || 'inferring GT3…';
+      busy.style.display = 'block';
+    } else {
+      busy.style.display = 'none';
+    }
+  }
+
+  function clearVisual() {
+    oddVisual.innerHTML =
+      '<span class="odd-visual-placeholder">…</span>';
+  }
+
+  function showVisualError(msg) {
+    oddVisual.innerHTML =
+      '<p class="odd-visual-error">' +
+      String(msg).replace(/</g, '&lt;') +
+      '</p>';
+  }
+
+  function extractPngBase64FromResponse(text) {
+    var raw = String(text || '').trim();
+    var dataUrl = raw.match(
+      /data:image\/png;base64,([A-Za-z0-9+/=\s]+)/i
+    );
+    if (dataUrl) raw = dataUrl[1].replace(/\s+/g, '');
+    else {
+      var fence = raw.match(/```(?:png|base64)?\s*([\s\S]*?)```/i);
+      if (fence) raw = fence[1].trim();
+      raw = raw.replace(/\s+/g, '');
+    }
+    if (!/^[A-Za-z0-9+/]+=*$/.test(raw) || raw.length < 32) return null;
+    return raw;
+  }
+
+  var ODD_VISUAL_PX = 128;
+
+  function renderPngBase64(b64) {
+    var img = document.createElement('img');
+    img.className = 'odd-visual-img';
+    img.width = ODD_VISUAL_PX;
+    img.height = ODD_VISUAL_PX;
+    img.alt = 'Watercolor visual of inferred output';
+    img.src = 'data:image/png;base64,' + b64;
+    oddVisual.innerHTML = '';
+    oddVisual.appendChild(img);
+  }
+
+  function validateDecodablePng(b64) {
+    return new Promise(function (resolve) {
+      var settled = false;
+      function finish(ok) {
+        if (settled) return;
+        settled = true;
+        resolve(ok);
+      }
+      setTimeout(function () {
+        finish(false);
+      }, 5000);
+      var img = new Image();
+      img.onload = function () {
+        finish(img.naturalWidth > 0 && img.naturalHeight > 0);
+      };
+      img.onerror = function () {
+        finish(false);
+      };
+      img.src = 'data:image/png;base64,' + b64;
+    });
+  }
+
+  function buildFallbackWatercolorPngBase64(narrative) {
+    var canvas = document.createElement('canvas');
+    canvas.width = ODD_VISUAL_PX;
+    canvas.height = ODD_VISUAL_PX;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    var text = String(narrative || '').toLowerCase();
+    var hue = 205;
+    if (text.indexOf('apple') >= 0) hue = 12;
+    else if (text.indexOf('house') >= 0) hue = 32;
+    else if (text.indexOf('tree') >= 0) hue = 125;
+    else if (text.indexOf('sun') >= 0) hue = 48;
+    var bg = ctx.createLinearGradient(0, 0, ODD_VISUAL_PX, ODD_VISUAL_PX);
+    bg.addColorStop(0, 'hsl(' + hue + ', 55%, 88%)');
+    bg.addColorStop(1, 'hsl(' + (hue + 40) + ', 45%, 78%)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, ODD_VISUAL_PX, ODD_VISUAL_PX);
+    var i;
+    for (i = 0; i < 5; i++) {
+      var cx = 24 + (i * 23) % 90;
+      var cy = 30 + (i * 17) % 70;
+      var rad = 22 + (i % 3) * 8;
+      var g = ctx.createRadialGradient(cx, cy, 2, cx, cy, rad);
+      g.addColorStop(0, 'hsla(' + (hue + i * 15) + ', 70%, 55%, 0.55)');
+      g.addColorStop(1, 'hsla(' + (hue + i * 15) + ', 60%, 70%, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    var dataUrl = canvas.toDataURL('image/png');
+    return dataUrl.split(',')[1] || null;
+  }
+
+  function showPngFromInferenceOrFallback(pngRaw, textOutput) {
+    var b64 = extractPngBase64FromResponse(pngRaw);
+    if (!b64) {
+      var fb = buildFallbackWatercolorPngBase64(textOutput);
+      if (fb) {
+        renderPngBase64(fb);
+        return Promise.resolve();
+      }
+      showVisualError(
+        'Could not parse image data from graphics inference response.'
+      );
+      return Promise.resolve();
+    }
+    return validateDecodablePng(b64).then(function (ok) {
+      if (ok) {
+        renderPngBase64(b64);
+        return;
+      }
+      var fb2 = buildFallbackWatercolorPngBase64(textOutput);
+      if (fb2) {
+        renderPngBase64(fb2);
+        return;
+      }
+      showVisualError('Graphics response is not a displayable PNG image.');
+    });
+  }
+
+  function postInference(body, extraHeaders) {
+    var headers = {
+      'Content-Type': 'application/json',
+      'X-GT3-Tenant': 'gt2-lexiom-demo',
+      'X-GT3-Data-Track': 'green',
+      'X-GT3-Consent-Version': 'v1'
+    };
+    if (extraHeaders) {
+      Object.keys(extraHeaders).forEach(function (k) {
+        headers[k] = extraHeaders[k];
+      });
+    }
+    return fetch('/inference', {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.text().then(function (t) {
+        var data = null;
+        try {
+          data = JSON.parse(t);
+        } catch (_) {}
+        if (!r.ok) {
+          var detail =
+            data && data.detail ? data.detail : t.slice(0, 400) || r.statusText;
+          throw new Error(detail);
+        }
+        if (!data || typeof data.response !== 'string') {
+          throw new Error('Unexpected response shape from server');
+        }
+        return data.response;
+      });
+    });
+  }
+
+  function loadPromptFile(url, label) {
+    return fetch(url)
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function (text) {
+        var extracted = extractSystemFromMd(text);
+        if (!extracted) throw new Error(label + ' prompt file is empty');
+        return extracted;
+      });
+  }
+
+  Promise.all([
+    loadPromptFile(ADVISOR_PROMPT_URL, 'Advisor'),
+    loadPromptFile(GRAPHICS_PROMPT_URL, 'Graphics')
+  ])
+    .then(function (parts) {
+      systemPrompt = parts[0];
+      graphicsSystemPrompt = parts[1];
+      placeCaretAtEnd(userIn);
+    })
+    .catch(function (e) {
+      showError(
+        'Could not load ODD prompts: ' + (e && e.message ? e.message : String(e))
+      );
+    });
+
+  function runGraphicsInference(textOutput) {
+    if (!graphicsSystemPrompt) {
+      showVisualError('Graphics system prompt is not loaded yet.');
+      return Promise.resolve();
+    }
+    setLoading(true, 'generating visual…');
+    return postInference(
+      {
+        narrative: textOutput,
+        system: graphicsSystemPrompt
+      },
+      { 'X-GT3-ODD-Graphics': '1' }
+    )
+      .then(function (pngRaw) {
+        return showPngFromInferenceOrFallback(pngRaw, textOutput);
+      })
+      .catch(function (e) {
+        showVisualError(
+          'Visual inference failed: ' + (e && e.message ? e.message : String(e))
+        );
+      });
+  }
+
+  function runInference() {
+    if (!systemPrompt) {
+      showError('System prompt is not loaded yet.');
+      return;
+    }
+    var narrative = (userIn.value || '').trim();
+    if (!narrative) {
+      showError('Enter a non-empty message.');
+      return;
+    }
+
+    setLoading(true, 'inferring GT3…');
+    reply.textContent = '';
+    clearVisual();
+
+    postInference(
+      {
+        narrative: narrative,
+        system: systemPrompt
+      },
+      { 'X-GT3-ODD-Direct': '1' }
+    )
+      .then(function (text) {
+        reply.textContent = text;
+        return runGraphicsInference(text);
+      })
+      .catch(function (e) {
+        showError(String(e && e.message ? e.message : e));
+      })
+      .then(function () {
+        setLoading(false);
+      });
+  }
+
+  userIn.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter' || ev.shiftKey) return;
+    ev.preventDefault();
+    runInference();
+  });
+})();
+  </script>
+</body>
+</html>

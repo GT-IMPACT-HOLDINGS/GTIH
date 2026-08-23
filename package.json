@@ -1,0 +1,42 @@
+{
+  "name": "gt3-poc-node",
+  "version": "0.2.0",
+  "description": "GT3 POC server (Node.js) â€” dual-variant inference with ledger logging and multiple LLM providers",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "postinstall": "node scripts/gt3-agent-runtime-install.mjs",
+    "agent-runtime:install": "node scripts/gt3-agent-runtime-install.mjs",
+    "build": "echo \"(No frontend build specified â€“ customize this script if needed)\"",
+    "test:odd": "playwright test tests/odd.single-flow.spec.ts",
+    "test:odd:headed": "playwright test tests/odd.single-flow.spec.ts --headed",
+    "test:odd:capture": "npm run test:odd",
+    "test:odd:alignment-report": "node scripts/odd-alignment-report.mjs",
+    "prehandoff:odd": "npm run test:odd:capture && npm run test:odd:alignment-report",
+    "build:lexiom-13": "tsc -p public/gt2/Lexiom_1_3/tsconfig.json",
+    "test:lexiom13-agent": "node --test tests/lexiom13-agent-tool-loop.test.mjs tests/lexiom13-build-evidence.test.mjs tests/lexiom13-document-context-economy.test.mjs tests/lexiom13-build-two-step.test.mjs",
+    "smoke:lexiom13-agent": "node scripts/smoke-lexiom13-bolt-tool-loop.mjs",
+    "smoke:lexiom13-context-economy": "node scripts/smoke-lexiom13-document-context-economy.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.19.2",
+    "js-yaml": "^4.3.0",
+    "morgan": "^1.10.0",
+    "ollama": "^0.5.0",
+    "pdfkit": "^0.15.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "archiver": "^7.0.1",
+    "typescript": "^5.7.3"
+  }
+}

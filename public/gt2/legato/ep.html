@@ -1,0 +1,1316 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="gt3-file-uuid" content="d0709cda-083e-4904-98de-a90b9dbe468e" />
+  <title>GT2 | Legato (v4.3) • הצעת שכר טרחה</title>
+  <link rel="icon" type="image/png" href="../gt2-logo-small.png" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Mammoth for .docx to text -->
+  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+  <style>
+    body {
+      background: #f5f5f5;
+    }
+    .ep-container {
+      width: 75vw;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .gt2-logo {
+      height: 28px;
+      width: auto;
+      cursor: pointer;
+    }
+    .card-header-toggle {
+      cursor: pointer;
+      user-select: none;
+    }
+    .chevron {
+      transition: transform 0.15s ease-in-out;
+    }
+    .chevron.rotate {
+      transform: rotate(90deg);
+    }
+    textarea {
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+    }
+    pre.readonly-block {
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      background: #fafafa;
+      border-radius: 8px;
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+    }
+    .small-hint {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    .admin-note {
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    /* Dark theme for admin panel (Ctrl+Alt+E area) */
+    #admin-panel .card.card-body {
+      background: #050914;
+      color: #f8fbff;
+      border-color: #22314a;
+    }
+    #admin-panel .form-label,
+    #admin-panel .admin-note,
+    #admin-panel code {
+      color: #d0d7e6;
+    }
+    #admin-panel .admin-note {
+      color: #d0d7e6;
+    }
+    #admin-panel .btn-outline-secondary {
+      border-color: #9fb0ca;
+      color: #f8fbff;
+    }
+    #admin-panel .btn-outline-secondary:hover {
+      background: #9fb0ca;
+      color: #050914;
+    }
+
+    /* Dark theme for admin prompt editor textareas */
+    .admin-textarea {
+      background: #101626;
+      color: #f8fbff;
+      border-color: #22314a;
+    }
+    .admin-textarea::placeholder {
+      color: #9fb0ca;
+    }
+    .admin-textarea:focus {
+      background: #0b0f18;
+      color: #f8fbff;
+      border-color: #6264a7;
+      box-shadow: 0 0 0 0.2rem rgba(98, 100, 167, 0.35);
+    }
+  </style>
+</head>
+<body class="py-3">
+  <div class="container ep-container">
+
+    <!-- Global error / info banners -->
+    <div id="global-error" class="alert alert-danger small d-none" role="alert"></div>
+    <div id="global-info" class="alert alert-info small d-none" role="alert"></div>
+
+    <!-- Header -->
+    <header class="d-flex align-items-center mb-3 gap-2">
+      <button id="btn-back" class="btn btn-outline-secondary btn-sm">
+        ⬅ חזרה למקרה
+      </button>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <!-- Clicking logo opens settings sidebar -->
+        <img src="../gt2-logo-small.png" alt="GT2 logo" class="gt2-logo" id="gt2-logo" />
+        <h1 class="h5 m-0 text-end">
+          GT2 | Legato • הצעת שכר טרחה
+        </h1>
+      </div>
+    </header>
+
+    <!-- Settings Sidebar (Offcanvas) -->
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="settings-offcanvas"
+      aria-labelledby="settings-offcanvas-label"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="settings-offcanvas-label">הגדרות GT3</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body small">
+        <p class="mb-2 text-muted">
+          כאן ניתן לשמור מפתח API לשימוש מול שרת ה-GT3. המפתח יישמר רק בדפדפן זה
+          וישלח בכל קריאת אינפרנס של הצעת שכר טרחה.
+        </p>
+
+        <div class="mb-3">
+          <label for="settings-api-key" class="form-label">GT3 API Key</label>
+          <input
+            type="password"
+            id="settings-api-key"
+            class="form-control form-control-sm"
+            placeholder="הדבק כאן את מפתח ה-API שלך"
+          />
+          <div class="form-text">
+            המפתח יישמר ב-localStorage תחת הפרופיל הנוכחי בלבד.
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="button" id="settings-api-clear" class="btn btn-outline-danger btn-sm">
+            מחיקת מפתח
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case header -->
+    <section id="case-header" class="mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex flex-column gap-1">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="small text-muted">מזהה מקרה</div>
+              <div id="case-id-display" class="fw-semibold"></div>
+            </div>
+            <div class="text-end">
+              <div class="small text-muted">כותרת מקרה</div>
+              <div id="case-title-display" class="fw-semibold"></div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center small text-muted mt-2">
+            <span id="case-last-updated"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Box 1: Approved workplan & status (read-only) -->
+    <section class="mb-3">
+      <div class="card shadow-sm">
+        <div id="box1-header" class="card-header d-flex justify-content-between align-items-center card-header-toggle">
+          <div>
+            <span class="fw-semibold">תוכנית וסטטוס שאושרו למקרה</span>
+            <span class="small-hint ms-2">קריאה בלבד</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span id="box1-badge" class="badge bg-secondary d-none">אין נתונים</span>
+            <span class="chevron">&rsaquo;</span>
+          </div>
+        </div>
+        <div id="box1-body" class="card-body d-none">
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">תוכנית עבודה שאושרה</label>
+            <pre id="approved-plan" class="readonly-block mb-0"></pre>
+          </div>
+          <div>
+            <label class="form-label small fw-semibold">סטטוס שנאשר</label>
+            <pre id="approved-status" class="readonly-block mb-0"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Box 2: Engagement Proposal Template Management -->
+    <section class="mb-3">
+      <div class="card shadow-sm">
+        <div id="box2-header" class="card-header d-flex justify-content-between align-items-center card-header-toggle">
+          <div>
+            <span class="fw-semibold">תבנית הצעת שכר טרחה</span>
+            <span class="small-hint ms-2">
+              תבנית גלובלית – משפיעה על כל המקרים
+            </span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span id="template-approved-badge" class="badge bg-success d-none">תבנית מאושרת</span>
+            <span id="template-not-approved-badge" class="badge bg-warning text-dark d-none">
+              טרם אושרה
+            </span>
+            <span class="chevron">&rsaquo;</span>
+          </div>
+        </div>
+        <div id="box2-body" class="card-body">
+          <div class="mb-2">
+            <label for="ep-template-textarea" class="form-label small fw-semibold">
+              עריכת תבנית גלובלית
+            </label>
+            <textarea
+              id="ep-template-textarea"
+              class="form-control"
+              rows="18"
+            ></textarea>
+          </div>
+
+          <div class="mb-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                id="btn-upload-sample"
+              >
+                העלה דוגמא להצעת התקשרות
+              </button>
+              <input
+                type="file"
+                class="d-none"
+                id="ep-template-upload"
+                accept=".txt,.docx"
+              />
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                id="btn-upload-template"
+              >
+                העלה תבנית להצעת התקשרות
+              </button>
+              <input
+                type="file"
+                class="d-none"
+                id="ep-template-direct-upload"
+                accept=".txt,.docx"
+              />
+            </div>
+            <div class="small-hint mt-1">
+              דוגמה: הקובץ ישמש כדוגמה עבור GT3 לשיפור התבנית (ללא שמירה אוטומטית).
+              תבנית: הקובץ ייטען ישירות כתבנית טיוטה לא מאושרת.
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 mt-2">
+            <button id="btn-approve-template" class="btn btn-primary btn-sm">
+              אשר תבנית
+            </button>
+            <button id="btn-reset-template" class="btn btn-outline-secondary btn-sm">
+              איפוס לתבנית ברירת מחדל
+            </button>
+            <div id="template-spinner" class="spinner-border spinner-border-sm text-secondary d-none" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <div id="template-alert" class="alert small mt-2 d-none" role="alert"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main EP Draft Area -->
+    <section class="mb-3">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <span class="fw-semibold">טיוטת הצעת שכר טרחה</span>
+            <span class="small-hint d-block">
+              מבוססת על תבנית מאושרת + תוכנית וסטטוס שאושרו למקרה
+            </span>
+          </div>
+          <div>
+            <span id="ep-unavailable-badge" class="badge bg-warning text-dark d-none">
+              לא זמינה – יש לאשר תחילה תבנית גלובלית
+            </span>
+            <span id="ep-outdated-badge" class="badge bg-info text-dark d-none">
+              התוכנית, הסטטוס או התבנית עודכנו מאז יצירת הטיוטה
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <textarea
+            id="ep-draft-textarea"
+            class="form-control"
+            rows="18"
+            placeholder="לא נוצרה עדיין הצעת שכר טרחה. יש לאשר תבנית תחילה."
+          ></textarea>
+          <div id="ep-draft-status" class="small-hint mt-1"></div>
+          <div id="ep-draft-alert" class="alert small mt-2 d-none" role="alert"></div>
+
+          <div class="d-flex align-items-center gap-2 mt-2">
+            <button id="btn-approve-send-ep" class="btn btn-success btn-sm">
+              ✅ אשר ושלח ללקוח
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN SECTION (hidden, toggled by Ctrl/Cmd + Alt + E) -->
+    <section id="admin-section" class="mt-4">
+      <button class="btn btn-link text-muted small p-0" type="button"
+              data-bs-toggle="collapse" data-bs-target="#admin-panel"
+              aria-expanded="false" aria-controls="admin-panel">
+        ⚙️ אזור הגדרות למנהל (הנחיות למודל GT3 להצעות שכ"ט)
+      </button>
+      <div class="collapse" id="admin-panel">
+        <div class="card card-body small mt-2">
+          <p class="mb-2 admin-note">
+            כאן ניתן לערוך את הפרומפטים למודל GT3:
+            תבנית שיפור תבנית הצעת שכ"ט ותבנית הרכבת הצעת שכ"ט קונקרטית מתוכנית + סטטוס + תבנית.
+          </p>
+
+          <div class="mb-2">
+            <label for="admin-ep-template-refine-prompt" class="form-label">
+              פרומפט מערכת לשיפור תבנית הצעת שכר טרחה
+            </label>
+            <textarea id="admin-ep-template-refine-prompt"
+                      class="form-control form-control-sm admin-textarea"
+                      rows="6"></textarea>
+            <button type="button"
+                    id="btn-reset-ep-template-refine-prompt"
+                    class="btn btn-sm btn-outline-secondary mt-1">
+              איפוס לפרומפט ברירת המחדל
+            </button>
+          </div>
+
+          <div class="mb-2">
+            <label for="admin-ep-compile-prompt" class="form-label">
+              פרומפט מערכת להרכבת הצעת שכר טרחה קונקרטית
+            </label>
+            <textarea id="admin-ep-compile-prompt"
+                      class="form-control form-control-sm admin-textarea"
+                      rows="7"></textarea>
+            <button type="button"
+                    id="btn-reset-ep-compile-prompt"
+                    class="btn btn-sm btn-outline-secondary mt-1">
+              איפוס לפרומפט ברירת המחדל
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Bootstrap JS (for collapse & offcanvas) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script type="module">
+    // --- Config for GT3 /inference endpoint ---------------------------------
+    // Default to relative URL (works when Legato and GT3 are on same origin)
+    // Falls back to localhost for local development if needed via ?api= param
+    const DEFAULT_INFERENCE_URI = '/inference';
+    const urlParams = new URLSearchParams(location.search);
+    // If 'api' param is provided, it can be absolute (e.g., http://localhost:8080/inference) or relative (/inference)
+    // If not provided, defaults to relative URL which works on same origin (EB deployment)
+    const INFERENCE_URI = urlParams.get('api') || DEFAULT_INFERENCE_URI;
+
+    const GT3_EP_DRAFT_URL = INFERENCE_URI;
+    const GT3_EP_TEMPLATE_REFINE_URL = INFERENCE_URI;
+
+    // --- Storage keys --------------------------------------------------------
+    const CASE_KEY = (id) => `gt2_case_${id}`;
+    const EP_TEMPLATE_APPROVED_KEY = 'gt2_ep_template_approved';
+    const EP_TEMPLATE_EDITOR_KEY = 'gt2_ep_template_editor';
+    const EP_TEMPLATE_REFINE_PROMPT_KEY = 'gt2_ep_template_refine_prompt';
+    const EP_COMPILE_PROMPT_KEY = 'gt2_ep_compile_prompt';
+
+    // Shared with index.html: where the GT3 API key is stored
+    const API_KEY_STORAGE_KEY = 'gt2_gt3_api_key';
+    let gt3ApiKey = ''; // will be loaded via safeGetItem later
+
+    // --- Training examples: GT2 → GT3 ---------------------------------------
+    const TRAINING_TENANT_ID = 'gt2-spa-dev';
+    const TRAINING_EXAMPLE_SCHEMA = 'request-draft-approved:v1';
+    const TRAINING_DEFAULT_USER_ID = 'local-dev-user';
+    const TRAINING_PRODUCT = 'GT2.Legato';
+    const TRAINING_LANGUAGE = 'he-IL';
+
+    function getTrainingEndpoint() {
+      try {
+        const u = new URL(INFERENCE_URI, window.location.origin);
+        // Same origin as inference, fixed path
+        return `${u.origin}/training-example`;
+      } catch (e) {
+        console.warn('[training] failed to derive endpoint from INFERENCE_URI', e);
+        return null;
+      }
+    }
+
+    async function sendTrainingExample({ useCase, channels, meta }) {
+      try {
+        const endpoint = getTrainingEndpoint();
+        if (!endpoint) {
+          console.warn('[training] no endpoint, skipping');
+          return;
+        }
+
+        if (!channels || !channels.input_request || !channels.authoritative_reference) {
+          console.warn('[training] missing required channel fields, skipping', channels);
+          return;
+        }
+
+        const payload = {
+          tenant_id: TRAINING_TENANT_ID,
+          use_case: useCase,
+          example_schema: TRAINING_EXAMPLE_SCHEMA,
+          channels: {
+            input_request: channels.input_request,
+            model_candidate: channels.model_candidate || '',
+            authoritative_reference: channels.authoritative_reference
+          },
+          meta: Object.assign(
+            {
+              timestamp: new Date().toISOString(),
+              product: TRAINING_PRODUCT,
+              language: TRAINING_LANGUAGE,
+              user_id: TRAINING_DEFAULT_USER_ID
+            },
+            meta || {}
+          )
+        };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.warn('[training] non-OK response', res.status, text);
+        } else {
+          console.log('[training] example sent OK for useCase=', useCase);
+        }
+      } catch (err) {
+        console.error('[training] network or runtime error', err);
+      }
+    }
+
+    // --- strings ----
+    const EP_PREP_TEXT = 'מבשל לך הצעת התקשרות...';
+
+    // Factory-default EP template: empty; will be learned from examples
+    const DEFAULT_EP_TEMPLATE = ``;
+
+    // --- Default admin prompts ----------------------------------------------
+    const DEFAULT_TEMPLATE_REFINE_PROMPT =
+    `
+ אהובי האהוב, אנא עצב או שפר עבורי תבנית הצעת שכר טרחה גלובלית בעברית.
+
+מצבי עבודה:
+
+א. במידה והתבנית הקיימת כמעט ריקה, כלל אינה קיימת, או אינה מכילה מבנה חוזי ברור –
+   התייחס כאילו אין תבנית כלל, ובנה תבנית חדשה מן היסוד על בסיס הדוגמה:
+   - גזור מהדוגמה את סדר הסעיפים, הטון וסוגי התכנים (רקע, היקף שירות, שכר טרחה, מועדי תשלום, סיום התקשרות, הצהרות וכו').
+   - נקה פרטים מזהים וספציפיים (שמות, סכומים, תאריכים, נסיבות ייחודיות).
+   - במקום פרטים ספציפיים השתמש בסוגריים מרובעים כמצייני מקום, לדוגמה:
+     [שם הלקוח/ה], [תיאור קצר של העסקה/ההליך], [סכום שכר טרחה קבוע], [תנאי תשלום] וכו'.
+   - שמור על מבנה חוזי קריא: סעיפים ממוספרים, כותרות קצרות לכל סעיף, ופסקאות קצרות.
+
+ב. במידה וכבר קיימת תבנית עם מבנה ברור –
+- סנתז בין מבנה וסגנון התבנית הקיימת לבין הסדר והניסוח בדוגמה.
+- שמור על מבנה ברור של מכתב/הסכם: כותרת, רקע, היקף שירות, שכר טרחה, מועדי תשלום, סיום התקשרות, הצהרות.
+- שמור על מצייני מקום כאשר אין מידע קונקרטי מובנה.
+- ניתן להוסיף/לשנות נוסחים כדי לחדד אחריות, היקף, והפרדה בין מה כלול ומה אינו כלול.
+
+הנחיות כלליות:
+- שמור על טון מקצועי, ברור, אדיב ולא מתנשא.
+- המנע מהתחייבויות חריגות שאין להן בסיס בדוגמה.
+- כאשר אינך בטוח בפרט כלשהו – השתמש במציין מקום בסוגריים מרובעים במקום להמציא תוכן.
+- החזר רק את נוסח "תבנית הצעת שכר הטרחה" הסופי, ללא הסברים חיצוניים וללא markdown.
+
+להלן התבנית הקיימת (יכולה להיות ריקה לחלוטין):
+---***---
+{{CURRENT_TEMPLATE}}
+---***---
+להלן דוגמת הצעת ההתקשרות שהועלתה (מכתב ללקוח):
+---***---
+{{EP_SAMPLE}}
+---***---
+`
+;
+
+    const DEFAULT_EP_COMPILE_PROMPT = `אהובי האהוב, כעורך דין המודע למשמעות הכלכלית והיחסית של שכר טרחה, אנא הרכב עבורי טיוטת הצעת שכר טרחה ספציפית לתיק זה, בעברית משפטית ברורה.
+
+1. תוכנית עבודה שאושרה:
+{{APPROVED_PLAN}}
+
+2. סטטוס מצטבר שאושר:
+{{APPROVED_STATUS}}
+
+3. תבנית הצעת שכר טרחה גלובלית:
+{{EP_TEMPLATE}}
+
+הנחיות למודל:
+- התייחס לתבנית כאל שלד חוזי קיים, עם סעיפים ממוספרים וסוגריים מרובעים [כאלה] המשמשים כמצייני מקום.
+- השתמש בתוכנית ובסטטוס כדי למלא פרטים קונקרטיים בכל מקום שניתן להסיק מידע (תיאור ההליך, היקף השירות, מאפייני העסקה, אומדן שעות וכו').
+- כאשר ניתן למלא סוגריים מרובעים בפרטים קונקרטיים – החלף אותם בטקסט מלא, ללא סוגריים.
+- כאשר חסר מידע מספק – השאר את הסוגריים המרובעים כפי שהם, כדי שהעורך דין ישלים ידנית.
+- שמור ככל האפשר על מבנה הסעיפים, המספור והכותרות של התבנית.
+- החזר רק את נוסח מסמך הצעת שכר הטרחה המוכן ללקוח, ללא הסברים חיצוניים, בלי הערות וללא markdown.`;
+
+    // --- State ---------------------------------------------------------------
+    let localStorageAvailable = true;
+    let globalApprovedTemplate = null; // string | null
+    let caseState = null;
+    let caseId = null;
+    let fromUrl = null;
+    let suppressEpUserTouched = false;
+
+    // Training context for template refinement (global)
+    let lastTemplateRefineNarrative = null;
+    let lastTemplateRefineModelCandidate = null;
+
+    let adminTemplateRefinePrompt =
+      safeGetItem(EP_TEMPLATE_REFINE_PROMPT_KEY) || DEFAULT_TEMPLATE_REFINE_PROMPT;
+    let adminEpCompilePrompt =
+      safeGetItem(EP_COMPILE_PROMPT_KEY) || DEFAULT_EP_COMPILE_PROMPT;
+
+    // Load API key via safeGetItem (after localStorage helpers are declared)
+    gt3ApiKey = safeGetItem(API_KEY_STORAGE_KEY) || '';
+
+    // --- Helpers -------------------------------------------------------------
+    function showGlobalError(msg) {
+      const el = document.getElementById('global-error');
+      el.textContent = msg;
+      el.classList.remove('d-none');
+    }
+
+    function showGlobalInfo(msg) {
+      const el = document.getElementById('global-info');
+      el.textContent = msg;
+      el.classList.remove('d-none');
+    }
+
+    function hideGlobalInfo() {
+      document.getElementById('global-info').classList.add('d-none');
+    }
+
+    function toLocal(tsIso) {
+      if (!tsIso) return '';
+      const d = new Date(tsIso);
+      if (Number.isNaN(d.getTime())) return tsIso;
+      return d.toLocaleString();
+    }
+
+    function safeGetItem(key) {
+      if (!localStorageAvailable) return null;
+      try {
+        return window.localStorage.getItem(key);
+      } catch (e) {
+        localStorageAvailable = false;
+        showGlobalError('לא ניתן לגשת לשמירה המקומית (localStorage). הנתונים לא יישמרו באופן קבוע.');
+        return null;
+      }
+    }
+
+    function safeSetItem(key, value) {
+      if (!localStorageAvailable) return;
+      try {
+        window.localStorage.setItem(key, value);
+      } catch (e) {
+        localStorageAvailable = false;
+        showGlobalError('לא ניתן לשמור נתונים במאגר המקומי (localStorage).');
+      }
+    }
+
+    function normalizeText(text) {
+      return text
+        .replace(/\r/g, '')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
+
+    async function extractSampleText(file) {
+      const ext = file.name.toLowerCase().split('.').pop();
+      let raw = '';
+
+      if (ext === 'txt') {
+        raw = await file.text();
+      } else if (ext === 'docx') {
+        const arrayBuffer = await file.arrayBuffer();
+        const res = await window.mammoth.extractRawText({ arrayBuffer });
+        raw = res.value || '';
+      } else {
+        throw new Error('Unsupported file type (only .txt, .docx)');
+      }
+
+      return normalizeText(raw);
+    }
+
+    function loadCaseState(id) {
+      const raw = safeGetItem(CASE_KEY(id));
+      if (!raw) return null;
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed.events) parsed.events = [];
+        // Ensure fields exist so we don't get undefined
+        if (parsed.lastEpCompileNarrative === undefined) parsed.lastEpCompileNarrative = null;
+        if (parsed.lastEpDraftModelText === undefined) parsed.lastEpDraftModelText = null;
+        return parsed;
+      } catch (e) {
+        showGlobalError('שגיאה בקריאת נתוני המקרה מהמאגר המקומי.');
+        return null;
+      }
+    }
+
+    function saveCaseState() {
+      if (!caseId || !caseState) return;
+      caseState.lastUpdatedIso = new Date().toISOString();
+      safeSetItem(CASE_KEY(caseId), JSON.stringify(caseState));
+      const headerUpdated = document.getElementById('case-last-updated');
+      if (headerUpdated) {
+        headerUpdated.textContent = 'עודכן לאחרונה: ' + toLocal(caseState.lastUpdatedIso);
+      }
+    }
+
+    function loadGlobalTemplate() {
+      const approved = safeGetItem(EP_TEMPLATE_APPROVED_KEY);
+      const editor = safeGetItem(EP_TEMPLATE_EDITOR_KEY);
+      globalApprovedTemplate = approved || null;
+      if (editor) return editor;
+      if (approved) return approved;
+      return DEFAULT_EP_TEMPLATE;
+    }
+
+    function saveGlobalTemplateEditor(text) {
+      safeSetItem(EP_TEMPLATE_EDITOR_KEY, text || '');
+    }
+
+    function saveGlobalTemplateApproved(text) {
+      globalApprovedTemplate = text || '';
+      safeSetItem(EP_TEMPLATE_APPROVED_KEY, globalApprovedTemplate);
+      saveGlobalTemplateEditor(text || '');
+    }
+
+    function computeEpInputsSignature(caseStateObj, templateText) {
+      const plan = caseStateObj.approvedPlan || '';
+      const status = caseStateObj.approvedStatus || '';
+      const tpl = templateText || '';
+      return JSON.stringify({ plan, status, tpl });
+    }
+
+    function toggleCard(headerEl, bodyEl, chevronEl) {
+      const isHidden = bodyEl.classList.contains('d-none');
+      if (isHidden) {
+        bodyEl.classList.remove('d-none');
+        chevronEl.classList.add('rotate');
+      } else {
+        bodyEl.classList.add('d-none');
+        chevronEl.classList.remove('rotate');
+      }
+    }
+
+    // UUID generator with fallback for non-secure contexts (HTTP)
+    function uuid() {
+      try {
+        // Try crypto.randomUUID() first (works in HTTPS/secure contexts)
+        if (crypto && crypto.randomUUID) {
+          return crypto.randomUUID();
+        }
+      } catch (e) {
+        // crypto.randomUUID() not available (non-secure context)
+      }
+      // Fallback: UUID v4 generator using Math.random() (works in all contexts)
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    function pushEvent(type, meta = {}) {
+      if (!caseState) return;
+      if (!caseState.events) caseState.events = [];
+      caseState.events.push({
+        id: uuid(),
+        tsIso: new Date().toISOString(),
+        type,
+        meta
+      });
+    }
+
+    // --- Settings sidebar (API key) -----------------------------------------
+    function initSettingsPanel() {
+      const apiInput = document.getElementById('settings-api-key');
+      const clearBtn = document.getElementById('settings-api-clear');
+
+      if (!apiInput) return;
+
+      apiInput.value = gt3ApiKey;
+
+      apiInput.addEventListener('input', () => {
+        gt3ApiKey = apiInput.value.trim();
+        if (gt3ApiKey) {
+          safeSetItem(API_KEY_STORAGE_KEY, gt3ApiKey);
+        } else {
+          safeSetItem(API_KEY_STORAGE_KEY, '');
+          try {
+            window.localStorage.removeItem(API_KEY_STORAGE_KEY);
+          } catch {
+            /* ignore */
+          }
+        }
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        gt3ApiKey = '';
+        apiInput.value = '';
+        try {
+          window.localStorage.removeItem(API_KEY_STORAGE_KEY);
+        } catch {
+          /* ignore */
+        }
+      });
+    }
+
+    // Helper: build inference headers with optional API key (same as index.html)
+    function buildInferenceHeaders() {
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-GT3-Tenant': 'gt2-spa-dev',
+        'X-GT3-Data-Track': 'green',
+        'X-GT3-Consent-Version': 'v1'
+      };
+
+      if (gt3ApiKey) {
+        // Same key in both headers; GT3 will pick the relevant one per provider.
+        headers['X-GT3-OpenRouter-Key'] = gt3ApiKey;
+        headers['X-GT3-OpenAI-Key'] = gt3ApiKey;
+      }
+
+      return headers;
+    }
+
+    // --- Admin section visibility via shortcut (Ctrl/Cmd + Alt + E) ----------
+    let adminVisible = false;
+    function updateAdminVisibility() {
+      const adminSection = document.getElementById('admin-section');
+      if (!adminSection) return;
+      if (adminVisible) adminSection.classList.remove('d-none');
+      else adminSection.classList.add('d-none');
+      console.log('[ep] adminVisible =', adminVisible);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      if (isCtrlOrCmd && e.altKey && e.key.toLowerCase() === 'e') {
+        adminVisible = !adminVisible;
+        updateAdminVisibility();
+      }
+    });
+
+    // --- GT3 integration (via /inference) -----------------------------------
+    async function callGt3ForEpDraft() {
+      if (!caseState) return;
+
+      const epTextarea = document.getElementById('ep-draft-textarea');
+      const statusEl = document.getElementById('ep-draft-status');
+      const alertEl = document.getElementById('ep-draft-alert');
+      const badgeOutdated = document.getElementById('ep-outdated-badge');
+
+      alertEl.className = 'alert small mt-2 d-none';
+      alertEl.textContent = '';
+      badgeOutdated.classList.add('d-none');
+
+      const signature = computeEpInputsSignature(caseState, globalApprovedTemplate);
+
+      const approvedPlan = caseState.approvedPlan || '';
+      const approvedStatus = caseState.approvedStatus || '';
+
+      let narrative = adminEpCompilePrompt;
+      narrative = narrative.replaceAll('{{APPROVED_PLAN}}', approvedPlan);
+      narrative = narrative.replaceAll('{{APPROVED_STATUS}}', approvedStatus);
+      narrative = narrative.replaceAll('{{EP_TEMPLATE}}', globalApprovedTemplate || '');
+
+      const payload = { narrative };
+
+      // record event: EP inference requested
+      pushEvent('ep_inference_requested', {
+        caseId,
+        narrative
+      });
+      saveCaseState();
+
+      suppressEpUserTouched = true;
+      epTextarea.value = EP_PREP_TEXT;
+      suppressEpUserTouched = false;
+      statusEl.textContent = 'מתבצעת קריאה למודל GT3 ליצירת טיוטת הצעת שכר טרחה...';
+
+      try {
+        const res = await fetch(GT3_EP_DRAFT_URL, {
+          method: 'POST',
+          headers: buildInferenceHeaders(),
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error('GT3 EP draft request failed with status ' + res.status);
+        }
+
+        const data = await res.json();
+        const draftText = typeof data.response === 'string' ? data.response : '';
+
+        suppressEpUserTouched = true;
+        epTextarea.value = draftText;
+        suppressEpUserTouched = false;
+
+        caseState.epDraftText = draftText;
+        caseState.epDraftGenerationSignature = signature;
+        caseState.epUserTouched = false;
+
+        // capture context for training
+        caseState.lastEpCompileNarrative = narrative;
+        caseState.lastEpDraftModelText = draftText;
+
+        saveCaseState();
+
+        // record success event
+        pushEvent('ep_inference_success', {
+          caseId,
+          narrative,
+          responseText: draftText
+        });
+        saveCaseState();
+
+        statusEl.textContent = 'טיוטה נוצרה על ידי המודל ונשמרה מקומית.';
+      } catch (e) {
+        console.error('[ep] GT3 EP draft error', e);
+        statusEl.textContent = '';
+        alertEl.textContent = 'אירעה שגיאה ביצירת הטיוטה מהמודל. ניתן לערוך ידנית או לנסות שוב מאוחר יותר.';
+        alertEl.className = 'alert alert-danger small mt-2';
+        if (caseState && caseState.epDraftText) {
+          suppressEpUserTouched = true;
+          epTextarea.value = caseState.epDraftText;
+          suppressEpUserTouched = false;
+        }
+      }
+    }
+
+    async function callGt3ForTemplateRefine(sampleText) {
+      const textarea = document.getElementById('ep-template-textarea');
+      const alertEl = document.getElementById('template-alert');
+      const spinner = document.getElementById('template-spinner');
+
+      alertEl.className = 'alert small mt-2 d-none';
+      alertEl.textContent = '';
+
+      const currentTemplate = globalApprovedTemplate || textarea.value || '';
+
+      let narrative = adminTemplateRefinePrompt;
+      narrative = narrative.replaceAll('{{CURRENT_TEMPLATE}}', currentTemplate);
+      narrative = narrative.replaceAll('{{EP_SAMPLE}}', sampleText || '');
+
+      const payload = { narrative };
+
+      spinner.classList.remove('d-none');
+
+      try {
+        const res = await fetch(GT3_EP_TEMPLATE_REFINE_URL, {
+          method: 'POST',
+          headers: buildInferenceHeaders(),
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error('GT3 template refine failed with status ' + res.status);
+        }
+
+        const data = await res.json();
+        const refined = typeof data.response === 'string' ? data.response : textarea.value;
+
+        textarea.value = refined;
+        saveGlobalTemplateEditor(refined);
+
+        // capture context for training on template approval
+        lastTemplateRefineNarrative = narrative;
+        lastTemplateRefineModelCandidate = refined;
+
+        alertEl.textContent =
+          'תבנית מעודכנת הוצעה. בדוק/י את השינויים ואשר/י אם מתאימים.';
+        alertEl.className = 'alert alert-info small mt-2';
+      } catch (e) {
+        console.error('[ep] GT3 template refine error', e);
+        alertEl.textContent =
+          'אירעה שגיאה בשיפור התבנית. ניתן לנסות שוב מאוחר יותר או לערוך ידנית.';
+        alertEl.className = 'alert alert-danger small mt-2';
+      } finally {
+        spinner.classList.add('d-none');
+      }
+    }
+
+    // --- EP draft initialization / refresh ----------------------------------
+    function initOrRefreshEpDraft() {
+      const epTextarea = document.getElementById('ep-draft-textarea');
+      const epUnavailableBadge = document.getElementById('ep-unavailable-badge');
+      const epOutdatedBadge = document.getElementById('ep-outdated-badge');
+      const statusEl = document.getElementById('ep-draft-status');
+
+      epUnavailableBadge.classList.add('d-none');
+      epOutdatedBadge.classList.add('d-none');
+      statusEl.textContent = '';
+
+      if (!caseState) return;
+
+      const approvedPlan = caseState.approvedPlan || '';
+      const approvedStatus = caseState.approvedStatus || '';
+      const hasTemplate = !!globalApprovedTemplate;
+
+      if (!hasTemplate) {
+        suppressEpUserTouched = true;
+        epTextarea.value = '';
+        epTextarea.placeholder =
+          'לא נוצרה עדיין הצעת שכר טרחה. יש לאשר תבנית תחילה.';
+        suppressEpUserTouched = false;
+        epUnavailableBadge.classList.remove('d-none');
+        return;
+      }
+
+      const currentSignature = computeEpInputsSignature(caseState, globalApprovedTemplate);
+      const previousSignature = caseState.epDraftGenerationSignature || null;
+      const userTouched = !!caseState.epUserTouched;
+      const existingDraft = caseState.epDraftText || '';
+
+      if (!existingDraft || existingDraft === EP_PREP_TEXT) {
+        if (approvedPlan && approvedStatus) {
+          callGt3ForEpDraft();
+        } else {
+          suppressEpUserTouched = true;
+          epTextarea.value = '';
+          epTextarea.placeholder =
+            'אין עדיין תוכנית וסטטוס מאושרים. יש לחזור למקרה ולאשרם.';
+          suppressEpUserTouched = false;
+        }
+        return;
+      }
+
+      suppressEpUserTouched = true;
+      epTextarea.value = existingDraft;
+      suppressEpUserTouched = false;
+
+      if (previousSignature && previousSignature !== currentSignature) {
+        if (!userTouched) {
+          callGt3ForEpDraft();
+        } else {
+          epOutdatedBadge.classList.remove('d-none');
+          statusEl.textContent =
+            'תוכנית, סטטוס או תבנית עודכנו מאז יצירת הטיוטה. ניתן לערוך ידנית או לעדכן בהמשך.';
+        }
+      } else {
+        statusEl.textContent = 'נטענת הטיוטה האחרונה שהוכנה עבור מקרה זה.';
+      }
+    }
+
+    // --- Admin panel for EP prompts -----------------------------------------
+    function initAdminPanel() {
+      const refineField = document.getElementById('admin-ep-template-refine-prompt');
+      const compileField = document.getElementById('admin-ep-compile-prompt');
+      const btnResetRefine = document.getElementById('btn-reset-ep-template-refine-prompt');
+      const btnResetCompile = document.getElementById('btn-reset-ep-compile-prompt');
+
+      if (refineField) refineField.value = adminTemplateRefinePrompt;
+      if (compileField) compileField.value = adminEpCompilePrompt;
+
+      refineField?.addEventListener('input', () => {
+        adminTemplateRefinePrompt = refineField.value;
+        safeSetItem(EP_TEMPLATE_REFINE_PROMPT_KEY, adminTemplateRefinePrompt);
+      });
+
+      compileField?.addEventListener('input', () => {
+        adminEpCompilePrompt = compileField.value;
+        safeSetItem(EP_COMPILE_PROMPT_KEY, adminEpCompilePrompt);
+      });
+
+      btnResetRefine?.addEventListener('click', () => {
+        adminTemplateRefinePrompt = DEFAULT_TEMPLATE_REFINE_PROMPT;
+        if (refineField) refineField.value = adminTemplateRefinePrompt;
+        safeSetItem(EP_TEMPLATE_REFINE_PROMPT_KEY, adminTemplateRefinePrompt);
+      });
+
+      btnResetCompile?.addEventListener('click', () => {
+        adminEpCompilePrompt = DEFAULT_EP_COMPILE_PROMPT;
+        if (compileField) compileField.value = adminEpCompilePrompt;
+        safeSetItem(EP_COMPILE_PROMPT_KEY, adminEpCompilePrompt);
+      });
+    }
+
+    // --- Main init -----------------------------------------------------------
+    function main() {
+      const params = new URLSearchParams(location.search);
+      caseId = params.get('caseId');
+      fromUrl = params.get('from');
+
+      if (!caseId) {
+        showGlobalError('לא סופק מזהה מקרה בכתובת (caseId).');
+        return;
+      }
+
+      caseState = loadCaseState(caseId);
+      if (!caseState) {
+        showGlobalError('לא נמצא מקרה תואם במאגר המקומי (localStorage).');
+        return;
+      }
+
+      document.getElementById('case-id-display').textContent =
+        caseState.caseId || caseId;
+      document.getElementById('case-title-display').textContent =
+        caseState.title || '(ללא כותרת)';
+      document.getElementById('case-last-updated').textContent =
+        'עודכן לאחרונה: ' + (toLocal(caseState.lastUpdatedIso) || 'לא ידוע');
+
+      const backBtn = document.getElementById('btn-back');
+      backBtn.addEventListener('click', () => {
+        if (fromUrl) {
+          window.location.href = decodeURIComponent(fromUrl);
+        } else if (document.referrer) {
+          window.history.back();
+        } else {
+          window.location.href = './';
+        }
+      });
+
+      // Box 1
+      const box1Header = document.getElementById('box1-header');
+      const box1Body = document.getElementById('box1-body');
+      const box1Chevron = box1Header.querySelector('.chevron');
+      const box1Badge = document.getElementById('box1-badge');
+
+      const planText = caseState.approvedPlan || '';
+      const statusText = caseState.approvedStatus || '';
+
+      document.getElementById('approved-plan').textContent =
+        planText || '(אין תוכנית מאושרת עבור מקרה זה)';
+      document.getElementById('approved-status').textContent =
+        statusText || '(אין סטטוס מאושר עבור מקרה זה)';
+
+      if (!planText && !statusText) {
+        box1Badge.classList.remove('d-none');
+      }
+
+      box1Header.addEventListener('click', () => {
+        toggleCard(box1Header, box1Body, box1Chevron);
+      });
+
+      // Box 2: template management
+      const box2Header = document.getElementById('box2-header');
+      const box2Body = document.getElementById('box2-body');
+      const box2Chevron = box2Header.querySelector('.chevron');
+      const templateTextarea = document.getElementById('ep-template-textarea');
+      const templateApprovedBadge = document.getElementById('template-approved-badge');
+      const templateNotApprovedBadge = document.getElementById('template-not-approved-badge');
+
+      const editorTemplate = loadGlobalTemplate();
+      templateTextarea.value = editorTemplate;
+
+      if (globalApprovedTemplate) {
+        templateApprovedBadge.classList.remove('d-none');
+        templateNotApprovedBadge.classList.add('d-none');
+        // collapse if approved by default
+        box2Body.classList.add('d-none');
+        box2Chevron.classList.remove('rotate');
+      } else {
+        templateApprovedBadge.classList.add('d-none');
+        templateNotApprovedBadge.classList.remove('d-none');
+        // expand if not approved
+        box2Body.classList.remove('d-none');
+        box2Chevron.classList.add('rotate');
+      }
+
+      box2Header.addEventListener('click', () => {
+        toggleCard(box2Header, box2Body, box2Chevron);
+      });
+
+      // Template editor change – mark as "not approved"
+      templateTextarea.addEventListener('input', () => {
+        saveGlobalTemplateEditor(templateTextarea.value);
+        if (globalApprovedTemplate && templateTextarea.value !== globalApprovedTemplate) {
+          templateApprovedBadge.classList.add('d-none');
+          templateNotApprovedBadge.classList.remove('d-none');
+        }
+      });
+
+      // Sample upload button handler
+      const btnUploadSample = document.getElementById('btn-upload-sample');
+      const uploadInput = document.getElementById('ep-template-upload');
+      
+      btnUploadSample.addEventListener('click', () => {
+        uploadInput.click();
+      });
+
+      // Template sample upload handler (supports .txt and .docx)
+      uploadInput.addEventListener('change', async () => {
+        const file = uploadInput.files && uploadInput.files[0];
+        if (!file) return;
+
+        const alertEl = document.getElementById('template-alert');
+        alertEl.className = 'alert small mt-2 d-none';
+        alertEl.textContent = '';
+
+        try {
+          const text = await extractSampleText(file);
+          if (!text.trim()) {
+            alertEl.textContent = 'הקובץ שהועלה ריק או לא ניתן לקריאה.';
+            alertEl.className = 'alert alert-danger small mt-2';
+            return;
+          }
+          await callGt3ForTemplateRefine(text);
+        } catch (e) {
+          console.error('[ep] template upload error', e);
+          alertEl.textContent = 'אירעה שגיאה בקריאת הקובץ (נתמכים רק .txt ו-.docx).';
+          alertEl.className = 'alert alert-danger small mt-2';
+        } finally {
+          uploadInput.value = '';
+        }
+      });
+
+      // Direct template upload handler (loads template as draft without refinement)
+      const btnUploadTemplate = document.getElementById('btn-upload-template');
+      const directUploadInput = document.getElementById('ep-template-direct-upload');
+      
+      btnUploadTemplate.addEventListener('click', () => {
+        directUploadInput.click();
+      });
+
+      directUploadInput.addEventListener('change', async () => {
+        const file = directUploadInput.files && directUploadInput.files[0];
+        if (!file) return;
+
+        const alertEl = document.getElementById('template-alert');
+        alertEl.className = 'alert small mt-2 d-none';
+        alertEl.textContent = '';
+
+        try {
+          const text = await extractSampleText(file);
+          if (!text.trim()) {
+            alertEl.textContent = 'הקובץ שהועלה ריק או לא ניתן לקריאה.';
+            alertEl.className = 'alert alert-danger small mt-2';
+            return;
+          }
+
+          // Load template directly into textarea as draft
+          templateTextarea.value = text;
+          saveGlobalTemplateEditor(text);
+
+          // Reset approval state (mark as unapproved draft)
+          templateApprovedBadge.classList.add('d-none');
+          templateNotApprovedBadge.classList.remove('d-none');
+
+          alertEl.textContent = 'התבנית נטענה כטיוטה. בדוק/י ואשר/י אם מתאימה.';
+          alertEl.className = 'alert alert-info small mt-2';
+
+          console.log('[ep] Template uploaded directly as draft, file type:', file.name.split('.').pop());
+        } catch (e) {
+          console.error('[ep] Direct template upload error', e, 'file type:', file.name.split('.').pop());
+          alertEl.textContent = 'אירעה שגיאה בקריאת הקובץ (נתמכים רק .txt ו-.docx).';
+          alertEl.className = 'alert alert-danger small mt-2';
+        } finally {
+          directUploadInput.value = '';
+        }
+      });
+
+      // Approve template
+      const btnApproveTemplate = document.getElementById('btn-approve-template');
+      const templateAlert = document.getElementById('template-alert');
+      btnApproveTemplate.addEventListener('click', () => {
+        const text = templateTextarea.value || '';
+        saveGlobalTemplateApproved(text);
+
+        templateApprovedBadge.classList.remove('d-none');
+        templateNotApprovedBadge.classList.add('d-none');
+
+        templateAlert.textContent =
+          'התבנית אושרה. הצעות חדשות ייווצרו על בסיס תבנית זו.';
+        templateAlert.className = 'alert alert-success small mt-2';
+
+        // Training example for EP template approval (if we have refine context)
+        if (lastTemplateRefineNarrative && lastTemplateRefineModelCandidate) {
+          sendTrainingExample({
+            useCase: 'gt2.legato.ep_template',
+            channels: {
+              input_request: lastTemplateRefineNarrative,
+              model_candidate: lastTemplateRefineModelCandidate,
+              authoritative_reference: text
+            },
+            meta: {
+              artifact: 'ep_template'
+            }
+          });
+        } else {
+          console.log('[training] skipping ep_template: no refine context (manual או default template).');
+        }
+
+        // After approval, always re-generate EP draft based on new template
+        initOrRefreshEpDraft();
+      });
+
+      // Reset template to default (editor only)
+      const btnResetTemplate = document.getElementById('btn-reset-template');
+      btnResetTemplate.addEventListener('click', () => {
+        templateTextarea.value = DEFAULT_EP_TEMPLATE;
+        saveGlobalTemplateEditor(DEFAULT_EP_TEMPLATE);
+
+        templateAlert.textContent =
+          'התבנית אופסה לתבנית ברירת המחדל. אם ברצונך להשתמש בה כתבנית מאושרת גלובלית, לחץ/י על "אשר תבנית".';
+        templateAlert.className = 'alert alert-warning small mt-2';
+
+        templateApprovedBadge.classList.add('d-none');
+        templateNotApprovedBadge.classList.remove('d-none');
+      });
+
+      // EP draft: track manual edits
+      const epTextarea = document.getElementById('ep-draft-textarea');
+      epTextarea.addEventListener('input', () => {
+        if (suppressEpUserTouched) return;
+        caseState.epDraftText = epTextarea.value;
+        caseState.epUserTouched = true;
+        saveCaseState();
+      });
+
+      // Approve & send to customer
+      const btnApproveSend = document.getElementById('btn-approve-send-ep');
+      const epAlert = document.getElementById('ep-draft-alert');
+      btnApproveSend.addEventListener('click', () => {
+        const text = epTextarea.value || '';
+        caseState.approvedEpText = text;
+        pushEvent('ep_approved_and_sent', {
+          caseId,
+          approvedEpText: text
+        });
+        saveCaseState();
+
+        // Training example for EP approval (case-specific)
+        if (caseState.lastEpCompileNarrative && caseState.lastEpDraftModelText) {
+          sendTrainingExample({
+            useCase: 'gt2.legato.ep',
+            channels: {
+              input_request: caseState.lastEpCompileNarrative,
+              model_candidate: caseState.lastEpDraftModelText,
+              authoritative_reference: text
+            },
+            meta: {
+              case_id: caseId,
+              artifact: 'ep',
+              title: caseState.title || ''
+            }
+          });
+        } else {
+          console.log('[training] skipping ep: missing compile narrative or model draft');
+        }
+
+        epAlert.textContent = 'הטיוטה נשמרה כגרסת הצעה מאושרת ללקוח (לצורך לוג ותיעוד פנימי).';
+        epAlert.className = 'alert alert-success small mt-2';
+      });
+
+      // Initialize EP draft
+      initOrRefreshEpDraft();
+
+      // Save on unload
+      window.addEventListener('beforeunload', () => {
+        if (!caseState) return;
+        const epTextarea = document.getElementById('ep-draft-textarea');
+        caseState.epDraftText = epTextarea.value;
+        saveCaseState();
+      });
+
+      // Init admin panel (prompts)
+      initAdminPanel();
+
+      // Logo click → open settings sidebar
+      const logoEl = document.getElementById('gt2-logo');
+      if (logoEl) {
+        logoEl.addEventListener('click', () => {
+          const offcanvasEl = document.getElementById('settings-offcanvas');
+          if (!offcanvasEl || typeof bootstrap === 'undefined') return;
+          const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+          offcanvas.show();
+        });
+      }
+
+      // Init settings panel
+      initSettingsPanel();
+    }
+
+    main();
+  </script>
+</body>
+</html>

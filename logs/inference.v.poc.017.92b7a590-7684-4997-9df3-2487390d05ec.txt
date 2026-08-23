@@ -1,0 +1,67 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: 92b7a590-7684-4997-9df3-2487390d05ec
+Timestamp: 2026-05-29T12:58:17.762Z
+LexiomNarrativeContract: 1
+
+Custom system prompt: yes (length 399)
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+A spacecraft is a vehicle designed for travel or operation in outer space, often equipped for scientific exploration or transport.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+A spacecraft is a vehicle designed for travel or operation in outer space, often equipped for scientific exploration or transport.
+
+=== LM outbound — odd_graphics / direct ===
+{
+  "logged_at": "2026-05-29T12:58:17.765Z",
+  "variant": "odd_graphics / direct",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "temperature": 0.3,
+  "max_tokens": 2048,
+  "messages": [
+    {
+      "role": "system",
+      "content": "# ODD graphics image prompt (source file)\r\n\r\n---\r\n\r\nRead the **narrative** (the full textual inference output from the prior ODD advisor turn) and produce **one watercolor image** that reflects it.\r\n\r\nOutput the image as **PNG base64** only (no markdown, no explanation, no `data:image/png;base64,` prefix). Any reasonable image size is acceptable; the application displays it at **128×128** pixels."
+    },
+    {
+      "role": "user",
+      "content": "A spacecraft is a vehicle designed for travel or operation in outer space, often equipped for scientific exploration or transport."
+    }
+  ]
+}
+
+=== ODD graphics response ===
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABJ0lEQVR42mJ0AIAAAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwAABAAEAAwA
+

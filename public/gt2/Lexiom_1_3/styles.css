@@ -1,0 +1,2597 @@
+﻿@import url("../Lexiom/styles.css");
+
+/* Lexiom 1.3.3 â€” Cursor / VS Code Dark Modern dev-tool palette */
+body.lexiom-13-body.lexiom-cockpit-mode {
+  --lexiom-body-bg: #141414;
+  --lexiom-text: #d4d4d4;
+  --lexiom-frame: #4daafc;
+  font-family: "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+  --lexiom-frame-rgba: rgba(77, 170, 252, 0.38);
+  --lexiom-highlight-bg: rgba(77, 170, 252, 0.14);
+  --lexiom-highlight-strong: rgba(77, 170, 252, 0.32);
+  --lexiom-error-bg: rgba(252, 107, 131, 0.14);
+  --lexiom-placeholder-bg: rgba(77, 170, 252, 0.24);
+  --lexiom-selection-bg: rgba(77, 170, 252, 0.24);
+  --lexiom-surface-bg: rgba(31, 31, 31, 0.94);
+  --lexiom-overlay-bg: rgba(20, 20, 20, 0.9);
+  --lexiom-cabinet-bg: radial-gradient(
+    circle at 50% 10%,
+    #252526 0%,
+    #1e1e1e 45%,
+    #141414 100%
+  );
+  --lexiom-13-border-subtle: rgba(77, 170, 252, 0.22);
+  --lexiom-13-border-muted: rgba(180, 190, 210, 0.28);
+  --lexiom-13-text-muted: rgba(212, 212, 212, 0.68);
+  --lexiom-13-text-strong: rgba(228, 228, 228, 0.95);
+  --lexiom-13-error: #fc6b83;
+  --lexiom-13-wireframe-width: 1px;
+  --lexiom-13-wireframe: color-mix(in srgb, var(--lexiom-frame) 50%, #1e1e1e 50%);
+  --lexiom-13-wireframe-rgba: rgba(77, 170, 252, 0.19);
+  --lexiom-13-cockpit-surface: #1e1e1e;
+  --lexiom-13-glyph-inactive: color-mix(in srgb, var(--lexiom-text) 58%, var(--lexiom-13-cockpit-surface) 42%);
+  /* Shared square for branch / prune / evidence / build control outlines. */
+  --lexiom-13-osn-control-size: 1.65rem;
+  /* Unapproved / editing draft body text (vs bluish approved presentation). */
+  --lexiom-13-draft-edit-text: #c9b6e8;
+  --lexiom-13-draft-edit-caret: #ddd0f5;
+}
+
+@media (prefers-color-scheme: light) {
+  body.lexiom-13-body.lexiom-cockpit-mode {
+    --lexiom-body-bg: #f3f3f3;
+    --lexiom-text: #252525;
+    --lexiom-frame: #0078d4;
+    --lexiom-frame-rgba: rgba(0, 120, 212, 0.34);
+    --lexiom-highlight-bg: rgba(0, 120, 212, 0.1);
+    --lexiom-highlight-strong: rgba(0, 120, 212, 0.22);
+    --lexiom-error-bg: rgba(207, 45, 45, 0.1);
+    --lexiom-placeholder-bg: rgba(0, 120, 212, 0.16);
+    --lexiom-selection-bg: rgba(0, 120, 212, 0.18);
+    --lexiom-surface-bg: rgba(255, 255, 255, 0.96);
+    --lexiom-overlay-bg: rgba(243, 243, 243, 0.96);
+    --lexiom-cabinet-bg: radial-gradient(
+      circle at 50% 10%,
+      #ffffff 0%,
+      #f3f3f3 55%,
+      #ececec 100%
+    );
+    --lexiom-13-border-subtle: rgba(0, 120, 212, 0.22);
+    --lexiom-13-border-muted: rgba(92, 92, 92, 0.24);
+    --lexiom-13-text-muted: rgba(37, 37, 37, 0.62);
+    --lexiom-13-text-strong: rgba(37, 37, 37, 0.92);
+    --lexiom-13-error: #cf2d2d;
+    --lexiom-13-wireframe-width: 1px;
+    --lexiom-13-wireframe: color-mix(in srgb, var(--lexiom-frame) 50%, #f3f3f3 50%);
+    --lexiom-13-wireframe-rgba: rgba(0, 120, 212, 0.17);
+    --lexiom-13-cockpit-surface: #ececec;
+    --lexiom-13-glyph-inactive: color-mix(in srgb, var(--lexiom-text) 58%, var(--lexiom-13-cockpit-surface) 42%);
+  }
+}
+
+/* Lexiom 1.3.3 â€” reasoning workspace shell overrides */
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-cabinet {
+  width: 90vw;
+  height: 90vh;
+  max-width: 90vw;
+  max-height: 90vh;
+  border: var(--lexiom-13-wireframe-width) solid var(--lexiom-13-wireframe);
+  border-color: var(--lexiom-13-wireframe) !important;
+}
+
+/* Cockpit title muted: eliminate outer stage margins and fill the browser window. */
+body.lexiom-13-body.lexiom-cockpit-mode.lexiom-13-edge-fill .lexiom-13-stage {
+  min-height: 100vh;
+  height: 100vh;
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode.lexiom-13-edge-fill .lexiom-13-cockpit-shell {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode.lexiom-13-edge-fill #lexiom-cabinet {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  flex: 1 1 auto;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode .lexiom-top-hud {
+  border-bottom-width: var(--lexiom-13-wireframe-width);
+  border-bottom-color: var(--lexiom-13-wireframe);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode .lexiom-top-hud[hidden] {
+  display: none !important;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode .lexiom-panel {
+  border-inline-end-width: var(--lexiom-13-wireframe-width);
+  border-inline-end-color: var(--lexiom-13-wireframe);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-bottom-ribbon {
+  border-top-width: var(--lexiom-13-wireframe-width);
+  border-top-color: var(--lexiom-13-wireframe);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card {
+  border-width: var(--lexiom-13-wireframe-width);
+  border-color: var(--lexiom-13-wireframe);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-header {
+  border-bottom-width: 0.5px;
+  border-bottom-color: var(--lexiom-13-wireframe-rgba);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  /* Match the bluish neon of the selected OSN section glyph so the player
+     correlates the center section strip with the draft card below. */
+  color: var(--lexiom-frame);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-label .lexiom-osn-section-glyph {
+  flex: 0 0 auto;
+  color: var(--lexiom-frame);
+}
+
+/* Match left-graph OSN leaf label typography (.lexiom-osn-node-main). */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-label-text {
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: normal;
+  line-height: 0.8;
+  letter-spacing: normal;
+}
+
+/* Approved draft-first text matches the approved success-evidence label color. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved .lexiom-draft-card-text,
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved .lexiom-draft-card-text:focus {
+  color: var(--lexiom-frame);
+  caret-color: var(--lexiom-frame);
+}
+
+/*
+ * VS Code Darkâ€“style draft-card text body (header / glyph unchanged).
+ * Transparent textarea over a Markdown highlight mirror + line gutter.
+ */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-editor {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: #1e1e1e;
+  border: 1px solid rgba(128, 128, 128, 0.28);
+  overflow: hidden;
+  font-family: "JetBrains Mono", Consolas, "Cascadia Code", "Courier New", monospace !important;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--lexiom-13-draft-edit-text);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* Active-editor chrome: focused draft body reads as a live IDE pane. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-editor.is-focused {
+  border-color: var(--lexiom-frame);
+  box-shadow:
+    0 0 0 1px var(--lexiom-frame-rgba),
+    inset 0 0 0 1px rgba(77, 170, 252, 0.12);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-gutter {
+  flex: 0 0 auto;
+  min-width: 2.75ch;
+  padding: 6px 10px 6px 8px;
+  box-sizing: border-box;
+  text-align: right;
+  /* Same face/size as editable draft text; ~25% less contrast vs prior gutter mix. */
+  font-family: "JetBrains Mono", Consolas, "Cascadia Code", "Courier New", monospace !important;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: color-mix(
+    in srgb,
+    color-mix(in srgb, #858585 70%, #1e1e1e 30%) 75%,
+    #1e1e1e 25%
+  );
+  background: #1e1e1e;
+  border-inline-end: 1px solid rgba(128, 128, 128, 0.22);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-gutter-line {
+  display: block;
+  height: 1.45em;
+  line-height: 1.45;
+  font: inherit;
+  font-size: inherit;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-gutter-line.is-wrap-pad {
+  visibility: hidden;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-surface {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  background: #1e1e1e;
+  cursor: text;
+}
+
+/* Current-line band (IDE-style); shown only while the textarea is focused. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-current-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* ~30% more contrast vs prior 0.045 against the dark editor/cockpit bg. */
+  background: rgba(255, 255, 255, 0.059);
+  border: none;
+}
+
+/* Empty-state edit invitation; hidden once the draft has any non-whitespace text. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-empty-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  pointer-events: none;
+  font-family: "JetBrains Mono", Consolas, "Cascadia Code", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, #d4d4d4 42%, #1e1e1e 58%);
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-empty-hint[hidden] {
+  display: none;
+}
+
+/* Offscreen measurer used to count soft-wrapped visual rows per newline. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-wrap-measurer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-highlight {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font: inherit;
+  line-height: 1.45;
+  font-family: "JetBrains Mono", Consolas, "Cascadia Code", "Courier New", monospace !important;
+  color: var(--lexiom-13-draft-edit-text);
+  background: transparent;
+  border: none;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-md-heading {
+  color: #4ec9b0;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-md-bold {
+  color: #dcdcaa;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-md-code {
+  color: #c586c0;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-editor .lexiom-draft-card-text {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  flex: none;
+  margin: 0;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid transparent;
+  font-family: "JetBrains Mono", Consolas, "Cascadia Code", "Courier New", monospace !important;
+  color: transparent;
+  caret-color: var(--lexiom-13-draft-edit-caret);
+  cursor: text;
+  font: inherit;
+  line-height: 1.45;
+  resize: none;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-editor .lexiom-draft-card-text:focus {
+  outline: none;
+  border-color: transparent;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--lexiom-13-draft-edit-caret);
+  cursor: text;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card-editor .lexiom-draft-card-text::selection {
+  background: var(--lexiom-selection-bg);
+  color: transparent;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved .lexiom-draft-card-highlight {
+  opacity: 0;
+}
+
+/* While edit-diff cues are active, keep the highlight mirror visible so green
+ * insert backgrounds show in both bluish (approved) and pale-purple (editing). */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.has-edit-diff .lexiom-draft-card-highlight {
+  opacity: 1;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved.has-edit-diff .lexiom-draft-card-highlight {
+  color: var(--lexiom-frame);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved.has-edit-diff .lexiom-draft-card-editor .lexiom-draft-card-text,
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved.has-edit-diff .lexiom-draft-card-editor .lexiom-draft-card-text:focus {
+  color: transparent;
+  caret-color: var(--lexiom-frame);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved.has-edit-diff .lexiom-draft-card-editor .lexiom-draft-card-text::selection {
+  color: transparent;
+}
+
+/* Inserted text vs edit baseline â€” green wash; text color inherits mode. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-diff-ins {
+  background: rgba(46, 160, 67, 0.38);
+  color: inherit;
+  border-radius: 2px;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved .lexiom-draft-card-editor .lexiom-draft-card-text,
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved .lexiom-draft-card-editor .lexiom-draft-card-text:focus {
+  color: var(--lexiom-frame);
+  caret-color: var(--lexiom-frame);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card.is-approved .lexiom-draft-card-editor .lexiom-draft-card-text::selection {
+  color: var(--lexiom-frame);
+}
+
+.lexiom-13-body .lexiom-main-wrap {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lexiom-13-stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.lexiom-13-cockpit-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: min(96vw, 1600px);
+}
+
+.lexiom-13-cockpit-title {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  opacity: 0.92;
+  margin: 0 0 0.45rem;
+  padding: 0.15rem 0.5rem;
+}
+
+.lexiom-13-cockpit-title[hidden] {
+  display: none !important;
+}
+
+.lexiom-13-region-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  margin-bottom: 0.5rem;
+}
+
+/* Single toggle at the top outer corner of the left panel (away from center). */
+.lexiom-13-full-graph-toggle {
+  position: absolute;
+  top: 0.2rem;
+  inset-inline-start: 0.2rem;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  padding: 0;
+  border: 1px solid var(--lexiom-13-border-subtle);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--lexiom-13-text-strong);
+  cursor: pointer;
+  opacity: 0.8;
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, color 0.15s ease;
+}
+
+.lexiom-13-full-graph-toggle:hover {
+  opacity: 1;
+  border-color: var(--lexiom-frame);
+  background: rgba(77, 170, 252, 0.1);
+  color: var(--lexiom-frame);
+}
+
+.lexiom-13-full-graph-toggle[aria-pressed="true"] {
+  opacity: 1;
+  border-color: var(--lexiom-frame);
+  background: var(--lexiom-selection-bg);
+  color: var(--lexiom-frame);
+}
+
+.lexiom-13-full-graph-icon {
+  display: inline-flex;
+  line-height: 0;
+}
+
+.lexiom-13-full-graph-toggle[aria-pressed="true"] .lexiom-13-full-graph-icon-expand,
+.lexiom-13-full-graph-toggle:not([aria-pressed="true"]) .lexiom-13-full-graph-icon-collapse {
+  display: none;
+}
+
+.lexiom-13-full-graph-toggle[aria-pressed="true"] .lexiom-13-full-graph-icon-collapse {
+  display: inline-flex;
+}
+
+/* Side view | Top view mode switch — left upper corner, beside full-graph toggle. */
+.lexiom-13-full-graph-kind-switch {
+  position: absolute;
+  top: 0.2rem;
+  inset-inline-start: calc(0.2rem + 1.65rem + 0.35rem);
+  inset-inline-end: auto;
+  z-index: 4;
+  display: none;
+  gap: 0.2rem;
+  padding: 0.12rem;
+  border: 1px solid var(--lexiom-13-border-subtle);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.lexiom-13-full-graph .lexiom-13-full-graph-kind-switch:not([hidden]) {
+  display: inline-flex;
+}
+
+.lexiom-13-full-graph-kind-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--lexiom-13-text-strong);
+  font-family: inherit;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.45rem;
+  cursor: pointer;
+  opacity: 0.72;
+}
+
+.lexiom-13-full-graph-kind-btn:hover {
+  opacity: 1;
+  color: var(--lexiom-frame);
+}
+
+.lexiom-13-full-graph-kind-btn[aria-pressed="true"] {
+  opacity: 1;
+  border-color: var(--lexiom-frame-rgba);
+  background: var(--lexiom-selection-bg);
+  color: var(--lexiom-frame);
+}
+
+#lexiom-left-panel-title,
+#lexiom-right-panel-title {
+  text-align: center;
+}
+
+/* Keep the title clear of the corner toggle (and kind switch in full-graph). */
+#lexiom-left-panel-title {
+  padding-inline: 1.9rem;
+}
+
+body.lexiom-13-full-graph #lexiom-left-panel-title {
+  padding-inline-start: 11.5rem;
+  padding-inline-end: 1.9rem;
+}
+
+.lexiom-l2-lenses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 0.25rem 0 0.5rem;
+}
+
+.lexiom-13-placeholder-chip {
+  border: 1px solid var(--lexiom-frame-rgba);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  background: var(--lexiom-highlight-bg);
+}
+
+.lexiom-lens-chip-active {
+  cursor: pointer;
+}
+
+.lexiom-lens-chip-active.is-selected {
+  border-color: var(--lexiom-frame);
+  background: var(--lexiom-selection-bg);
+}
+
+.lexiom-lens-chip-active.is-disabled,
+.lexiom-lens-chip-active:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.lexiom-13-lens-pass {
+  margin-left: 0.35rem;
+  padding: 0 0.3rem;
+  border-radius: 0.6rem;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  background: var(--lexiom-selection-bg);
+  opacity: 0.85;
+}
+
+.lexiom-13-lens-status {
+  width: 100%;
+  margin-bottom: 0.45rem;
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+
+.lexiom-osn-graph {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.lexiom-osn-graph-filters {
+  flex: 0 0 auto;
+  margin-top: 0.65rem;
+  margin-bottom: 0;
+}
+
+#lexiom-left-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  transition: background-color 0.35s ease;
+}
+
+/* Thematic-plane shift cue: tint the left panel toward Focus OSN wireframe blue
+   (≤20%) so native vs additional-plane presentation is easy to tell apart. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-left-panel.lexiom-13-plane-shifted {
+  background-color: color-mix(
+    in srgb,
+    var(--lexiom-13-cockpit-surface) 80%,
+    var(--lexiom-frame) 20%
+  );
+}
+
+#lexiom-left-panel .lexiom-osn-graph {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  /* Focus sits near the top quarter so more of the panel shows descendants. */
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 3fr);
+  gap: 0;
+}
+
+/* Full-graph presentation: left panel fills the cabinet; classical scrollable tree. */
+body.lexiom-13-full-graph #lexiom-center-playfield,
+body.lexiom-13-full-graph #lexiom-right-panel {
+  display: none !important;
+}
+
+body.lexiom-13-full-graph #lexiom-left-panel {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: none;
+  border-inline-end: none;
+}
+
+body.lexiom-13-full-graph #lexiom-left-panel .lexiom-osn-graph {
+  display: flex;
+  flex-direction: column;
+  grid-template-rows: none;
+  overflow: auto;
+  gap: 0.35rem;
+  padding: 0.35rem 0.25rem 1rem;
+}
+
+body.lexiom-13-full-graph .lexiom-osn-graph-full-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: min-content;
+}
+
+/* OSNG Garden SVG exposition */
+.lexiom-osng-garden-host {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.lexiom-osng-garden {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 12rem;
+  color: var(--lexiom-frame);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.lexiom-osng-garden.is-panning {
+  cursor: grabbing;
+}
+
+.lexiom-garden-edge {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.15;
+  opacity: 0.78;
+}
+
+.lexiom-garden-edge-native {
+  stroke-dasharray: none;
+}
+
+.lexiom-garden-edge-cross {
+  stroke-dasharray: 5 4;
+  opacity: 0.92;
+  stroke-width: 1.35;
+}
+
+.lexiom-garden-node {
+  cursor: pointer;
+  color: var(--garden-plane-color, var(--lexiom-frame));
+}
+
+.lexiom-garden-focus-halo {
+  fill: var(--garden-halo-color, currentColor);
+  fill-opacity: 0.25;
+  stroke: none;
+  pointer-events: none;
+  /* Disc paints above this fill so only the annulus shows the translucent wash.
+     Halo fill color is 50% contrast-boosted toward white/black vs the panel. */
+  filter:
+    drop-shadow(0 0 2px var(--garden-halo-glow, var(--garden-plane-glow, var(--lexiom-frame-rgba))))
+    drop-shadow(0 0 6px var(--garden-halo-glow, var(--garden-plane-glow, var(--lexiom-frame-rgba))));
+}
+
+.lexiom-garden-node-disc {
+  fill: color-mix(in srgb, currentColor 38%, #1e1e1e 62%);
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+
+.lexiom-garden-node.is-root .lexiom-garden-node-disc {
+  fill: color-mix(in srgb, currentColor 58%, #1e1e1e 42%);
+  stroke-width: 1.45;
+  filter:
+    drop-shadow(0 0 4px var(--garden-plane-glow, var(--lexiom-frame-rgba)))
+    drop-shadow(0 0 10px var(--garden-plane-glow, var(--lexiom-frame-rgba)))
+    drop-shadow(0 0 18px var(--garden-plane-glow, var(--lexiom-frame-rgba)));
+}
+
+.lexiom-garden-node.is-root.is-selected .lexiom-garden-node-disc {
+  filter:
+    drop-shadow(0 0 6px var(--garden-plane-glow, var(--lexiom-frame-rgba)))
+    drop-shadow(0 0 14px var(--garden-plane-glow, var(--lexiom-frame-rgba)))
+    drop-shadow(0 0 22px var(--garden-plane-glow, var(--lexiom-frame-rgba)));
+}
+
+.lexiom-garden-node.is-selected .lexiom-garden-node-disc {
+  fill: currentColor;
+  stroke: currentColor;
+  filter: drop-shadow(0 0 6px var(--garden-plane-glow, var(--lexiom-frame-rgba)));
+}
+
+.lexiom-garden-node-label {
+  fill: currentColor;
+  font-family: "JetBrains Mono", Consolas, "Cascadia Code", monospace;
+  font-size: 7.5px;
+  paint-order: stroke;
+  stroke: color-mix(in srgb, #141414 85%, transparent);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.lexiom-garden-node.is-selected .lexiom-garden-node-label {
+  fill: currentColor;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lexiom-osng-garden {
+    scroll-behavior: auto;
+  }
+}
+
+body.lexiom-13-full-graph .lexiom-osn-node-main.is-selected {
+  scroll-margin-block: 40vh;
+}
+
+.lexiom-osn-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.55rem 0.6rem;
+  border: 1px dashed var(--lexiom-13-border-subtle);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.lexiom-osn-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.lexiom-osn-filter-checkbox {
+  width: 0.9rem;
+  height: 0.9rem;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--lexiom-frame);
+}
+
+.lexiom-osn-filter-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lexiom-osn-filter-summary {
+  font-size: 0.74rem;
+  line-height: 1.4;
+  opacity: 0.78;
+  padding-top: 0.15rem;
+  border-top: 1px dashed var(--lexiom-13-border-subtle);
+}
+
+.lexiom-osn-approval-glyph {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: var(--lexiom-13-osn-control-size, 1.65rem);
+  height: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-width: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-height: var(--lexiom-13-osn-control-size, 1.65rem);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  line-height: 1;
+  user-select: none;
+  /* Dashed until every reviewable evidence for this OSN is approved. */
+  border: 1px dashed var(--lexiom-13-border-subtle);
+  border-radius: 4px;
+  background: transparent;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    border-style 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
+}
+
+button.lexiom-osn-approval-glyph-trigger {
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+button.lexiom-osn-approval-glyph-trigger:hover {
+  background: var(--lexiom-highlight-bg);
+  border-color: var(--lexiom-frame);
+  transform: scale(1.06);
+}
+
+button.lexiom-osn-approval-glyph-trigger:focus-visible {
+  outline: 1px solid var(--lexiom-frame);
+  outline-offset: 1px;
+}
+
+.lexiom-osn-approval-glyph.is-approved {
+  color: var(--lexiom-frame);
+  text-shadow: 0 0 6px var(--lexiom-frame-rgba);
+  border-style: solid;
+  border-color: rgba(77, 170, 252, 0.45);
+  box-shadow: 0 0 6px var(--lexiom-frame-rgba);
+}
+
+.lexiom-osn-approval-glyph.is-partial {
+  color: #f0c060;
+  border-style: dashed;
+}
+
+.lexiom-osn-approval-glyph.is-pending {
+  color: var(--lexiom-13-glyph-inactive);
+  opacity: 0.85;
+  border-style: dashed;
+}
+
+.lexiom-osn-approval-glyph.is-none {
+  color: var(--lexiom-13-glyph-inactive);
+  opacity: 0.45;
+  border-style: dashed;
+}
+
+.lexiom-osn-graph-branch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-left: 1rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--lexiom-frame-rgba);
+}
+
+/* Focus-centered layout: ancestor chain stacked straight above the Focus OSN,
+   left-aligned with it (no branch indent or border). */
+#lexiom-left-panel .lexiom-osn-graph.lexiom-13-plane-picker-open {
+  overflow: visible;
+  z-index: 4;
+}
+
+.lexiom-osn-graph-ancestors {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 0.5rem;
+  position: relative;
+}
+
+.lexiom-osn-graph-ancestors:has(.lexiom-13-plane-picker) {
+  overflow: visible;
+  z-index: 5;
+}
+
+/* PlaneShift: clickable shadow sits inline beside the native/direct ancestor. */
+.lexiom-13-plane-shadow-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: 0.2rem;
+  z-index: 2;
+}
+
+.lexiom-osn-graph-ancestor-row.has-plane-shadow .lexiom-osn-node-row {
+  flex-wrap: nowrap;
+}
+
+.lexiom-osn-graph-ancestors.has-plane-shadow-only {
+  min-height: 1.75rem;
+  justify-content: flex-end;
+}
+
+.lexiom-osn-graph-ancestors.has-plane-shadow-only .lexiom-13-plane-shadow-wrap {
+  margin: 0.15rem;
+}
+
+.lexiom-osn-graph-ancestors.lexiom-13-plane-shadow-detached {
+  justify-content: flex-start;
+  padding-bottom: 0.35rem;
+  min-height: 0;
+}
+
+.lexiom-13-plane-shadow {
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+  border: 1px solid var(--lexiom-frame-rgba);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+  opacity: 0.85;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.lexiom-13-plane-shadow:hover,
+.lexiom-13-plane-shadow:focus-visible {
+  opacity: 1;
+  background: var(--lexiom-highlight-bg);
+  outline: 1px solid var(--lexiom-frame);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+.lexiom-13-plane-shadow-glyph {
+  display: inline-flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.12rem;
+  width: 0.72rem;
+  height: 0.7rem;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  opacity: 1;
+}
+
+.lexiom-13-plane-shadow-glyph > span {
+  flex: 0 0 0.12rem;
+  width: 0.12rem;
+  border-radius: 1px;
+  background: var(--lexiom-frame);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.lexiom-13-plane-picker {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.35rem);
+  min-width: 12.5rem;
+  max-width: 18rem;
+  margin: 0;
+  padding: 0.45rem 0.4rem 0.4rem;
+  border: 1px solid var(--lexiom-frame-rgba);
+  border-radius: 4px;
+  background: var(--lexiom-panel-bg, var(--lexiom-bg, #1e1e1e));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  z-index: 5;
+  color: inherit;
+}
+
+.lexiom-13-plane-picker-legend {
+  float: left;
+  width: 100%;
+  padding: 0 0.2rem 0.35rem;
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  color: var(--lexiom-13-text-muted, inherit);
+}
+
+.lexiom-13-plane-picker-list {
+  clear: both;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.lexiom-13-plane-picker-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  color: inherit;
+}
+
+.lexiom-13-plane-picker-radio {
+  flex: 0 0 auto;
+  margin: 0.15rem 0 0;
+  accent-color: var(--lexiom-frame);
+  cursor: pointer;
+}
+
+.lexiom-13-plane-picker-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.lexiom-13-plane-picker-item.is-native {
+  background: var(--lexiom-highlight-bg);
+  border-color: var(--lexiom-frame-rgba);
+}
+
+.lexiom-13-plane-picker-item.is-active {
+  outline: 1px solid var(--lexiom-frame);
+}
+
+.lexiom-13-plane-picker-item:hover,
+.lexiom-13-plane-picker-item:focus-within {
+  background: var(--lexiom-highlight-bg);
+  outline: 1px solid var(--lexiom-frame);
+}
+
+.lexiom-13-plane-picker-name {
+  font-size: 0.8rem;
+  line-height: 1.25;
+}
+
+.lexiom-13-plane-picker-desc {
+  display: none;
+  font-size: 0.68rem;
+  line-height: 1.3;
+  opacity: 0.82;
+}
+
+.lexiom-13-plane-picker-item:hover .lexiom-13-plane-picker-desc,
+.lexiom-13-plane-picker-item:focus-within .lexiom-13-plane-picker-desc,
+.lexiom-13-plane-picker-item.is-active .lexiom-13-plane-picker-desc {
+  display: block;
+}
+
+.lexiom-osn-graph-ancestors.lexiom-13-plane-fade-out,
+.lexiom-osn-graph-descendants.lexiom-13-plane-fade-out {
+  opacity: 0;
+  transition: opacity 0.75s ease;
+}
+
+.lexiom-osn-graph-ancestors.lexiom-13-plane-fade-in,
+.lexiom-osn-graph-descendants.lexiom-13-plane-fade-in {
+  opacity: 0;
+  animation: lexiom13-plane-fade-in 1.5s ease forwards;
+}
+
+@keyframes lexiom13-plane-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lexiom-osn-graph-ancestors.lexiom-13-plane-fade-out,
+  .lexiom-osn-graph-descendants.lexiom-13-plane-fade-out,
+  .lexiom-osn-graph-ancestors.lexiom-13-plane-fade-in,
+  .lexiom-osn-graph-descendants.lexiom-13-plane-fade-in {
+    transition: none;
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.lexiom-osn-graph-focus-zone {
+  min-width: 0;
+}
+
+.lexiom-osn-graph-descendants {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 0.5rem;
+}
+
+/* Sibling arrows sit inline in the Focus OSN's node row: â—€ just before the
+   OSN button, â–¶ right after it (before the seed section glyph). Both always
+   render so the Focus OSN keeps a stable horizontal position; an arrow lights
+   in bluish neon only when a sibling is reachable in that direction. */
+.lexiom-osn-sibling-trigger {
+  flex: 0 0 auto;
+  width: 1.1rem;
+  min-width: 1.1rem;
+  height: 1.4rem;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 0.65rem;
+  line-height: 1;
+  transition: color 0.15s ease, opacity 0.15s ease, background-color 0.15s ease, text-shadow 0.15s ease;
+}
+
+.lexiom-osn-sibling-trigger.is-empty {
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+.lexiom-osn-sibling-trigger.is-available {
+  color: var(--lexiom-frame);
+  opacity: 0.9;
+  cursor: pointer;
+  text-shadow: 0 0 5px var(--lexiom-frame-rgba);
+}
+
+.lexiom-osn-sibling-trigger.is-available:hover {
+  background: var(--lexiom-highlight-bg);
+  opacity: 1;
+  text-shadow: 0 0 6px var(--lexiom-frame-rgba), 0 0 12px var(--lexiom-frame-rgba);
+}
+
+.lexiom-osn-sibling-trigger.is-available:focus-visible {
+  outline: 1px solid var(--lexiom-frame);
+  outline-offset: 1px;
+  opacity: 1;
+}
+
+#lexiom-osn-prune-status {
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
+  margin: 0;
+  padding: 0.35rem;
+  background: var(--lexiom-surface-bg);
+}
+
+.lexiom-osn-graph-node {
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  background: var(--lexiom-surface-bg);
+}
+
+.lexiom-osn-node-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+}
+
+/*
+ * Evidence + build controls share a right-edge rail so their glyphs sit on
+ * stable vertical columns across OSN rows (calmer when both filters are on).
+ */
+.lexiom-osn-node-status-rail {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 0.35rem;
+  align-items: center;
+  justify-items: center;
+}
+
+.lexiom-osn-node-status-rail.is-dual {
+  grid-template-columns:
+    var(--lexiom-13-osn-control-size, 1.65rem)
+    var(--lexiom-13-osn-control-size, 1.65rem);
+}
+
+.lexiom-osn-node-status-rail .lexiom-osn-approval-glyph,
+.lexiom-osn-node-status-rail .lexiom-osn-build-trigger {
+  margin: 0;
+}
+
+.lexiom-osn-node-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: normal;
+  line-height: 0.8;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Only the Focus OSN button spans its row; ancestor and descendant buttons
+   shrink to their leaf label so attention stays on the Focus OSN. */
+.lexiom-osn-node-main:not(.is-selected) {
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Section glyphs sit inline in the Focus OSN's node row (not a vertical expand). */
+.lexiom-osn-node-row .lexiom-osn-section-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  flex: 0 0 auto;
+}
+
+.lexiom-osn-graph-node:not(.lexiom-osn-section-trigger) {
+  border: 1px solid var(--lexiom-13-border-subtle);
+  box-shadow: inset 0 0 0 1px rgba(77, 170, 252, 0.06);
+}
+
+.lexiom-osn-branch-trigger {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: var(--lexiom-13-osn-control-size, 1.65rem);
+  height: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-width: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-height: var(--lexiom-13-osn-control-size, 1.65rem);
+  padding: 0;
+  border: 1px dashed var(--lexiom-13-border-subtle);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--lexiom-13-text-strong);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lexiom-osn-edit-name-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: auto;
+  padding-inline-start: 0.4rem;
+  border: none;
+  background: transparent;
+  color: var(--lexiom-13-text-muted);
+  cursor: pointer;
+  line-height: 0;
+  vertical-align: middle;
+  transition: color 0.15s ease;
+}
+
+.lexiom-osn-edit-name-trigger:hover {
+  color: var(--lexiom-frame);
+}
+
+.lexiom-osn-edit-name-trigger:focus-visible {
+  outline: 1px solid var(--lexiom-frame);
+  outline-offset: 1px;
+}
+
+.lexiom-osn-edit-name-trigger.is-selected {
+  color: var(--lexiom-frame);
+}
+
+.lexiom-osn-edit-name-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.lexiom-osn-edit-name-glyph svg {
+  display: block;
+}
+
+.lexiom-osn-branch-trigger:hover {
+  background: var(--lexiom-highlight-bg);
+  border-color: var(--lexiom-frame);
+  color: var(--lexiom-frame);
+}
+
+.lexiom-osn-branch-trigger:focus-visible {
+  outline: 1px solid var(--lexiom-frame);
+  outline-offset: 1px;
+}
+
+.lexiom-osn-prune-trigger {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: var(--lexiom-13-osn-control-size, 1.65rem);
+  height: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-width: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-height: var(--lexiom-13-osn-control-size, 1.65rem);
+  padding: 0;
+  border: 1px dashed var(--lexiom-13-border-subtle);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--lexiom-13-text-muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lexiom-osn-prune-trigger:hover {
+  background: rgba(200, 72, 72, 0.12);
+  border-color: rgba(200, 72, 72, 0.55);
+  color: #c84848;
+}
+
+.lexiom-osn-prune-trigger:focus-visible {
+  outline: 1px solid #c84848;
+  outline-offset: 1px;
+}
+
+.lexiom-osn-node-main.is-immature {
+  border-style: dashed;
+  opacity: 0.92;
+  font-weight: 500;
+}
+
+.lexiom-osn-section-trigger.is-locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+/*
+ * Read-only / locked center surfaces: flatter than the VS Codeâ€“style draft editor
+ * so editable draft cards stand out by contrast.
+ */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-readonly-surface {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
+  background: color-mix(in srgb, #1e1e1e 72%, #141414 28%);
+  border: 1px dashed color-mix(in srgb, var(--lexiom-13-border-muted) 70%, transparent);
+  border-radius: 4px;
+  cursor: default;
+  box-shadow: none;
+  opacity: 0.88;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-readonly-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  padding: 0.4rem 0.65rem;
+  border-bottom: 1px dashed color-mix(in srgb, var(--lexiom-13-border-muted) 55%, transparent);
+  color: var(--lexiom-13-text-muted);
+  font-family: "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-readonly-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  color: var(--lexiom-13-text-muted);
+  opacity: 0.9;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-readonly-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 1rem 0.85rem;
+  color: var(--lexiom-13-text-muted);
+  cursor: default;
+}
+
+.lexiom-13-maturation-gate {
+  padding: 1rem 0.25rem;
+  line-height: 1.5;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-maturation-gate-card .lexiom-13-maturation-gate {
+  padding: 1.1rem 0.85rem 1.25rem;
+  margin: 0;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-evidence-viewer-host.lexiom-readonly-surface {
+  flex: 1 1 0;
+  overflow: hidden;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-evidence-viewer-host.lexiom-readonly-surface .lexiom-evidence-viewer {
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 0.55rem 0.65rem 0.75rem;
+  opacity: 0.92;
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-evidence-viewer-host.lexiom-readonly-surface .lexiom-evidence-viewer-text,
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-evidence-viewer-host.lexiom-readonly-surface .lexiom-evidence-viewer-code {
+  background: color-mix(in srgb, var(--lexiom-surface-bg) 75%, #141414 25%);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--lexiom-13-border-muted) 65%, transparent);
+  cursor: default;
+}
+
+/* Editable draft cards: slightly clearer shell so they contrast with readonly surfaces. */
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card:not(.lexiom-readonly-surface) {
+  background: color-mix(in srgb, var(--lexiom-surface-bg) 55%, #1e1e1e 45%);
+}
+
+body.lexiom-13-body.lexiom-cockpit-mode #lexiom-center-playfield .lexiom-draft-card:not(.lexiom-readonly-surface) .lexiom-draft-card-editor {
+  opacity: 1;
+}
+
+.lexiom-draft-card-glyph.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.lexiom-osn-build-trigger {
+  position: relative;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: var(--lexiom-13-osn-control-size, 1.65rem);
+  height: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-width: var(--lexiom-13-osn-control-size, 1.65rem);
+  min-height: var(--lexiom-13-osn-control-size, 1.65rem);
+  padding: 0;
+  border: 1px solid var(--lexiom-13-border-subtle);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--lexiom-13-text-strong);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, filter 0.2s ease, color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lexiom-osn-build-bulb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.lexiom-osn-build-trigger:not(.is-disabled):not(.is-lit),
+.lexiom-osn-build-trigger.is-disabled {
+  opacity: 1;
+  filter: none;
+  color: var(--lexiom-13-glyph-inactive);
+}
+
+.lexiom-osn-build-trigger.is-lit {
+  opacity: 1;
+  filter: none;
+  color: #4de4ff;
+  background: transparent;
+  border-color: rgba(77, 228, 255, 0.35);
+  box-shadow: 0 0 10px rgba(77, 228, 255, 0.35), 0 0 18px rgba(77, 170, 252, 0.2);
+}
+
+.lexiom-osn-build-trigger.is-preparing {
+  color: #f0c060;
+  border-color: rgba(240, 192, 96, 0.62);
+  box-shadow: 0 0 8px rgba(240, 192, 96, 0.25);
+  cursor: wait;
+  animation: lexiom-build-acknowledged 0.9s ease-in-out infinite alternate;
+}
+
+.lexiom-osn-build-trigger.is-prepared {
+  color: #f0c060;
+  background: rgba(240, 192, 96, 0.08);
+  border-color: rgba(240, 192, 96, 0.72);
+  box-shadow: 0 0 10px rgba(240, 192, 96, 0.32);
+}
+
+.lexiom-osn-build-trigger.is-running {
+  color: #4de4ff;
+  border-color: rgba(77, 228, 255, 0.65);
+  cursor: wait;
+  animation: lexiom-build-active 1.35s ease-in-out infinite;
+}
+
+.lexiom-osn-build-trigger.is-running::after {
+  content: "";
+  position: absolute;
+  inset: -0.28rem;
+  border: 1px solid rgba(77, 228, 255, 0.72);
+  border-radius: 7px;
+  animation: lexiom-build-orbit 1.35s ease-out infinite;
+  pointer-events: none;
+}
+
+.lexiom-osn-build-trigger.is-completed {
+  color: #82e6b0;
+  border-color: rgba(130, 230, 176, 0.72);
+  box-shadow: 0 0 10px rgba(130, 230, 176, 0.32),
+    0 0 18px rgba(77, 170, 252, 0.14);
+}
+
+.lexiom-osn-build-trigger.is-failed {
+  color: #ff8585;
+  border-color: rgba(255, 133, 133, 0.72);
+  box-shadow: 0 0 8px rgba(255, 90, 90, 0.24);
+}
+
+.lexiom-osn-build-trigger.is-busy:disabled {
+  opacity: 1;
+  filter: none;
+}
+
+.lexiom-osn-build-trigger.is-lit .lexiom-osn-build-bulb svg {
+  filter: drop-shadow(0 0 3px rgba(77, 228, 255, 0.95)) drop-shadow(0 0 8px rgba(77, 170, 252, 0.65));
+}
+
+.lexiom-osn-build-trigger:hover {
+  background: var(--lexiom-highlight-bg);
+  border-color: var(--lexiom-frame);
+}
+
+.lexiom-osn-build-trigger.is-lit:hover {
+  background: rgba(77, 170, 252, 0.08);
+  border-color: rgba(77, 228, 255, 0.5);
+  box-shadow: 0 0 12px rgba(77, 228, 255, 0.45), 0 0 22px rgba(77, 170, 252, 0.28);
+}
+
+.lexiom-osn-build-trigger.is-lit:hover .lexiom-osn-build-bulb svg {
+  filter: drop-shadow(0 0 4px rgba(77, 228, 255, 1)) drop-shadow(0 0 10px rgba(77, 170, 252, 0.75));
+}
+
+.lexiom-osn-build-trigger.is-disabled {
+  cursor: default;
+  border-style: dashed;
+}
+
+.lexiom-osn-build-trigger.is-disabled:hover {
+  background: transparent;
+  border-color: var(--lexiom-13-border-subtle);
+}
+
+@keyframes lexiom-build-acknowledged {
+  from {
+    box-shadow: 0 0 5px rgba(240, 192, 96, 0.2);
+  }
+  to {
+    box-shadow: 0 0 12px rgba(240, 192, 96, 0.52);
+  }
+}
+
+@keyframes lexiom-build-active {
+  0%,
+  100% {
+    box-shadow: 0 0 7px rgba(77, 228, 255, 0.26),
+      0 0 13px rgba(77, 170, 252, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(77, 228, 255, 0.64),
+      0 0 24px rgba(77, 170, 252, 0.32);
+  }
+}
+
+@keyframes lexiom-build-orbit {
+  from {
+    opacity: 0.82;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+}
+
+.lexiom-build-status-banner {
+  margin: 0.7rem 0 0.25rem;
+  padding: 0.72rem 0.82rem;
+  border: 1px solid var(--lexiom-13-border-subtle);
+  border-left-width: 3px;
+  border-radius: 5px;
+  background: color-mix(
+    in srgb,
+    var(--lexiom-13-cockpit-surface) 88%,
+    var(--lexiom-frame) 12%
+  );
+}
+
+.lexiom-build-status-banner.is-preparing {
+  border-left-color: #f0c060;
+}
+
+.lexiom-build-status-banner.is-prepared {
+  border-left-color: #f0c060;
+}
+
+.lexiom-build-status-banner.is-running {
+  border-left-color: #4de4ff;
+}
+
+.lexiom-build-status-banner.is-completed {
+  border-left-color: #82e6b0;
+}
+
+.lexiom-build-status-banner.is-failed {
+  border-left-color: #ff8585;
+}
+
+.lexiom-build-status-phase {
+  color: var(--lexiom-13-text-strong);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+.lexiom-build-status-meta {
+  margin-top: 0.22rem;
+  color: var(--lexiom-13-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.lexiom-build-progress-rail {
+  position: relative;
+  height: 2px;
+  margin-top: 0.62rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(77, 170, 252, 0.16);
+}
+
+.lexiom-build-progress-fill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 34%;
+  border-radius: inherit;
+  background: currentColor;
+}
+
+.lexiom-build-status-banner.is-preparing .lexiom-build-progress-fill {
+  color: #f0c060;
+  animation: lexiom-build-progress 1.2s ease-in-out infinite;
+}
+
+.lexiom-build-status-banner.is-running .lexiom-build-progress-fill {
+  color: #4de4ff;
+  animation: lexiom-build-progress 1.2s ease-in-out infinite;
+}
+
+.lexiom-build-status-banner.is-completed .lexiom-build-progress-fill {
+  width: 100%;
+  color: #82e6b0;
+}
+
+@keyframes lexiom-build-progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(305%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lexiom-osn-build-trigger.is-preparing,
+  .lexiom-osn-build-trigger.is-running,
+  .lexiom-osn-build-trigger.is-running::after,
+  .lexiom-build-status-banner .lexiom-build-progress-fill {
+    animation: none;
+  }
+
+  .lexiom-build-status-banner.is-preparing .lexiom-build-progress-fill,
+  .lexiom-build-status-banner.is-running .lexiom-build-progress-fill {
+    width: 62%;
+  }
+}
+
+.lexiom-osn-section-branch {
+  margin-left: 0.8rem;
+  padding-left: 0.65rem;
+  border-left-style: dashed;
+  border-left-color: var(--lexiom-13-border-muted);
+}
+
+/* Four maturation-section glyphs share one horizontal LTR group:
+   Seed â†’ Thematic Lenses â†’ Output Spec â†’ Success Evidences. */
+.lexiom-osn-section-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.lexiom-osn-section-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 1.7rem;
+  min-height: 1.55rem;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.84rem;
+  font-style: normal;
+  color: var(--lexiom-13-text-muted);
+  background: transparent;
+  border-color: var(--lexiom-13-border-muted);
+  border-style: dashed;
+  opacity: 1;
+}
+
+.lexiom-osn-section-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.lexiom-osn-section-glyph svg {
+  display: block;
+}
+
+.lexiom-osn-section-trigger:hover {
+  color: var(--lexiom-13-text-strong);
+}
+
+/* Selected section glyph glows in the bluish neon so the player connects the
+   center section strip with the presentation shown in the draft card below. */
+.lexiom-osn-section-trigger.is-selected {
+  color: var(--lexiom-frame);
+  font-weight: 600;
+}
+
+.lexiom-osn-section-trigger.is-selected .lexiom-osn-section-glyph svg {
+  filter: drop-shadow(0 0 4px var(--lexiom-frame-rgba))
+    drop-shadow(0 0 9px var(--lexiom-frame-rgba));
+}
+
+.lexiom-osn-build-child {
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+.lexiom-osn-trigger {
+  width: 100%;
+  border: 1px solid transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.lexiom-osn-section-trigger.lexiom-osn-trigger {
+  width: auto;
+}
+
+.lexiom-osn-trigger:hover {
+  border-color: var(--lexiom-frame-rgba);
+  background: var(--lexiom-highlight-bg);
+}
+
+/* The Focus OSN gets the strongest treatment; ancestors stay visible as a
+   softer breadcrumb trail so the current node is unmistakable. */
+.lexiom-osn-node-main.is-selected {
+  border-color: var(--lexiom-frame);
+  background: var(--lexiom-selection-bg);
+  box-shadow: 0 0 6px var(--lexiom-frame-rgba), 0 0 12px var(--lexiom-frame-rgba);
+  font-weight: 700;
+  color: var(--lexiom-frame);
+}
+
+.lexiom-osn-node-main.is-ancestor {
+  border-color: var(--lexiom-frame-rgba);
+  background: var(--lexiom-highlight-bg);
+  opacity: 0.8;
+}
+
+/* Non-focus OSN buttons drop their resting wireframe outline; only the Focus
+   OSN keeps its bordered frame. Hover still previews a subtle border. */
+.lexiom-osn-node-main:not(.is-selected) {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.lexiom-osn-node-main:not(.is-selected):hover {
+  border-color: var(--lexiom-frame-rgba);
+}
+
+.lexiom-osn-focus {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+  flex-shrink: 0;
+}
+
+/* Center playfield strip for the Focus OSN's four section glyphs. */
+.lexiom-osn-section-strip {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  padding: 0.35rem 0 0.5rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 0.5px solid var(--lexiom-13-wireframe-rgba, var(--lexiom-frame-rgba));
+}
+
+.lexiom-osn-section-strip .lexiom-osn-section-row {
+  margin: 0;
+  padding: 0;
+}
+
+.lexiom-osn-focus-title {
+  font-size: var(--lexiom-font-title);
+  font-weight: var(--lexiom-title-font-weight);
+  letter-spacing: var(--lexiom-title-letter-spacing);
+}
+
+.lexiom-osn-focus-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.lexiom-osn-focus-meta {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.lexiom-osn-focus-meta-strip {
+  line-height: 1.45;
+  unicode-bidi: plaintext;
+  text-align: center;
+}
+
+.lexiom-osn-focus-meta-strip .lexiom-13-region-label {
+  margin-bottom: 0;
+}
+
+.lexiom-osn-focus-meta-strip .lexiom-osn-focus-meta-trigger.lexiom-13-region-label {
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: var(--lexiom-title-font-weight);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.lexiom-osn-focus-owner-prefix {
+  display: inline;
+  white-space: pre;
+  user-select: none;
+}
+
+.lexiom-osn-focus-meta-cell {
+  display: inline;
+  vertical-align: baseline;
+  max-width: 100%;
+}
+
+.lexiom-osn-focus-meta-editable,
+.lexiom-osn-focus-meta-trigger {
+  outline: none;
+  cursor: pointer;
+  border-bottom: 1px dashed transparent;
+  padding-inline: 0.12em;
+  min-width: 2ch;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.lexiom-osn-focus-meta-trigger {
+  display: inline;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  text-align: inherit;
+}
+
+.lexiom-osn-focus-meta-editable:hover,
+.lexiom-osn-focus-meta-editable:focus,
+.lexiom-osn-focus-meta-trigger:hover,
+.lexiom-osn-focus-meta-trigger:focus,
+.lexiom-osn-focus-meta-trigger.is-selected {
+  border-bottom-color: var(--lexiom-frame-rgba, rgba(0, 0, 0, 0.35));
+  opacity: 1;
+}
+
+.lexiom-osn-focus-meta-divider {
+  display: inline;
+  white-space: pre;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.75;
+}
+
+.lexiom-osn-card {
+  font-size: var(--lexiom-font-content);
+  line-height: 1.45;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.lexiom-13-draft-host {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.lexiom-osn-section {
+  margin-bottom: 1rem;
+}
+
+.lexiom-osn-section:last-child {
+  margin-bottom: 0;
+}
+
+.lexiom-osn-section-title {
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  margin-bottom: 0.45rem;
+}
+
+.lexiom-osn-copy {
+  margin: 0;
+}
+
+.lexiom-osn-detail-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.lexiom-osn-detail-list li {
+  margin-bottom: 0.35rem;
+}
+
+.lexiom-osn-output-spec {
+  margin: 0;
+  white-space: pre-wrap;
+  font: inherit;
+  color: inherit;
+  background: var(--lexiom-surface-bg);
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+.lexiom-13-welcome-lead {
+  margin: 0 0 0.75rem;
+}
+
+.lexiom-13-muted {
+  margin: 0;
+  opacity: 0.72;
+  font-size: 0.9rem;
+}
+
+.lexiom-success-evidences {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.lexiom-success-evidences li {
+  margin-bottom: 0.25rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.lexiom-success-evidences li {
+  padding: 0.35rem 0.5rem;
+  background: var(--lexiom-surface-bg);
+}
+
+.lexiom-success-evidences-inline {
+  margin-bottom: 0;
+}
+
+.lexiom-evidence-item {
+  display: block;
+}
+
+.lexiom-evidence-title {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.lexiom-evidence-body {
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.lexiom-evidence-artifact-item {
+  min-height: 3.5rem;
+}
+
+.lexiom-evidence-placeholder {
+  margin-top: 0.25rem;
+  font-size: 0.84rem;
+  font-style: italic;
+  opacity: 0.68;
+}
+
+.lexiom-evidence-artifact-name {
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  opacity: 0.82;
+  word-break: break-word;
+}
+
+.lexiom-evidence-artifact-trigger {
+  width: 100%;
+  border: 1px solid var(--lexiom-13-border-subtle);
+  border-radius: 4px;
+  background: var(--lexiom-surface-bg);
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: normal;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.lexiom-evidence-artifact-trigger:hover {
+  border-color: var(--lexiom-frame-rgba);
+  background: var(--lexiom-highlight-bg);
+}
+
+.lexiom-evidence-artifact-trigger.is-selected {
+  border-color: var(--lexiom-frame);
+  background: var(--lexiom-selection-bg);
+}
+
+.lexiom-evidence-approval {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--lexiom-13-border-subtle);
+}
+
+.lexiom-evidence-approval-checkbox {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--lexiom-frame);
+}
+
+.lexiom-evidence-approval-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.lexiom-evidence-approval-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lexiom-evidence-approval-checkbox:disabled + .lexiom-evidence-approval-label {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.lexiom-evidence-artifact-item.is-approved {
+  border-left: 3px solid var(--lexiom-frame);
+  padding-left: 0.4rem;
+}
+
+.lexiom-evidence-artifact-item.is-approved .lexiom-evidence-approval-label {
+  opacity: 1;
+  color: var(--lexiom-frame);
+}
+
+.lexiom-evidence-center-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.lexiom-lineage-narrative-card {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  min-height: 0;
+  margin-top: 0;
+  border-width: var(--lexiom-13-wireframe-width, 1px);
+  border-color: var(--lexiom-13-wireframe, var(--lexiom-frame));
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.lexiom-lineage-narrative-card-solo {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Unify with OSN draft cards: the IDE editor shell fills the narrative card
+   below the header (no content-capped height). */
+.lexiom-lineage-narrative-card .lexiom-draft-card-header {
+  flex: 0 0 auto;
+}
+
+.lexiom-lineage-narrative-card .lexiom-draft-card-editor {
+  flex: 1 1 0;
+  min-height: 0;
+  height: auto;
+  align-self: stretch;
+}
+
+.lexiom-lineage-narrative-card.is-link-target-flash {
+  border-color: var(--lexiom-frame);
+  box-shadow: 0 0 0 1px var(--lexiom-frame-rgba), 0 0 18px var(--lexiom-frame-rgba);
+}
+
+.lexiom-lineage-narrative-text {
+  resize: none;
+}
+
+.lexiom-evidence-viewer-host {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lexiom-evidence-viewer-host .lexiom-evidence-viewer {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.lexiom-evidence-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.lexiom-evidence-viewer-body {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.lexiom-evidence-viewer-media {
+  margin: 0;
+}
+
+.lexiom-evidence-viewer-image,
+.lexiom-evidence-viewer-video {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--lexiom-13-border-subtle);
+  background: #101010;
+}
+
+.lexiom-evidence-viewer-text,
+.lexiom-evidence-viewer-code {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: inherit;
+  line-height: 1.45;
+  background: var(--lexiom-surface-bg);
+  border: 1px solid var(--lexiom-13-border-subtle);
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+.lexiom-evidence-viewer-code code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.86rem;
+}
+
+.lexiom-13-ribbon-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border: 1px dashed var(--lexiom-frame-rgba);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  opacity: 0.75;
+  letter-spacing: 0.04em;
+}
+
+.lexiom-causal-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 160px;
+}
+
+.lexiom-causal-chat-panels {
+  display: flex;
+  flex-direction: row;
+  gap: 0.65rem;
+  align-items: stretch;
+  min-height: 0;
+}
+
+.lexiom-causal-chat-ask-panel,
+.lexiom-causal-chat-exposition-panel {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.lexiom-causal-chat-panel-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.lexiom-causal-chat-ask-panel.is-unlock-flash {
+  animation: lexiom-ask-unlock-flash 1.4s ease-out;
+}
+
+@keyframes lexiom-ask-unlock-flash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(120, 200, 255, 0.55);
+  }
+  40% {
+    box-shadow: 0 0 0 3px rgba(120, 200, 255, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(120, 200, 255, 0);
+  }
+}
+
+.lexiom-causal-ask-card {
+  flex: 1 1 auto;
+  min-height: 120px;
+  margin-top: 0;
+  border-width: var(--lexiom-13-wireframe-width, 1px);
+  border-color: var(--lexiom-13-wireframe, var(--lexiom-frame));
+  padding: 0.35rem 0.45rem;
+}
+
+.lexiom-causal-ask-input {
+  min-height: 96px;
+  max-height: 180px;
+  border: none;
+  padding: 0.2rem 0.1rem;
+  color: var(--lexiom-text);
+  font-family: inherit;
+  font-size: var(--lexiom-font-content);
+  line-height: 1.45;
+}
+
+.lexiom-causal-ask-input:focus {
+  border: none;
+  outline: none;
+  color: var(--lexiom-text);
+  caret-color: var(--lexiom-text);
+}
+
+.lexiom-causal-ask-input:disabled {
+  opacity: 0.55;
+}
+
+.lexiom-causal-exec-summary-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lexiom-causal-exec-summary-card .lexiom-evidence-artifact-trigger {
+  flex: 1 1 auto;
+  min-height: 4.5rem;
+  color: var(--lexiom-text);
+  font-family: inherit;
+  font-size: var(--lexiom-font-content);
+  line-height: 1.45;
+}
+
+.lexiom-causal-exec-summary-card .lexiom-evidence-artifact-trigger.is-disabled {
+  opacity: 0.72;
+  cursor: default;
+  pointer-events: none;
+}
+
+.lexiom-causal-exec-summary-trigger .lexiom-evidence-artifact-name,
+.lexiom-causal-exec-summary-card .lexiom-evidence-artifact-name {
+  margin-top: 0;
+  white-space: normal;
+  text-align: start;
+  color: var(--lexiom-text);
+  font-family: inherit;
+  font-size: var(--lexiom-font-content);
+  line-height: 1.45;
+  opacity: 1;
+  word-break: break-word;
+}
+
+.lexiom-causal-exec-summary-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.lexiom-causal-exec-summary-question,
+.lexiom-causal-exec-summary-answer {
+  color: var(--lexiom-text);
+  font-family: inherit;
+  font-size: var(--lexiom-font-content);
+  line-height: 1.45;
+  opacity: 1;
+}
+
+.lexiom-causal-exec-summary-divider {
+  width: 100%;
+  border-top: var(--lexiom-13-wireframe-width, 1px) solid
+    var(--lexiom-13-wireframe, var(--lexiom-frame));
+  opacity: 0.7;
+}
+
+.lexiom-causal-chat-status {
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+#lexiom-center-playfield.lexiom-center-playfield {
+  display: flex;
+  flex-direction: column;
+}
+
+#lexiom-center-playfield .lexiom-center-activity {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Center playfield fade: outgoing content dissolves into the playfield
+   background, then the incoming content fades into being. Used for Focus OSN
+   scroll, section-key exposition swaps, and draft presentation-mode flips.
+   Baseline times = Lexiom's Canonical Duration (LCD) in app.js
+   (LCD_FADE_OUT_MS / LCD_FADE_IN_MS); readyâ†’editing may override to half LCD;
+   section-key swaps may override to 3/4 LCD. */
+.lexiom-center-fade-overlay {
+  position: absolute;
+  inset: 0;
+  min-height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 1;
+  /* linear keeps the outgoing content visible across the whole fade;
+     the default ease curve dropped ~80% of opacity in the first half.
+     Duration must match LCD_FADE_OUT_MS in app.js (unless inline-scaled). */
+  transition: opacity 1.5s linear;
+}
+
+.lexiom-center-fade-overlay.is-fading {
+  opacity: 0;
+}
+
+/* DaDa dropping-text rain: look-and-feel only; above fade overlay, non-interactive. */
+.lexiom-dada-dropping-text {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 1;
+}
+
+.lexiom-dada-dropping-text-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lexiom-dada-dropping-text {
+    display: none;
+  }
+}
+
+/* DaDa outline breath on Focus OSN transitions (color driven in JS). */
+#lexiom-center-playfield.lexiom-dada-outline-breathing {
+  outline-style: solid;
+  outline-offset: -1px;
+}
+
+#lexiom-osn-card.is-center-fade-hidden {
+  opacity: 0;
+}
+
+#lexiom-osn-card.is-center-fading-in {
+  opacity: 1;
+  /* Duration must match LCD_FADE_IN_MS in app.js (unless inline-scaled). */
+  transition: opacity 3s ease;
+}
+
+#lexiom-center-playfield .lexiom-bottom-ribbon {
+  border-top: var(--lexiom-13-wireframe-width, 2px) solid var(--lexiom-13-wireframe, var(--lexiom-frame));
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.lexiom-13-error {
+  color: var(--lexiom-13-error);
+  line-height: 1.45;
+}
+
+.lexiom-welcome-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  background: var(--lexiom-overlay-bg, rgba(20, 20, 20, 0.9));
+  backdrop-filter: blur(2px);
+}
+
+.lexiom-welcome-modal-overlay[hidden] {
+  display: none;
+}
+
+.lexiom-welcome-modal {
+  max-width: 30rem;
+  width: 100%;
+  padding: 1.75rem 1.75rem 1.5rem;
+  border: 1px solid var(--lexiom-frame);
+  border-radius: 10px;
+  background: var(--lexiom-surface-bg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 24px var(--lexiom-frame-rgba);
+  color: var(--lexiom-text);
+}
+
+.lexiom-welcome-modal-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.lexiom-welcome-modal-body {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.lexiom-welcome-modal-button {
+  margin-top: 0.35rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--lexiom-frame);
+  border-radius: 6px;
+  background: var(--lexiom-selection-bg);
+  color: var(--lexiom-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.lexiom-welcome-modal-button:hover {
+  background: var(--lexiom-highlight-strong);
+}
+
+
+/* Phase B - Bud download control (inline after card title) */
+.lexiom-bud-draft-download {
+  appearance: none;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.lexiom-bud-draft-download:hover {
+  background: transparent;
+  opacity: 1;
+}
+
+.lexiom-bud-draft-download:focus-visible {
+  outline: 1px solid var(--lexiom-frame);
+  outline-offset: 1px;
+}
+
+.lexiom-bud-draft-download-glyph {
+  display: inline-flex;
+  line-height: 0;
+}

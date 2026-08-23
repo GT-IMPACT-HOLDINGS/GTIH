@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lexiom Cockpit — Calendar + Case-List Wireframe (text-free)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #030416;
+      --frame: #9d7bff;
+      --frame-soft: rgba(157, 123, 255, 0.5);
+      --frame-faint: rgba(157, 123, 255, 0.28);
+      --fill-dim: rgba(157, 123, 255, 0.12);
+      --fill-mid: rgba(157, 123, 255, 0.22);
+      --fill-strong: rgba(157, 123, 255, 0.38);
+      --cabinet-bg: radial-gradient(circle at 50% 12%, #2c1d6b 0%, #130a33 48%, #050316 100%);
+      --scanline-opacity: 0.18;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7f5fb;
+        --frame: #7a6c9e;
+        --frame-soft: rgba(122, 108, 158, 0.55);
+        --frame-faint: rgba(122, 108, 158, 0.30);
+        --fill-dim: rgba(122, 108, 158, 0.14);
+        --fill-mid: rgba(122, 108, 158, 0.26);
+        --fill-strong: rgba(122, 108, 158, 0.42);
+        --cabinet-bg: radial-gradient(circle at 50% 12%, #f1ecf8 0%, #ece6f5 58%, #e2d9ef 100%);
+        --scanline-opacity: 0;
+      }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--frame);
+    }
+
+    .stage {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Cabinet shell — same footprint, dissolved outline + scanlines kept */
+    .cabinet {
+      width: 80vw;
+      height: 80vh;
+      background: var(--cabinet-bg);
+      border: 2px solid transparent;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      isolation: isolate;
+      filter: contrast(1.05) saturate(1.03);
+      overflow: hidden;
+    }
+    .cabinet::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.55) 0px,
+        rgba(0, 0, 0, 0) 2px
+      );
+      opacity: var(--scanline-opacity);
+    }
+    .cabinet > * { position: relative; z-index: 1; }
+
+    /* Reserved space: Top HUD (16%) + L3 ribbon at bottom of center (12%) */
+    .top-hud-slot {
+      flex: 0 0 16%;
+      border-bottom: 1px solid transparent;
+    }
+    /* L3 ribbon slot — space reserved at the bottom of the Center column
+       (same 12% as wireframe.html), but the three buttons are omitted. */
+    .l3-ribbon-slot {
+      flex: 0 0 12%;
+    }
+
+    /* Main row: Left 20% / Center 60% / Right 20% */
+    .main {
+      flex: 1 1 0;
+      display: flex;
+      min-height: 0;
+    }
+
+    .panel {
+      padding: 1.4vh 1ch;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1vh;
+      box-sizing: border-box;
+      min-height: 0;
+    }
+    .panel-left {
+      flex: 1 1 0;
+      border-right: 1px solid transparent;
+    }
+    .panel-right {
+      flex: 1 1 0;
+      border-left: 1px solid transparent;
+      overflow-y: auto;
+    }
+    .center {
+      flex: 2 1 0;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      min-height: 0;
+    }
+
+    /* Common left-aligned panel-title bar */
+    .panel-title {
+      height: 1vh;
+      width: 38%;
+      background: var(--fill-strong);
+      border-radius: 2px;
+    }
+
+    /* ===== Left Panel — Calendar ===== */
+    .calendar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9vh;
+      min-width: 0;
+    }
+    .cal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8ch;
+    }
+    .cal-arrow {
+      width: 0;
+      height: 0;
+      border-top: 0.7vh solid transparent;
+      border-bottom: 0.7vh solid transparent;
+      flex-shrink: 0;
+    }
+    .cal-arrow.prev { border-right: 0.9vh solid var(--frame); }
+    .cal-arrow.next { border-left: 0.9vh solid var(--frame); }
+    .cal-month {
+      flex: 1 1 0;
+      height: 1.2vh;
+      background: var(--fill-strong);
+      border-radius: 2px;
+    }
+
+    .cal-dow-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.35vh;
+    }
+    .cal-dow {
+      height: 0.7vh;
+      background: var(--fill-mid);
+      border-radius: 1px;
+      opacity: 0.85;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.35vh;
+    }
+    .cal-cell {
+      aspect-ratio: 1 / 1;
+      background: var(--fill-dim);
+      border: 1px solid var(--frame-faint);
+      position: relative;
+    }
+    .cal-cell.muted {
+      opacity: 0.35;
+    }
+    .cal-cell.today {
+      background: var(--fill-strong);
+      border-color: var(--frame);
+      box-shadow: 0 0 4px var(--frame-soft);
+    }
+    .cal-cell.event::after {
+      content: "";
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 0.45vh;
+      height: 0.45vh;
+      background: var(--frame);
+      border-radius: 50%;
+    }
+    .cal-cell.event-2::before {
+      content: "";
+      position: absolute;
+      bottom: 2px;
+      right: calc(2px + 0.7vh);
+      width: 0.45vh;
+      height: 0.45vh;
+      background: var(--frame);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+
+    /* ===== Right Panel — List of cases ===== */
+    .case-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .case-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8ch;
+      padding: 0.9vh 0.4ch;
+      border-bottom: 1px solid var(--frame-faint);
+      border-left: 2px solid transparent;
+    }
+    .case-row:last-child { border-bottom: none; }
+    .case-row.active {
+      background: var(--fill-mid);
+      border-left-color: var(--frame);
+      padding-left: 0.4ch;
+    }
+    .case-pip {
+      width: 1.3vh;
+      height: 1.3vh;
+      border-radius: 50%;
+      border: 1.5px solid var(--frame);
+      background: transparent;
+      flex-shrink: 0;
+    }
+    .case-pip.solid {
+      background: var(--frame);
+    }
+    .case-pip.check {
+      background: var(--frame);
+      position: relative;
+    }
+    .case-pip.check::after {
+      content: "";
+      position: absolute;
+      left: 28%;
+      top: 12%;
+      width: 22%;
+      height: 55%;
+      border-right: 1.5px solid var(--bg);
+      border-bottom: 1.5px solid var(--bg);
+      transform: rotate(45deg);
+    }
+    .case-content {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45vh;
+      min-width: 0;
+    }
+    .case-title {
+      height: 0.95vh;
+      background: var(--fill-strong);
+      border-radius: 1px;
+    }
+    .case-meta {
+      height: 0.6vh;
+      background: var(--fill-mid);
+      opacity: 0.7;
+      border-radius: 1px;
+    }
+    .case-status {
+      width: 0.7vh;
+      height: 0.7vh;
+      background: var(--frame);
+      flex-shrink: 0;
+      border-radius: 1px;
+    }
+    .case-status.dim {
+      background: var(--frame-faint);
+    }
+
+    /* Center Playfield — draft-first card silhouette (same as wireframe.html) */
+    .activity {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4vh;
+      padding: 2vh 2ch;
+      min-height: 0;
+    }
+    .draft-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1.2ch;
+    }
+    .glyph {
+      width: 1.8vh;
+      height: 1.8vh;
+      border: 1.5px solid var(--frame);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .draft-card-label {
+      flex: 0 0 30%;
+      height: 1vh;
+      background: var(--fill-strong);
+    }
+    .draft-card-body {
+      flex: 1 1 0;
+      border: 1px solid var(--frame-soft);
+      background: var(--fill-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 1.8vh;
+      padding: 1.6vh 1.4ch;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .paragraph {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7vh;
+    }
+    .text-line {
+      height: 0.7vh;
+      background: var(--fill-strong);
+      opacity: 0.7;
+      border-radius: 1px;
+    }
+    /* Mixed row: a row of segments that visually breaks a "line of text"
+       into plain text segments + an inline "hyperlink" segment. */
+    .text-row {
+      height: 0.7vh;
+      display: flex;
+      align-items: center;
+      gap: 0.6ch;
+    }
+    .text-seg {
+      height: 100%;
+      background: var(--fill-strong);
+      opacity: 0.7;
+      border-radius: 1px;
+    }
+    /* Hyperlink segment: brighter saturated tone + a thin underline below,
+       to evoke "clickable hyperlink to stored data". */
+    .text-link {
+      position: relative;
+      height: 100%;
+      background: var(--frame);
+      border-radius: 1px;
+      box-shadow: 0 0 3px var(--frame-soft);
+    }
+    .text-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.45vh;
+      height: 1px;
+      background: var(--frame);
+    }
+    .w-95 { width: 95%; }
+    .w-88 { width: 88%; }
+    .w-82 { width: 82%; }
+    .w-75 { width: 75%; }
+    .w-66 { width: 66%; }
+    .w-58 { width: 58%; }
+    .w-44 { width: 44%; }
+    .w-32 { width: 32%; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="cabinet" aria-hidden="true">
+
+      <!-- Reserved Top HUD band (empty) -->
+      <div class="top-hud-slot"></div>
+
+      <main class="main">
+
+        <!-- Left Panel: Calendar -->
+        <aside class="panel panel-left">
+          <div class="panel-title"></div>
+
+          <div class="calendar">
+            <div class="cal-header">
+              <div class="cal-arrow prev"></div>
+              <div class="cal-month"></div>
+              <div class="cal-arrow next"></div>
+            </div>
+
+            <div class="cal-dow-row">
+              <div class="cal-dow"></div>
+              <div class="cal-dow"></div>
+              <div class="cal-dow"></div>
+              <div class="cal-dow"></div>
+              <div class="cal-dow"></div>
+              <div class="cal-dow"></div>
+              <div class="cal-dow"></div>
+            </div>
+
+            <!-- 6 weeks x 7 days; first 3 + last 7 muted (prev / next month);
+                 a few cells flagged as event days; one cell marks "today". -->
+            <div class="cal-grid">
+              <!-- Week 1: 3 muted + 4 current -->
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell event"></div>
+              <div class="cal-cell"></div>
+
+              <!-- Week 2 -->
+              <div class="cal-cell"></div>
+              <div class="cal-cell event"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell event event-2"></div>
+              <div class="cal-cell"></div>
+
+              <!-- Week 3 — today sits mid-week -->
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell today event"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell event"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+
+              <!-- Week 4 -->
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell event"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell event"></div>
+
+              <!-- Week 5 -->
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell event"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell"></div>
+              <div class="cal-cell muted"></div>
+
+              <!-- Week 6: 6 muted (next month) -->
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+              <div class="cal-cell muted"></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center Playfield: same draft-first card + L3 ribbon as wireframe.html -->
+        <section class="center">
+          <div class="activity">
+            <div class="draft-card-header">
+              <div class="glyph"></div>
+              <div class="draft-card-label"></div>
+            </div>
+            <div class="draft-card-body">
+              <div class="paragraph">
+                <div class="text-line w-95"></div>
+                <div class="text-line w-88"></div>
+                <div class="text-row w-82">
+                  <div class="text-seg" style="flex: 0 0 44%;"></div>
+                  <div class="text-link" style="flex: 0 0 20%;"></div>
+                  <div class="text-seg" style="flex: 0 0 30%;"></div>
+                </div>
+                <div class="text-line w-95"></div>
+                <div class="text-line w-75"></div>
+                <div class="text-row w-88">
+                  <div class="text-seg" style="flex: 0 0 58%;"></div>
+                  <div class="text-link" style="flex: 0 0 36%;"></div>
+                </div>
+                <div class="text-line w-82"></div>
+                <div class="text-line w-66"></div>
+              </div>
+              <div class="paragraph">
+                <div class="text-line w-95"></div>
+                <div class="text-row w-88">
+                  <div class="text-seg" style="flex: 0 0 24%;"></div>
+                  <div class="text-link" style="flex: 0 0 22%;"></div>
+                  <div class="text-seg" style="flex: 0 0 48%;"></div>
+                </div>
+                <div class="text-line w-82"></div>
+                <div class="text-line w-95"></div>
+                <div class="text-row w-75">
+                  <div class="text-seg" style="flex: 0 0 55%;"></div>
+                  <div class="text-link" style="flex: 0 0 40%;"></div>
+                </div>
+                <div class="text-line w-58"></div>
+              </div>
+              <div class="paragraph">
+                <div class="text-line w-88"></div>
+                <div class="text-line w-95"></div>
+                <div class="text-row w-82">
+                  <div class="text-seg" style="flex: 0 0 38%;"></div>
+                  <div class="text-link" style="flex: 0 0 24%;"></div>
+                  <div class="text-seg" style="flex: 0 0 32%;"></div>
+                </div>
+                <div class="text-line w-66"></div>
+                <div class="text-line w-44"></div>
+                <div class="text-line w-32"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="l3-ribbon-slot"></div>
+        </section>
+
+        <!-- Right Panel: List of cases -->
+        <aside class="panel panel-right">
+          <div class="panel-title"></div>
+
+          <div class="case-list">
+            <div class="case-row">
+              <div class="case-pip check"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:78%;"></div>
+                <div class="case-meta" style="width:42%;"></div>
+              </div>
+              <div class="case-status dim"></div>
+            </div>
+
+            <div class="case-row active">
+              <div class="case-pip solid"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:88%;"></div>
+                <div class="case-meta" style="width:55%;"></div>
+              </div>
+              <div class="case-status"></div>
+            </div>
+
+            <div class="case-row">
+              <div class="case-pip"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:70%;"></div>
+                <div class="case-meta" style="width:38%;"></div>
+              </div>
+              <div class="case-status dim"></div>
+            </div>
+
+            <div class="case-row">
+              <div class="case-pip solid"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:82%;"></div>
+                <div class="case-meta" style="width:48%;"></div>
+              </div>
+              <div class="case-status"></div>
+            </div>
+
+            <div class="case-row">
+              <div class="case-pip"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:60%;"></div>
+                <div class="case-meta" style="width:32%;"></div>
+              </div>
+              <div class="case-status dim"></div>
+            </div>
+
+            <div class="case-row">
+              <div class="case-pip check"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:74%;"></div>
+                <div class="case-meta" style="width:44%;"></div>
+              </div>
+              <div class="case-status dim"></div>
+            </div>
+
+            <div class="case-row">
+              <div class="case-pip"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:66%;"></div>
+                <div class="case-meta" style="width:36%;"></div>
+              </div>
+              <div class="case-status dim"></div>
+            </div>
+
+            <div class="case-row">
+              <div class="case-pip solid"></div>
+              <div class="case-content">
+                <div class="case-title" style="width:80%;"></div>
+                <div class="case-meta" style="width:50%;"></div>
+              </div>
+              <div class="case-status"></div>
+            </div>
+          </div>
+        </aside>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>

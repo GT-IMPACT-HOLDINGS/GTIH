@@ -1,0 +1,196 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "21311eab-4f9f-446b-be2a-36b39e874cf1",
+  "lane": "agent_broker",
+  "created_at": "2026-08-01T07:46:01.697Z",
+  "completed_at": "2026-08-01T07:46:22.407Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "msa2heco_4e3151f8",
+      "pass": "builder",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-08-01T07:46:01.697Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 975
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 17682
+      }
+    ],
+    "message_count": 2,
+    "packet_chars": 20069,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nDocument mode uses BUILD_PLAN plus immutable per-node JSON under ./nodes/ and SOURCE_MAP. Read only the node keys assigned to the current phase.\nUse write_file for complete artifact contents.\nPrimary deliverable path: document.md\nWrite phase artifacts only (OUTLINE.md or the assigned sections/*.md). Host assembly owns document.md unless a reconcile phase asks otherwise. Reader-facing prose must contain ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta.\nSubmit the required phase artifact with write_file; the host validates and completes the phase atomically.\nPhase: fill cluster c01 (Market Positioning).\nSubmit exactly sections/01-market-positioning.md with write_file; the host completes the phase atomically.\nDo not write document.md in this phase. The host packet is complete; no reads are needed."
+        },
+        {
+          "role": "user",
+          "content": "Compose the assigned section from this bounded packet.\n\n## Shared policy\n{\"shared_invariants\":[\"Write finished reader-facing prose only.\",\"Do not invent unsupported capability, regulatory, numerical, market, or pricing claims.\",\"Preserve product identity and category from Root/Standard capsules and source excerpts.\",\"Do not emit OSN ids, schema field names, or build-process vocabulary in document.md / sections/**.\"],\"shared_requirement_markers\":[\"treat ai-generated interpretation and copy as proposals\",\"classify capability, market, regulatory, numerical, and performance claims\",\"do not publish unsupported certainty\",\"keep the result concrete, commercially usable\",\"consistent with ancestor osns\"]}\n\n## Root\n{\"key\":\"n01\",\"title\":\"Lexiom 1.3 — Ogun Brand\",\"seed\":\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"unique_requirements\":[\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"claim_constraints\":[\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\",\"Treat AI-generated interpretation and copy as proposals until an authorized human approves them.\",\"Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\"]}\n\n## Outline\n# Lexiom 1.3 — Ogun Brand Document\n\n## Table of Contents\n\n### 1. Market Positioning\n**Owning Key:** n50  \n**Cluster:** c01  \n**Section Path:** sections/01-market-positioning.md\n\nPosition Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.\n\n### 2. Audience and Enterprise Value\n**Owning Key:** n35  \n**Cluster:** c02  \n**Section Path:** sections/02-audience-and-enterprise-value.md\n\nConnect Ogun's governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.\n\n### 3. Creative Identity\n**Owning Key:** n04  \n**Cluster:** c03  \n**Section Path:** sections/03-creative-identity.md\n\nExpress Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.\n\n### 4. Go-to-Market System\n**Owning Key:** n19  \n**Cluster:** c04  \n**Section Path:** sections/04-go-to-market-system.md\n\nTurn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\n\n---\n\n## Document Governance\n\n**Root Brand Seed (n01):**  \nGovern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\n\n**Shared Policy Invariants:**\n- Write finished reader-facing prose only.\n- Do not invent unsupported capability, regulatory, numerical, market, or pricing claims.\n- Preserve product identity and category from Root/Standard capsules and source excerpts.\n- Do not emit OSN ids, schema field names, or build-process vocabulary in document.md / sections/**.\n- Treat AI-generated interpretation and copy as proposals until authorized human approval.\n- Classify capability, market, regulatory, numerical, and performance claims; do not publish unsupported certainty.\n- Require inspectable delivery and classify claims according to available proof.\n\n\n## Assigned nodes\n[{\"key\":\"n50\",\"title\":\"Market Positioning\",\"role\":\"mid\",\"discipline\":\"Positioning Strategy\",\"parent_keys\":[\"n34\"],\"child_keys\":[\"n51\",\"n58\"],\"seed\":\"Position Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.\",\"unique_requirements\":[\"Position Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§4, 9, and 15\"},{\"key\":\"n51\",\"title\":\"Category Definition\",\"role\":\"mid\",\"discipline\":\"Category Design\",\"parent_keys\":[\"n50\"],\"child_keys\":[\"n52\",\"n55\"],\"seed\":\"Establish the primary commercial category and its supporting technical vocabulary for business and technical audiences.\",\"unique_requirements\":[\"Establish the primary commercial category and its supporting technical vocabulary for business and technical audiences.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§4\"},{\"key\":\"n52\",\"title\":\"Primary Commercial Category\",\"role\":\"mid\",\"discipline\":\"Category Strategy\",\"parent_keys\":[\"n51\"],\"child_keys\":[\"n54\",\"n53\"],\"seed\":\"Lead consistently with Outcome Governance and Semantic Relationship Operating System and explain the organizational value carried by that category.\",\"unique_requirements\":[\"Lead consistently with Outcome Governance and Semantic Relationship Operating System and explain the organizational value carried by that category.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§4.1 and 4.3\"},{\"key\":\"n54\",\"title\":\"Canonical Category Statement\",\"role\":\"leaf\",\"discipline\":\"Brand Positioning\",\"parent_keys\":[\"n52\"],\"child_keys\":[],\"seed\":\"Produce a concise canonical category statement that connects intentions, standards, governed outcome graphs, human authority, and evidence.\",\"unique_requirements\":[\"Produce a concise canonical category statement that connects intentions, standards, governed outcome graphs, human authority, and evidence.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§4.1 and 4.3\"},{\"key\":\"n53\",\"title\":\"Category Education\",\"role\":\"leaf\",\"discipline\":\"Market Education\",\"parent_keys\":[\"n52\"],\"child_keys\":[],\"seed\":\"Teach prospects what outcome governance and semantic relationship management mean without relying on unexplained product jargon.\",\"unique_requirements\":[\"Teach prospects what outcome governance and semantic relationship management mean without relying on unexplained product jargon.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§4.1 and 17.3\"},{\"key\":\"n55\",\"title\":\"Supporting Technical Categories\",\"role\":\"mid\",\"discipline\":\"Technical Marketing\",\"parent_keys\":[\"n51\"],\"child_keys\":[\"n56\",\"n57\"],\"seed\":\"Use technical descriptors to clarify architecture for technical, investor, security, and architecture audiences without displacing the primary category.\",\"unique_requirements\":[\"Use technical descriptors to clarify architecture for technical, investor, security, and architecture audiences without displacing the primary category.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§4.2\"},{\"key\":\"n56\",\"title\":\"Deterministic Semantic Operating System\",\"role\":\"leaf\",\"discipline\":\"Architecture Marketing\",\"parent_keys\":[\"n55\"],\"child_keys\":[],\"seed\":\"Explain the implemented Lexiom 1.3 POC as a deterministic human-approval and persistence boundary between probabilistic GT3 drafts and canonical OSN YAML, without implying control over general enterprise state.\",\"unique_requirements\":[\"Explain the implemented Lexiom 1.3 POC as a deterministic human-approval and persistence boundary between probabilistic GT3 drafts and canonical OSN YAML, without implying control over general enterprise state.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§4.2 and 9.3\"},{\"key\":\"n57\",\"title\":\"Governed Agent Lifecycle Infrastructure\",\"role\":\"leaf\",\"discipline\":\"AI Governance Marketing\",\"parent_keys\":[\"n55\"],\"child_keys\":[],\"seed\":\"Explain that mapped build agents receive snapshotted OSN compilation instructions while explicit human actions retain authority over canonical OSN YAML; characterize this as a governed build-agent handoff, not a complete agent lifecycle.\",\"unique_requirements\":[\"Explain that mapped build agents receive snapshotted OSN compilation instructions while explicit human actions retain authority over canonical OSN YAML; characterize this as a governed build-agent handoff, not a complete agent lifecycle.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§4.2, 6.3, and 9.3\"},{\"key\":\"n58\",\"title\":\"Competitive Differentiation\",\"role\":\"mid\",\"discipline\":\"Competitive Strategy\",\"parent_keys\":[\"n50\"],\"child_keys\":[\"n62\",\"n59\"],\"seed\":\"Differentiate Ogun by the meaning, authority, lineage, inheritance, and evidence it governs rather than by feature-list comparison.\",\"unique_requirements\":[\"Differentiate Ogun by the meaning, authority, lineage, inheritance, and evidence it governs rather than by feature-list comparison.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§15\"},{\"key\":\"n62\",\"title\":\"Record and Work Systems Contrast\",\"role\":\"mid\",\"discipline\":\"Competitive Intelligence\",\"parent_keys\":[\"n58\"],\"child_keys\":[\"n63\",\"n64\"],\"seed\":\"Contrast Ogun with CRM, project management, and requirements systems while respecting the strengths and proper role of each.\",\"unique_requirements\":[\"Contrast Ogun with CRM, project management, and requirements systems while respecting the strengths and proper role of each.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§15.1–15.2 and 15.7\"},{\"key\":\"n63\",\"title\":\"CRM Contrast\",\"role\":\"leaf\",\"discipline\":\"CRM Market Analysis\",\"parent_keys\":[\"n62\"],\"child_keys\":[],\"seed\":\"Show that CRM records commercial relationships while Ogun governs their intended outcomes and evolving meaning.\",\"unique_requirements\":[\"Show that CRM records commercial relationships while Ogun governs their intended outcomes and evolving meaning.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§15.1\"},{\"key\":\"n64\",\"title\":\"Project and Requirements Contrast\",\"role\":\"leaf\",\"discipline\":\"Work Management Analysis\",\"parent_keys\":[\"n62\"],\"child_keys\":[],\"seed\":\"Show that work and requirements tools track activity or specifications while Ogun governs why work exists and what proves success.\",\"unique_requirements\":[\"Show that work and requirements tools track activity or specifications while Ogun governs why work exists and what proves success.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§15.2 and 15.7\"},{\"key\":\"n59\",\"title\":\"AI Platform Contrast\",\"role\":\"mid\",\"discipline\":\"AI Market Intelligence\",\"parent_keys\":[\"n58\"],\"child_keys\":[\"n61\",\"n60\"],\"seed\":\"Distinguish Ogun from AI governance, observability, orchestration, and coding tools through its control of authority, outcome meaning, and evidence.\",\"unique_requirements\":[\"Distinguish Ogun from AI governance, observability, orchestration, and coding tools through its control of authority, outcome meaning, and evidence.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§15.3–15.6\"},{\"key\":\"n61\",\"title\":\"AI Governance and Observability Contrast\",\"role\":\"leaf\",\"discipline\":\"AI Governance Analysis\",\"parent_keys\":[\"n59\"],\"child_keys\":[],\"seed\":\"Explain that the current POC gates canonical OSN writes through explicit human actions and carries explicitly linked standard ancestors into lineage context and build snapshots; policy enforcement, live conflict detection, and Concordance resolution are not implemented.\",\"unique_requirements\":[\"Explain that the current POC gates canonical OSN writes through explicit human actions and carries explicitly linked standard ancestors into lineage context and build snapshots; policy enforcement, live conflict detection, and Concordance resolution are not i…\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§15.3–15.4\"},{\"key\":\"n60\",\"title\":\"Agent Orchestration and Coding Contrast\",\"role\":\"leaf\",\"discipline\":\"Agent Platform Analysis\",\"parent_keys\":[\"n59\"],\"child_keys\":[],\"seed\":\"Explain that Ogun governs the OSN graph used to prepare coding-agent handoffs and human evidence review, rather than claiming that it automatically authorizes or validates execution.\",\"unique_requirements\":[\"Explain that Ogun governs the OSN graph used to prepare coding-agent handoffs and human evidence review, rather than claiming that it automatically authorizes or validates execution.\",\"Preserve Ogun’s primary category, human-governed authority model, and evidence-backed promise.\"],\"source_sections\":\"§§15.5–15.6\"}]\n\n## Referenced source sections\n## 4. Category Definition\r\n\r\n### 4.1 Primary commercial category\r\n\r\nOgun shall lead with the category:\r\n\r\n> **Outcome Governance and Semantic Relationship Operating System**\r\n\r\nThis category communicates the broader economic and organizational value of Lexiom beyond software development.\r\n\r\n### 4.2 Supporting technical categories\r\n\r\nFor technical, investor, security, and architecture audiences, Ogun may also be described as:\r\n\r\n- a **Deterministic Semantic Operating System**;\r\n- **Governed Agent Lifecycle Infrastructure**;\r\n- a **human-approved semantic execution layer**;\r\n- an **evidence-backed operating layer for agentic work**.\r\n\r\nThese terms support the primary category. They must not displace it in general marketing.\r\n\r\n### 4.3 Category definition\r\n\r\n> An Outcome Governance and Semantic Relationship Operating System transforms human intentions, organizational standards, and relation\n\n## 6. Core Product Story\r\n\r\n### 6.1 The four-part story\r\n\r\nEvery core marketing narrative should explain Ogun through four movements:\r\n\r\n1. **Specify** — Humans express and approve the intended outcome.\r\n2. **Shape** — Ogun develops the outcome through thematic disciplines, organizational standards, and AI-assisted proposals.\r\n3. **Govern** — Human authority controls canonical state, conflict resolution, inheritance, and change.\r\n4. **Prove** — Unmediated success evidence and lineage evidence show whether the outcome was achieved and why it took its form.\r\n\r\n### 6.2 OSNs\r\n\r\nAn **Outcome Specification Node** is a human-owned semantic node that defines:\r\n\r\n- a desired outcome;\r\n- the approved context surrounding it;\r\n- its owner;\r\n- its discipline lenses;\r\n- its output specification;\r\n- inherited standards and constraints;\r\n- related parent and child outcomes;\r\n- and at least one success e\n\n## 9. Positioning Framework\r\n\r\n### 9.1 Primary positioning statement\r\n\r\n> For enterprises that must coordinate complex human and AI-assisted work, Lexiom 1.3 — Ogun is an Outcome Governance and Semantic Relationship Operating System that turns intentions, standards, and commitments into human-approved outcome graphs with direct evidence of achievement. Unlike CRM, project-management, AI-governance, or agent-orchestration tools, Ogun governs meaning from expectation through delivery.\r\n\r\n### 9.2 Executive positioning\r\n\r\n> Ogun gives leaders a governed view of what the organization is trying to achieve, who owns each part, where meaning is drifting, what AI is proposing, and what evidence proves success.\r\n\r\n### 9.3 Technology positioning\r\n\r\n> Ogun is the deterministic semantic control layer between probabilistic AI generation and canonical enterprise state.\r\n\r\n### 9.4 XRM positioning\r\n\r\n> O\n\n## 15. Competitive Differentiation\r\n\r\n### 15.1 Versus CRM\r\n\r\nCRM records the commercial relationship.  \r\nOgun governs the relationship’s intended outcomes and evolving meaning.\r\n\r\n### 15.2 Versus project management\r\n\r\nProject tools track work items and status.  \r\nOgun governs why the work exists, how disciplines shape it, and what proves success.\r\n\r\n### 15.3 Versus AI governance and GRC\r\n\r\nGovernance tools document models, policies, and risks.  \r\nOgun binds human approval, inherited standards, and evidence into the active development and execution path.\r\n\r\n### 15.4 Versus LLM observability\r\n\r\nObservability tools inspect probabilistic behavior after execution.  \r\nOgun governs what may become canonical before or during execution and preserves approved lineage.\r\n\r\n### 15.5 Versus agent orchestration\r\n\r\nOrchestration systems coordinate agents.  \r\nOgun coordinates authority, outcome meaning,\n\n## 17. Website Specification\r\n\r\n### 17.1 Homepage sequence\r\n\r\n1. **Hero**\r\n   - “Govern what must become real.”\r\n   - One-sentence category explanation.\r\n   - Primary CTA: “Explore an enterprise use case.”\r\n   - Secondary CTA: “See how Ogun works.”\r\n\r\n2. **The gap**\r\n   - Enterprise systems record activity but lose the meaning connecting expectation to delivery.\r\n\r\n3. **The Ogun model**\r\n   - Specify → Shape → Govern → Prove.\r\n\r\n4. **XRM**\r\n   - CRM determinism plus Semantic Relationship Management.\r\n\r\n5. **Human-governed AI**\r\n   - White Move → Black Move → Stability.\r\n\r\n6. **Enterprise value**\r\n   - alignment, evidence, risk, relationship continuity, economic intelligence.\r\n\r\n7. **Use cases**\r\n   - product, professional services, procurement, regulated operations, legal, cross-company delivery.\r\n\r\n8. **Executive portal and cockpit**\r\n   - garden view and cultivation view.\r\n\r\n9. **Proof\n\nSubmit sections/01-market-positioning.md now with write_file."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 6000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-08-01T07:46:22.402Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "I'll compose the Market Positioning section based on the assigned nodes and source material provided.",
+    "assistant_content_chars": 101,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 5045,
+      "completion_tokens": 1937,
+      "total_tokens": 6982,
+      "cost": 0.01473,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01473,
+        "upstream_inference_prompt_cost": 0.005045,
+        "upstream_inference_completions_cost": 0.009685
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785570360-jHKnI9Ckl478OITcVa88",
+      "object": "chat.completion",
+      "created": 1785570360,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "I'll compose the Market Positioning section based on the assigned nodes and source material provided.",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_01PuNLEEVCeSsWzPdTFiHuMN",
+                "function": {
+                  "name": "write_file",
+                  "arguments": "{\"path\": \"sections/01-market-positioning.md\", \"content\": \"# Market Positioning\\n\\n## Primary Commercial Category\\n\\nOgun is an **Outcome Governance and Semantic Relationship Operating System**.\\n\\nThis category communicates the broader economic and organizational value of Lexiom 1.3 beyond software development. It positions Ogun as the operating system that transforms human intentions, organizational standards, and relationships into governed, inspectable, evidence-backed outcomes.\\n\\n### What This Category Means\\n\\nAn Outcome Governance and Semantic Relationship Operating System serves enterprises that must coordinate complex human and AI-assisted work. It turns intentions, standards, and commitments into human-approved outcome graphs with direct evidence of achievement.\\n\\nThe category rests on three foundational capabilities:\\n\\n- **Outcome Governance** — Human authority controls what becomes canonical, how meaning evolves, and what evidence proves success.\\n- **Semantic Relationship Management** — The system preserves the intended meaning connecting expectations to delivery, across disciplines, standards, and organizational boundaries.\\n- **Operating System** — Ogun provides the deterministic control layer that sits between probabilistic AI generation and canonical enterprise state, enabling governed handoffs to agents, teams, and systems.\\n\\n## Supporting Technical Categories\\n\\nFor technical, investor, security, and architecture audiences, Ogun may also be described as:\\n\\n- a **Deterministic Semantic Operating System** — the human-approval and persistence boundary between probabilistic AI drafts and canonical outcome specifications;\\n- **Governed Agent Lifecycle Infrastructure** — a system that provides mapped build agents with snapshotted compilation instructions while explicit human actions retain authority over canonical state;\\n- a **human-approved semantic execution layer** — the control point where human judgment gates what becomes binding;\\n- an **evidence-backed operating layer for agentic work** — the foundation that prepares outcome graphs for agent handoffs and preserves the lineage connecting intention to delivery.\\n\\nThese technical descriptors support and clarify the primary category. They do not displace it in general marketing.\\n\\n## Positioning Statement\\n\\n**For enterprises that must coordinate complex human and AI-assisted work, Lexiom 1.3 — Ogun is an Outcome Governance and Semantic Relationship Operating System that turns intentions, standards, and commitments into human-approved outcome graphs with direct evidence of achievement. Unlike CRM, project-management, AI-governance, or agent-orchestration tools, Ogun governs meaning from expectation through delivery.**\\n\\n## Executive Positioning\\n\\nOgun gives leaders a governed view of what the organization is trying to achieve, who owns each part, where meaning is drifting, what AI is proposing, and what evidence proves success.\\n\\n## Technology Positioning\\n\\nOgun is the deterministic semantic control layer between probabilistic AI generation and canonical enterprise state.\\n\\n## Competitive Differentiation\\n\\n### Versus CRM\\n\\nCRM records the commercial relationship.  \\nOgun governs the relationship's intended outcomes and evolving meaning.\\n\\nCRM systems excel at capturing and organizing relationship data—contacts, interactions, opportunities, and transaction history. They provide visibility into the commercial pipeline and relationship lifecycle. Ogun operates at a different level: it governs *why* the relationship exists, *what* both parties intend to achieve together, *how* those intentions evolve as circumstances change, and *what evidence* proves the relationship delivered its intended value. Where CRM answers \\\"What happened in this relationship?\\\", Ogun answers \\\"What are we trying to achieve together, and did we achieve it?\\\"\\n\\n### Versus Project Management and Work-Tracking Systems\\n\\nProject tools track work items and status.  \\nOgun governs why the work exists, how disciplines shape it, and what proves success.\\n\\nProject management and work-tracking systems organize tasks, timelines, and resource allocation. They provide visibility into activity and progress. Ogun operates upstream and downstream: it governs the *intention* behind the work (why it exists), the *disciplines* and *standards* that shape how it should be done, and the *evidence* that proves whether it succeeded. Where project tools answer \\\"What work is planned and how far along are we?\\\", Ogun answers \\\"What are we trying to achieve, who owns it, what standards apply, and what proves we succeeded?\\\"\\n\\n### Versus AI Governance and GRC Tools\\n\\nGovernance tools document models, policies, and risks.  \\nOgun binds human approval, inherited standards, and evidence into the active development and execution path.\\n\\nAI governance, GRC, and policy-management tools create frameworks for risk, compliance, and decision-making. They document what should happen. Ogun goes further: it embeds governance *into the active work itself*. It carries inherited standards and constraints into every outcome specification, gates canonical writes through explicit human actions, preserves the lineage connecting decisions to outcomes, and links success evidence directly to the governed specifications that produced it. Where governance tools answer \\\"What policies and risks apply?\\\", Ogun answers \\\"What did we approve, what standards did we inherit, and what evidence shows we delivered it?\\\"\\n\\n### Versus LLM Observability and Monitoring\\n\\nObservability tools inspect probabilistic behavior after execution.  \\nOgun governs what may become canonical before or during execution and preserves approved lineage.\\n\\nObservability and monitoring tools provide visibility into AI model behavior, token usage, and output quality after the fact. They help teams understand what happened. Ogun operates at the governance boundary: it controls what AI proposals may become canonical before they are executed, preserves the lineage of approved decisions and their ancestors, and ensures that success evidence can be traced back to the human-approved specifications that guided the work. Where observability answers \\\"What did the AI do and how well did it perform?\\\", Ogun answers \\\"What did we approve the AI to do, what standards guided that approval, and what evidence shows it worked?\\\"\\n\\n### Versus Agent Orchestration Platforms\\n\\nOrchestration systems coordinate agents.  \\nOgun coordinates authority, outcome meaning, and evidence.\\n\\nAgent orchestration platforms manage the execution of multiple AI agents, route work between them, and coordinate their outputs. They focus on *how work flows*. Ogun focuses on *what work means* and *who controls it*. It prepares outcome graphs that agents can use as specifications for their work, gates the canonical state that agents receive, and preserves the evidence that proves whether agents delivered the intended outcomes. Where orchestration answers \\\"How do we route work between agents?\\\", Ogun answers \\\"What are we asking agents to achieve, who approved it, and what proves they succeeded?\\\"\\n\\n## The Outcome Governance Model\\n\\nOgun turns human intention into governed, inspectable, evidence-backed outcomes through four movements:\\n\\n1. **Specify** — Humans express and approve the intended outcome, its context, its owner, and the standards that apply to it.\\n2. **Shape** — Ogun develops the outcome through thematic disciplines, organizational standards, and AI-assisted proposals, all subject to human review.\\n3. **Govern** — Human authority controls canonical state, conflict resolution, inheritance, and change. Explicit human actions gate what becomes binding.\\n4. **Prove** — Unmediated success evidence and lineage evidence show whether the outcome was achieved and why it took its form.\\n\\nThis model preserves human authority at every stage while enabling AI to assist in proposal, analysis, and execution preparation. It ensures that meaning is not lost between intention and delivery.\\n\\n## Why This Matters\\n\\nEnterprises today face a coordination problem: as work becomes more complex, more distributed, and more AI-assisted, the meaning connecting what was intended to what was delivered becomes harder to preserve. Teams lose sight of *why* work exists. Standards drift. AI proposals are accepted or rejected without clear governance. Evidence of success is disconnected from the intentions that guided the work.\\n\\nOgun solves this by making outcome governance and semantic relationship management the operating system for complex work. It gives enterprises a way to:\\n\\n- **Align** — Ensure that everyone understands what is being tried to achieve and why.\\n- **Govern** — Control what becomes canonical and preserve the lineage of decisions.\\n- **Prove** — Link success evidence directly to the intentions and standards that guided the work.\\n- **Evolve** — Change outcomes and standards while preserving the history of why changes were made.\\n\\nThis is not a feature of CRM, project management, AI governance, or agent orchestration. It is a distinct operating system for enterprises that must coordinate human intention with AI-assisted execution.\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 5045,
+        "completion_tokens": 1937,
+        "total_tokens": 6982,
+        "cost": 0.01473,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.01473,
+          "upstream_inference_prompt_cost": 0.005045,
+          "upstream_inference_completions_cost": 0.009685
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 20710,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

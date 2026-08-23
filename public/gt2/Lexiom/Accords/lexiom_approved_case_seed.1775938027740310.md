@@ -1,0 +1,7 @@
+## Case Seed Narrative
+
+The tenant asserts that their landlord is withholding a $3,000 security deposit, claiming damages that the tenant contends they did not cause. The tenant moved out on March 1 and provided photographic evidence along with a walkthrough email to document the condition of the premises. Despite these efforts, the landlord has not responded to the tenant's requests for a refund. According to the lease agreement, the security deposit must be returned within 30 days of moving out.
+
+In response, the landlord disputes the tenant's claim, stating that the security deposit was only $2,000, not $3,000 as claimed by the tenant. The landlord conducted an inspection after the tenant's departure and identified multiple issues requiring repair, cleaning, and replacement that exceed normal wear and tear. The landlord specifically mentions damages to the wooden kitchen and asserts that these conditions justify withholding the deposit. Furthermore, the landlord indicates that they are in the process of gathering invoices and estimates to substantiate their claims regarding the costs incurred.
+
+The tenant seeks to draft a demand letter and, if necessary, pursue a small claims action to recover the withheld deposit.

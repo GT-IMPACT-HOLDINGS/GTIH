@@ -1,0 +1,1399 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="gt3-file-uuid" content="a1f4c9d3-9824-4344-9ede-d065c1bbae84" />
+  <title>GT2 | Legato (v13.9)</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../gt2-logo-small.png" />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Mammoth for .docx to text -->
+  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+  <style>
+    body { background:#fafafa; }
+    .workplan.sheen, .status-text.sheen {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent);
+      background-size: 200% 100%;
+      animation: sheen 0.8s ease;
+    }
+    @keyframes sheen { from{background-position:200% 0} to{background-position:-200% 0} }
+    .card { border-radius: 14px; }
+    .status-msg[aria-live="polite"] { min-height: 1.25rem; }
+    textarea.workplan, textarea.status-text { font-size: .98rem; line-height: 1.35; }
+    .approved-text {
+      color: #6c757d;
+    }
+    .admin-note { font-size: 0.8rem; }
+    .gt2-logo {
+      height: 28px;
+      width: auto;
+      cursor: pointer;
+    }
+
+    /* Dark theme for admin panel (Ctrl+Alt+E area) */
+    #admin-panel .card.card-body {
+      background: #050914;
+      color: #f8fbff;
+      border-color: #22314a;
+    }
+    #admin-panel .form-label,
+    #admin-panel .admin-note,
+    #admin-panel code {
+      color: #d0d7e6;
+    }
+    #admin-panel .admin-note {
+      color: #d0d7e6;
+    }
+    #admin-panel .btn-outline-secondary {
+      border-color: #9fb0ca;
+      color: #f8fbff;
+    }
+    #admin-panel .btn-outline-secondary:hover {
+      background: #9fb0ca;
+      color: #050914;
+    }
+
+    /* Dark theme for admin prompt editor textareas */
+    .admin-textarea {
+      background: #101626;
+      color: #f8fbff;
+      border-color: #22314a;
+    }
+    .admin-textarea::placeholder {
+      color: #9fb0ca;
+    }
+    .admin-textarea:focus {
+      background: #0b0f18;
+      color: #f8fbff;
+      border-color: #6264a7;
+      box-shadow: 0 0 0 0.2rem rgba(98, 100, 167, 0.35);
+    }
+  </style>
+</head>
+<body class="container py-3">
+  <header class="d-flex align-items-center gap-2 mb-3">
+    <div class="d-flex align-items-center gap-2 flex-grow-1">
+      <!-- Clicking the logo opens the settings sidebar -->
+      <img src="../gt2-logo-small.png" alt="GT2 logo" class="gt2-logo" id="gt2-logo">
+      <h1 class="h4 m-0">GT2 | Legato</h1>
+    </div>
+    <button id="btn-new-case" class="btn btn-primary btn-sm">מקרה חדש</button>
+  </header>
+
+  <!-- Settings Sidebar (Offcanvas) -->
+  <div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="settings-offcanvas"
+    aria-labelledby="settings-offcanvas-label"
+  >
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="settings-offcanvas-label">הגדרות GT3</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body small">
+      <p class="mb-2 text-muted">
+        כאן ניתן לשמור מפתח API לשימוש מול שרת ה-GT3. המפתח יישמר רק בדפדפן זה
+        וישלח בכל בקשת אינפרנס מ-Legato ל-GT3.
+      </p>
+
+      <div class="mb-3">
+        <label for="settings-api-key" class="form-label">GT3 API Key</label>
+        <input
+          type="password"
+          id="settings-api-key"
+          class="form-control form-control-sm"
+          placeholder="הדבק כאן את מפתח ה-API שלך"
+        />
+        <div class="form-text">
+          המפתח יישמר ב-localStorage תחת הפרופיל הנוכחי בלבד.
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="button" id="settings-api-clear" class="btn btn-outline-danger btn-sm">
+          מחיקת מפתח
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main id="case-list" class="d-flex flex-column gap-3"></main>
+
+  <!-- Admin prompt configuration panel (hidden by secret shortcut) -->
+  <section id="admin-section" class="mt-4">
+    <button class="btn btn-link text-muted small p-0" type="button"
+            data-bs-toggle="collapse" data-bs-target="#admin-panel"
+            aria-expanded="false" aria-controls="admin-panel">
+      ⚙️ אזור הגדרות למנהל (הנחיות למודל)
+    </button>
+    <div class="collapse" id="admin-panel">
+      <div class="card card-body small mt-2">
+        <p class="mb-2 admin-note">
+          כאן ניתן לערוך את הטקסטים המשמשים לבניית הנרטיב שנשלח ל-GT3.
+          השתמשו במשתנים:
+          <code>{{PREVIOUS_PLAN}}</code>,
+          <code>{{PREVIOUS_STATUS}}</code>,
+          <code>{{NEW_DOC}}</code>.
+        </p>
+
+        <div class="mb-2">
+          <label for="admin-narrative-template" class="form-label">תבנית נרטיב מלאה</label>
+          <textarea id="admin-narrative-template"
+                    class="form-control form-control-sm admin-textarea"
+                    rows="7"></textarea>
+          <button type="button"
+                  id="btn-reset-narrative"
+                  class="btn btn-sm btn-outline-secondary mt-1">
+            איפוס תבנית לברירת מחדל
+          </button>
+        </div>
+
+        <div class="mb-2">
+          <label for="admin-default-prev-plan" class="form-label">תוכנית עבודה ראשונית ברירת מחדל</label>
+          <textarea id="admin-default-prev-plan"
+                    class="form-control form-control-sm admin-textarea"
+                    rows="2"></textarea>
+          <button type="button"
+                  id="btn-reset-prev-plan"
+                  class="btn btn-sm btn-outline-secondary mt-1">
+            איפוס לתוכנית ברירת מחדל
+          </button>
+        </div>
+
+        <div class="mb-2">
+          <label for="admin-default-status" class="form-label">סטטוס ברירת מחדל (כאשר אין סטטוס קודם)</label>
+          <textarea id="admin-default-status"
+                    class="form-control form-control-sm admin-textarea"
+                    rows="2"></textarea>
+          <button type="button"
+                  id="btn-reset-status"
+                  class="btn btn-sm btn-outline-secondary mt-1">
+            איפוס לסטטוס ברירת מחדל
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Template for a single case card -->
+  <template id="tpl-case-card">
+    <section class="card shadow-sm" data-case-id="">
+      <div class="card-body d-flex flex-column gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <input class="form-control form-control-sm case-title" placeholder="כותרת מקרה (רשות)"/>
+          <button class="btn btn-outline-secondary btn-sm btn-lifecycle" title="הצג ציר חיים">⏱️</button>
+          <button class="btn btn-outline-danger btn-sm btn-delete-case" title="מחיקת מקרה">🗑️</button>
+          <small class="text-muted ms-auto last-updated"></small>
+        </div>
+
+        <!-- Status first: short hint -->
+        <textarea class="form-control status-text" rows="4"
+                  placeholder="️ אפשרות 1: תיאור מצב המקרה בחלון זה."></textarea>
+
+        <!-- Workplan second: short hint -->
+        <textarea class="form-control workplan" rows="6"
+                  placeholder=" אפשרות 2: העלאת מסמך לצורך עדכון טיוטת תוכנית עבודה."
+                  disabled></textarea>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <input type="file" accept=".txt,.docx" class="form-control form-control-sm file-input" />
+          <!-- Approval buttons: outlined green before approval, solid green after -->
+          <button class="btn btn-outline-success btn-sm py-0 btn-apply-status" disabled>
+            👍 אשר מצב קיים
+          </button>
+          <button class="btn btn-outline-success btn-sm py-0 btn-apply-plan" disabled>
+            👍 אשר תוכנית עבודה
+          </button>
+          <!-- EP creation button -->
+          <button class="btn btn-outline-primary btn-sm py-0 btn-create-ep" disabled>
+            🧾 צור הצעת מחיר
+          </button>
+          <span class="ms-auto small text-muted status-msg" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Bootstrap JS (for collapse & offcanvas) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script type="module">
+    // =========================================================
+    // GT2 SPA v13.9
+    // =========================================================
+
+    // Default to relative URL (works when Legato and GT3 are on same origin)
+    // Falls back to localhost for local development if needed via ?api= param
+    const DEFAULT_INFERENCE_URI = '/inference';
+    const urlParams = new URLSearchParams(location.search);
+    // If 'api' param is provided, it can be absolute (e.g., http://localhost:8080/inference) or relative (/inference)
+    // If not provided, defaults to relative URL which works on same origin (EB deployment)
+    const INFERENCE_URI = urlParams.get('api') || DEFAULT_INFERENCE_URI;
+
+    const INDEX_KEY = 'gt2_cases_index';
+    const CASE_KEY  = (id) => `gt2_case_${id}`;
+
+    const ADMIN_NARRATIVE_TEMPLATE_KEY = 'gt2_admin_narrative_template_v5';
+    const ADMIN_DEFAULT_PREV_PLAN_KEY  = 'gt2_admin_default_prev_plan_v5';
+    const ADMIN_DEFAULT_STATUS_KEY     = 'gt2_admin_default_status_v5';
+
+    // New: API key storage key
+    const API_KEY_STORAGE_KEY = 'gt2_gt3_api_key';
+    let gt3ApiKey = localStorage.getItem(API_KEY_STORAGE_KEY) || '';
+
+    const MAX_WORDS = 3000;
+
+    const nowIso    = () => new Date().toISOString();
+    // UUID generator with fallback for non-secure contexts (HTTP)
+    const uuid      = () => {
+      try {
+        // Try crypto.randomUUID() first (works in HTTPS/secure contexts)
+        if (crypto && crypto.randomUUID) {
+          return crypto.randomUUID();
+        }
+      } catch (e) {
+        // crypto.randomUUID() not available (non-secure context)
+      }
+      // Fallback: UUID v4 generator using Math.random() (works in all contexts)
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    };
+    const wordCount = (s) => (s.trim().match(/\S+/g) || []).length;
+
+    // Canonicalization function for Status diff tracking
+    function canon(text) {
+      return (text || '').trim();
+    }
+
+    function setStatus(el, msg) { el.textContent = msg || ''; }
+
+    function sheen(el) {
+      el.classList.add('sheen');
+      setTimeout(() => el.classList.remove('sheen'), 800);
+    }
+
+    function saveIndex(ids) {
+      localStorage.setItem(INDEX_KEY, JSON.stringify(ids));
+    }
+    function loadIndex() {
+      try { return JSON.parse(localStorage.getItem(INDEX_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    // ---------- Event logging ----------
+    function pushEvent(state, type, meta = {}) {
+      if (!state.events) state.events = [];
+      state.events.push({
+        id: uuid(),
+        tsIso: nowIso(),
+        type,
+        meta
+      });
+    }
+
+    function saveCaseState(state) {
+      const toPersist = {
+        caseId: state.caseId,
+        title: state.title,
+        approvedPlan: state.approvedPlan,
+        approvedStatus: state.approvedStatus,
+        lastUpdatedIso: state.lastUpdatedIso,
+        events: state.events || [],
+        draftStatus: state.draftStatus, // New: persist draftStatus instead of currentStatusText
+        epDraftText: state.epDraftText,
+        epDraftGenerationSignature: state.epDraftGenerationSignature,
+        epUserTouched: state.epUserTouched,
+        approvedEpText: state.approvedEpText,
+        lastInferenceNarrative: state.lastInferenceNarrative,
+        lastModelWorkPlan: state.lastModelWorkPlan,
+        lastModelStatus: state.lastModelStatus
+      };
+      localStorage.setItem(CASE_KEY(state.caseId), JSON.stringify(toPersist));
+    }
+    function loadCaseState(caseId) {
+      try {
+        const raw = localStorage.getItem(CASE_KEY(caseId));
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed.events) parsed.events = [];
+        // Migration: if old state has currentStatusText, migrate to draftStatus
+        if (parsed.currentStatusText !== undefined && parsed.draftStatus === undefined) {
+          parsed.draftStatus = parsed.currentStatusText;
+          delete parsed.currentStatusText;
+        }
+        return parsed;
+      } catch {
+        return null;
+      }
+    }
+
+    function deleteCaseState(caseId) {
+      localStorage.removeItem(CASE_KEY(caseId));
+      const ids = loadIndex().filter(id => id !== caseId);
+      saveIndex(ids);
+    }
+
+    function updateLastUpdatedLabel(card, iso) {
+      const label = card.querySelector('.last-updated');
+      if (!iso) { label.textContent = ''; return; }
+      const d = new Date(iso);
+      label.textContent = d.toLocaleString();
+    }
+
+    function broadcastAdminEvent(type) {
+      const ids = loadIndex();
+      ids.forEach(id => {
+        const st = loadCaseState(id);
+        if (!st) return;
+        if (!st.events) st.events = [];
+        pushEvent(st, type, {});
+        saveCaseState(st);
+      });
+      console.log('[admin] broadcast event to cases:', type);
+    }
+
+    // -------------------------
+    // Training examples: GT2 → GT3
+    // -------------------------
+    const TRAINING_TENANT_ID = 'gt2-spa-dev';
+    const TRAINING_EXAMPLE_SCHEMA = 'request-draft-approved:v1';
+    const TRAINING_DEFAULT_USER_ID = 'local-dev-user';
+    const TRAINING_PRODUCT = 'GT2.Legato';
+    const TRAINING_LANGUAGE = 'he-IL';
+
+    function getTrainingEndpoint() {
+      try {
+        const u = new URL(INFERENCE_URI, window.location.origin);
+        // Same origin, /training-example path
+        return `${u.origin}/training-example`;
+      } catch (e) {
+        console.warn('[training] failed to derive endpoint from INFERENCE_URI', e);
+        return null;
+      }
+    }
+
+    async function sendTrainingExample({ useCase, channels, meta }) {
+      try {
+        const endpoint = getTrainingEndpoint();
+        if (!endpoint) {
+          console.warn('[training] no endpoint, skipping');
+          return;
+        }
+
+        if (!channels || !channels.input_request || !channels.authoritative_reference) {
+          console.warn('[training] missing required channel fields, skipping', channels);
+          return;
+        }
+
+        const payload = {
+          tenant_id: TRAINING_TENANT_ID,
+          use_case: useCase,
+          example_schema: TRAINING_EXAMPLE_SCHEMA,
+          channels: {
+            input_request: channels.input_request,
+            model_candidate: channels.model_candidate || '',
+            authoritative_reference: channels.authoritative_reference
+          },
+          meta: Object.assign(
+            {
+              timestamp: new Date().toISOString(),
+              product: TRAINING_PRODUCT,
+              language: TRAINING_LANGUAGE,
+              user_id: TRAINING_DEFAULT_USER_ID
+            },
+            meta || {}
+          )
+        };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.warn('[training] non-OK response', res.status, text);
+        } else {
+          console.log('[training] example sent OK for useCase=', useCase);
+        }
+      } catch (err) {
+        console.error('[training] network or runtime error', err);
+      }
+    }
+
+    // -------------------------
+    // Default prompts
+    // -------------------------
+    const NARRATIVE_TEMPLATE_DEFAULT = `אהובי האהוב, כערוך דין וחבר, אנא ערוך עבורי תוכנית עבודה ותיאור מצב של תיק במשרדי בהתבסס על מסמך חדש שהתקבל בתיק.  
+תוכנית העבודה צריכה, ככל שהדבר נובע מן המסמך החדש, להתייחס גם לניהול וגידור סיכונים בתיק, וגם לפעולות תקשורת/תיאום אפשריות מול גורמים חיצוניים (לקוח, צד שכנגד, רשויות, בעלי מקצוע等等).
+
+להלן נתוני התיק נכונים להיום:
+
+1. תוכנית העבודה האחרונה שאושרה על ידי:
+{{PREVIOUS_PLAN}}
+
+2. סטטוס מצטבר של הצעדים שבוצעו עד כה על ידי:
+{{PREVIOUS_STATUS}}
+
+3. מסמך חדש שהתקבל כעת בתיק:
+{{NEW_DOC}}
+
+הנחיות מחייבות:
+
+א. שמור על יציבות מרבית של תוכנית העבודה שאושרה.
+- אל תשכתב צעדים קיימים אלא אם המסמך החדש או השינוי בסטטוס מחייבים זאת במפורש.
+- אל תוסיף צעדים חדשים אם המסמך החדש או השינוי בסטטוס לא יוצרים צורך ברור בפעולה נוספת.
+- בצע עדכוני דלתא בלבד: רק מה שנובע ישירות מן המסמך החדש או מן השינוי בסטטוס.
+- שמור על המבנה, הכותרות, המספור, הסדר והסגנון של התוכנית הקיימת ככל האפשר.
+- העדף עריכות מינימליות על פני כתיבה מחדש.
+- אם יש צורך בפריטים חדשים, הוסף אותם בסגנון עקבי (או הכנס אותם לסעיף הקיים המתאים ביותר, אך שמור על השלד הכללי יציב).
+- המטרה: להפוך את התוכנית החדשה לקלה לקריאה ולהשוואה מול התוכנית שכבר אושרה.
+
+ב. קבע את העדכונים לפי סדר ההחלטה הבא:
+1. אם המסמך החדש משלים או מסיים צעד קיים – עדכן רק את הסטטוס של אותו צעד, בלי לשנות את נוסח התוכנית.
+2. אם המסמך החדש יוצר צורך בפעולה חדשה שלא קיימת בתוכנית – הוסף צעד חדש קצר וממוקד בתחתית התוכנית. כאשר אתה מוסיף צעד חדש, בדוק במפורש:
+   - האם יש בו מרכיב של גידור סיכונים (בדיקות נוספות, ניסוח זהיר, חלופות פעולה, תיעוד מגן וכו')?
+   - האם יש בו מרכיב של תקשורת/תיאום מול גורם חיצוני (פנייה, תשובה, עדכון, שליחת מסמך)?
+   אם כן – ציין זאת במפורש בתוך נוסח הצעד (לדוגמה: "גידור סיכון באמצעות...", "פנייה ל...").
+3. אם המסמך החדש אינו משלים צעד קיים ואינו יוצר צורך בצעד חדש – השאר את תוכנית העבודה ללא שינוי.
+
+ג. מבנה ואורך:
+- תוכנית העבודה המעודכנת תהיה בנויה מ־2–4 שלבים ותהיה באורך של עד כ־100 מילים.
+- ככל שהמסמך החדש מציף סיכון מהותי או אי־ודאות, לפחות צעד אחד בתוכנית יתייחס במפורש להערכת סיכונים ולגידורם.
+- אם מן המסמך החדש עולה צורך בתקשורת עם גורמים חיצוניים – לפחות צעד אחד יתייחס במפורש לפעולות כאלה (פנייה, תיאום, עדכון, שליחת מסמכים וכו').
+
+ד. סטטוס:
+- הסטטוס יתאר בקצרה את מצב הצעדים שבוצעו עד היום, ואת המסמכים שהתקבלו בתיק כאשר הם ממוספרים.
+- אם בוצעה או נדרשת תקשורת עם גורמים חיצוניים (לקוח, צדדים אחרים, רשויות, מומחים) – ציין זאת במפורש בסטטוס, כולל ציון אם התקבלה תשובה.
+
+ה. כותרת מקרה:
+- הצע כותרת קצרה וברורה לתיק, שניתן להשתמש בה כ״שם המקרה״ במערכת.
+
+ענה בפורמט הבא בדיוק, ללא כל טקסט אחר:
+<case_title>כותרת מוצעת למקרה כאן</case_title>
+<work_plan>תכנית העבודה המעודכנת כאן</work_plan>
+<status>סטטוס הצעדים שבוצעו כאן</status>
+`;
+
+    const DEFAULT_PREV_PLAN_DEFAULT =
+      "עדיין לא נרשמה תוכנית עבודה.";
+    const DEFAULT_STATUS_FALLBACK_DEFAULT =
+      "עדיין לא נרשמו צעדים שבוצעו.";
+
+    let adminNarrativeTemplate =
+      localStorage.getItem(ADMIN_NARRATIVE_TEMPLATE_KEY) || NARRATIVE_TEMPLATE_DEFAULT;
+    let adminDefaultPrevPlan =
+      localStorage.getItem(ADMIN_DEFAULT_PREV_PLAN_KEY) || DEFAULT_PREV_PLAN_DEFAULT;
+    let adminDefaultStatus =
+      localStorage.getItem(ADMIN_DEFAULT_STATUS_KEY) || DEFAULT_STATUS_FALLBACK_DEFAULT;
+
+    // Narrative builder
+    function buildNarrative(previousPlanRaw, previousStatusRaw, newDocText) {
+      const effectivePrevPlan =
+        previousPlanRaw && previousPlanRaw.trim()
+          ? previousPlanRaw
+          : adminDefaultPrevPlan;
+
+      const effectiveStatus =
+        previousStatusRaw && previousStatusRaw.trim()
+          ? previousStatusRaw
+          : adminDefaultStatus;
+
+      let narrative = adminNarrativeTemplate;
+      narrative = narrative.replaceAll('{{PREVIOUS_PLAN}}', effectivePrevPlan);
+      narrative = narrative.replaceAll('{{PREVIOUS_STATUS}}', effectiveStatus);
+      narrative = narrative.replaceAll('{{NEW_DOC}}', newDocText);
+
+      return narrative;
+    }
+    
+    // Narrative builder with Status delta context (for iterative workflow)
+    function buildNarrativeWithDelta(prevApprovedStatus, newlyApprovedStatus, latestWorkplan) {
+      // Ensure we have strings (defensive)
+      const prevStatusStr = (prevApprovedStatus !== undefined && prevApprovedStatus !== null) 
+        ? String(prevApprovedStatus).trim() 
+        : '';
+      const newStatusStr = (newlyApprovedStatus !== undefined && newlyApprovedStatus !== null)
+        ? String(newlyApprovedStatus).trim()
+        : '';
+      const workplanStr = (latestWorkplan !== undefined && latestWorkplan !== null)
+        ? String(latestWorkplan).trim()
+        : '';
+
+      const effectivePrevPlan = workplanStr || adminDefaultPrevPlan;
+      const effectivePrevStatus = prevStatusStr || adminDefaultStatus;
+
+      // Debug logging
+      console.log('[buildNarrativeWithDelta] Building narrative with:', {
+        effectivePrevStatusLength: effectivePrevStatus.length,
+        newStatusStrLength: newStatusStr.length,
+        effectivePrevStatusPreview: effectivePrevStatus.substring(0, 50) + (effectivePrevStatus.length > 50 ? '...' : ''),
+        newStatusStrPreview: newStatusStr.substring(0, 50) + (newStatusStr.length > 50 ? '...' : '')
+      });
+
+      // Build narrative emphasizing delta and structure preservation
+      let narrative = adminNarrativeTemplate;
+      
+      // Use latest approved Workplan as PREVIOUS_PLAN
+      narrative = narrative.replaceAll('{{PREVIOUS_PLAN}}', effectivePrevPlan);
+      
+      // Use previous approved Status as PREVIOUS_STATUS (this should be the OLD one)
+      narrative = narrative.replaceAll('{{PREVIOUS_STATUS}}', effectivePrevStatus);
+      
+      // NEW_DOC contains the status delta information
+      // Show: OLD status -> NEW status
+      const statusDeltaText = `אין מסמך חדש. הסטטוס עודכן מ:
+---
+${effectivePrevStatus}
+---
+ל:
+---
+${newStatusStr}
+---
+אנא עדכן את תוכנית העבודה בהתאם לשינוי בסטטוס, תוך שמירה על המבנה, הכותרות, המספור והסגנון של התוכנית הקיימת.`;
+      
+      narrative = narrative.replaceAll('{{NEW_DOC}}', statusDeltaText);
+
+      return narrative;
+    }
+
+    function parseTaggedResponse(raw, caseId) {
+      const titleMatch  = raw.match(/<case_title>([\s\S]*?)<\/case_title>/i);
+      const workPlanMatch = raw.match(/<work_plan>([\s\S]*?)<\/work_plan>/i);
+      const statusMatch   = raw.match(/<status>([\s\S]*?)<\/status>/i);
+
+      if (!titleMatch || !workPlanMatch || !statusMatch) {
+        throw new Error(
+          'התשובה מהמודל אינה בפורמט המצופה <case_title>...</case_title>, <work_plan>...</work_plan> ו-<status>...</status>.'
+        );
+      }
+
+      const caseTitle = titleMatch[1].trim();
+      const workPlan  = workPlanMatch[1].trim();
+      const status    = statusMatch[1].trim();
+
+      if (!caseTitle || !workPlan || !status) {
+        throw new Error('אחד הסעיפים case_title, work_plan או status ריקים לאחר הפענוח.');
+      }
+
+      return { caseTitle, workPlan, status };
+    }
+
+    // Admin panel wiring
+    function initAdminPanel() {
+      const narrativeField = document.getElementById('admin-narrative-template');
+      const prevPlanField  = document.getElementById('admin-default-prev-plan');
+      const statusField    = document.getElementById('admin-default-status');
+
+      const btnResetNarr   = document.getElementById('btn-reset-narrative');
+      const btnResetPrev   = document.getElementById('btn-reset-prev-plan');
+      const btnResetStatus = document.getElementById('btn-reset-status');
+
+      if (!narrativeField || !prevPlanField || !statusField) return;
+
+      narrativeField.value = adminNarrativeTemplate;
+      prevPlanField.value  = adminDefaultPrevPlan;
+      statusField.value    = adminDefaultStatus;
+
+      narrativeField.addEventListener('input', () => {
+        adminNarrativeTemplate = narrativeField.value;
+        localStorage.setItem(ADMIN_NARRATIVE_TEMPLATE_KEY, adminNarrativeTemplate);
+        broadcastAdminEvent('admin_narrative_changed');
+      });
+
+      prevPlanField.addEventListener('input', () => {
+        adminDefaultPrevPlan = prevPlanField.value;
+        localStorage.setItem(ADMIN_DEFAULT_PREV_PLAN_KEY, adminDefaultPrevPlan);
+        broadcastAdminEvent('admin_default_prev_plan_changed');
+      });
+
+      statusField.addEventListener('input', () => {
+        adminDefaultStatus = statusField.value;
+        localStorage.setItem(ADMIN_DEFAULT_STATUS_KEY, adminDefaultStatus);
+        broadcastAdminEvent('admin_default_status_changed');
+      });
+
+      btnResetNarr?.addEventListener('click', () => {
+        adminNarrativeTemplate = NARRATIVE_TEMPLATE_DEFAULT;
+        narrativeField.value  = adminNarrativeTemplate;
+        localStorage.setItem(ADMIN_NARRATIVE_TEMPLATE_KEY, adminNarrativeTemplate);
+        broadcastAdminEvent('admin_narrative_reset');
+      });
+
+      btnResetPrev?.addEventListener('click', () => {
+        adminDefaultPrevPlan = DEFAULT_PREV_PLAN_DEFAULT;
+        prevPlanField.value  = adminDefaultPrevPlan;
+        localStorage.setItem(ADMIN_DEFAULT_PREV_PLAN_KEY, adminDefaultPrevPlan);
+        broadcastAdminEvent('admin_default_prev_plan_reset');
+      });
+
+      btnResetStatus?.addEventListener('click', () => {
+        adminDefaultStatus = DEFAULT_STATUS_FALLBACK_DEFAULT;
+        statusField.value  = adminDefaultStatus;
+        localStorage.setItem(ADMIN_DEFAULT_STATUS_KEY, adminDefaultStatus);
+        broadcastAdminEvent('admin_default_status_reset');
+      });
+    }
+
+    // Settings sidebar (API key)
+    function initSettingsPanel() {
+      const apiInput = document.getElementById('settings-api-key');
+      const clearBtn = document.getElementById('settings-api-clear');
+
+      if (!apiInput) return;
+
+      apiInput.value = gt3ApiKey;
+
+      apiInput.addEventListener('input', () => {
+        gt3ApiKey = apiInput.value.trim();
+        if (gt3ApiKey) {
+          localStorage.setItem(API_KEY_STORAGE_KEY, gt3ApiKey);
+        } else {
+          localStorage.removeItem(API_KEY_STORAGE_KEY);
+        }
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        gt3ApiKey = '';
+        apiInput.value = '';
+        localStorage.removeItem(API_KEY_STORAGE_KEY);
+      });
+    }
+
+    // Helper: build inference headers with optional API key
+    function buildInferenceHeaders() {
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-GT3-Tenant': 'gt2-spa-dev',
+        'X-GT3-Data-Track': 'green',
+        'X-GT3-Consent-Version': 'v1'
+      };
+
+      if (gt3ApiKey) {
+        // We send the same key in both headers.
+        // GT3 will use the relevant one per provider and ignore the rest.
+        headers['X-GT3-OpenRouter-Key'] = gt3ApiKey;
+        headers['X-GT3-OpenAI-Key'] = gt3ApiKey;
+      }
+
+      return headers;
+    }
+
+    // Text extraction
+    async function extractText(file) {
+      const ext = file.name.toLowerCase().split('.').pop();
+      let raw = '';
+      if (ext === 'txt') {
+        raw = await file.text();
+      } else if (ext === 'docx') {
+        const arrayBuffer = await file.arrayBuffer();
+        const res = await window.mammoth.extractRawText({ arrayBuffer });
+        raw = res.value || '';
+      } else {
+        throw new Error('Unsupported file type (only .txt, .docx)');
+      }
+
+      const normalized = normalizeText(raw);
+      const prefixed = `${file.name}\n\n${normalized}`;
+      return prefixed;
+    }
+
+    function normalizeText(text) {
+      return text
+        .replace(/\r/g, '')
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
+
+    // Admin section shortcut (Ctrl/Cmd + Alt + E)
+    let adminVisible = false;
+    function updateAdminVisibility() {
+      const adminSection = document.getElementById('admin-section');
+      if (!adminSection) return;
+      if (adminVisible) adminSection.classList.remove('d-none');
+      else adminSection.classList.add('d-none');
+      console.log('[index] adminVisible =', adminVisible);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      if (isCtrlOrCmd && e.altKey && e.key.toLowerCase() === 'e') {
+        adminVisible = !adminVisible;
+        updateAdminVisibility();
+      }
+    });
+
+    // Approval buttons appearance helper
+    function setApprovalButtonStyle(btn, locked) {
+      if (!btn) return;
+      btn.classList.remove('btn-success', 'btn-outline-success');
+      if (locked) {
+        btn.classList.add('btn-success');
+      } else {
+        btn.classList.add('btn-outline-success');
+      }
+    }
+
+    // Case Card Factory
+    function createCaseCard(caseId, initialState) {
+      const tpl = document.getElementById('tpl-case-card');
+      const frag = tpl.content.cloneNode(true);
+      const section   = frag.querySelector('section');
+      section.dataset.caseId = caseId;
+
+      const titleInput    = section.querySelector('.case-title');
+      const lifecycleBtn  = section.querySelector('.btn-lifecycle');
+      const deleteBtn     = section.querySelector('.btn-delete-case');
+      const textareaPlan  = section.querySelector('.workplan');
+      const textareaStat  = section.querySelector('.status-text');
+      const fileInput     = section.querySelector('.file-input');
+      const applyPlanBtn  = section.querySelector('.btn-apply-plan');
+      const applyStatBtn  = section.querySelector('.btn-apply-status');
+      const createEpBtn   = section.querySelector('.btn-create-ep');
+      const statusMsg     = section.querySelector('.status-msg');
+
+      const state = Object.assign({
+        caseId,
+        title: '',
+        approvedPlan: undefined,
+        approvedStatus: undefined,
+        lastUpdatedIso: undefined,
+        uiState: 'EMPTY',
+        planLocked: false,
+        statusLocked: false,
+        currentPlanText: '',
+        draftStatus: '', // Changed from currentStatusText to draftStatus
+        events: [],
+        epDraftText: undefined,
+        epDraftGenerationSignature: undefined,
+        epUserTouched: false,
+        approvedEpText: undefined,
+        lastInferenceNarrative: undefined,
+        lastModelWorkPlan: undefined,
+        lastModelStatus: undefined
+      }, initialState || {});
+      
+      // Migration: if old state has currentStatusText, migrate to draftStatus
+      if (state.currentStatusText !== undefined && state.draftStatus === undefined) {
+        state.draftStatus = state.currentStatusText;
+        delete state.currentStatusText;
+      }
+
+      if (!state.events) state.events = [];
+
+      if (state.approvedPlan) state.planLocked = true;
+      if (state.approvedStatus) state.statusLocked = true;
+      if (state.approvedPlan || state.approvedStatus) state.uiState = 'READY';
+
+      function persist() {
+        state.lastUpdatedIso = nowIso();
+        saveCaseState(state);
+        updateLastUpdatedLabel(section, state.lastUpdatedIso);
+      }
+
+      // Compute isStatusDirty based on canonicalized comparison
+      function computeIsStatusDirty() {
+        const draft = canon(state.draftStatus || '');
+        const approved = canon(state.approvedStatus || '');
+        return draft !== approved;
+      }
+
+      function render() {
+        titleInput.value = state.title || '';
+        updateLastUpdatedLabel(section, state.lastUpdatedIso);
+
+        const planTextToShow =
+          state.planLocked
+            ? (state.approvedPlan || state.currentPlanText || '')
+            : (state.currentPlanText || state.approvedPlan || '');
+
+        // Status text: always show draftStatus (volatile value)
+        const statusTextToShow = state.draftStatus || '';
+
+        // In EMPTY state: workplan locked, status editable
+        if (state.uiState === 'EMPTY' && !state.approvedPlan && !state.approvedStatus) {
+          textareaPlan.value = '';
+          textareaPlan.disabled = true;
+          textareaPlan.readOnly = true;
+
+          textareaStat.value = statusTextToShow;
+          textareaStat.disabled = false;
+          textareaStat.readOnly = false;
+        } else {
+          textareaPlan.value = planTextToShow;
+          textareaStat.value = statusTextToShow;
+        }
+        
+        // Compute and update Status dirty state
+        const isStatusDirty = computeIsStatusDirty();
+        
+        // Update Status glyph UI based on dirty state
+        if (state.statusLocked && isStatusDirty) {
+          // Status was approved but is now dirty - show "needs re-accept"
+          state.statusLocked = false;
+          console.log(`[${state.caseId}] Status diff detected: draft differs from approved`);
+        }
+
+        textareaPlan.classList.remove('approved-text');
+        textareaStat.classList.remove('approved-text');
+
+        if (state.uiState === 'GENERATING') {
+          textareaPlan.readOnly = true;
+          textareaPlan.disabled = false;
+          textareaStat.readOnly = true;
+          textareaStat.disabled = false;
+        } else if (state.planLocked) {
+          textareaPlan.readOnly = true;
+          textareaPlan.disabled = false;
+          textareaPlan.classList.add('approved-text');
+        } else if (state.uiState === 'READY') {
+          textareaPlan.readOnly = false;
+          textareaPlan.disabled = false;
+        }
+
+        if (state.uiState === 'GENERATING') {
+          // already handled above
+        } else if (state.statusLocked) {
+          textareaStat.readOnly = true;
+          textareaStat.disabled = false;
+          textareaStat.classList.add('approved-text');
+        } else if (state.uiState === 'READY' || state.uiState === 'EMPTY') {
+          textareaStat.readOnly = false;
+          textareaStat.disabled = false;
+        }
+
+        if (state.uiState === 'GENERATING') {
+          fileInput.disabled = true;
+          applyPlanBtn.disabled = true;
+          applyStatBtn.disabled = true;
+          createEpBtn.disabled = true;
+          setStatus(statusMsg, 'יוצר תוכנית וסטטוס...');
+        } else {
+          const canUpload =
+            state.uiState === 'EMPTY' ||
+            (state.uiState === 'READY' && state.planLocked && state.statusLocked);
+
+          fileInput.disabled = !canUpload;
+
+          applyPlanBtn.disabled =
+            !(state.uiState === 'READY' && !state.planLocked);
+
+          const canApproveStatus =
+            !state.statusLocked &&
+            (state.uiState === 'READY' || state.uiState === 'EMPTY');
+
+          applyStatBtn.disabled = !canApproveStatus;
+
+          const canCreateEp = !!(state.approvedPlan && state.approvedStatus);
+          createEpBtn.disabled = !canCreateEp;
+
+          applyPlanBtn.textContent = state.planLocked
+            ? '💾 נשמרה תוכנית עבודה'
+            : '👍 אשר תוכנית עבודה';
+
+          // Status button text: show "needs re-accept" if dirty after approval
+          const isStatusDirty = computeIsStatusDirty();
+          if (state.statusLocked && isStatusDirty) {
+            applyStatBtn.textContent = '🔄 אשר מחדש מצב קיים';
+          } else {
+            applyStatBtn.textContent = state.statusLocked
+              ? '💾 נשמר מצב קיים'
+              : '👍 אשר מצב קיים';
+          }
+
+          setApprovalButtonStyle(applyPlanBtn, state.planLocked);
+          setApprovalButtonStyle(applyStatBtn, state.statusLocked && !isStatusDirty);
+
+          if (!canUpload && state.uiState === 'READY') {
+            setStatus(statusMsg, 'יש לאשר תוכנית וסטטוס לפני העלאת מסמך נוסף.');
+          } else {
+            setStatus(statusMsg, '');
+          }
+        }
+      }
+
+      // Helper: if title is empty and model proposed one, auto-fill but keep editable
+      function maybeAutoFillTitleFromModel(caseTitle, source) {
+        const trimmedExisting = (state.title || '').trim();
+        const trimmedProposed = (caseTitle || '').trim();
+        if (!trimmedExisting && trimmedProposed) {
+          state.title = trimmedProposed;
+          titleInput.value = trimmedProposed;
+          pushEvent(state, 'case_title_auto_filled', {
+            source,
+            caseTitle: trimmedProposed
+          });
+        }
+      }
+
+      // Generate Workplan from Status delta (iterative workflow)
+      async function generateWorkplanFromStatusDelta(prevApprovedStatus, newlyApprovedStatus, latestWorkplan) {
+        console.log(`[${state.caseId}] Generating Workplan from Status delta`, {
+          prevApprovedStatusLength: prevApprovedStatus.length,
+          newlyApprovedStatusLength: newlyApprovedStatus.length,
+          latestWorkplanLength: latestWorkplan.length
+        });
+
+        // Build narrative with delta context
+        const narrative = buildNarrativeWithDelta(
+          prevApprovedStatus,
+          newlyApprovedStatus,
+          latestWorkplan
+        );
+        
+        const payload = {
+          narrative,
+          // Explicit delta context for logging and model visibility
+          latestApprovedStatus: prevApprovedStatus,
+          newlyApprovedStatus: newlyApprovedStatus,
+          latestWorkplan: latestWorkplan
+        };
+
+        state.uiState = 'GENERATING';
+        saveCaseState(state);
+        render();
+        setStatus(statusMsg, 'מעדכן תוכנית עבודה...');
+
+        pushEvent(state, 'status_delta_workplan_inference_requested', {
+          narrativeLength: narrative.length,
+          prevApprovedStatusLength: prevApprovedStatus.length,
+          newlyApprovedStatusLength: newlyApprovedStatus.length,
+          latestWorkplanLength: latestWorkplan.length
+        });
+
+        // Log inference payload structure (without sensitive content)
+        console.log(`[${state.caseId}] Workplan inference payload keys:`, {
+          narrativeLength: narrative.length,
+          latestApprovedStatusLength: prevApprovedStatus.length,
+          newlyApprovedStatusLength: newlyApprovedStatus.length,
+          latestWorkplanLength: latestWorkplan.length
+        });
+
+        try {
+          const t0 = performance.now();
+          const res = await fetch(INFERENCE_URI, {
+            method: 'POST',
+            headers: buildInferenceHeaders(),
+            body: JSON.stringify(payload)
+          });
+          const t1 = performance.now();
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status} ${await res.text()}`);
+          }
+
+          const data = await res.json();
+          const raw = data.response;
+          if (typeof raw !== 'string') {
+            throw new Error('Malformed response: "response" is not a string');
+          }
+
+          const { caseTitle, workPlan, status } = parseTaggedResponse(raw, state.caseId);
+
+          // Auto-fill case title if empty
+          maybeAutoFillTitleFromModel(caseTitle, 'status_delta_inference');
+
+          // Set new workplan as draft (not approved)
+          state.currentPlanText = workPlan;
+          state.planLocked = false; // Reset Workplan approval
+          state.uiState = 'READY';
+          state.lastUpdatedIso = nowIso();
+
+          // Capture context for training
+          state.lastInferenceNarrative = narrative;
+          state.lastModelWorkPlan = workPlan;
+          state.lastModelStatus = status;
+
+          pushEvent(state, 'status_delta_workplan_inference_success', {
+            workPlan,
+            caseTitle,
+            narrative
+          });
+
+          saveCaseState(state);
+          render();
+
+          sheen(textareaPlan);
+
+          console.log(
+            `[${state.caseId}] Status delta Workplan inference OK in ${(t1 - t0).toFixed(0)}ms.`,
+            `work_plan len=${workPlan.length}, words=${wordCount(workPlan)}`
+          );
+        } catch (err) {
+          console.error(`[${state.caseId}] Status delta Workplan inference error:`, err);
+          setStatus(statusMsg, 'שגיאה בעדכון תוכנית עבודה, נסה שוב מאוחר יותר');
+          pushEvent(state, 'status_delta_workplan_inference_error', {
+            message: String(err)
+          });
+          state.uiState = (state.approvedPlan || state.approvedStatus) ? 'READY' : 'EMPTY';
+          saveCaseState(state);
+          render();
+        }
+      }
+      
+      // Invalidate downstream artifacts that depend on Workplan
+      function invalidateDownstreamArtifacts() {
+        console.log(`[${state.caseId}] Invalidating downstream artifacts due to Status update`);
+        
+        // Clear EP drafts and approvals
+        state.epDraftText = undefined;
+        state.epDraftGenerationSignature = undefined;
+        state.approvedEpText = undefined;
+        state.epUserTouched = false;
+        
+        pushEvent(state, 'downstream_artifacts_invalidated', {
+          reason: 'status_updated',
+          clearedArtifacts: ['epDraftText', 'epDraftGenerationSignature', 'approvedEpText']
+        });
+        
+        console.log(`[${state.caseId}] Downstream artifacts reset: EP drafts and approvals cleared`);
+      }
+
+      titleInput.addEventListener('input', () => {
+        state.title = titleInput.value;
+        persist();
+      });
+
+      lifecycleBtn.addEventListener('click', () => {
+        const from = encodeURIComponent(location.pathname + location.search);
+        const target = `case-lifecycle.html?caseId=${encodeURIComponent(state.caseId)}&from=${from}`;
+        window.location.href = target;
+      });
+
+      createEpBtn.addEventListener('click', () => {
+        const from = encodeURIComponent(location.pathname + location.search);
+        const target = `ep.html?caseId=${encodeURIComponent(state.caseId)}&from=${from}`;
+        window.location.href = target;
+      });
+
+      textareaPlan.addEventListener('input', () => {
+        if (state.uiState === 'READY' && state.planLocked) {
+          state.planLocked = false;
+          render();
+        }
+        state.currentPlanText = textareaPlan.value;
+      });
+
+      textareaStat.addEventListener('input', () => {
+        // Update draftStatus on every input
+        state.draftStatus = textareaStat.value;
+        
+        // Recompute dirty state and update UI
+        const isStatusDirty = computeIsStatusDirty();
+        if (state.statusLocked && isStatusDirty) {
+          // Status was approved but is now dirty - force to not accepted
+          state.statusLocked = false;
+          console.log(`[${state.caseId}] Status diff detected on input: draft differs from approved`);
+          pushEvent(state, 'status_diff_detected', {
+            draftLength: state.draftStatus.length,
+            approvedLength: (state.approvedStatus || '').length
+          });
+        }
+        persist();
+        render();
+      });
+
+      applyPlanBtn.addEventListener('click', () => {
+        state.approvedPlan = textareaPlan.value;
+        state.currentPlanText = state.approvedPlan;
+        state.planLocked = true;
+        pushEvent(state, 'plan_approved', {
+          length: state.approvedPlan.length,
+          wordCount: wordCount(state.approvedPlan)
+        });
+        persist();
+        render();
+
+        // Send training example for Workplan (if we have matching inference context)
+        if (state.lastInferenceNarrative && state.lastModelWorkPlan) {
+          sendTrainingExample({
+            useCase: 'gt2.legato.workplan',
+            channels: {
+              input_request: state.lastInferenceNarrative,
+              model_candidate: state.lastModelWorkPlan,
+              authoritative_reference: state.approvedPlan
+            },
+            meta: {
+              case_id: state.caseId,
+              artifact: 'workplan',
+              title: state.title || ''
+            }
+          });
+        } else {
+          console.log('[training] skipping workplan: missing narrative/model draft');
+        }
+      });
+
+      applyStatBtn.addEventListener('click', async () => {
+        const isStatusDirty = computeIsStatusDirty();
+        
+        // Capture previous approved Status BEFORE any state mutations
+        // This must be the OLD approved status (before this click)
+        // Use a deep copy to ensure we don't accidentally reference the same object
+        const prevApprovedStatus = (state.approvedStatus !== undefined && state.approvedStatus !== null) 
+          ? String(state.approvedStatus) 
+          : '';
+        
+        // Use draftStatus as source of truth (not textareaStat.value which might be stale)
+        const newlyApprovedStatus = String(state.draftStatus || textareaStat.value || '');
+        const latestWorkplan = (state.approvedPlan !== undefined && state.approvedPlan !== null)
+          ? String(state.approvedPlan)
+          : '';
+        
+        // Debug: Log what we captured BEFORE any mutations
+        console.log(`[${state.caseId}] Status approval - captured values (BEFORE mutations):`, {
+          prevApprovedStatus: prevApprovedStatus.substring(0, 100) + (prevApprovedStatus.length > 100 ? '...' : ''),
+          newlyApprovedStatus: newlyApprovedStatus.substring(0, 100) + (newlyApprovedStatus.length > 100 ? '...' : ''),
+          prevApprovedStatusLength: prevApprovedStatus.length,
+          newlyApprovedStatusLength: newlyApprovedStatus.length,
+          isDirty: isStatusDirty,
+          stateApprovedStatusBefore: (state.approvedStatus || '').substring(0, 50) + ((state.approvedStatus || '').length > 50 ? '...' : ''),
+          stateDraftStatusBefore: (state.draftStatus || '').substring(0, 50) + ((state.draftStatus || '').length > 50 ? '...' : '')
+        });
+        
+        // Update approved Status snapshot (AFTER capturing previous)
+        state.approvedStatus = newlyApprovedStatus;
+        state.draftStatus = newlyApprovedStatus; // Sync draft to approved
+        state.statusLocked = true;
+        
+        pushEvent(state, 'status_approved', {
+          length: state.approvedStatus.length,
+          wordCount: wordCount(state.approvedStatus),
+          isReAccept: !!prevApprovedStatus,
+          wasDirty: isStatusDirty,
+          prevApprovedStatusLength: prevApprovedStatus.length,
+          newlyApprovedStatusLength: newlyApprovedStatus.length
+        });
+        
+        console.log(`[${state.caseId}] Status re-accept triggered`, {
+          isDirty: isStatusDirty,
+          prevApprovedStatusLength: prevApprovedStatus.length,
+          newlyApprovedStatusLength: newlyApprovedStatus.length
+        });
+        
+        persist();
+        render();
+
+        // Send training example for Status (if we have matching inference context)
+        if (state.lastInferenceNarrative && state.lastModelStatus) {
+          sendTrainingExample({
+            useCase: 'gt2.legato.status',
+            channels: {
+              input_request: state.lastInferenceNarrative,
+              model_candidate: state.lastModelStatus,
+              authoritative_reference: state.approvedStatus
+            },
+            meta: {
+              case_id: state.caseId,
+              artifact: 'status',
+              title: state.title || ''
+            }
+          });
+        } else {
+          console.log('[training] skipping status: missing narrative/model draft');
+        }
+
+        // Only trigger Workplan inference if Status was dirty (changed)
+        if (isStatusDirty) {
+          // Validation: ensure prevApprovedStatus and newlyApprovedStatus are different
+          const prevTrimmed = canon(prevApprovedStatus);
+          const newTrimmed = canon(newlyApprovedStatus);
+          
+          if (prevTrimmed === newTrimmed && prevApprovedStatus.length > 0) {
+            console.warn(`[${state.caseId}] WARNING: prevApprovedStatus and newlyApprovedStatus are the same!`, {
+              prevApprovedStatus: prevApprovedStatus.substring(0, 100),
+              newlyApprovedStatus: newlyApprovedStatus.substring(0, 100)
+            });
+          }
+          
+          console.log(`[${state.caseId}] Status changed, triggering Workplan regeneration`, {
+            prevApprovedStatusPreview: prevApprovedStatus.substring(0, 50) + (prevApprovedStatus.length > 50 ? '...' : ''),
+            newlyApprovedStatusPreview: newlyApprovedStatus.substring(0, 50) + (newlyApprovedStatus.length > 50 ? '...' : ''),
+            prevApprovedStatusLength: prevApprovedStatus.length,
+            newlyApprovedStatusLength: newlyApprovedStatus.length,
+            areDifferent: prevTrimmed !== newTrimmed
+          });
+          
+          // Reset Workplan approval
+          state.planLocked = false;
+          
+          // Invalidate all downstream artifacts
+          invalidateDownstreamArtifacts();
+          
+          // Trigger Workplan inference with delta context
+          // Pass the captured prevApprovedStatus (OLD) and newlyApprovedStatus (NEW)
+          // These should be different if isStatusDirty is true
+          await generateWorkplanFromStatusDelta(prevApprovedStatus, newlyApprovedStatus, latestWorkplan);
+        } else {
+          console.log(`[${state.caseId}] Status unchanged, no inference triggered`);
+        }
+      });
+
+      deleteBtn.addEventListener('click', () => {
+        const ok = window.confirm('האם למחוק את המקרה הזה? פעולה זו אינה ניתנת לשחזור.');
+        if (!ok) return;
+        deleteCaseState(state.caseId);
+        section.remove();
+      });
+
+      fileInput.addEventListener('change', async () => {
+        if (!fileInput.files || !fileInput.files[0]) return;
+        if (state.uiState === 'GENERATING') return;
+
+        const file = fileInput.files[0];
+        try {
+          const text = await extractText(file);
+          const wc   = wordCount(text);
+
+          if (wc > MAX_WORDS) {
+            setStatus(statusMsg, 'המסמך ארוך מדי, עד ' + MAX_WORDS +' מילים בלבד.');
+            fileInput.value = '';
+            return;
+          }
+
+          pushEvent(state, 'doc_uploaded', {
+            fileName: file.name,
+            wordCount: wc
+          });
+
+          const previousPlan   = state.approvedPlan || '';
+          const previousStatus = state.approvedStatus || '';
+
+          const narrative = buildNarrative(previousPlan, previousStatus, text);
+          const payload   = { narrative };
+
+          state.uiState = 'GENERATING';
+          saveCaseState(state);
+          render();
+
+          const t0 = performance.now();
+          const res = await fetch(INFERENCE_URI, {
+            method: 'POST',
+            headers: buildInferenceHeaders(),
+            body: JSON.stringify(payload)
+          });
+          const t1 = performance.now();
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status} ${await res.text()}`);
+          }
+
+          const data = await res.json();
+          const raw = data.response;
+          if (typeof raw !== 'string') {
+            throw new Error('Malformed response: "response" is not a string');
+          }
+
+          const { caseTitle, workPlan, status } = parseTaggedResponse(raw, state.caseId);
+
+          // Auto-fill case title if empty
+          maybeAutoFillTitleFromModel(caseTitle, 'doc_inference');
+
+          state.currentPlanText = workPlan;
+          state.draftStatus = status; // Use draftStatus instead of currentStatusText
+          state.planLocked = false;
+          state.statusLocked = false;
+          state.uiState = 'READY';
+          state.lastUpdatedIso = nowIso();
+
+          // Capture context for future training examples
+          state.lastInferenceNarrative = narrative;
+          state.lastModelWorkPlan = workPlan;
+          state.lastModelStatus = status;
+
+          pushEvent(state, 'inference_success', {
+            caseTitle,
+            workPlan,
+            status,
+            narrative
+          });
+
+          saveCaseState(state);
+          render();
+
+          sheen(textareaPlan);
+          sheen(textareaStat);
+
+          console.log(
+            `[${state.caseId}] Inference OK in ${(t1 - t0).toFixed(0)}ms.`,
+            `work_plan len=${workPlan.length}, words=${wordCount(workPlan)};`,
+            `status len=${status.length}, words=${wordCount(status)}`
+          );
+
+        } catch (err) {
+          console.error(`[${state.caseId}] Inference/Upload error:`, err);
+          setStatus(statusMsg, 'שגיאה בהפקת תוכנית/סטטוס, נסה שוב מאוחר יותר');
+          pushEvent(state, 'inference_error', {
+            message: String(err)
+          });
+          state.uiState = (state.approvedPlan || state.approvedStatus) ? 'READY' : 'EMPTY';
+          saveCaseState(state);
+          render();
+        } finally {
+          fileInput.value = '';
+        }
+      });
+
+      render();
+      return section;
+    }
+
+    const list   = document.getElementById('case-list');
+    const btnNew = document.getElementById('btn-new-case');
+
+    function mountCase(caseId, initialState) {
+      const card = createCaseCard(caseId, initialState);
+      list.prepend(card);
+    }
+
+    function initFromStorage() {
+      const ids = loadIndex();
+      ids.forEach(id => {
+        const st = loadCaseState(id);
+        mountCase(id, st || undefined);
+      });
+    }
+
+    btnNew.addEventListener('click', () => {
+      const id = uuid();
+      const state = {
+        caseId: id,
+        uiState: 'EMPTY',
+        lastUpdatedIso: nowIso(),
+        events: []
+      };
+      pushEvent(state, 'case_created', {});
+      const idx = [id, ...loadIndex()];
+      saveIndex(idx);
+      saveCaseState(state);
+      mountCase(id, state);
+    });
+
+    // Logo click → open settings sidebar
+    const logoEl = document.getElementById('gt2-logo');
+    if (logoEl) {
+      logoEl.addEventListener('click', () => {
+        const offcanvasEl = document.getElementById('settings-offcanvas');
+        if (!offcanvasEl || typeof bootstrap === 'undefined') return;
+        const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+        offcanvas.show();
+      });
+    }
+
+    initAdminPanel();
+    initSettingsPanel();
+    initFromStorage();
+    console.log(`GT2 SPA v13.9 ready. INFERENCE_URI=${INFERENCE_URI}`);
+  </script>
+</body>
+</html>

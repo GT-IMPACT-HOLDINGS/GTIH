@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="gt3-file-uuid" content="c3ce2cb6-e811-46ad-b502-01f0b520e4f7" />
+  <title>QuoteMe v1 — Opportunity</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../gt2-logo-small.png" />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Mammoth for .docx to text -->
+  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+  <style>
+    body {
+      background: #fafafa;
+    }
+    .quote-me-primary {
+      color: #2F6BFF;
+    }
+    .quote-me-approved {
+      color: #00B8D9;
+    }
+    .btn-primary {
+      background-color: #2F6BFF;
+      border-color: #2F6BFF;
+    }
+    .btn-primary:hover {
+      background-color: #1a5ae6;
+      border-color: #1a5ae6;
+    }
+    .sensitive-warning {
+      background-color: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <!-- Header -->
+    <header class="d-flex align-items-center mb-4 gap-2">
+      <a href="index.html" class="btn btn-outline-secondary btn-sm">← Back</a>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <img src="../gt2-logo-small.png" alt="GT2 logo" class="gt2-logo" id="gt2-logo" style="height: 28px; cursor: pointer;">
+        <h1 class="h5 m-0 quote-me-primary">QuoteMe — Opportunity</h1>
+      </div>
+    </header>
+
+    <!-- Opportunity Title -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <label for="opportunity-title" class="form-label fw-semibold">Opportunity Title</label>
+        <input 
+          type="text" 
+          id="opportunity-title" 
+          class="form-control" 
+          placeholder="Enter opportunity title..."
+        />
+      </div>
+    </div>
+
+    <!-- Status Field (using draft-field component) -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div id="status-draft-field-container">
+          <!-- Draft field component will be inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Workplan Field (using draft-field component) -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div id="workplan-draft-field-container">
+          <!-- Draft field component will be inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Engagement Proposal (EP) Field (using draft-field component) -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div id="ep-draft-field-container">
+          <!-- Draft field component will be inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex gap-2 flex-wrap">
+          <button id="btn-mark-sent" class="btn btn-primary" disabled>
+            Send EP to Customer
+          </button>
+        </div>
+        <p class="small text-muted mt-2 mb-0">
+          EP must be approved (via glyph) before sending to customer.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Sidebar (Offcanvas) -->
+  <div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="settings-offcanvas"
+    aria-labelledby="settings-offcanvas-label"
+  >
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="settings-offcanvas-label">GT3 Settings</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body small">
+      <p class="mb-2 text-muted">
+        Enter your GT3 API key here. The key is stored in browser localStorage only
+        and sent with every inference request to GT3.
+      </p>
+
+      <div class="mb-3">
+        <label for="settings-api-key" class="form-label">GT3 API Key</label>
+        <input
+          type="password"
+          id="settings-api-key"
+          class="form-control form-control-sm"
+          placeholder="Paste your API key here"
+        />
+        <div class="form-text">
+          Key is stored in browser localStorage only.
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="button" id="settings-api-clear" class="btn btn-outline-danger btn-sm">
+          Clear Key
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script type="module">
+    import {
+      loadQuoteMeData,
+      saveQuoteMeData,
+      getOpportunity,
+      updateOpportunity,
+      appendAuditLog
+    } from './storage.js';
+    import { setApiKey, getApiKey, callGT3 } from './gt3-client.js';
+    // Cache-busting: add ?v=timestamp to force browser to reload latest version
+    import { createDraftField, updateDraftField, updateDraftFieldActions } from '../utilities/draft-field.js?v=1.8.1';
+    import { extractText, normalizeText, scanSensitive } from './text-extraction.js';
+    import { buildWorkplanNarrative, buildStatusNarrative, buildTitleNarrative, buildEPNarrative } from './inference-narratives.js';
+    import { showErrorToast, showSuccessToast, showWarningToast } from './toast-utils.js';
+    import { showHeaderLoading, removeHeaderLoading } from './loading-utils.js';
+    import { isNetworkError, setupNetworkListeners } from './network-utils.js';
+
+    // ---------- State ----------
+    let currentData = loadQuoteMeData();
+    let currentOpportunity = null;
+    let opportunityId = null;
+    let statusDraftFieldContainer = null;
+    let workplanDraftFieldContainer = null;
+    let epDraftFieldContainer = null;
+
+    // ---------- Get Opportunity ID from URL ----------
+    const urlParams = new URLSearchParams(window.location.search);
+    opportunityId = urlParams.get('id');
+    
+    if (!opportunityId) {
+      alert('No opportunity ID provided. Redirecting to opportunities list.');
+      window.location.href = 'index.html';
+    }
+
+    // ---------- UI Elements ----------
+    const titleInput = document.getElementById('opportunity-title');
+    const statusContainer = document.getElementById('status-draft-field-container');
+    const workplanContainer = document.getElementById('workplan-draft-field-container');
+    const epContainer = document.getElementById('ep-draft-field-container');
+    
+    // Working state tracking for Status field
+    let statusWorkingState = 'idle'; // 'idle' | 'working' | 'error'
+    let statusErrorPreview = null;
+
+    // ---------- Load Opportunity ----------
+    function loadOpportunity() {
+      currentOpportunity = getOpportunity(currentData, opportunityId);
+      
+      if (!currentOpportunity) {
+        alert('Opportunity not found. Redirecting to opportunities list.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Populate title
+      titleInput.value = currentOpportunity.title || '';
+
+      // Render Status field
+      renderStatusField();
+      
+      // Render Workplan field
+      renderWorkplanField();
+
+      // Render EP field
+      renderEPField();
+
+      // Update "Mark as Sent" button state
+      updateMarkSentButtonState();
+    }
+
+    // ---------- Render Status Field ----------
+    function renderStatusField() {
+      if (!statusContainer) return;
+      
+      statusContainer.innerHTML = '';
+      
+      const statusText = currentOpportunity.statusText || '';
+      const statusApproved = currentOpportunity.statusApproved || false;
+      // Default to false if fields don't exist (for backward compatibility)
+      const hasLmDraft = currentOpportunity.statusHasLmDraft !== undefined ? currentOpportunity.statusHasLmDraft : false;
+      const hasUserEdits = currentOpportunity.statusHasUserEdits !== undefined ? currentOpportunity.statusHasUserEdits : false;
+      
+      statusDraftFieldContainer = createDraftField({
+        label: 'Status',
+        text: statusText,
+        approved: statusApproved,
+        hasLmDraft: hasLmDraft,
+        hasUserEdits: hasUserEdits,
+        readOnly: false,
+        placeholder: 'Enter status manually or upload document to generate...',
+        workingState: statusWorkingState,
+        errorPreview: statusErrorPreview,
+        onUpload: async (file) => {
+          // Handle file upload (per DraftFirst v1.1: upload action in header row)
+          await handleNewInputUpload(file, 'file');
+        },
+        onTextChange: (newText, userHasEdited) => {
+          // Update Status text and track user edits
+          const updates = {
+            statusText: newText
+          };
+          
+          // Track authorship state
+          if (userHasEdited && hasLmDraft) {
+            // User edited LM draft → LM+User
+            updates.statusHasUserEdits = true;
+          } else if (!hasLmDraft && newText.trim()) {
+            // User-only content (no LM draft) → user-only
+            updates.statusHasLmDraft = false;
+            updates.statusHasUserEdits = false;
+          }
+          
+          updateOpportunity(currentData, opportunityId, updates);
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          
+          // Revoke approval if edited after approval
+          if (statusApproved && newText !== statusText) {
+            updateOpportunity(currentData, opportunityId, {
+              statusApproved: false,
+              statusApprovedAt: null
+            });
+            currentData = loadQuoteMeData();
+            currentOpportunity = getOpportunity(currentData, opportunityId);
+            // Invalidate EP on Status edit (per QuoteMeStateMachineSpec.md)
+            invalidateEP();
+            renderEPField(); // Re-render EP to reflect locked state
+          }
+          
+          // Always update glyph to reflect current state (component may have updated internally, but we sync with storage)
+          if (statusDraftFieldContainer) {
+            updateDraftField(statusDraftFieldContainer, {
+              text: newText,
+              approved: currentOpportunity.statusApproved || false,
+              hasLmDraft: currentOpportunity.statusHasLmDraft || false,
+              hasUserEdits: currentOpportunity.statusHasUserEdits || false
+            });
+          }
+        },
+        onApproveToggle: async (isApproved) => {
+          // Get current state
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          if (!currentOpportunity) return;
+          
+          // Check if Workplan exists before updating approval state
+          const workplanExists = currentOpportunity.workplanText && currentOpportunity.workplanText.trim();
+          
+          // Update approval
+          updateOpportunity(currentData, opportunityId, {
+            statusApproved: isApproved,
+            statusApprovedAt: isApproved ? new Date().toISOString() : null
+          });
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          
+          // If Status is approved, trigger Workplan generation:
+          // - If Workplan is empty (first-time generation)
+          // - OR if Workplan exists (re-acceptance triggers regeneration down the chain)
+          if (isApproved) {
+            await generateWorkplanFromStatus();
+            // Reload data after workplan generation to ensure we have the latest state
+            currentData = loadQuoteMeData();
+            currentOpportunity = getOpportunity(currentData, opportunityId);
+          }
+          
+          // Invalidate EP if Status is approved and Workplan is also approved
+          // (per QuoteMeStateMachineSpec.md Section 4.2 Rule 6: EP invalidation on upstream change)
+          if (isApproved && currentOpportunity.workplanApproved) {
+            invalidateEP();
+            // Reload data after invalidation
+            currentData = loadQuoteMeData();
+            currentOpportunity = getOpportunity(currentData, opportunityId);
+          }
+          
+          // Update glyph
+          if (statusDraftFieldContainer) {
+            updateDraftField(statusDraftFieldContainer, {
+              text: currentOpportunity.statusText,
+              approved: currentOpportunity.statusApproved,
+              hasLmDraft: currentOpportunity.statusHasLmDraft,
+              hasUserEdits: currentOpportunity.statusHasUserEdits
+            });
+          }
+          
+          // Re-render EP field (may unlock if Workplan is now approved)
+          renderEPField();
+          
+          // Auto-generate EP if both Status and Workplan are now approved
+          if (isApproved) {
+            await autoGenerateEPIfNeeded();
+          }
+        }
+      });
+
+      statusContainer.appendChild(statusDraftFieldContainer);
+    }
+    
+    // ---------- Generate Status + Workplan from NEW INPUT (parallel, atomic) ----------
+    async function generateStatusAndWorkplanFromNewInput(newInputText) {
+      if (!currentData.profile) {
+        statusWorkingState = 'error';
+        statusErrorPreview = 'Profile not found. Cannot generate Status and Workplan.';
+        updateDraftFieldActions(statusDraftFieldContainer, statusWorkingState, statusErrorPreview);
+        return;
+      }
+
+      // Keep working state active
+      statusWorkingState = 'working';
+      updateDraftFieldActions(statusDraftFieldContainer, statusWorkingState);
+
+      try {
+        // Get previous approved Status and Workplan (for stability)
+        const previousStatus = currentOpportunity.statusText || '';
+        const previousWorkplan = currentOpportunity.workplanText || '';
+
+        // Build narratives for both calls (per QuoteMeInferenceSpec.md)
+        const statusNarrative = buildStatusNarrative(
+          currentData.profile,
+          previousStatus,
+          previousWorkplan,
+          newInputText
+        );
+        const workplanNarrative = buildWorkplanNarrative(
+          currentData.profile,
+          previousWorkplan,
+          previousStatus,
+          newInputText
+        );
+
+        // Trigger both calls in parallel (per QuoteMeApiSpec.md Section 6)
+        const startTime = Date.now();
+        const [statusResult, workplanResult] = await Promise.all([
+          callGT3(statusNarrative),
+          callGT3(workplanNarrative)
+        ]);
+        const latencyMs = Date.now() - startTime;
+
+        // Atomic commit: both must succeed (per QuoteMeInferenceSpec.md + QuoteMeApiSpec.md)
+        if (statusResult.ok && workplanResult.ok && statusResult.text && workplanResult.text) {
+          // Both succeeded - commit atomically
+          updateOpportunity(currentData, opportunityId, {
+            statusText: statusResult.text,
+            statusHasLmDraft: true,
+            statusHasUserEdits: false,
+            statusApproved: false, // Already revoked earlier
+            statusApprovedAt: null,
+            workplanText: workplanResult.text,
+            workplanHasLmDraft: true,
+            workplanHasUserEdits: false,
+            workplanApproved: false, // Already revoked earlier
+            workplanApprovedAt: null
+          });
+
+          // Log audit events (per QuoteMeObservabilitySpec.md)
+          appendAuditLog(currentData, opportunityId, 'status_generated', 'Status generated from NEW INPUT', {
+            requestNarrative: statusNarrative.substring(0, 200000), // Truncate per spec
+            responseText: statusResult.text.substring(0, 200000),
+            latencyMs: latencyMs,
+            provider: null, // GT3 doesn't return this
+            model: null // GT3 doesn't return this
+          });
+
+          appendAuditLog(currentData, opportunityId, 'workplan_generated', 'Workplan generated from NEW INPUT', {
+            requestNarrative: workplanNarrative.substring(0, 200000),
+            responseText: workplanResult.text.substring(0, 200000),
+            latencyMs: latencyMs,
+            provider: null,
+            model: null
+          });
+
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+
+          // Update UI
+          statusWorkingState = 'idle';
+          updateDraftFieldActions(statusDraftFieldContainer, statusWorkingState);
+          renderStatusField();
+          renderWorkplanField();
+          // Invalidate EP when NEW INPUT is uploaded (approvals were revoked)
+          invalidateEP();
+          renderEPField();
+        } else {
+          // Either failed - discard both (atomic behavior per QuoteMeApiSpec.md Section 6)
+          throw new Error(
+            `Generation failed: ${!statusResult.ok ? `Status: ${statusResult.error || 'Unknown error'}` : ''} ${!workplanResult.ok ? `Workplan: ${workplanResult.error || 'Unknown error'}` : ''}`
+          );
+        }
+      } catch (err) {
+        console.error('[Status+Workplan generation] Error:', err);
+        statusWorkingState = 'error';
+        statusErrorPreview = String(err);
+        updateDraftFieldActions(statusDraftFieldContainer, statusWorkingState, statusErrorPreview);
+
+        // Log error audit event (per QuoteMeObservabilitySpec.md)
+        appendAuditLog(currentData, opportunityId, 'error', 'Status+Workplan generation failed', {
+          error: String(err),
+          errorPreview: statusErrorPreview
+        });
+      }
+    }
+
+    // ---------- Generate Workplan from approved Status ----------
+    async function generateWorkplanFromStatus() {
+      if (!currentData.profile) {
+        return; // Error handling in caller
+      }
+      
+      const approvedStatus = currentOpportunity.statusText || '';
+      if (!approvedStatus.trim()) {
+        return; // No status to work with
+      }
+      
+      try {
+        // Use existing workplan as context if it exists (for re-acceptance scenarios)
+        const previousWorkplan = currentOpportunity.workplanText || '';
+        
+        // Build narrative: Profile + approved Status (no NEW INPUT document)
+        const newInput = `No new document. The updated status is:\n${approvedStatus}`;
+        const narrative = buildWorkplanNarrative(
+          currentData.profile,
+          previousWorkplan, // Use existing workplan as context if available
+          approvedStatus, // Approved status
+          newInput
+        );
+        
+        const result = await callGT3(narrative);
+        
+        if (result.ok && result.text) {
+          // Save generated Workplan
+          updateOpportunity(currentData, opportunityId, {
+            workplanText: result.text,
+            workplanHasLmDraft: true,
+            workplanHasUserEdits: false,
+            workplanApproved: false,
+            workplanApprovedAt: null
+          });
+          
+          // Log audit event
+          appendAuditLog(currentData, opportunityId, 'workplan_generated', 'Workplan generated from approved Status', {
+            trigger: 'status_approval',
+            narrative: narrative.substring(0, 1000), // Truncate
+            latencyMs: result.latencyMs
+          });
+          
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          
+          // Always re-render Workplan field to ensure it shows the newly generated workplan
+          renderWorkplanField();
+          
+          // Also update the field if it exists (double-check to ensure textarea is updated)
+          if (workplanDraftFieldContainer && workplanDraftFieldContainer._textarea) {
+            const textarea = workplanDraftFieldContainer._textarea;
+            const newText = currentOpportunity.workplanText || '';
+            if (textarea.value !== newText) {
+              textarea.value = newText;
+              // Trigger input event to ensure any listeners are notified
+              textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          }
+          
+          // Title proposal (if title is empty) - non-blocking
+          // Use approved Status text as "new input" for title proposal
+          if (!currentOpportunity.title || !currentOpportunity.title.trim()) {
+            try {
+              const titleNarrative = buildTitleNarrative(currentData.profile, approvedStatus);
+              const titleResult = await callGT3(titleNarrative);
+              
+              if (titleResult.ok && titleResult.text) {
+                updateOpportunity(currentData, opportunityId, {
+                  title: titleResult.text.trim()
+                });
+                
+                // Log title_proposed audit event
+                appendAuditLog(currentData, opportunityId, 'title_proposed', 'Title proposed from approved Status', {
+                  source: 'gt3',
+                  title: titleResult.text.trim(),
+                  requestNarrative: titleNarrative.substring(0, 200000),
+                  latencyMs: titleResult.latencyMs || null,
+                  provider: null,
+                  model: null
+                });
+                
+                // Reload and update UI
+                currentData = loadQuoteMeData();
+                currentOpportunity = getOpportunity(currentData, opportunityId);
+                titleInput.value = currentOpportunity.title || '';
+              }
+            } catch (err) {
+              console.error('[Title proposal] Error:', err);
+              // Non-blocking: title proposal failure doesn't block Workplan generation
+            }
+          }
+        } else {
+          throw new Error(result.error || 'Workplan generation failed');
+        }
+      } catch (err) {
+        console.error('[Workplan generation] Error:', err);
+        // Error is handled silently (user can retry via regenerate button if needed)
+      }
+    }
+
+    // ---------- Render Workplan Field ----------
+    function renderWorkplanField() {
+      if (!workplanContainer) return;
+      
+      workplanContainer.innerHTML = '';
+      
+      const workplanText = currentOpportunity.workplanText || '';
+      const workplanApproved = currentOpportunity.workplanApproved || false;
+      // Default to false if fields don't exist (for backward compatibility)
+      const hasLmDraft = currentOpportunity.workplanHasLmDraft !== undefined ? currentOpportunity.workplanHasLmDraft : false;
+      const hasUserEdits = currentOpportunity.workplanHasUserEdits !== undefined ? currentOpportunity.workplanHasUserEdits : false;
+      
+      // Check if day-zero (workplan empty and no workplan generated event)
+      const isDayZero = !workplanText && !currentOpportunity.auditLog?.some(e => e.eventType === 'workplan_generated');
+      const readOnly = isDayZero; // Disable workplan in day-zero mode
+      
+      workplanDraftFieldContainer = createDraftField({
+        label: 'Workplan',
+        text: workplanText,
+        approved: workplanApproved,
+        hasLmDraft: hasLmDraft,
+        hasUserEdits: hasUserEdits,
+        readOnly: readOnly,
+        placeholder: isDayZero 
+          ? 'Workplan will be generated after Status approval (day-zero mode)'
+          : 'Workplan will appear here after processing new input or Status approval...',
+        onTextChange: (newText, userHasEdited) => {
+          if (readOnly) return; // Don't allow edits in day-zero mode
+          
+          // Update Workplan text and track user edits
+          const updates = {
+            workplanText: newText
+          };
+          
+          // Track user edits if user actually edited
+          if (userHasEdited && hasLmDraft) {
+            updates.workplanHasUserEdits = true;
+          } else if (!hasLmDraft && newText.trim()) {
+            // If no LM draft exists and user types, mark as user-only
+            updates.workplanHasLmDraft = false;
+            updates.workplanHasUserEdits = false;
+          }
+          
+          updateOpportunity(currentData, opportunityId, updates);
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          
+          // Revoke approval if edited after approval
+          if (workplanApproved && newText !== workplanText) {
+            updateOpportunity(currentData, opportunityId, {
+              workplanApproved: false,
+              workplanApprovedAt: null
+            });
+            currentData = loadQuoteMeData();
+            currentOpportunity = getOpportunity(currentData, opportunityId);
+            // Invalidate EP on Workplan edit (per QuoteMeStateMachineSpec.md)
+            invalidateEP();
+            renderEPField(); // Re-render EP to reflect locked state
+          }
+          
+          // Update glyph if state changed
+          if (workplanDraftFieldContainer && 
+              (currentOpportunity.workplanHasUserEdits !== hasUserEdits ||
+               currentOpportunity.workplanHasLmDraft !== hasLmDraft)) {
+            updateDraftField(workplanDraftFieldContainer, {
+              text: newText,
+              approved: currentOpportunity.workplanApproved,
+              hasLmDraft: currentOpportunity.workplanHasLmDraft,
+              hasUserEdits: currentOpportunity.workplanHasUserEdits
+            });
+          }
+        },
+        onApproveToggle: async (isApproved) => {
+          // Get current state before updating
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          if (!currentOpportunity) return;
+          
+          updateOpportunity(currentData, opportunityId, {
+            workplanApproved: isApproved,
+            workplanApprovedAt: isApproved ? new Date().toISOString() : null
+          });
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          
+          // Invalidate EP if Workplan is approved and Status is also approved
+          // (per QuoteMeStateMachineSpec.md Section 4.2 Rule 6: EP invalidation on upstream change)
+          // This handles re-acceptance: when Workplan is re-approved, EP is invalidated and regenerated
+          if (isApproved && currentOpportunity.statusApproved) {
+            invalidateEP();
+            // Reload data after invalidation
+            currentData = loadQuoteMeData();
+            currentOpportunity = getOpportunity(currentData, opportunityId);
+          }
+          
+          // Update glyph
+          if (workplanDraftFieldContainer) {
+            updateDraftField(workplanDraftFieldContainer, {
+              text: currentOpportunity.workplanText,
+              approved: currentOpportunity.workplanApproved,
+              hasLmDraft: currentOpportunity.workplanHasLmDraft,
+              hasUserEdits: currentOpportunity.workplanHasUserEdits
+            });
+          }
+          
+          // Re-render EP field (unlocks when Workplan is approved)
+          renderEPField();
+          
+          // Auto-generate EP if both Status and Workplan are now approved
+          // This will trigger EP generation on re-acceptance as well (after invalidation)
+          if (isApproved) {
+            await autoGenerateEPIfNeeded();
+          }
+        }
+      });
+
+      workplanContainer.appendChild(workplanDraftFieldContainer);
+    }
+
+    // ---------- Render EP Field (using draft-field component) ----------
+    function renderEPField() {
+      if (!epContainer) return;
+      epContainer.innerHTML = '';
+
+      // Check if Workplan is approved (EP unlocks when Workplan is approved)
+      const workplanApproved = currentOpportunity?.workplanApproved || false;
+      const ep = currentOpportunity?.ep || {};
+      const epText = ep.epText || '';
+      const epApproved = ep.epApproved || false;
+      const epSent = ep.epSent || false;
+
+      // EP is locked (read-only, glyph disabled) until Workplan is approved
+      const isLocked = !workplanApproved;
+      
+      // Infer authorship state from EP data
+      const hasLmDraft = ep.epGeneratedAt !== null && ep.epGeneratedAt !== undefined;
+      const hasUserEdits = false; // Component will track this internally
+
+      epDraftFieldContainer = createDraftField({
+        label: 'Engagement Proposal',
+        text: epText,
+        approved: epApproved,
+        hasLmDraft: hasLmDraft,
+        hasUserEdits: hasUserEdits,
+        readOnly: isLocked || epSent, // Locked until Workplan approved, or sent
+        placeholder: isLocked
+          ? 'Approve the Workplan to unlock the Engagement Proposal draft.'
+          : (epSent 
+            ? 'EP has been sent and is now read-only.' 
+            : 'EP will appear here after generation...'),
+        onTextChange: (newText, userHasEdited) => {
+          if (isLocked || epSent) return; // Don't allow edits when locked or sent
+          
+          const currentEP = currentOpportunity.ep || {};
+          const updates = {
+            ep: {
+              ...currentEP,
+              epText: newText
+            }
+          };
+
+          // Revoke approval if edited after approval
+          // (per QuoteMeStateMachineSpec.md Section 4.2 Rule 4)
+          if (currentEP.epApproved && newText !== epText) {
+            updates.ep.epApproved = false;
+            updates.ep.epApprovedAt = null;
+          }
+
+          updateOpportunity(currentData, opportunityId, updates);
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+
+          // Update glyph to reflect current state
+          if (epDraftFieldContainer) {
+            const updatedEP = currentOpportunity.ep || {};
+            const updatedHasLmDraft = updatedEP.epGeneratedAt !== null && updatedEP.epGeneratedAt !== undefined;
+            updateDraftField(epDraftFieldContainer, {
+              text: newText,
+              approved: updatedEP.epApproved || false,
+              hasLmDraft: updatedHasLmDraft,
+              hasUserEdits: userHasEdited && updatedHasLmDraft
+            });
+          }
+          
+          // Update "Mark as Sent" button state
+          updateMarkSentButtonState();
+        },
+        onApproveToggle: async (isApproved) => {
+          if (isLocked) return; // Don't allow approval when locked
+          
+          // Get current state
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          if (!currentOpportunity) return;
+
+          const currentEP = currentOpportunity.ep || {};
+
+          // Update approval
+          updateOpportunity(currentData, opportunityId, {
+            ep: {
+              ...currentEP,
+              epApproved: isApproved,
+              epApprovedAt: isApproved ? new Date().toISOString() : null
+            }
+          });
+
+          // Log audit event if approved
+          if (isApproved) {
+            appendAuditLog(currentData, opportunityId, 'ep_approved', 'Engagement Proposal approved', {
+              approvedAt: new Date().toISOString()
+            });
+          }
+
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+
+          // Update glyph
+          if (epDraftFieldContainer) {
+            const updatedEP = currentOpportunity.ep || {};
+            const updatedHasLmDraft = updatedEP.epGeneratedAt !== null && updatedEP.epGeneratedAt !== undefined;
+            updateDraftField(epDraftFieldContainer, {
+              text: updatedEP.epText || '',
+              approved: updatedEP.epApproved || false,
+              hasLmDraft: updatedHasLmDraft,
+              hasUserEdits: false // Reset on approval
+            });
+          }
+          
+          // Update "Mark as Sent" button state
+          updateMarkSentButtonState();
+        }
+      });
+
+      epContainer.appendChild(epDraftFieldContainer);
+    }
+
+    // ---------- Invalidate EP (when Status/Workplan are re-approved) ----------
+    function invalidateEP() {
+      // Check if EP exists
+      if (currentOpportunity.ep && currentOpportunity.ep.epText) {
+        // Clear EP per QuoteMeStateMachineSpec.md Section 4.2 Rule 6
+        updateOpportunity(currentData, opportunityId, {
+          ep: {
+            epText: '',
+            epGeneratedAt: null,
+            epApproved: false,
+            epApprovedAt: null,
+            epSent: false,
+            epSentAt: null
+          }
+        });
+        
+        // Log invalidation
+        appendAuditLog(currentData, opportunityId, 'ep_invalidated', 'EP invalidated due to upstream change (Status/Workplan re-approved)', {
+          reason: 'upstream_approval_change'
+        });
+        
+        currentData = loadQuoteMeData();
+        currentOpportunity = getOpportunity(currentData, opportunityId);
+      }
+    }
+
+    // ---------- Update "Mark as Sent" Button State ----------
+    function updateMarkSentButtonState() {
+      const markSentBtn = document.getElementById('btn-mark-sent');
+      if (!markSentBtn) return;
+      
+      const ep = currentOpportunity?.ep || {};
+      const epText = ep.epText || '';
+      const epApproved = ep.epApproved || false;
+      const epSent = ep.epSent || false;
+      
+      // Button is enabled only if EP exists, is approved, and not yet sent
+      const canSend = epText.trim().length > 0 && epApproved && !epSent;
+      
+      markSentBtn.disabled = !canSend;
+      
+      if (epSent) {
+        markSentBtn.textContent = 'EP Sent to Customer';
+        markSentBtn.classList.remove('btn-primary');
+        markSentBtn.classList.add('btn-success');
+      } else if (!epApproved) {
+        markSentBtn.textContent = 'Send EP to Customer';
+        markSentBtn.classList.remove('btn-success');
+        markSentBtn.classList.add('btn-primary');
+      } else {
+        markSentBtn.textContent = 'Send EP to Customer';
+        markSentBtn.classList.remove('btn-success');
+        markSentBtn.classList.add('btn-primary');
+      }
+    }
+
+    // ---------- Check if EP should auto-generate ----------
+    function shouldAutoGenerateEP() {
+      const statusApproved = currentOpportunity?.statusApproved || false;
+      const workplanApproved = currentOpportunity?.workplanApproved || false;
+      // PA only needs to exist (not be approved) - non-blocking gate
+      const paExists = currentData.pa && currentData.pa.text && currentData.pa.text.trim().length > 0;
+      
+      // EP should auto-generate when Status and Workplan are approved AND PA exists
+      // AND EP doesn't exist yet (no epText or epText is empty)
+      const ep = currentOpportunity?.ep || {};
+      const epExists = ep.epText && ep.epText.trim().length > 0;
+      
+      return statusApproved && workplanApproved && paExists && !epExists;
+    }
+
+    // ---------- Auto-generate EP when prerequisites are met ----------
+    async function autoGenerateEPIfNeeded() {
+      if (!shouldAutoGenerateEP()) {
+        return;
+      }
+      
+      // Check prerequisites
+      if (!currentData.profile) {
+        console.warn('[EP auto-generation] Profile not found');
+        return;
+      }
+      
+      // PA only needs to exist (not be approved) - non-blocking gate
+      if (!currentData.pa || !currentData.pa.text || !currentData.pa.text.trim()) {
+        console.warn('[EP auto-generation] PA not found');
+        return;
+      }
+      
+      try {
+        // Build EP narrative per QuoteMeInferenceSpec.md Call D
+        const narrative = buildEPNarrative(currentData.profile, currentData.pa, currentOpportunity);
+        
+        // Call GT3
+        const result = await callGT3(narrative);
+        
+        if (result.ok && result.text) {
+          // Save EP
+          updateOpportunity(currentData, opportunityId, {
+            ep: {
+              epText: result.text,
+              epGeneratedAt: new Date().toISOString(),
+              epApproved: false,
+              epApprovedAt: null,
+              epSent: false,
+              epSentAt: null
+            }
+          });
+          
+          // Log audit event
+          appendAuditLog(currentData, opportunityId, 'ep_generated', 'Engagement Proposal generated', {
+            source: 'gt3',
+            requestNarrative: narrative.substring(0, 200000),
+            responseText: result.text.substring(0, 200000),
+            latencyMs: result.latencyMs || null,
+            provider: null,
+            model: null
+          });
+          
+          currentData = loadQuoteMeData();
+          currentOpportunity = getOpportunity(currentData, opportunityId);
+          
+          // Re-render EP field to show generated content
+          renderEPField();
+        } else {
+          throw new Error(result.error || 'EP generation failed');
+        }
+      } catch (err) {
+        console.error('[EP auto-generation] Error:', err);
+        // Non-blocking: EP generation failure doesn't block the UI
+        // User can retry by re-approving Status/Workplan if needed
+      }
+    }
+
+    // ---------- Title Edit Handler ----------
+    titleInput.addEventListener('input', () => {
+      updateOpportunity(currentData, opportunityId, {
+        title: titleInput.value.trim()
+      });
+      currentData = loadQuoteMeData();
+      currentOpportunity = getOpportunity(currentData, opportunityId);
+    });
+
+    // ---------- Handle New Input Upload (from Status header action) ----------
+    async function handleNewInputUpload(file, inputType = 'file') {
+      if (!currentData.profile) {
+        statusWorkingState = 'error';
+        statusErrorPreview = 'Profile not found. Cannot process input.';
+        updateDraftFieldActions(statusDraftFieldContainer, statusWorkingState, statusErrorPreview);
+        return;
+      }
+
+      // Update working state (show spinner in header)
+      statusWorkingState = 'working';
+      statusErrorPreview = null;
+      updateDraftFieldActions(statusDraftFieldContainer, statusWorkingState);
+
+      try {
+        // Extract text
+        let inputText = '';
+        if (inputType === 'file' && file) {
+          inputText = await extractText(file);
+        } else {
+          throw new Error('Invalid input type');
+        }
+
+        // Scan for sensitive patterns
+        const sensitiveResult = scanSensitive(inputText);
+        // Note: Sensitive warning could be shown in a toast or inline message (non-blocking per spec)
+
+        // Append audit log entry
+        appendAuditLog(currentData, opportunityId, 'new_input_added', 'New input processed', {
+          inputText: inputText.substring(0, 1000), // Truncate for storage (per spec)
+          inputType: inputType,
+          sensitiveDetected: sensitiveResult.detected,
+          sensitiveCategories: sensitiveResult.categories
+        });
+
+        // Revoke approvals
+        updateOpportunity(currentData, opportunityId, {
+          statusApproved: false,
+          statusApprovedAt: null,
+          workplanApproved: false,
+          workplanApprovedAt: null
+        });
+
+        currentData = loadQuoteMeData();
+        currentOpportunity = getOpportunity(currentData, opportunityId);
+        
+        // Invalidate EP when NEW INPUT is uploaded (per QuoteMeStateMachineSpec.md Section 4.2 Rule 6)
+        invalidateEP();
+
+        // Trigger Status + Workplan generation in parallel (atomic)
+        // Per QuoteMeInferenceSpec.md Calls C1 & C2, QuoteMeApiSpec.md Section 6
+        await generateStatusAndWorkplanFromNewInput(inputText);
+
+        // Title proposal (if title is empty) - non-blocking
+        // Per QuoteMeInferenceSpec.md Call C3, QuoteMeApiSpec.md Section 7
+        if (!currentOpportunity.title || !currentOpportunity.title.trim()) {
+          try {
+            const titleNarrative = buildTitleNarrative(currentData.profile, inputText);
+            const titleResult = await callGT3(titleNarrative);
+            
+            if (titleResult.ok && titleResult.text) {
+              updateOpportunity(currentData, opportunityId, {
+                title: titleResult.text.trim()
+              });
+              
+              // Log title_proposed audit event
+              appendAuditLog(currentData, opportunityId, 'title_proposed', 'Title proposed from NEW INPUT', {
+                source: 'gt3',
+                title: titleResult.text.trim(),
+                requestNarrative: titleNarrative.substring(0, 200000),
+                latencyMs: titleResult.latencyMs || null,
+                provider: null,
+                model: null
+              });
+              
+              // Reload and update UI
+              currentData = loadQuoteMeData();
+              currentOpportunity = getOpportunity(currentData, opportunityId);
+              titleInput.value = currentOpportunity.title || '';
+            }
+          } catch (err) {
+            console.error('[Title proposal] Error:', err);
+            // Non-blocking: title proposal failure doesn't block Status+Workplan generation
+          }
+        }
+
+      } catch (err) {
+        console.error('[Upload] Error:', err);
+        statusWorkingState = 'error';
+        statusErrorPreview = String(err);
+        updateDraftFieldActions(statusDraftFieldContainer, statusWorkingState, statusErrorPreview);
+      }
+    }
+
+
+    // ---------- Settings Panel ----------
+    function initSettingsPanel() {
+      const apiInput = document.getElementById('settings-api-key');
+      const clearBtn = document.getElementById('settings-api-clear');
+
+      if (!apiInput) return;
+
+      apiInput.value = getApiKey();
+
+      apiInput.addEventListener('input', () => {
+        setApiKey(apiInput.value.trim());
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        setApiKey('');
+        apiInput.value = '';
+      });
+    }
+
+    // Logo click → open settings sidebar
+    const logoEl = document.getElementById('gt2-logo');
+    if (logoEl) {
+      logoEl.addEventListener('click', () => {
+        const offcanvasEl = document.getElementById('settings-offcanvas');
+        if (!offcanvasEl || typeof bootstrap === 'undefined') return;
+        const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+        offcanvas.show();
+      });
+    }
+
+    // ---------- "Mark as Sent" Button Handler ----------
+    const markSentBtn = document.getElementById('btn-mark-sent');
+    if (markSentBtn) {
+      markSentBtn.addEventListener('click', () => {
+        const ep = currentOpportunity?.ep || {};
+        const epText = ep.epText || '';
+        const epApproved = ep.epApproved || false;
+        const epSent = ep.epSent || false;
+        
+        if (!epText.trim()) {
+          alert('EP text is empty. Cannot send.');
+          return;
+        }
+        
+        if (!epApproved) {
+          alert('EP must be approved before sending to customer.');
+          return;
+        }
+        
+        if (epSent) {
+          alert('EP has already been sent to customer.');
+          return;
+        }
+        
+        // Confirm before sending
+        if (!confirm('Are you sure you want to mark this Engagement Proposal as sent to the customer?')) {
+          return;
+        }
+        
+        // Update EP sent state
+        updateOpportunity(currentData, opportunityId, {
+          ep: {
+            ...ep,
+            epSent: true,
+            epSentAt: new Date().toISOString()
+          }
+        });
+        
+        // Log audit event
+        appendAuditLog(currentData, opportunityId, 'ep_sent', 'Engagement Proposal sent to customer', {
+          sentAt: new Date().toISOString()
+        });
+        
+        currentData = loadQuoteMeData();
+        currentOpportunity = getOpportunity(currentData, opportunityId);
+        
+        // Re-render EP field (becomes read-only when sent)
+        renderEPField();
+        
+        // Update button state
+        updateMarkSentButtonState();
+      });
+    }
+
+    // ---------- Initialization ----------
+    initSettingsPanel();
+    loadOpportunity();
+  </script>
+</body>
+</html>

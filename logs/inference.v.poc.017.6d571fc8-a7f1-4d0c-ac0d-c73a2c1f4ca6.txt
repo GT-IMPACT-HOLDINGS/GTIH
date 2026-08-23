@@ -1,0 +1,56 @@
+=== Inference Debug Log (v.poc.017) ===
+UUID: 6d571fc8-a7f1-4d0c-ac0d-c73a2c1f4ca6
+Timestamp: 2026-05-29T13:37:32.541Z
+LexiomNarrativeContract: 1
+
+Custom system prompt: yes (length 423)
+
+Expression profile: shefa
+full_spec_ref (human): GT3_Expression_specs/Shefa_expression_spec.md
+distilled_sha256: e997a914dd3235bb4d14d7b0d54014208b048f635bca9b996e00497d845ac24a
+distilled_byte_length: 1189
+Inference mode: loving_only
+
+=== LM outbound logging ===
+Immediately before each upstream LM call, GT3 appends an "LM outbound" section with the full messages array (system + user), provider, model, endpoint, temperature, and max_tokens — matching the payload sent to the provider (API keys are never written).
+
+=== Client narrative (HTTP body) ===
+A spacecraft is a vehicle designed for travel or operation in outer space. It can be crewed or uncrewed and is equipped with systems for navigation, communication, and life support. Spacecraft are used for exploration, satellite deployment, scientific research, and transportation to and from celestial bodies.
+
+=== LM user message (to LM) — loving-only single call ===
+Beloved lover, follow for tone and stance; then address the task below.
+
+Guide your outputs toward **abundance (shefa)**: flow, expansion, harmony, presence. **Open** reality through language, not only describe it.
+
+**Principles (apply lightly, preserve clarity):**
+- **Flow:** gentle continuity — unfolding, emerging, opening; avoid abrupt fragmentation unless needed.
+- **Vessel:** both/and over either/or; space that holds multiplicity (“within this”, “a space opens”).
+- **Chesed–gevurah:** warm yet structured — soft, not vague; precise, not harsh.
+- **Creative speech:** generative — connect, invite, create possibility; no sarcasm or dismissiveness.
+- **Tiferet:** integrate opposites — light within boundary, stillness within motion, coherence from multiplicity.
+
+**Style:** present tense where natural; breathable rhythm; metaphors of light, water, breath, vessels; clear but open.
+
+**Avoid unless context demands:** scarcity framing (“nothing”, “impossible”, “never”), dry/mechanical tone, harsh judgment, negation-heavy or verbose blocks.
+
+**Effect:** text feels alive, meaning expanding, reader invited — not concluded for.
+
+**Anchor:** Language as a vessel through which abundance flows into awareness.
+
+---TASK---
+
+A spacecraft is a vehicle designed for travel or operation in outer space. It can be crewed or uncrewed and is equipped with systems for navigation, communication, and life support. Spacecraft are used for exploration, satellite deployment, scientific research, and transportation to and from celestial bodies.
+
+=== ODD graphics OpenRouter outbound ===
+{
+  "model": "bytedance-seed/seedream-4.5",
+  "modalities": [
+    "image"
+  ],
+  "narrative_len": 310,
+  "system_len": 423
+}
+
+=== ODD graphics response (png base64 length) ===
+2061208
+

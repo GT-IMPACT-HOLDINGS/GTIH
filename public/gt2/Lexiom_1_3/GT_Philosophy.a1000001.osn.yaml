@@ -1,0 +1,137 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.a1000001.osn
+file_name: GT_Philosophy.a1000001.osn
+node_type: organizational_standard
+title: GT Philosophy
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Constellation Philosophy OSN Owner
+graph:
+  parent_osn_ids: []
+  child_osn_ids:
+    - GT_Philosophy.ProductLexiom.a1000002.osn
+    - GT_Philosophy.BrandLexiom.a1000005.osn
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: null
+seed: >
+  Express the GT constellation philosophy as a reusable software-development standard so any future
+  product, tool, or workflow can be shaped as human-governed, draft-first, evidence-backed software
+  that preserves GT3's reusable core, GT2's productization role, and GT1's public-benefit posture.
+thematic_lenses:
+  - lens_id: lens.constellation.value_flow
+    name: Constellation Value Flow
+    purpose: >-
+      Keep GT3, GT2, and GT1 legible as complementary roles rather than collapsing all value into
+      one layer.
+  - lens_id: lens.constellation.human_governance
+    name: Human Governance
+    purpose: >-
+      Preserve explicit approval, no silent mutation, and human responsibility for canonical
+      outcomes.
+  - lens_id: lens.constellation.traceable_builds
+    name: Traceable Buildability
+    purpose: >-
+      Require inspectable specs, source artifacts, and evidence so software can be reviewed,
+      replayed, and trusted.
+  - lens_id: lens.constellation.reusable_core
+    name: Reusable Core
+    purpose: >-
+      Prefer durable GT3 capabilities, patterns, and intellectual capital when a solution should
+      serve more than one product surface.
+output_spec: |-
+  1. Enter the GT constellation philosophy as a living software-development standard —
+  human-governed, draft-first, evidence-backed — then explore Constellation Value Flow, Human
+  Governance, Traceable Buildability, and Reusable Core for how Lexiom 1.3 currently embodies
+  that standard.
+
+  ## Constellation Value Flow
+  2. Productize GT3 inference inside the GT2 Lexiom SPA on the same Node origin (cockpit + POST
+  /inference) without collapsing GT3 reusable core into one-off UI code.
+  3. Host ProductLexiom and BrandLexiom as sibling branches under GT_Philosophy in one OSN graph
+  (full-graph mode shows both domains; BrandLexiom files live under Branding/).
+  4. Map build plugins by branch: software-coding for ProductLexiom scopes and document builder
+  for BrandLexiom scopes.
+  5. Keep the center Build card as a handoff/report (plugin, strategy, run, artifacts), not the
+  delivered software or brand document itself.
+  6. Frame Lexiom 1.3 persona text so Lexiom assists without speaking as the human owner or
+  treating model output as canonical.
+
+  ## Human Governance
+  7. Land LM/GT3 output only as editable non-canonical drafts; mutate disk YAML only after
+  explicit human approve through persist, canonize, or prune.
+  8. Keep session evidence approvals and chat proposals from auto-writing OSN files.
+  9. Require draft-card glyph approval before treating center edits as committed White Moves for
+  persistence.
+  10. Run session commits through WHITE_COMMIT then BLACK_RUN side-effects so inference and disk
+  I/O are not silent background mutation.
+  11. Block immature success_evidences approval without a compliant direct evidence kind.
+  12. Strip runtime maturity and immature child ids on serialize paths so disk YAML stays
+  canonical-clean.
+  13. Confine DaDa / theWeatherman to look-and-feel — never drafts, YAML, or provenance.
+
+  ## Traceable Buildability
+  14. Bind each OSN to inspectable success-evidence artifacts via versioned evidences/ filenames
+  and/or build-run collections.
+  15. When building, write inspectable handoff and prompt artifacts under builds/lexiom13/<runId>/
+  (plugin_id, strategy_id, run_id, walk_plan, primary_artifacts).
+  16. After a successful VAL run, persist a bud bloom pointer on the requesting compilation-root
+  OSN so the delivered SUD is openable in Center separately from the Build handoff/report card.
+  17. Keep a session action log of select/edit/approve/build/causal events for inspectability
+  without claiming a durable Move ledger.
+  18. Honor compilation_scope when gathering the prepare subgraph (self_only /
+  self_and_approved_descendants / self_plus_parent_context).
+  19. Parse causal answers into APPROVED_CAUSES / inferred / missing sections so lineage remains
+  reviewable.
+  20. Warn on OSNG parent/child reciprocity mismatches at load so graph integrity is visible.
+
+  ## Reusable Core
+  21. Reuse one OSN YAML schema and recursive /lexiom13/osn/list loader across nested domain
+  directories.
+  22. Reuse one GT3 client path (callGT3 + shared narrative builders) with Lexiom persona /
+  tenant / data-track headers for lens, maturation, title, and causal flows.
+  23. Prefer Node co-host + static YAML (optional ?api= and lexiom_gt3_api_key) over a product
+  database so the constellation core stays portable across surfaces.
+  24. Share evidence-link and filter helper modules so product and brand branches reuse the same
+  inspection machinery.
+success_evidences:
+  - evidence_id: sev.constellation.governed_draft_flow_video
+    kind: VIDEO-CLIP
+    direct: true
+    inspection_prompt: >
+      Record a short interaction with a delivered GT product showing machine output arriving as an
+      editable non-canonical draft, the human reviewing it in the Center Playfield, and canonical
+      persistence occurring only after explicit approval. Include enough of the surrounding product
+      to identify the GT2 product surface and the GT3-backed capability. Deliver the video file as
+      direct evidence of draft-first human governance and separation of reusable core from product
+      experience.
+  - evidence_id: sev.constellation.software_mapping_brief
+    kind: markdown_brief
+    direct: false
+    inspection_prompt: >
+      Supplemental derivative evidence only — does not satisfy the direct minimum. Produce a short
+      markdown brief for one software initiative. In the brief, map which capabilities belong
+      primarily to GT3, which belong to GT2, and which could support GT1 public-benefit expression.
+      Also state how the initiative preserves draft-first approval, traceability, and at least one
+      direct inspection evidence artifact. Deliver the markdown file as the evidence artifact.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

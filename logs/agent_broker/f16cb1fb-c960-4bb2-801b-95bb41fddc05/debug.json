@@ -1,0 +1,8 @@
+{
+  "error": "Agent broker requires GT3_LEXIOM_AGENT_KEY or OPENROUTER_API_KEY (or X-GT3-OpenRouter-Key).",
+  "upstream_status": null,
+  "upstream_body_preview": null,
+  "run_id": "step3-curl",
+  "pass": "builder",
+  "redacted": true
+}

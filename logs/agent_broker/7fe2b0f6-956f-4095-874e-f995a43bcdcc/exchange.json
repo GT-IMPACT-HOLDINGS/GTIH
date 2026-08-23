@@ -1,0 +1,183 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "7fe2b0f6-956f-4095-874e-f995a43bcdcc",
+  "lane": "agent_broker",
+  "created_at": "2026-07-30T09:57:29.847Z",
+  "completed_at": "2026-07-30T09:57:29.882Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "ms7cawjq_4fba1343",
+      "pass": "builder",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-07-30T09:57:29.847Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 688
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 5772
+      }
+    ],
+    "message_count": 2,
+    "packet_chars": 7936,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nInspect the frozen OSNG snapshot with list_files and read_file before authoring.\nTreat ./osng/ as read-only source material.\nUse write_file for complete artifact contents.\nPrimary deliverable path: document.md\nDocument mode: Pass1 write OUTLINE.md (TOC + owning OSN ids scaffold only). Pass2 write document.md in reader-facing prose with ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta. Provenance only belongs in BUILD_REPORT.md if you write it.\nCall finish only when the required artifacts are complete and correct."
+        },
+        {
+          "role": "user",
+          "content": "# Lexiom document builder\n\n## Prepared workspace\n- The CA mounts this prepared build directory as its workspace root.\n- Frozen OSNG snapshot for this run: `./osng/` (64 OSN files).\n- OSNG primer (copied): `./OSNG_Basics_README.md`\n- Optional Lexiom audit index: `./HANDOFF.json` (membership / strategy metadata).\n\n## Role and privileges\n- You are a document author / compiler.\n- Read OSN YAML only under `./osng/` (read-only snapshot). Do **not** modify files under `./osng/`.\n- Write deliverables at this project root (e.g. document.md, index.html, BUILD_REPORT.md, OUTLINE.md / FILE_PLAN.md) — not into `./osng/`.\n- Do not reach outside this project for OSN sources; the snapshot is the closed universe for this build.\n- **Evidence collection is out of scope for this file.** After primary deliverables exist, use the sibling `EVIDENCE_AGENT_PROMPT.md` (index: `./EVIDENCE_PLAN.json`).\n\n## How to learn OSN structure (authoritative — do not skip)\n- Open the compilation-root `*.osn.yaml` under `./osng/` and read its leading `#` comment header first. That header is the primary description of OSN fields and `graph.parent_osn_ids` / `graph.child_osn_ids` / `standard_ancestor_osn_ids` linking.\n- Treat that header as future-ready schema documentation: if headers evolve, follow the file you opened — do not invent a parallel schema from this prompt.\n- For filesystem identity and header/README pairing, also read: `./OSNG_Basics_README.md`\n- When path prefixes and `graph.*` disagree, `graph.*` is authoritative (as stated in the OSN header).\n\n## Compilation root and scope\n- Compilation root OSN id: GT_Philosophy.BrandLexiom.a1000005.osn\n- Compilation root path (in this project): `./osng/Branding/GT_Philosophy.BrandLexiom.a1000005.osn.yaml`\n- Open that root file first (after reading its header). Use its `seed` + `output_spec` as the primary outcome contract for this build.\n- Scope: self_and_approved_descendants; profile: document_agent\n- **Closure rule:** only files present under `./osng/` participate. Discover them via `graph.*` links. Sibling branches that were not snapshotted are simply absent — do not invent or fetch them from elsewhere.\n\n## Strategy (how to traverse via graph.*)\nstrategy_id: outline_then_fill\nUse Standard / Root / Mid / Leaf roles from the subgraph. Do not invent claims absent from OSN text you opened.\n- **Pass 1 (outline, ancestor-first):** walk Root then `graph.child_osn_ids` pre-order; write OUTLINE.md / FILE_PLAN.md only (titles + owning OSN ids) — no full body yet.\n- **Pass 2 (fill, descendant-first):** walk children before parents within each chapter/module; fill artifact bodies from leaf `output_spec` text.\n- **Pass 3 (reconcile):** re-open Root (+ Standard if in scope); fix global consistency against success evidences.\n- At each node: open the YAML under `./osng/`, read the header if needed, then extract `seed`, `output_spec`, `thematic_lenses`, `success_evidences`, and `graph` as needed for the artifact.\n- Resolve `id` / `file_name` to a snapshotted `*.osn.yaml` under `./osng/` (directory layout mirrors Lexiom_1_3; `graph.*` remains authoritative).\n- Do not paste or assume OSN bodies from memory; pull requirements from the files you open.\n\n## Artifact contract\n- Primary deliverable: document.md (coherent entry document).\n- Optional multi-file pack under sections/ only if Root output_spec or the outline demands it.\n- **Outcome cleanliness (required):** document.md and sections/** must be free of OSNG/OSN traces — no OSN ids, *.osn.yaml paths, schema field names (output_spec, seed, graph.*, success_evidences, …), build/process meta, or “compiled from OSN…” language. Write finished domain prose only.\n- Provenance (which OSN informed which section) belongs ONLY in BUILD_REPORT.md; OUTLINE.md may keep owning OSN ids as Lexiom scaffold — never copy those into the reader-facing body.\n- Before finish: scan the outcome body and remove any residual OSNG/OSN traces (plugin failure if any remain).\n- Pass 1: write OUTLINE.md (TOC + owning OSN ids as scaffold only); no full body copy.\n- Pass 2: fill document.md (and optional sections/) in reader-facing voice — no OSNG traces.\n- Pass 3: reconcile Root/Standard tone and success evidences; run cleanliness scan on the outcome body.\n- Always write BUILD_REPORT.md listing included OSN ids you actually used, strategy, primary files, gaps, and which OSN supplied each major decision.\n\n## Non-goals\n- Not a coding agent; do not emit application source trees.\n- Do not invent unsupported claims.\n- Do not modify files under ./osng/ (snapshot is read-only).\n- Do not treat this prompt as a restatement of OSN schema — use OSN headers.\n- Do not publish OSNG/OSN process, ids, or schema vocabulary inside document.md / sections/.\n\n## Conflict precedence (when Concordance is unavailable)\n- Standard ancestor invariants\n- Compilation root outcome contract\n- Mid-level structural OSNs (chapters/parts)\n- Leaf OSNs (detailed messaging / clauses)\n- Record unresolved conflicts in BUILD_REPORT.md rather than inventing a silent merge.\n\n## Extraction protocol\n1. Read compilation-root header + `./OSNG_Basics_README.md`.\n2. Traverse via graph.* among files under `./osng/`, using strategy_id walk rules above.\n3. For each visited OSN, extract only what the artifact needs (prefer `output_spec`; use `seed` for intent). Do not collect evidence files here.\n4. Produce the artifact at the project root.\n5. Write BUILD_REPORT.md with provenance (OSN id → contribution).\n\n## Agent execution\n- Inspect source files through the CA workspace tools; do not assume contents from filenames.\n- Write primary artifacts through the CA workspace tools and finish only after verification.\n- Evidence generation remains a separate Step 5 pass described by `EVIDENCE_AGENT_PROMPT.md`.\n"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "list_files",
+            "description": "List files in the mounted build workspace.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "Relative directory; omit for workspace root."
+                },
+                "depth": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 6
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "read_file",
+            "description": "Read UTF-8 text from a relative workspace file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60000
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "finish",
+            "description": "Finish only after required artifacts are present and ready for validation.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 12000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-07-30T09:57:29.876Z",
+    "format": "gt3_error",
+    "upstream_status": null,
+    "error": "Agent broker requires GT3_LEXIOM_AGENT_KEY or OPENROUTER_API_KEY (or X-GT3-OpenRouter-Key).",
+    "raw_error_body": null,
+    "captured_chars": 0,
+    "original_chars": 0,
+    "truncated": false
+  },
+  "outcome": {
+    "status": "error",
+    "ok": false,
+    "latency_ms": 37,
+    "upstream_status": null,
+    "detail": "Agent broker requires GT3_LEXIOM_AGENT_KEY or OPENROUTER_API_KEY (or X-GT3-OpenRouter-Key)."
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

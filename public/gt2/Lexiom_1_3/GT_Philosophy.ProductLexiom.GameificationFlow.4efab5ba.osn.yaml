@@ -1,0 +1,127 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. The seed states intention;
+# thematic_lenses name professional perspectives; output_spec states the
+# outcome contract; success_evidences name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: GT_Philosophy.ProductLexiom.GameificationFlow.4efab5ba.osn
+file_name: GT_Philosophy.ProductLexiom.GameificationFlow.4efab5ba.osn
+node_type: discipline
+title: Gameification Flow
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Product OSN Owner
+graph:
+  parent_osn_ids:
+    - GT_Philosophy.ProductLexiom.a1000002.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids: []
+  derived_from_lens_id: null
+seed: Here we would like to specify the gamification aspects of Lexiom 1.3
+thematic_lenses:
+  - lens_id: lens.draft.engagement
+    name: Engagement
+    purpose: >-
+      Expand the seed along interactive elements that foster player involvement and connection
+      within the game.
+  - lens_id: lens.draft.progression
+    name: Progression
+    purpose: >-
+      Expand the seed along the development of player skills and achievements, creating a sense of
+      growth and accomplishment.
+  - lens_id: lens.draft.feedback
+    name: Feedback
+    purpose: >-
+      Expand the seed along the mechanisms for player input and response, enhancing the experience
+      through meaningful communication and reflection.
+output_spec: |-
+  1. Dive into Lexiom 1.3's gamification as it is built today — the cadence, gates, and feedback
+  loops that make the cockpit feel playable — then explore Engagement, Progression, and Feedback
+  below for the concrete rebuild requirements.
+  
+  ## Engagement
+  2. Keep the three graph filters (Evidence approval, Build controls, Top bar) disabled by
+  default so denser chrome is opt-in play rather than forced noise.
+  3. After the player approves a Causal Lineage narrative, unlock continued player-asks in the
+  bottom ribbon (playerAskUnlockedByEvidenceKey) with a brief unlock flash.
+  4. Switch ask placeholder/aria from the causal ask to the player-ask copy once unlocked so the
+  second loop is visibly distinct.
+  5. Route imperative change-language asks into an output_spec-change proposal path rather than
+  only a lineage narrative.
+  6. Let re-clicking an active L2 lens chip deepen the current section (pass counter / ×N badge)
+  as a progressive reframe loop.
+  7. Expose Focus-row + branching so the player can spawn playable immature New Branch shells
+  without leaving the graph.
+  8. Let the executive-summary control jump the player into the center evidence/findings stack
+  so engagement continues in the playfield.
+  
+  ## Progression
+  9. Mature immature OSNs through Seed → Thematic Lenses → Output Spec → Success Evidences,
+  unlocking each next section only after the prior gate is approved.
+  10. When a maturation section is locked, show the center locked-gate card instead of an
+  editable draft and disable locked section-strip glyphs.
+  11. Mark immature nodes and locked glyphs visually (dashed / is-immature / is-locked).
+  12. Cascade locks when an earlier approved immature section is re-edited
+  (resetImmatureMaturityFrom) so progression cannot skip backward silently.
+  13. Require a compliant direct success-evidence kind before an immature success_evidences gate
+  can be approved.
+  14. On final-gate approval, canonize to linked YAML and remount NewBranch_* placeholders to the
+  matured title slug so becoming a file closes the arc.
+  15. Treat Build controls + can_be_compilation_root bulbs as an advanced progression surface
+  (handoff after prepare/run); after a successful bloom, unlock the Bud section glyph so reviewing
+  the delivered SUD becomes the post-build reward; treat prune confirmation as a costly reverse
+  move that tombstones the subtree.
+  
+  ## Feedback
+  16. Drive draft-card attestation glyphs from draft state (empty / ● / ◯ / ◉) and use bluish
+  ready vs pale-purple editing presentation colors.
+  17. Mark unapproved inserts with green .lexiom-diff-ins against editBaselineText until glyph
+  approval clears the baseline; first keystroke on an approved card auto-revokes approval; log
+  approval_blocked when an empty or gated approve click is refused.
+  18. When Evidence approval is enabled, show per-OSN attestation glyphs (· / ○ / ◐ / ●) as
+  navigation-only status (click does not change approval).
+  19. Fade the center playfield with LCD_FADE_OUT_MS=1500 / LCD_FADE_IN_MS=3000: full scale on
+  Focus change and editing→approved; 0.75 on section-key swaps; 0.5 on approved→editing; Bud open
+  adds a 2-LCD (3000ms) rain-only hold between fade-out and fade-in so the event lasts 2 LCDs
+  longer than other section tabs.
+  20. On Bud open only, run DaDa Love-biased Matrix rain (theWeatherman / fadeKind=bud_open) at
+  2× the ordinary fadeOut+fadeIn duration; on Focus OSN transitions run outline breath; skip both
+  under prefers-reduced-motion; never mutate drafts or YAML.
+  21. Flash .is-unlock-flash on the ask panel and .is-link-target-flash on narrative /
+  output_spec-change jump targets.
+  22. Provide VS Code–style draft editor chrome (line gutter + current-line band) while editing
+  so input feedback feels immediate.
+  23. Keep the ribbon placeholder (“Semantic actions — coming soon”) when no evidence is open so
+  the feedback channel stays calm until Causal Lineage Chat activates.
+success_evidences:
+  - evidence_id: sev.draft.engagement_feature
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      Review the delivered codebase for a specific interactive element that enhances player
+      engagement, such as a dynamic challenge feature, and provide a snippet that demonstrates how
+      it fosters connection and involvement within the gameplay experience.
+  - evidence_id: sev.draft.progression_summary_report
+    kind: markdown_brief
+    direct: false
+    inspection_prompt: >-
+      Generate a markdown report summarizing player progression metrics across the SUD, including
+      skill development and achievement tracking, to validate how well the system creates pathways
+      for growth and a tangible sense of accomplishment.
+compilation:
+  can_be_compilation_root: false
+  compilation_scope: self_only
+  target_tool_profile: null

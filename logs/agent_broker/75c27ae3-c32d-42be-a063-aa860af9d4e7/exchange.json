@@ -1,0 +1,196 @@
+{
+  "schema_version": "gt3-lm-exchange/1",
+  "exchange_id": "75c27ae3-c32d-42be-a063-aa860af9d4e7",
+  "lane": "agent_broker",
+  "created_at": "2026-08-02T08:47:49.882Z",
+  "completed_at": "2026-08-02T08:48:14.283Z",
+  "route": {
+    "source": {
+      "kind": "containerized_agent",
+      "ca_location": "browser_session",
+      "executor": "bolt_webcontainer",
+      "run_id": "msbk3lvr_2a2433c0",
+      "pass": "builder",
+      "plugin_id": "lexiom13.document_builder",
+      "tenant": null,
+      "track": null
+    },
+    "gateway": {
+      "id": "gt3",
+      "role": "lm_control_plane"
+    },
+    "destination": {
+      "id": "openrouter",
+      "label": "OpenRouter",
+      "transport": "openai_compatible_http",
+      "locality": "remote",
+      "endpoint_kind": "chat_completions"
+    },
+    "model": "anthropic/claude-haiku-4.5"
+  },
+  "request": {
+    "captured_at": "2026-08-02T08:47:49.882Z",
+    "stream": false,
+    "message_index": [
+      {
+        "index": 0,
+        "role": "system",
+        "name": null,
+        "content_chars": 973
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "name": null,
+        "content_chars": 16280
+      }
+    ],
+    "message_count": 2,
+    "packet_chars": 18668,
+    "truncations": [],
+    "packet": {
+      "model": "anthropic/claude-haiku-4.5",
+      "temperature": 0.2,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are the Lexiom 1.3 build agent (bolt-style, headless).\nUse only the supplied structured tools. Prose cannot read or change the workspace.\nDocument mode uses BUILD_PLAN plus immutable per-node JSON under ./nodes/ and SOURCE_MAP. Read only the node keys assigned to the current phase.\nUse write_file for complete artifact contents.\nPrimary deliverable path: document.md\nWrite phase artifacts only (OUTLINE.md or the assigned sections/*.md). Host assembly owns document.md unless a reconcile phase asks otherwise. Reader-facing prose must contain ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta.\nSubmit the required phase artifact with write_file; the host validates and completes the phase atomically.\nPhase: fill cluster c03 (Creative Identity).\nSubmit exactly sections/03-creative-identity.md with write_file; the host completes the phase atomically.\nDo not write document.md in this phase. The host packet is complete; no reads are needed."
+        },
+        {
+          "role": "user",
+          "content": "Compose the assigned section from this bounded packet.\n\n## Shared policy\n{\"shared_invariants\":[\"Write finished reader-facing prose only.\",\"Do not invent unsupported capability, regulatory, numerical, market, or pricing claims.\",\"Preserve product identity and category from Root/Standard capsules and source excerpts.\",\"Do not emit OSN ids, schema field names, or build-process vocabulary in document.md / sections/**.\"],\"shared_requirement_markers\":[]}\n\n## Root\n{\"key\":\"n01\",\"title\":\"Lexiom 1.3 — Ogun Brand\",\"seed\":\"Govern the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes.\",\"unique_requirements\":[\"1. Enter how Lexiom currently holds the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes — then explore Brand Leadership, Human Authority, and Evidence and Claims be…\"],\"claim_constraints\":[\"1. Enter how Lexiom currently holds the complete enterprise brand for Lexiom 1.3 — Ogun as the service that turns human intention into governed, inspectable, evidence-backed outcomes — then explore Brand Leadership, Human Authority, and Evidence and Claims be…\",\"Require inspectable delivery and classify claims according to available proof.\"]}\n\n## Outline\n# Lexiom 1.3 — Ogun Brand\n\n## Table of Contents\n\n### 1. Market Positioning\n**Owning Key:** n50  \n**Cluster:** c01  \n**Section Path:** sections/01-market-positioning.md\n\nPosition Ogun as the Outcome Governance and Semantic Relationship Operating System without collapsing it into a narrower software category.\n\n### 2. Audience and Enterprise Value\n**Owning Key:** n35  \n**Cluster:** c02  \n**Section Path:** sections/02-audience-and-enterprise-value.md\n\nConnect Ogun's governed cooperation model to the sectors, roles, concerns, and measurable business effects that create enterprise demand.\n\n### 3. Creative Identity\n**Owning Key:** n04  \n**Cluster:** c03  \n**Section Path:** sections/03-creative-identity.md\n\nExpress Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.\n\n### 4. Go-to-Market System\n**Owning Key:** n19  \n**Cluster:** c04  \n**Section Path:** sections/04-go-to-market-system.md\n\nTurn the Ogun brand into product proof, demand, sales enablement, packaging, pilots, and measurable commercial learning.\n\n---\n\n## Document Governance\n\n**Root Node:** n01 (Lexiom 1.3 — Ogun Brand)  \n**Standard Node:** n02 (GT Philosophy)  \n**Brand Strategy Parent:** n34 (Ogun Brand Strategy)  \n**Brand Expression Parent:** n03 (Ogun Brand Expression)\n\nThis outline scaffolds the complete brand documentation for Lexiom 1.3 — Ogun, organized as a coherent system of market positioning, audience value, creative expression, and commercial activation.\n\n\n## Assigned nodes\n[{\"key\":\"n04\",\"title\":\"Creative Identity\",\"role\":\"mid\",\"discipline\":\"Creative Direction\",\"parent_keys\":[\"n03\"],\"child_keys\":[\"n05\",\"n12\"],\"seed\":\"Express Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible.\",\"unique_requirements\":[\"1. Enter the living brand intention — Express Ogun through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible — then explore Creative Direction and Evidence and Claims below for the code-backed rebuild contr…\"],\"source_sections\":\"§§3 and 10–13\"},{\"key\":\"n05\",\"title\":\"Verbal Identity\",\"role\":\"mid\",\"discipline\":\"Verbal Brand Strategy\",\"parent_keys\":[\"n04\"],\"child_keys\":[\"n09\",\"n06\"],\"seed\":\"Govern naming, message hierarchy, taglines, personality, and voice so every expression remains clear and evidence-aware.\",\"unique_requirements\":[\"1. Enter how Lexiom currently holds naming, message hierarchy, taglines, personality, and voice so every expression remains clear and evidence-aware — then explore Verbal Brand Strategy and Evidence and Claims below for the code-backed rebuild contract. ## Ve…\"],\"source_sections\":\"§§3 and 10–12\"},{\"key\":\"n09\",\"title\":\"Naming Architecture\",\"role\":\"mid\",\"discipline\":\"Brand Architecture\",\"parent_keys\":[\"n05\"],\"child_keys\":[\"n10\",\"n11\"],\"seed\":\"Keep Lexiom, Lexiom 1.3, Ogun, Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence in one coherent hierarchy.\",\"unique_requirements\":[\"1. Walk through how Lexiom currently keeps Lexiom, Lexiom 1.3, Ogun, Lexiom Cockpit, Ogun Portal, OSN Graph Garden, and Demo Evidence in one coherent hierarchy — then explore Brand Architecture and Evidence and Claims below for the code-backed rebuild contrac…\"],\"source_sections\":\"§3\"},{\"key\":\"n10\",\"title\":\"Master Naming Structure\",\"role\":\"leaf\",\"discipline\":\"Naming Strategy\",\"parent_keys\":[\"n09\"],\"child_keys\":[],\"seed\":\"Standardize first and subsequent mentions and prevent Ogun from appearing as an unrelated product separate from Lexiom.\",\"unique_requirements\":[\"1. Enter the living brand intention — Standardize first and subsequent mentions and prevent Ogun from appearing as an unrelated product separate from Lexiom — then explore Naming Strategy and Evidence and Claims below for the code-backed rebuild contract. ## …\"],\"source_sections\":\"§3.1\"},{\"key\":\"n11\",\"title\":\"Ogun Naming Rationale\",\"role\":\"leaf\",\"discipline\":\"Brand Narrative\",\"parent_keys\":[\"n09\"],\"child_keys\":[],\"seed\":\"Use the governed-forge metaphor to evoke disciplined toolmaking and accountable transformation without mysticism or aggression.\",\"unique_requirements\":[\"1. Enter the living brand intention — Use the governed-forge metaphor to evoke disciplined toolmaking and accountable transformation without mysticism or aggression — then explore Brand Narrative and Evidence and Claims below for the code-backed rebuild contr…\"],\"source_sections\":\"§§3.2–3.3\"},{\"key\":\"n06\",\"title\":\"Messaging and Voice\",\"role\":\"mid\",\"discipline\":\"Brand Copy Direction\",\"parent_keys\":[\"n05\"],\"child_keys\":[\"n07\",\"n08\"],\"seed\":\"Apply the message hierarchy, tagline system, personality, and voice consistently from promise through technical proof.\",\"unique_requirements\":[\"1. Enter the living brand intention — Apply the message hierarchy, tagline system, personality, and voice consistently from promise through technical proof — then explore Brand Copy Direction and Evidence and Claims below for the code-backed rebuild contract.…\"],\"source_sections\":\"§§10–12\"},{\"key\":\"n07\",\"title\":\"Tagline System\",\"role\":\"leaf\",\"discipline\":\"Campaign Copywriting\",\"parent_keys\":[\"n06\"],\"child_keys\":[],\"seed\":\"Lead with “Govern what must become real” and select supporting or campaign lines according to audience and proof context.\",\"unique_requirements\":[\"1. Enter the living brand intention — Lead with “Govern what must become real” and select supporting or campaign lines according to audience and proof context — then explore Campaign Copywriting and Evidence and Claims below for the code-backed rebuild contra…\"],\"source_sections\":\"§§10–11\"},{\"key\":\"n08\",\"title\":\"Tone of Voice\",\"role\":\"leaf\",\"discipline\":\"Editorial Direction\",\"parent_keys\":[\"n06\"],\"child_keys\":[],\"seed\":\"Use declarative clarity, active verbs, restrained metaphor, and human language while avoiding hype and probabilistic claims presented as fact.\",\"unique_requirements\":[\"1. Enter the living brand intention — Use declarative clarity, active verbs, restrained metaphor, and human language while avoiding hype and probabilistic claims presented as fact — then explore Editorial Direction and Evidence and Claims below for the code-b…\"],\"source_sections\":\"§12\"},{\"key\":\"n12\",\"title\":\"Visual Identity\",\"role\":\"mid\",\"discipline\":\"Visual Design Direction\",\"parent_keys\":[\"n04\"],\"child_keys\":[\"n16\",\"n13\"],\"seed\":\"Create an accessible visual system for the governed forge and living graph whose states communicate authority, proposals, evidence, and conflict.\",\"unique_requirements\":[\"1. Enter the living brand intention — Create an accessible visual system for the governed forge and living graph whose states communicate authority, proposals, evidence, and conflict — then explore Visual Design Direction and Evidence and Claims below for the…\"],\"source_sections\":\"§13\"},{\"key\":\"n16\",\"title\":\"Visual Language\",\"role\":\"mid\",\"discipline\":\"Brand Design\",\"parent_keys\":[\"n12\"],\"child_keys\":[\"n18\",\"n17\"],\"seed\":\"Define core forms, avoided motifs, and semantic color principles for disciplined pathways, inheritance, evidence, and state.\",\"unique_requirements\":[\"1. Come explore how Lexiom currently carries core forms, avoided motifs, and semantic color principles for disciplined pathways, inheritance, evidence, and state — then explore Brand Design and Evidence and Claims below for the code-backed rebuild contract. #…\"],\"source_sections\":\"§§13.1–13.3\"},{\"key\":\"n18\",\"title\":\"Core Visual Metaphor\",\"role\":\"leaf\",\"discipline\":\"Concept Design\",\"parent_keys\":[\"n16\"],\"child_keys\":[],\"seed\":\"Express the governed forge and living graph through structured nodes, convergence, seeds, layers, anchors, and lineage without cliché or appropriation.\",\"unique_requirements\":[\"1. Enter the living brand intention — Express the governed forge and living graph through structured nodes, convergence, seeds, layers, anchors, and lineage without cliché or appropriation — then explore Concept Design and Evidence and Claims below for the co…\"],\"source_sections\":\"§§13.1–13.2\"},{\"key\":\"n17\",\"title\":\"Semantic Color Principles\",\"role\":\"leaf\",\"discipline\":\"Color and Accessibility Design\",\"parent_keys\":[\"n16\"],\"child_keys\":[],\"seed\":\"Distinguish approved, proposed, stable, conflict, missing-evidence, achieved, inherited, and overridden states with accessible contrast.\",\"unique_requirements\":[\"1. Enter the living brand intention — Distinguish approved, proposed, stable, conflict, missing-evidence, achieved, inherited, and overridden states with accessible contrast — then explore Color and Accessibility Design and Evidence and Claims below for the c…\"],\"source_sections\":\"§13.3\"},{\"key\":\"n13\",\"title\":\"Typography and Motion\",\"role\":\"mid\",\"discipline\":\"Interaction Brand Design\",\"parent_keys\":[\"n12\"],\"child_keys\":[\"n15\",\"n14\"],\"seed\":\"Use architectural readability and restrained state-transition motion to reinforce credibility and governance.\",\"unique_requirements\":[\"1. Enter the living brand intention — Use architectural readability and restrained state-transition motion to reinforce credibility and governance — then explore Interaction Brand Design and Evidence and Claims below for the code-backed rebuild contract. ## I…\"],\"source_sections\":\"§§13.4–13.5\"},{\"key\":\"n15\",\"title\":\"Typography\",\"role\":\"leaf\",\"discipline\":\"Typography Design\",\"parent_keys\":[\"n13\"],\"child_keys\":[],\"seed\":\"Specify spacious headings, highly legible body text, and restrained monospace for identifiers and provenance without pseudo-futuristic distortion.\",\"unique_requirements\":[\"1. Dive into how Lexiom currently specifies spacious headings, highly legible body text, and restrained monospace for identifiers and provenance without pseudo-futuristic distortion — then explore Typography Design and Evidence and Claims below for the code-b…\"],\"source_sections\":\"§13.4\"},{\"key\":\"n14\",\"title\":\"Motion\",\"role\":\"leaf\",\"discipline\":\"Motion Design\",\"parent_keys\":[\"n13\"],\"child_keys\":[],\"seed\":\"Animate proposals, White Move anchoring, lineage inspection, and evidence closure as meaningful state transitions rather than decoration.\",\"unique_requirements\":[\"1. Enter the living brand intention — Animate proposals, White Move anchoring, lineage inspection, and evidence closure as meaningful state transitions rather than decoration — then explore Motion Design and Evidence and Claims below for the code-backed rebui…\"],\"source_sections\":\"§13.5\"}]\n\n## Referenced source sections\n## 3. Brand Architecture\r\n\r\n### 3.1 Master naming structure\r\n\r\nThe prescribed external naming hierarchy is:\r\n\r\n- **Lexiom** — the master product and intellectual platform.\r\n- **Lexiom 1.3** — the product generation.\r\n- **Ogun** — the version name and commercial B2B expression of Lexiom 1.3.\r\n- **Lexiom Cockpit** — the focused workspace for developing and governing an individual OSN Graph.\r\n- **Ogun Portal** — the executive and portfolio-level environment for organizing, observing, comparing, and governing OSN Graph gardens.\r\n- **OSN Graph Garden** — a managed portfolio of related OSN Graphs.\r\n- **Demo Evidence** — the evidence-visibility mode through which a user inspects why an artifact or behavior exists and whether the intended outcome was achieved.\r\n\r\nThe first full mention should be:\r\n\r\n> **Lexiom 1.3 — Ogun**\r\n\r\nAcceptable subsequent mentions:\r\n\r\n- Ogun\r\n- Lexiom\r\n- the Ogun servic\n\n## 10. Message Hierarchy\r\n\r\n### Level 1 — Brand promise\r\n\r\n> **Govern what must become real.**\r\n\r\n### Level 2 — Category explanation\r\n\r\n> Ogun is the Outcome Governance and Semantic Relationship Operating System for complex human and AI cooperation.\r\n\r\n### Level 3 — Functional explanation\r\n\r\n> It transforms intentions into human-owned Outcome Specification Nodes, develops them through approved disciplines and standards, and requires evidence of successful fulfillment.\r\n\r\n### Level 4 — Business proof\r\n\r\n> Leaders can see where value, effort, quality, security, standards, customer commitments, and supplier responsibilities align—or quietly drift apart.\r\n\r\n### Level 5 — Technical proof\r\n\r\n> White Moves control canonical state. Black Moves remain proposals. Approved OSNs preserve provenance, replayability, governed inheritance, conflict visibility, compilation roots, success evidence, and li\n\n## 11. Tagline System\r\n\r\n### 11.1 Primary tagline\r\n\r\n> **Govern what must become real.**\r\n\r\n### 11.2 Supporting taglines\r\n\r\n- **From intention to evidence.**\r\n- **Human authority for the agentic enterprise.**\r\n- **Where commitments become governed outcomes.**\r\n- **Let AI propose. Let people decide.**\r\n- **Every outcome owned. Every decision traceable.**\r\n- **The operating system for accountable cooperation.**\r\n- **Beyond CRM: govern the relationship outcome.**\r\n- **Shape together. Approve clearly. Prove directly.**\r\n\r\n### 11.3 Campaign lines\r\n\r\nFor AI governance:\r\n\r\n> **Speed without silent drift.**\r\n\r\nFor XRM:\r\n\r\n> **CRM remembers the account. Ogun remembers the meaning.**\r\n\r\nFor executive portfolio intelligence:\r\n\r\n> **See where development energy becomes enterprise value.**\r\n\r\nFor evidence:\r\n\r\n> **Done is not a status. It is something you can inspect.**\r\n\r\nFor supplier cooperation:\n\n## 12. Brand Personality\r\n\r\nOgun should feel:\r\n\r\n- disciplined;\r\n- grounded;\r\n- intelligent;\r\n- calm under complexity;\r\n- precise without becoming sterile;\r\n- powerful without theatrics;\r\n- human-centered without sentimentality;\r\n- visionary without unsupported prophecy;\r\n- and technically credible without hiding behind jargon.\r\n\r\n### 12.1 Archetypal blend\r\n\r\n- **The Smith:** shapes raw potential into useful form.\r\n- **The Steward:** protects human authority and institutional memory.\r\n- **The Navigator:** reveals relationships, tensions, and routes through complexity.\r\n- **The Witness:** preserves evidence of what was intended, approved, and achieved.\r\n\r\n### 12.2 Tone of voice\r\n\r\nUse:\r\n\r\n- declarative clarity;\r\n- concrete business consequences;\r\n- active verbs;\r\n- restrained metaphor;\r\n- evidence-aware confidence;\r\n- human language before technical detail.\r\n\r\nAvoid:\r\n\r\n- “revolutionary”\n\n## 13. Visual Identity Direction\r\n\r\n### 13.1 Core visual metaphor\r\n\r\nThe visual system should express **the governed forge** and **the living graph**.\r\n\r\nPrimary forms:\r\n\r\n- nodes connected by disciplined pathways;\r\n- branching and convergence;\r\n- a glowing seed becoming a structured graph;\r\n- layers of inherited standards;\r\n- evidence anchors;\r\n- a controlled pulse moving through the graph;\r\n- a prism revealing lineage;\r\n- crafted metal or mineral textures used sparingly.\r\n\r\n### 13.2 Avoided motifs\r\n\r\nAvoid:\r\n\r\n- humanoid robots;\r\n- generic glowing brains;\r\n- uncontrolled neural-network webs;\r\n- chess imagery as the dominant identity;\r\n- weapons, violence, fire, or militaristic depictions of Ogun;\r\n- tribal caricature or decorative appropriation;\r\n- fantasy mysticism disconnected from enterprise value.\r\n\r\n### 13.3 Color principles\r\n\r\nThe palette should communicate:\r\n\r\n- dark structural\n\nSubmit sections/03-creative-identity.md now with write_file."
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "write_file",
+            "description": "Write complete UTF-8 contents to an allowed artifact file.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "content"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "max_tokens": 6000,
+      "stream": false
+    }
+  },
+  "response": {
+    "captured_at": "2026-08-02T08:48:14.271Z",
+    "format": "openai_json",
+    "upstream_status": 200,
+    "assistant_content": "I'll compose the Creative Identity section from the bounded packet, drawing on the assigned nodes and source sections provided.",
+    "assistant_content_chars": 127,
+    "assistant_content_truncated": false,
+    "truncations": [],
+    "finish_reason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 4814,
+      "completion_tokens": 2323,
+      "total_tokens": 7137,
+      "cost": 0.016429,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016429,
+        "upstream_inference_prompt_cost": 0.004814,
+        "upstream_inference_completions_cost": 0.011615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "packet": {
+      "id": "gen-1785660468-Z6WnRDtDG40Ks3SbiHNB",
+      "object": "chat.completion",
+      "created": 1785660468,
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "Amazon Bedrock",
+      "system_fingerprint": null,
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "tool_calls",
+          "native_finish_reason": "tool_use",
+          "message": {
+            "role": "assistant",
+            "content": "I'll compose the Creative Identity section from the bounded packet, drawing on the assigned nodes and source sections provided.",
+            "refusal": null,
+            "reasoning": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "toolu_bdrk_01FrY7LgowV8Ph5TwqFy8Prs",
+                "function": {
+                  "name": "write_file",
+                  "arguments": "{\"path\": \"sections/03-creative-identity.md\", \"content\": \"# 3. Creative Identity\\n\\nOgun's creative identity expresses the brand through disciplined verbal and visual systems that feel strong, calm, human-governed, and technically credible. Every element—from naming and messaging to color and motion—reinforces the core promise: **Govern what must become real.**\\n\\n---\\n\\n## 3.1 Verbal Identity\\n\\n### Naming Architecture\\n\\nThe external naming hierarchy keeps Lexiom, Lexiom 1.3, Ogun, and all related products in one coherent system:\\n\\n- **Lexiom** — the master product and intellectual platform.\\n- **Lexiom 1.3** — the product generation.\\n- **Ogun** — the version name and commercial B2B expression of Lexiom 1.3.\\n- **Lexiom Cockpit** — the focused workspace for developing and governing an individual OSN Graph.\\n- **Ogun Portal** — the executive and portfolio-level environment for organizing, observing, comparing, and governing OSN Graph gardens.\\n- **OSN Graph Garden** — a managed portfolio of related OSN Graphs.\\n- **Demo Evidence** — the evidence-visibility mode through which a user inspects why an artifact or behavior exists and whether the intended outcome was achieved.\\n\\n**First full mention:** Lexiom 1.3 — Ogun\\n\\n**Acceptable subsequent mentions:** Ogun, Lexiom, the Ogun service\\n\\nThis structure prevents Ogun from appearing as an unrelated product separate from Lexiom, while allowing the Ogun name to carry commercial weight in B2B contexts.\\n\\n### Ogun Naming Rationale\\n\\nThe name Ogun evokes the governed forge—disciplined toolmaking and accountable transformation. It carries the weight of craftsmanship and precision without mysticism or aggression. In the context of Lexiom 1.3, Ogun signals that outcomes are forged through intention, discipline, and evidence, not accident or hope.\\n\\n---\\n\\n## 3.2 Message Hierarchy\\n\\n**Level 1 — Brand Promise**\\n\\n> Govern what must become real.\\n\\n**Level 2 — Category Explanation**\\n\\n> Ogun is the Outcome Governance and Semantic Relationship Operating System for complex human and AI cooperation.\\n\\n**Level 3 — Functional Explanation**\\n\\n> It transforms intentions into human-owned Outcome Specification Nodes, develops them through approved disciplines and standards, and requires evidence of successful fulfillment.\\n\\n**Level 4 — Business Proof**\\n\\n> Leaders can see where value, effort, quality, security, standards, customer commitments, and supplier responsibilities align—or quietly drift apart.\\n\\n**Level 5 — Technical Proof**\\n\\n> White Moves control canonical state. Black Moves remain proposals. Approved OSNs preserve provenance, replayability, governed inheritance, conflict visibility, compilation roots, success evidence, and lineage inspection.\\n\\n---\\n\\n## 3.3 Tagline System\\n\\n**Primary Tagline**\\n\\n> Govern what must become real.\\n\\n**Supporting Taglines**\\n\\n- From intention to evidence.\\n- Human authority for the agentic enterprise.\\n- Where commitments become governed outcomes.\\n- Let AI propose. Let people decide.\\n- Every outcome owned. Every decision traceable.\\n- The operating system for accountable cooperation.\\n- Beyond CRM: govern the relationship outcome.\\n- Shape together. Approve clearly. Prove directly.\\n\\n**Campaign Lines**\\n\\nFor AI governance: *Speed without silent drift.*\\n\\nFor XRM: *CRM remembers the account. Ogun remembers the meaning.*\\n\\nFor executive portfolio intelligence: *See where development energy becomes enterprise value.*\\n\\nFor evidence: *Done is not a status. It is something you can inspect.*\\n\\n---\\n\\n## 3.4 Tone of Voice\\n\\nOgun's voice is:\\n\\n- **Declarative and clear.** Avoid hedging, probabilistic language presented as fact, and unnecessary qualification.\\n- **Active and concrete.** Use verbs that show agency and business consequence. Ground abstractions in what users actually do.\\n- **Restrained in metaphor.** The governed forge and living graph are the core metaphors; use them consistently but sparingly.\\n- **Human before technical.** Lead with business meaning; technical detail follows as proof.\\n- **Evidence-aware and confident.** Speak with the authority of what can be inspected and verified, not what is hoped or predicted.\\n\\n**Avoid:**\\n\\n- \\\"Revolutionary,\\\" \\\"transformative,\\\" or other unsupported superlatives.\\n- Hype, mysticism, or pseudo-futuristic language.\\n- Jargon without explanation.\\n- Sentimentality or anthropomorphism.\\n\\n---\\n\\n## 3.5 Brand Personality\\n\\nOgun should feel:\\n\\n- **Disciplined.** Every choice is intentional; nothing is decorative or accidental.\\n- **Grounded.** Rooted in real enterprise problems and measurable outcomes.\\n- **Intelligent.** Capable of holding complexity without collapsing it into false simplicity.\\n- **Calm under complexity.** Steady, reliable, and clear even when the problem is hard.\\n- **Precise without sterility.** Technical rigor expressed in human language.\\n- **Powerful without theatrics.** Strength comes from capability, not volume or aggression.\\n- **Human-centered without sentimentality.** People make decisions; systems preserve and enforce them.\\n- **Visionary without unsupported prophecy.** Ambitious about what governance can achieve, grounded in what can be proven.\\n- **Technically credible.** Every claim can be inspected; every promise can be verified.\\n\\n### Archetypal Blend\\n\\n- **The Smith:** shapes raw potential into useful form through discipline and craft.\\n- **The Steward:** protects human authority and institutional memory against drift and decay.\\n- **The Navigator:** reveals relationships, tensions, and routes through complexity.\\n- **The Witness:** preserves evidence of what was intended, approved, and achieved.\\n\\n---\\n\\n## 3.6 Visual Identity\\n\\n### Core Visual Metaphor\\n\\nThe visual system expresses **the governed forge** and **the living graph** through:\\n\\n- **Nodes connected by disciplined pathways.** Clear, intentional relationships without visual noise.\\n- **Branching and convergence.** Showing how intentions split into work streams and reconverge into outcomes.\\n- **A glowing seed becoming a structured graph.** Potential becoming governed reality.\\n- **Layers of inherited standards.** Showing how approved disciplines flow through the system.\\n- **Evidence anchors.** Visual markers that prove fulfillment and preserve lineage.\\n- **A controlled pulse moving through the graph.** Motion that shows governance in action, not decoration.\\n- **A prism revealing lineage.** Transparency into why something exists and what it depends on.\\n- **Crafted metal or mineral textures used sparingly.** Suggesting precision and durability without overwhelming the interface.\\n\\n### Avoided Motifs\\n\\nDo not use:\\n\\n- Humanoid robots or generic glowing brains.\\n- Uncontrolled neural-network webs or chaotic imagery.\\n- Chess imagery as the dominant identity.\\n- Weapons, violence, fire, or militaristic depictions of Ogun.\\n- Tribal caricature or decorative appropriation.\\n- Fantasy mysticism disconnected from enterprise value.\\n\\n---\\n\\n## 3.7 Semantic Color Principles\\n\\nThe color palette communicates state and governance:\\n\\n- **Approved and canonical:** Deep, stable colors that signal authority and finality.\\n- **Proposed:** Lighter, provisional tones that signal pending decision.\\n- **Stable and inherited:** Colors that show lineage and approved standards flowing through the system.\\n- **Conflict and missing evidence:** Distinct, accessible colors that demand attention without aggression.\\n- **Achieved and verified:** Colors that signal successful fulfillment and evidence closure.\\n- **Overridden and superseded:** Muted or faded tones that show historical state without confusion with current reality.\\n\\nAll colors meet WCAG AA contrast standards for accessibility. The palette avoids pure red/green dependency to serve colorblind users.\\n\\n---\\n\\n## 3.8 Typography\\n\\nTypography reinforces credibility and governance:\\n\\n- **Headings:** Spacious, architectural, and confident. Enough breathing room to signal clarity and authority.\\n- **Body text:** Highly legible, generous line height, and restrained measure. Designed for sustained reading and comprehension.\\n- **Identifiers and provenance:** Restrained monospace for OSN IDs, lineage markers, and technical references. No pseudo-futuristic distortion or decorative styling.\\n\\nThe typographic system prioritizes readability over novelty. Every choice serves governance and evidence, not aesthetic fashion.\\n\\n---\\n\\n## 3.9 Motion\\n\\nMotion reinforces state transitions and governance:\\n\\n- **Proposals entering the graph:** Smooth, purposeful motion that shows intention becoming structure.\\n- **White Move anchoring:** Controlled motion that signals canonical state being locked and preserved.\\n- **Lineage inspection:** Motion that reveals provenance and dependencies without distraction.\\n- **Evidence closure:** Motion that confirms fulfillment and marks an outcome as verified.\\n\\nMotion is restrained and meaningful. It never decorates; it always communicates governance in action. Transitions are fast enough to feel responsive, slow enough to be understood.\\n\\n---\\n\\n## Summary\\n\\nOgun's creative identity is a unified system of naming, messaging, visual form, and motion that expresses disciplined governance, human authority, and technical credibility. Every element reinforces the core promise: **Govern what must become real.** The system is strong without aggression, calm without passivity, and technically rigorous without hiding behind jargon. It feels like a tool built by people who understand both enterprise complexity and the need for clarity.\\n\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 4814,
+        "completion_tokens": 2323,
+        "total_tokens": 7137,
+        "cost": 0.016429,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.016429,
+          "upstream_inference_prompt_cost": 0.004814,
+          "upstream_inference_completions_cost": 0.011615
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "outcome": {
+    "status": "completed",
+    "ok": true,
+    "latency_ms": 24401,
+    "upstream_status": 200,
+    "detail": null
+  },
+  "redaction": {
+    "applied": true,
+    "credential_headers_stored": false,
+    "note": "Credential-shaped keys and values are redacted before persistence."
+  }
+}

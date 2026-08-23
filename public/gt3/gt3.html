@@ -1,0 +1,2886 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>GT3 LM Ops Console (v13.11)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="gt3-file-uuid" content="be6b35fe-4bad-4b03-85d0-9990a49ef546" />
+  
+  <!-- Content Security Policy: Allow resources needed by GT3 console -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
+    img-src 'self' data: https:;
+    connect-src 'self';
+    frame-src 'none';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'none';
+  " />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="gt3-logo-small.png" />
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+  />
+
+  <!-- Fonts -->
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+  />
+
+  <style>
+    :root {
+      --gt3-bg: #050814;
+      --gt3-card-bg: #0b1020;
+      --gt3-border: #151a2a;
+      --gt3-primary: #35c5ff;
+      --gt3-success: #63FFA3;
+      --gt3-warning: #FF4FD8;
+      --gt3-text-main: #e2e7ff;
+      --gt3-text-muted: #8a93b5;
+      --gt3-nav-width: 72px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body.gt3-body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #101730 0, #050814 55%);
+      color: var(--gt3-text-main);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Layout */
+    .gt3-layout {
+      display: flex;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .gt3-sidebar {
+      width: var(--gt3-nav-width);
+      background: rgba(2, 6, 23, 0.95);
+      border-right: 1px solid var(--gt3-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 0.25rem;
+      position: fixed;
+      inset-block: 0;
+      inset-inline-start: 0;
+      z-index: 1000;
+    }
+
+    .gt3-sidebar-brand {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gt3-logo {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    .gt3-nav-spacer {
+      flex: 1;
+    }
+
+    .gt3-nav-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--gt3-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      transition:
+        background-color 0.16s ease,
+        color 0.16s ease,
+        border-color 0.16s ease,
+        box-shadow 0.16s ease;
+      cursor: pointer;
+    }
+
+    .gt3-nav-btn i {
+      font-size: 1.3rem;
+    }
+
+    .gt3-nav-btn:hover {
+      background: rgba(53, 197, 255, 0.08);
+      color: var(--gt3-primary);
+      border-color: rgba(53, 197, 255, 0.4);
+      box-shadow: 0 0 12px rgba(53, 197, 255, 0.25);
+    }
+
+    .gt3-nav-btn.active {
+      background: radial-gradient(circle at top, rgba(53, 197, 255, 0.3), rgba(11, 16, 32, 0.95));
+      color: var(--gt3-primary);
+      border-color: rgba(53, 197, 255, 0.8);
+      box-shadow:
+        0 0 22px rgba(53, 197, 255, 0.6),
+        0 0 4px rgba(99, 255, 163, 0.4);
+    }
+
+    .gt3-main {
+      margin-inline-start: var(--gt3-nav-width);
+      flex: 1;
+      padding: 1.5rem 1.5rem 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .gt3-main {
+        padding: 1rem 0.75rem 1.5rem;
+      }
+    }
+
+    /* Main header */
+    .gt3-main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .gt3-main-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gt3-text-main);
+    }
+
+    .gt3-main-subtitle {
+      font-size: 0.85rem;
+      color: var(--gt3-text-muted);
+    }
+
+    .gt3-mono {
+      font-family: "JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .gt3-small {
+      font-size: 0.78rem;
+    }
+
+    /* Cards & panels */
+    .gt3-card {
+      background: var(--gt3-card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--gt3-border);
+      padding: 1rem 1.25rem;
+      box-shadow:
+        0 18px 35px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(8, 12, 28, 0.9);
+    }
+
+    .gt3-card-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gt3-text-main);
+      margin-bottom: 0.25rem;
+    }
+
+    .gt3-card-subtitle {
+      font-size: 0.8rem;
+      color: var(--gt3-text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    /* Tabs */
+    .gt3-tab-panel {
+      display: none;
+      animation: gt3-fade-in 0.16s ease-out;
+    }
+
+    .gt3-tab-panel.active {
+      display: block;
+    }
+
+    @keyframes gt3-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Placeholder lines */
+    .gt3-placeholder-line {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #151a2a, #222642, #151a2a);
+      background-size: 200% 100%;
+      animation: gt3-pulse 2.2s infinite linear;
+      margin-bottom: 0.4rem;
+      opacity: 0.75;
+    }
+
+    @keyframes gt3-pulse {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* Health pills */
+    .gt3-health-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 90px;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .gt3-health-healthy {
+      color: var(--gt3-success);
+      background: rgba(7, 26, 24, 0.95);
+      border-color: rgba(99, 255, 163, 0.8);
+      box-shadow: 0 0 14px rgba(99, 255, 163, 0.6);
+    }
+
+    .gt3-health-bad {
+      color: #ffffff;
+      background: rgba(80, 10, 55, 0.96);
+      border-color: rgba(255, 79, 216, 0.9);
+      box-shadow: 0 0 14px rgba(255, 79, 216, 0.7);
+    }
+
+    /* Logs & training lists */
+    .gt3-log-list {
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .gt3-log-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      outline: none;
+      margin-bottom: 0.2rem;
+      transition:
+        background-color 0.12s ease,
+        border-color 0.12s ease,
+        box-shadow 0.12s ease;
+    }
+
+    .gt3-log-row:hover,
+    .gt3-log-row:focus-visible {
+      background: rgba(53, 197, 255, 0.08);
+      border-color: rgba(53, 197, 255, 0.45);
+      box-shadow: 0 0 10px rgba(53, 197, 255, 0.35);
+    }
+
+    .gt3-log-row.selected {
+      background: radial-gradient(circle at top, rgba(53, 197, 255, 0.2), rgba(11, 16, 32, 0.95));
+      border-color: rgba(99, 255, 163, 0.9);
+      box-shadow:
+        0 0 18px rgba(99, 255, 163, 0.6),
+        0 0 2px rgba(53, 197, 255, 0.4);
+    }
+
+    .gt3-log-row-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+    }
+
+    .gt3-log-row-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      color: var(--gt3-text-muted);
+    }
+
+    .gt3-log-row-msg {
+      font-size: 0.78rem;
+      color: var(--gt3-text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .gt3-log-tenant {
+      font-size: 0.7rem;
+      color: var(--gt3-text-muted);
+    }
+
+    .gt3-log-ts {
+      font-size: 0.7rem;
+      color: var(--gt3-text-muted);
+    }
+
+    .gt3-packet-inspector {
+      min-height: 28rem;
+    }
+
+    .gt3-packet-route {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .gt3-packet-route-node,
+    .gt3-packet-meta-pill {
+      border: 1px solid rgba(53, 197, 255, 0.38);
+      border-radius: 999px;
+      padding: 0.12rem 0.52rem;
+      color: var(--gt3-text-main);
+      background: rgba(11, 16, 32, 0.72);
+      font-size: 0.7rem;
+    }
+
+    .gt3-packet-route-arrow {
+      color: var(--gt3-text-muted);
+      font-size: 0.72rem;
+    }
+
+    .gt3-packet-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .gt3-packet-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .gt3-packet-search {
+      min-width: 13rem;
+      flex: 1 1 14rem;
+      color: var(--gt3-text-main);
+      background: rgba(5, 10, 22, 0.9);
+      border: 1px solid rgba(53, 197, 255, 0.4);
+      border-radius: 8px;
+      padding: 0.36rem 0.55rem;
+      font-size: 0.78rem;
+    }
+
+    .gt3-packet-search:focus {
+      outline: none;
+      border-color: rgba(99, 255, 163, 0.85);
+      box-shadow: 0 0 9px rgba(99, 255, 163, 0.25);
+    }
+
+    .gt3-packet-plane {
+      border: 1px solid rgba(53, 197, 255, 0.24);
+      border-radius: 12px;
+      padding: 0.7rem;
+      background: rgba(5, 10, 22, 0.5);
+      margin-bottom: 0.75rem;
+    }
+
+    .gt3-packet-plane.is-response {
+      border-color: rgba(99, 255, 163, 0.3);
+    }
+
+    .gt3-packet-plane-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.55rem;
+      color: var(--gt3-text-main);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .gt3-packet-message {
+      border-left: 3px solid rgba(53, 197, 255, 0.58);
+      padding-left: 0.6rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .gt3-packet-message[data-role="system"] {
+      border-left-color: rgba(255, 79, 216, 0.72);
+    }
+
+    .gt3-packet-message[data-role="assistant"] {
+      border-left-color: rgba(99, 255, 163, 0.72);
+    }
+
+    .gt3-packet-role {
+      color: var(--gt3-text-muted);
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.2rem;
+    }
+
+    .gt3-packet-content,
+    .gt3-packet-raw {
+      margin: 0;
+      color: var(--gt3-text-main);
+      background: transparent;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 0.75rem;
+      line-height: 1.45;
+      max-height: 23rem;
+      overflow: auto;
+    }
+
+    .gt3-packet-raw {
+      max-height: 18rem;
+      padding: 0.55rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 7px;
+    }
+
+    .gt3-packet-content mark,
+    .gt3-packet-raw mark {
+      color: #071018;
+      background: #ffe06b;
+      border-radius: 2px;
+      padding: 0 0.04rem;
+    }
+
+    .gt3-packet-details summary {
+      cursor: pointer;
+      color: var(--gt3-text-muted);
+      font-size: 0.72rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .gt3-packet-empty {
+      display: grid;
+      place-items: center;
+      min-height: 24rem;
+      color: var(--gt3-text-muted);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .gt3-log-track-pill {
+      border-radius: 999px;
+      padding: 0.05rem 0.5rem;
+      font-size: 0.68rem;
+      border: 1px solid transparent;
+    }
+
+    .gt3-log-track-pill.track-green {
+      color: var(--gt3-success);
+      border-color: rgba(99, 255, 163, 0.8);
+      background: rgba(10, 30, 25, 0.9);
+    }
+
+    .gt3-log-track-pill.track-orange {
+      color: #ffd27f;
+      border-color: rgba(255, 180, 90, 0.85);
+      background: rgba(40, 25, 5, 0.95);
+    }
+
+    .gt3-log-track-pill.track-red {
+      color: #ff9c9c;
+      border-color: rgba(255, 120, 120, 0.85);
+      background: rgba(40, 8, 8, 0.95);
+    }
+
+    .gt3-log-track-pill.track-unknown {
+      color: var(--gt3-text-muted);
+      border-color: rgba(138, 147, 181, 0.6);
+      background: rgba(10, 12, 22, 0.9);
+    }
+
+    .gt3-log-lane-pill {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.1rem 0.4rem;
+      border-radius: 0.25rem;
+      margin-left: 0.35rem;
+      vertical-align: middle;
+      border: 1px solid transparent;
+    }
+
+    .gt3-log-lane-pill.lane-product {
+      color: #9ec9ef;
+      border-color: rgba(120, 170, 220, 0.7);
+      background: rgba(20, 40, 60, 0.95);
+    }
+
+    .gt3-log-lane-pill.lane-agent {
+      color: #e8c87a;
+      border-color: rgba(200, 170, 80, 0.75);
+      background: rgba(50, 40, 15, 0.95);
+    }
+
+    .gt3-lane-filters .btn.active {
+      background: rgba(80, 90, 120, 0.55);
+      border-color: rgba(160, 170, 200, 0.7);
+      color: #f0f0f5;
+    }
+
+    .gt3-logs-alert {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="gt3-body">
+  <div class="gt3-layout">
+    <!-- Sidebar -->
+    <aside class="gt3-sidebar">
+      <div class="gt3-sidebar-brand">
+        <img src="gt3-logo-small.png" alt="GT3 logo" class="gt3-logo" />
+      </div>
+
+      <button
+        type="button"
+        class="gt3-nav-btn"
+        data-tab-target="tab-dashboard"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        title="Dashboard & Config"
+      >
+        <i class="bi bi-speedometer2"></i>
+      </button>
+
+      <button
+        type="button"
+        class="gt3-nav-btn"
+        data-tab-target="tab-logs"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        title="Logs"
+      >
+        <i class="bi bi-terminal"></i>
+      </button>
+
+      <button
+        type="button"
+        class="gt3-nav-btn active"
+        data-tab-target="tab-game-records"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        title="Game records"
+      >
+        <i class="bi bi-collection-play"></i>
+      </button>
+
+      <button
+        type="button"
+        class="gt3-nav-btn"
+        data-tab-target="tab-training"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        title="Training Examples"
+      >
+        <i class="bi bi-database"></i>
+      </button>
+
+      <div class="gt3-nav-spacer"></div>
+
+      <div
+        class="text-center mt-auto mb-1"
+        style="font-size: 0.7rem; color: var(--gt3-text-muted);"
+      >
+        Ops
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="gt3-main">
+      <header class="gt3-main-header">
+        <div>
+          <div class="gt3-main-title">GT3 LM Ops Console</div>
+          <div class="gt3-main-subtitle">
+            Environment-aware dashboard · logs · game records · training examples
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <!-- Header health indicator -->
+          <span
+            id="gt3-header-health-pill"
+            class="gt3-health-pill gt3-health-bad"
+          >
+            UNKNOWN
+          </span>
+        </div>
+      </header>
+
+      <!-- TAB: Dashboard & Config -->
+      <section
+        id="tab-dashboard"
+        class="gt3-tab-panel"
+        aria-label="Dashboard and configuration"
+      >
+        <!-- Top strip: environment (no pill here) -->
+        <div class="gt3-card mb-3">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+              <div class="gt3-card-title">Environment</div>
+              <div class="gt3-card-subtitle">
+                <span class="me-3">
+                  GT3 LM Server ·
+                  <span id="dash-server-version" class="gt3-mono">unknown</span>
+                </span>
+              </div>
+              <div class="gt3-card-subtitle mt-1">
+                Uptime:
+                <span id="dash-uptime" class="gt3-mono">unknown</span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center flex-wrap gap-3">
+              <div class="text-end">
+                <div
+                  id="dash-health-last-check"
+                  class="gt3-card-subtitle mt-1 gt3-small text-end"
+                >
+                  Last check: —
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <div class="form-check form-switch mb-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="dash-live-toggle"
+                  />
+                  <label class="form-check-label gt3-small" for="dash-live-toggle">
+                    Live
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  id="dash-refresh-btn"
+                  class="btn btn-sm btn-outline-light gt3-small"
+                >
+                  Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard cards -->
+        <div class="row g-3">
+          <!-- Agent runtime bringup (VAL Step 2) -->
+          <div class="col-md-6">
+            <div class="gt3-card">
+              <div class="gt3-card-title">Agent runtime bringup</div>
+              <div class="gt3-card-subtitle">
+                <!-- CA secondary name Hanuman: devotee of Ram (player); tools without the throne -->
+                CA (Hanuman) <span class="gt3-mono">browser_session</span> +
+                <span class="gt3-mono">bolt_webcontainer</span>
+                (player WebContainer agent; Docker/Aider Follow-up)
+              </div>
+              <ul class="list-unstyled mb-0 gt3-mono gt3-small">
+                <li>
+                  Status:
+                  <span id="dash-agent-bringup-status">—</span>
+                </li>
+                <li>
+                  CA (Hanuman) location:
+                  <span id="dash-agent-ca-location">browser_session</span>
+                </li>
+                <li>
+                  Executor:
+                  <span id="dash-agent-executor">bolt_webcontainer</span>
+                </li>
+                <li>
+                  Legacy Docker (Follow-up):
+                  <span id="dash-agent-docker">—</span>
+                </li>
+                <li>
+                  Legacy image (Follow-up):
+                  <span id="dash-agent-image">—</span>
+                </li>
+              </ul>
+              <div
+                id="dash-agent-bringup-detail"
+                class="gt3-card-subtitle mt-2 gt3-small"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Traffic snapshot (since uptime) -->
+          <div class="col-md-6">
+            <div class="gt3-card">
+              <div class="gt3-card-title">Traffic (since server start)</div>
+              <div class="gt3-card-subtitle">
+                Product inference + training examples (not agent broker).
+              </div>
+              <ul class="list-unstyled mb-0 gt3-mono gt3-small">
+                <li>
+                  Inferences:
+                  <span id="dash-traffic-inference">—</span>
+                </li>
+                <li>
+                  Training examples:
+                  <span id="dash-traffic-training">—</span>
+                </li>
+              </ul>
+              <div
+                id="dash-traffic-note"
+                class="gt3-card-subtitle mt-2 gt3-small"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Agent broker traffic (VAL Step 3) -->
+          <div class="col-md-6">
+            <div class="gt3-card">
+              <div class="gt3-card-title">Agent broker traffic</div>
+              <div class="gt3-card-subtitle">
+                OpenAI-compat <span class="gt3-mono">POST /v1/chat/completions</span>
+                → configured agent LM destination (OpenRouter now; transport-neutral Ops contract).
+              </div>
+              <ul class="list-unstyled mb-0 gt3-mono gt3-small">
+                <li>
+                  Destination:
+                  <span id="dash-agent-broker-destination">—</span>
+                </li>
+                <li>
+                  Model:
+                  <span id="dash-agent-broker-model">—</span>
+                </li>
+                <li>
+                  Packet capture:
+                  <span id="dash-agent-broker-capture">—</span>
+                </li>
+                <li>
+                  Ok / Error:
+                  <span id="dash-agent-broker-ok">—</span>
+                  /
+                  <span id="dash-agent-broker-error">—</span>
+                </li>
+                <li>
+                  Last 5m ok / err:
+                  <span id="dash-agent-broker-ok-5m">—</span>
+                  /
+                  <span id="dash-agent-broker-err-5m">—</span>
+                </li>
+              </ul>
+              <div
+                id="dash-agent-broker-last-error"
+                class="gt3-card-subtitle mt-2 gt3-small"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Recent Lexiom agent runs (VAL Step 4) -->
+          <div class="col-md-6">
+            <div class="gt3-card">
+              <div class="gt3-card-title">Recent agent runs</div>
+              <div class="gt3-card-subtitle">
+                Lexiom <span class="gt3-mono">/lexiom13/build/run</span> outcomes (builder only in Step 4; bud later).
+              </div>
+              <ul
+                id="dash-recent-agent-runs"
+                class="list-unstyled mb-0 gt3-mono gt3-small"
+              >
+                <li class="gt3-card-subtitle">No runs yet.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Model runtime + config -->
+          <div class="col-md-6">
+            <div class="gt3-card">
+              <div class="gt3-card-title">Model runtime</div>
+              <div class="gt3-card-subtitle">
+                Provider, model, and dual inference flag as seen by the server.
+              </div>
+              <ul class="list-unstyled mb-1 gt3-mono gt3-small">
+                <li>
+                  Provider:
+                  <span id="dash-provider-detail">unknown</span>
+                </li>
+                <li>
+                  Model:
+                  <span id="dash-model-detail">unknown</span>
+                </li>
+                <li>
+                  Inference mode:
+                  <span id="dash-inference-detail">unknown</span>
+                </li>
+                <li class="gt3-small text-muted">
+                  Legacy dual flag:
+                  <span id="dash-dual-compat">—</span>
+                </li>
+                <li>
+                  Expression profile:
+                  <span id="dash-expression-detail">unknown</span>
+                </li>
+              </ul>
+              <div
+                id="dash-model-note"
+                class="gt3-card-subtitle mt-1 gt3-small"
+              ></div>
+
+              <hr class="border-secondary my-2" />
+
+              <div class="gt3-card-subtitle gt3-small mb-1">
+                Runtime configuration (editable when Live is OFF).
+              </div>
+
+              <form id="cfg-form" class="gt3-small" onsubmit="return false;">
+                <div class="row g-2 align-items-end">
+                  <div class="col-3">
+                    <label for="cfg-provider" class="form-label mb-1 gt3-small">
+                      Provider
+                    </label>
+                    <select
+                      id="cfg-provider"
+                      class="form-select form-select-sm gt3-mono"
+                    >
+                      <option value="mock">mock</option>
+                      <option value="ollama">ollama</option>
+                      <option value="openrouter">openrouter</option>
+                      <option value="openai">openai</option>
+                    </select>
+                  </div>
+                  <div class="col-3">
+                    <label for="cfg-model-id" class="form-label mb-1 gt3-small">
+                      Model ID
+                    </label>
+                    <input
+                      id="cfg-model-id"
+                      type="text"
+                      class="form-control form-control-sm gt3-mono"
+                      placeholder="llama3.1 / gpt-4o-mini / ..."
+                    />
+                  </div>
+                  <div class="col-2">
+                    <label for="cfg-expression" class="form-label mb-1 gt3-small">
+                      Expression
+                    </label>
+                    <select
+                      id="cfg-expression"
+                      class="form-select form-select-sm gt3-mono"
+                      title="Populated from Expression_skills/ via /ops/summary"
+                    >
+                      <option value="none">none</option>
+                    </select>
+                  </div>
+                  <div class="col-2">
+                    <label for="cfg-inference-mode" class="form-label mb-1 gt3-small">
+                      Inference
+                    </label>
+                    <select
+                      id="cfg-inference-mode"
+                      class="form-select form-select-sm gt3-mono"
+                      title="single = one call original; dual = loving + delayed original; loving_only = one call with loving user text"
+                    >
+                      <option value="single">single</option>
+                      <option value="dual">dual</option>
+                      <option value="loving_only">loving_only</option>
+                    </select>
+                  </div>
+                  <div class="col-2 text-end">
+                    <button
+                      type="button"
+                      id="cfg-apply-btn"
+                      class="btn btn-sm btn-outline-primary w-100"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+                <div
+                  id="cfg-panel-note"
+                  class="gt3-card-subtitle gt3-small mt-1"
+                >
+                  Runtime config is read-only while Live is ON. Toggle Live off to edit and apply changes.
+                </div>
+                <div
+                  id="cfg-status"
+                  class="gt3-card-subtitle gt3-small mt-1"
+                ></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: Logs -->
+      <section
+        id="tab-logs"
+        class="gt3-tab-panel"
+        aria-label="Logs and telemetry"
+      >
+        <div class="gt3-card mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="gt3-card-title">Logs &amp; Telemetry</div>
+              <div class="gt3-card-subtitle">
+                Live LM crossings through GT3. Select an AGENT row to inspect the redacted request context and offshore model response in place.
+              </div>
+            </div>
+          </div>
+          <!-- Non-blocking logs error -->
+          <div
+            id="logs-error-alert"
+            class="alert alert-warning gt3-logs-alert mt-2 d-none"
+            role="alert"
+          ></div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-5">
+            <div class="gt3-card">
+              <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                  <div class="gt3-card-title">Event stream</div>
+                  <div class="gt3-card-subtitle">
+                    Product inference + agent broker events (most recent first).
+                  </div>
+                </div>
+                <div class="btn-group btn-group-sm gt3-lane-filters" role="group" aria-label="Lane filter">
+                  <button type="button" class="btn btn-outline-light gt3-small active" data-lane-filter="all">All</button>
+                  <button type="button" class="btn btn-outline-light gt3-small" data-lane-filter="product_inference">Product</button>
+                  <button type="button" class="btn btn-outline-light gt3-small" data-lane-filter="agent_broker">Agent</button>
+                </div>
+              </div>
+              <div id="logs-empty-placeholder" class="gt3-card-subtitle gt3-small mt-1">
+                No events yet.
+              </div>
+              <div id="logs-event-list" class="gt3-log-list" role="listbox" aria-label="LM events"></div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="gt3-card gt3-packet-inspector" aria-live="polite">
+              <div class="gt3-card-title">LM packet inspector</div>
+              <div class="gt3-card-subtitle mb-2">
+                <!-- CA secondary name Hanuman: devotee of Ram (player); tools without the throne -->
+                CA (Hanuman) → GT3 → LM destination. Credential-shaped values are redacted before persistence.
+              </div>
+              <div id="logs-packet-empty" class="gt3-packet-empty">
+                Select an AGENT exchange to inspect exactly what crossed GT3.
+              </div>
+              <div id="logs-packet-loading" class="gt3-packet-empty d-none">
+                Reading the exchange packet…
+              </div>
+              <div id="logs-packet-error" class="alert alert-warning gt3-logs-alert d-none"></div>
+              <div id="logs-packet-detail" class="d-none">
+                <div id="logs-packet-route" class="gt3-packet-route"></div>
+                <div id="logs-packet-meta" class="gt3-packet-meta"></div>
+                <div class="gt3-packet-toolbar">
+                  <input
+                    id="logs-packet-search"
+                    class="gt3-packet-search"
+                    type="search"
+                    placeholder="Find in request and response (for example: Ogun)"
+                    aria-label="Find text in this LM exchange"
+                  />
+                  <span id="logs-packet-search-count" class="gt3-small text-muted"></span>
+                  <button id="logs-copy-request" type="button" class="btn btn-sm btn-outline-info">Copy request</button>
+                  <button id="logs-copy-response" type="button" class="btn btn-sm btn-outline-success">Copy response</button>
+                </div>
+                <section class="gt3-packet-plane" aria-labelledby="logs-request-title">
+                  <div class="gt3-packet-plane-title">
+                    <span id="logs-request-title">Request context entering the LM</span>
+                    <span id="logs-request-size" class="gt3-small text-muted"></span>
+                  </div>
+                  <div id="logs-request-messages"></div>
+                  <details class="gt3-packet-details">
+                    <summary>Raw redacted request packet</summary>
+                    <pre id="logs-request-raw" class="gt3-packet-raw"></pre>
+                  </details>
+                </section>
+                <section class="gt3-packet-plane is-response" aria-labelledby="logs-response-title">
+                  <div class="gt3-packet-plane-title">
+                    <span id="logs-response-title">LM response returning through GT3</span>
+                    <span id="logs-response-size" class="gt3-small text-muted"></span>
+                  </div>
+                  <pre id="logs-response-content" class="gt3-packet-content"></pre>
+                  <details class="gt3-packet-details mt-2">
+                    <summary>Raw redacted response packet</summary>
+                    <pre id="logs-response-raw" class="gt3-packet-raw"></pre>
+                  </details>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: Game records (Lexiom session logs under logs/<uuid>/) -->
+      <section
+        id="tab-game-records"
+        class="gt3-tab-panel active"
+        aria-label="Lexiom game records"
+      >
+        <div class="gt3-card mb-3">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+              <div class="gt3-card-title">Lexiom game recordings</div>
+              <div class="gt3-card-subtitle">
+                <strong>Sessions list</strong> includes only folders with a non-empty
+                <span class="gt3-mono">session_events.jsonl</span> (client-emitted session essence from Lexiom: L23 Q&amp;A turns,
+                approved L24 lanes, approved action items, approved private artifacts). Inference debug logs remain under
+                <span class="gt3-mono">/logs/&lt;uuid&gt;/</span> separately.
+              </div>
+            </div>
+          </div>
+          <div
+            id="game-records-error"
+            class="alert alert-warning gt3-logs-alert mt-2 d-none"
+            role="alert"
+          ></div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-4">
+            <div class="gt3-card">
+              <div class="gt3-card-title">Sessions</div>
+              <div
+                id="game-records-empty"
+                class="gt3-card-subtitle gt3-small"
+              >
+                No session-essence folders yet. Open a Lexiom case (game record id) and interact so the client can POST events.
+              </div>
+              <div
+                id="game-records-list"
+                class="gt3-log-list mt-2"
+                role="listbox"
+                aria-label="Game record ids"
+              ></div>
+              <button
+                type="button"
+                id="game-records-refresh"
+                class="btn btn-sm btn-outline-secondary mt-2"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="gt3-card">
+              <div class="gt3-card-title mb-1">Timeline</div>
+              <div id="game-records-detail-empty" class="gt3-card-subtitle gt3-small">
+                Select a session.
+              </div>
+              <div id="game-records-detail" class="mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: Training Examples -->
+      <section
+        id="tab-training"
+        class="gt3-tab-panel"
+        aria-label="Training examples"
+      >
+        <div class="gt3-card mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="gt3-card-title">Training Examples</div>
+              <div class="gt3-card-subtitle">
+                Read-only list of collected training examples. Click a row to open the example JSON in a new tab.
+              </div>
+            </div>
+          </div>
+          <div
+            id="training-error-alert"
+            class="alert alert-warning gt3-logs-alert mt-2 d-none"
+            role="alert"
+          ></div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="gt3-card">
+              <div class="gt3-card-title">Examples</div>
+              <div class="gt3-card-subtitle">
+                Latest training examples (most recent first).
+              </div>
+              <div
+                id="training-empty-placeholder"
+                class="gt3-card-subtitle gt3-small mt-1"
+              >
+                No training examples yet.
+              </div>
+              <div
+                id="training-event-list"
+                class="gt3-log-list"
+                role="listbox"
+                aria-label="Training examples"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // --- Utility functions ---------------------------------------------------
+    function gt3FormatTimestamp(date) {
+      if (!(date instanceof Date)) return '—';
+      if (isNaN(date.getTime())) return '—';
+      const pad = (n) => (n < 10 ? '0' + n : '' + n);
+      const yyyy = date.getFullYear();
+      const mm = pad(date.getMonth() + 1);
+      const dd = pad(date.getDate());
+      const hh = pad(date.getHours());
+      const mi = pad(date.getMinutes());
+      const ss = pad(date.getSeconds());
+      return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+    }
+
+    /** Locale-aware date + time for UI (session lists, timelines). */
+    function gt3FormatHumanTime(dateOrIso) {
+      let d;
+      if (dateOrIso instanceof Date) d = dateOrIso;
+      else if (typeof dateOrIso === 'string') d = new Date(dateOrIso);
+      else return '—';
+      if (isNaN(d.getTime())) return '—';
+      try {
+        return new Intl.DateTimeFormat(undefined, {
+          dateStyle: 'medium',
+          timeStyle: 'medium',
+        }).format(d);
+      } catch {
+        return gt3FormatTimestamp(d);
+      }
+    }
+
+    function gt3EssenceTimeRangeText(data) {
+      const f = data && data.first_event_at;
+      const l = data && data.last_event_at;
+      if (!f && !l) return '';
+      if (f && l && f !== l) {
+        return (
+          gt3FormatHumanTime(f) + ' → ' + gt3FormatHumanTime(l)
+        );
+      }
+      return gt3FormatHumanTime(f || l);
+    }
+
+    function gt3FormatUptime(seconds) {
+      if (typeof seconds !== 'number' || !isFinite(seconds) || seconds < 0) {
+        return 'unknown';
+      }
+      const s = Math.floor(seconds);
+      const days = Math.floor(s / 86400);
+      const hours = Math.floor((s % 86400) / 3600);
+      const mins = Math.floor((s % 3600) / 60);
+      const secs = s % 60;
+      const parts = [];
+      if (days > 0) parts.push(days + 'd');
+      if (hours > 0 || parts.length) parts.push(hours + 'h');
+      if (mins > 0 || parts.length) parts.push(mins + 'm');
+      parts.push(secs + 's');
+      return parts.join(' ');
+    }
+
+    function gt3SetHealthPill(el, ok) {
+      if (!el) return;
+      el.textContent = ok ? 'HEALTHY' : 'UNREACHABLE';
+      el.classList.remove('gt3-health-healthy', 'gt3-health-bad');
+      el.classList.add(ok ? 'gt3-health-healthy' : 'gt3-health-bad');
+    }
+
+    // --- Dashboard data & polling -------------------------------------------
+    let dashLive = false;
+    let dashTimerId = null;
+
+    // Logs state
+    let logsEvents = [];
+    let logsSelectedId = null;
+    let logsLaneFilter = 'all'; // all | product_inference | agent_broker
+    let logsSelectedExchange = null;
+    let logsInspectorQuery = '';
+    let logsInspectorLoadToken = 0;
+
+    // Training examples state
+    let trainingExamples = [];
+    let trainingSelectedId = null;
+
+    // Game records (Lexiom logs/<uuid>/)
+    let gameRecordsSelectedId = null;
+    /** @type {object|null} Last loaded /game-records/:id/essence payload (for Markdown export). */
+    let gameRecordsLastEssence = null;
+
+    // --- Config panel enable/disable ----------------------------------------
+    function gt3SetConfigPanelEnabled(editable) {
+      const providerSel = document.getElementById('cfg-provider');
+      const modelInput = document.getElementById('cfg-model-id');
+      const expressionSel = document.getElementById('cfg-expression');
+      const inferenceSel = document.getElementById('cfg-inference-mode');
+      const applyBtn = document.getElementById('cfg-apply-btn');
+      const noteEl = document.getElementById('cfg-panel-note');
+
+      const disabled = !editable;
+
+      [providerSel, modelInput, expressionSel, inferenceSel, applyBtn].forEach((el) => {
+        if (el) el.disabled = disabled;
+      });
+
+      if (noteEl) {
+        noteEl.textContent = disabled
+          ? 'Runtime config is read-only while Live is ON. Toggle Live off to edit and apply changes.'
+          : 'You may edit and apply runtime configuration. After applying, consider turning Live back on.';
+      }
+    }
+
+    async function gt3FetchHealth() {
+      const headerPill = document.getElementById('gt3-header-health-pill');
+      const lastCheckEl = document.getElementById('dash-health-last-check');
+
+      let ok = false;
+      let uptimeFromHealth = null;
+      let versionFromHealth = null;
+
+      try {
+        const resp = await fetch('/healthz', { cache: 'no-store' });
+        const now = new Date();
+        if (lastCheckEl) {
+          lastCheckEl.textContent = 'Last check: ' + gt3FormatTimestamp(now);
+        }
+
+        if (!resp.ok) {
+          throw new Error('HTTP ' + resp.status);
+        }
+        const data = await resp.json().catch(() => ({}));
+        if (data && data.status === 'ok') {
+          ok = true;
+        }
+        if (typeof data.uptime_seconds === 'number') {
+          uptimeFromHealth = data.uptime_seconds;
+        }
+        if (typeof data.server_version === 'string') {
+          versionFromHealth = data.server_version;
+        }
+      } catch (e) {
+        console.warn('[gt3] /healthz error:', e);
+      }
+
+      gt3SetHealthPill(headerPill, ok);
+
+      if (uptimeFromHealth != null) {
+        const uptimeEl = document.getElementById('dash-uptime');
+        if (uptimeEl) {
+          uptimeEl.textContent = gt3FormatUptime(uptimeFromHealth);
+        }
+      }
+      if (versionFromHealth) {
+        const versionEl = document.getElementById('dash-server-version');
+        if (versionEl) {
+          versionEl.textContent = versionFromHealth;
+        }
+      }
+    }
+
+    /**
+     * Rebuild the Expression dropdown from server skill list (none + expression_skills).
+     * @param {Array<{id:string,label?:string}>|null|undefined} skills
+     * @param {string|undefined} selectedProfile
+     */
+    function gt3RebuildExpressionSelect(skills, selectedProfile) {
+      const sel = document.getElementById('cfg-expression');
+      if (!sel) return;
+      const prev = sel.value;
+      sel.innerHTML = '';
+      const optNone = document.createElement('option');
+      optNone.value = 'none';
+      optNone.textContent = 'none';
+      sel.appendChild(optNone);
+      const list = Array.isArray(skills)
+        ? skills.filter((s) => s && typeof s.id === 'string' && s.id)
+        : [];
+      list.sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      for (const s of list) {
+        const o = document.createElement('option');
+        o.value = String(s.id);
+        o.textContent =
+          typeof s.label === 'string' && s.label ? s.label : String(s.id);
+        sel.appendChild(o);
+      }
+      const ids = new Set(['none', ...list.map((x) => String(x.id))]);
+      const want =
+        typeof selectedProfile === 'string' && selectedProfile
+          ? selectedProfile
+          : prev;
+      sel.value = ids.has(want) ? want : 'none';
+    }
+
+    /**
+     * Expected /ops/summary shape:
+     * {
+     *   server_version: "v.poc.015",
+     *   uptime_seconds: 1234,
+     *   llm_provider: "mock" | "ollama" | "openrouter" | "openai",
+     *   model_id: "...",
+     *   inference_mode: "single" | "dual" | "loving_only",
+     *   dual_inference: true, // iff inference_mode === "dual"
+     *   expression_skills: [{ id, label, full_spec_ref? }],
+     *   traffic_total: { inference: 0, training_example: 0 },
+     *   traffic_last_5m: { ... } // optional
+     * }
+     */
+    async function gt3FetchSummary() {
+      const versionEl = document.getElementById('dash-server-version');
+      const uptimeEl = document.getElementById('dash-uptime');
+
+      const providerDetailEl = document.getElementById('dash-provider-detail');
+      const modelDetailEl = document.getElementById('dash-model-detail');
+      const inferenceDetailEl = document.getElementById('dash-inference-detail');
+      const dualCompatEl = document.getElementById('dash-dual-compat');
+      const expressionDetailEl = document.getElementById('dash-expression-detail');
+
+      const trafficInfEl = document.getElementById('dash-traffic-inference');
+      const trafficTrnEl = document.getElementById('dash-traffic-training');
+      const trafficNoteEl = document.getElementById('dash-traffic-note');
+
+      const agentBringupStatusEl = document.getElementById('dash-agent-bringup-status');
+      const agentCaLocationEl = document.getElementById('dash-agent-ca-location');
+      const agentExecutorEl = document.getElementById('dash-agent-executor');
+      const agentDockerEl = document.getElementById('dash-agent-docker');
+      const agentImageEl = document.getElementById('dash-agent-image');
+      const agentBringupDetailEl = document.getElementById('dash-agent-bringup-detail');
+
+      const agentBrokerDestinationEl = document.getElementById('dash-agent-broker-destination');
+      const agentBrokerModelEl = document.getElementById('dash-agent-broker-model');
+      const agentBrokerCaptureEl = document.getElementById('dash-agent-broker-capture');
+      const agentBrokerOkEl = document.getElementById('dash-agent-broker-ok');
+      const agentBrokerErrEl = document.getElementById('dash-agent-broker-error');
+      const agentBrokerOk5mEl = document.getElementById('dash-agent-broker-ok-5m');
+      const agentBrokerErr5mEl = document.getElementById('dash-agent-broker-err-5m');
+      const agentBrokerLastErrEl = document.getElementById('dash-agent-broker-last-error');
+
+      const modelNoteEl = document.getElementById('dash-model-note');
+
+      const cfgProviderSel = document.getElementById('cfg-provider');
+      const cfgModelInput = document.getElementById('cfg-model-id');
+      const cfgInferenceSel = document.getElementById('cfg-inference-mode');
+      const cfgExpressionSel = document.getElementById('cfg-expression');
+
+      try {
+        const resp = await fetch('/ops/summary', { cache: 'no-store' });
+        if (!resp.ok) {
+          throw new Error('HTTP ' + resp.status);
+        }
+        const data = await resp.json();
+
+        const serverVersion = data.server_version || 'unknown';
+        const uptime = gt3FormatUptime(data.uptime_seconds);
+
+        const provider = data.llm_provider || 'unknown';
+        const model = data.model_id || 'unknown';
+        const inferenceMode =
+          typeof data.inference_mode === 'string' && data.inference_mode
+            ? data.inference_mode
+            : typeof data.dual_inference === 'boolean'
+              ? data.dual_inference
+                ? 'dual'
+                : 'single'
+              : 'unknown';
+
+        const dualCompat =
+          typeof data.dual_inference === 'boolean'
+            ? String(data.dual_inference)
+            : 'n/a';
+
+        const exprProfile =
+          typeof data.expression_profile === 'string'
+            ? data.expression_profile
+            : 'unknown';
+        let exprExtra = '';
+        if (data.expression_distilled && data.expression_distilled.sha256) {
+          exprExtra =
+            ' (sha256=' + String(data.expression_distilled.sha256).slice(0, 12) + '…)';
+        }
+
+        if (versionEl) versionEl.textContent = serverVersion;
+        if (uptimeEl) uptimeEl.textContent = uptime;
+
+        if (providerDetailEl) providerDetailEl.textContent = provider;
+        if (modelDetailEl) modelDetailEl.textContent = model;
+        if (inferenceDetailEl) inferenceDetailEl.textContent = inferenceMode;
+        if (dualCompatEl) dualCompatEl.textContent = dualCompat;
+        if (expressionDetailEl) {
+          expressionDetailEl.textContent =
+            exprProfile === 'unknown' ? 'unknown' : exprProfile + exprExtra;
+        }
+        if (modelNoteEl) modelNoteEl.textContent = '';
+
+        // Update config panel fields to reflect server state
+        if (cfgProviderSel && provider !== 'unknown') {
+          cfgProviderSel.value = provider;
+        }
+        if (cfgModelInput && model !== 'unknown') {
+          cfgModelInput.value = model;
+        }
+        if (
+          cfgInferenceSel &&
+          inferenceMode !== 'unknown' &&
+          ['single', 'dual', 'loving_only'].indexOf(inferenceMode) >= 0
+        ) {
+          cfgInferenceSel.value = inferenceMode;
+        }
+        if (cfgExpressionSel) {
+          gt3RebuildExpressionSelect(
+            data.expression_skills,
+            typeof data.expression_profile === 'string'
+              ? data.expression_profile
+              : undefined
+          );
+        }
+
+        // Prefer traffic_total; fall back to traffic_last_5m if needed
+        const trafficTotal = data.traffic_total || data.traffic_last_5m || {};
+        const infCount = typeof trafficTotal.inference === 'number'
+          ? trafficTotal.inference
+          : 0;
+        const trnCount = typeof trafficTotal.training_example === 'number'
+          ? trafficTotal.training_example
+          : 0;
+
+        if (trafficInfEl) trafficInfEl.textContent = infCount;
+        if (trafficTrnEl) trafficTrnEl.textContent = trnCount;
+        if (trafficNoteEl) {
+          trafficNoteEl.textContent = data.traffic_total
+            ? ''
+            : 'Using last_5m metrics as fallback; consider exposing traffic_total in /ops/summary.';
+        }
+
+        const agentRt = data.agent_runtime || {};
+        const bringupStatus = agentRt.bringup_status || 'unknown';
+        if (agentBringupStatusEl) {
+          agentBringupStatusEl.textContent = bringupStatus;
+          agentBringupStatusEl.style.color =
+            bringupStatus === 'ok'
+              ? '#8fdf8f'
+              : bringupStatus === 'failed'
+                ? '#f0a0a0'
+                : '';
+        }
+        function fmtDocker(d) {
+          if (!d) return '(missing)';
+          return d.ok === false
+            ? 'not ok'
+            : d.version
+              ? String(d.version)
+              : 'ok';
+        }
+        function fmtImage(img) {
+          if (!img) return '(missing)';
+          const name = img.name ? String(img.name) : 'image?';
+          const id = img.id ? String(img.id) : '';
+          if (id) {
+            const short = id.length > 20 ? id.slice(0, 19) + '…' : id;
+            return name + ' @ ' + short;
+          }
+          return name;
+        }
+        if (agentCaLocationEl) {
+          agentCaLocationEl.textContent =
+            agentRt.ca_location || 'browser_session';
+        }
+        if (agentExecutorEl) {
+          agentExecutorEl.textContent =
+            agentRt.executor || 'bolt_webcontainer';
+        }
+        if (agentDockerEl) agentDockerEl.textContent = fmtDocker(agentRt.docker);
+        if (agentImageEl) agentImageEl.textContent = fmtImage(agentRt.image);
+        if (agentBringupDetailEl) {
+          agentBringupDetailEl.textContent =
+            agentRt.detail ||
+            (bringupStatus === 'ok'
+              ? 'Ready for Lexiom 1.3 /run (browser WebContainer CA (Hanuman)).'
+              : '');
+        }
+
+        const broker = data.agent_broker || {};
+        const brokerTotal = broker.traffic_total || {};
+        const broker5m = broker.traffic_last_5m || {};
+        const brokerDestination = broker.destination || {};
+        const brokerObservability = broker.observability || {};
+        if (agentBrokerDestinationEl) {
+          agentBrokerDestinationEl.textContent =
+            (brokerDestination.label || brokerDestination.id || 'OpenRouter') +
+            (brokerDestination.locality
+              ? ' · ' + brokerDestination.locality
+              : '') +
+            (brokerDestination.transport
+              ? ' · ' + brokerDestination.transport
+              : '');
+        }
+        if (agentBrokerModelEl) {
+          agentBrokerModelEl.textContent =
+            broker.agent_model_id || broker.openrouter_model_id || '—';
+        }
+        if (agentBrokerCaptureEl) {
+          agentBrokerCaptureEl.textContent =
+            brokerObservability.packet_capture || 'metadata only';
+        }
+        if (agentBrokerOkEl) agentBrokerOkEl.textContent = brokerTotal.ok ?? 0;
+        if (agentBrokerErrEl) agentBrokerErrEl.textContent = brokerTotal.error ?? 0;
+        if (agentBrokerOk5mEl) agentBrokerOk5mEl.textContent = broker5m.ok ?? 0;
+        if (agentBrokerErr5mEl) agentBrokerErr5mEl.textContent = broker5m.error ?? 0;
+        if (agentBrokerLastErrEl) {
+          agentBrokerLastErrEl.textContent = broker.last_error_detail
+            ? 'Last error: ' + broker.last_error_detail
+            : broker.key_configured === false
+              ? 'No agent OpenRouter key configured (GT3_LEXIOM_AGENT_KEY / OPENROUTER_API_KEY).'
+              : '';
+        }
+
+        const runsEl = document.getElementById('dash-recent-agent-runs');
+        if (runsEl) {
+          const runs = Array.isArray(data.recent_agent_runs)
+            ? data.recent_agent_runs
+            : [];
+          if (!runs.length) {
+            runsEl.innerHTML =
+              '<li class="gt3-card-subtitle">No runs yet.</li>';
+          } else {
+            runsEl.innerHTML = runs
+              .slice(0, 8)
+              .map((r) => {
+                const id = r.run_id || '?';
+                const st = r.status || '?';
+                const det = r.detail
+                  ? String(r.detail).slice(0, 80)
+                  : '';
+                const budMark =
+                  r.bud_written === true
+                    ? 'bud=yes'
+                    : r.bud_written === false
+                      ? 'bud=no'
+                      : '';
+                return (
+                  '<li>' +
+                  st +
+                  ' · ' +
+                  id +
+                  ' · ' +
+                  (r.executor || '') +
+                  (r.ca_location ? ' @ ' + r.ca_location : '') +
+                  (budMark ? ' · ' + budMark : '') +
+                  (det ? ' — ' + det : '') +
+                  '</li>'
+                );
+              })
+              .join('');
+          }
+        }
+      } catch (e) {
+        console.warn('[gt3] /ops/summary error:', e);
+
+        if (trafficNoteEl) {
+          trafficNoteEl.textContent =
+            'Summary unavailable (ensure /ops/summary is implemented).';
+        }
+        if (agentBringupDetailEl) {
+          agentBringupDetailEl.textContent =
+            'Could not load agent_runtime from /ops/summary.';
+        }
+        if (agentBrokerLastErrEl) {
+          agentBrokerLastErrEl.textContent =
+            'Could not load agent_broker from /ops/summary.';
+        }
+        if (modelNoteEl) {
+          modelNoteEl.textContent =
+            'Provider/model data requires /ops/summary to expose runtime info.';
+        }
+      }
+    }
+
+    // -------- Logs tab: fetch & render --------------------------------------
+    /**
+     * Expected /inferences response:
+     * { "events": [ { id, ts_iso, tenant, track, log_url? | log_file? } ] }
+     */
+    async function gt3FetchLogs() {
+      const errorEl = document.getElementById('logs-error-alert');
+      const listEl = document.getElementById('logs-event-list');
+      const emptyEl = document.getElementById('logs-empty-placeholder');
+
+      if (!listEl || !errorEl || !emptyEl) return;
+
+      try {
+        const resp = await fetch('/inferences', { cache: 'no-store' });
+        if (!resp.ok) {
+          throw new Error('HTTP ' + resp.status);
+        }
+        const data = await resp.json();
+        let events = [];
+
+        if (Array.isArray(data)) {
+          events = data;
+        } else if (data && Array.isArray(data.events)) {
+          events = data.events;
+        }
+
+        // Keep descending by ts_iso (most recent first)
+        events.sort((a, b) => {
+          const ta = Date.parse(a.ts_iso || '') || 0;
+          const tb = Date.parse(b.ts_iso || '') || 0;
+          return tb - ta;
+        });
+
+        const MAX_EVENTS = 200;
+        logsEvents = events.slice(0, MAX_EVENTS);
+
+        errorEl.classList.add('d-none');
+        errorEl.textContent = '';
+
+        gt3RenderLogsList();
+        if (
+          logsSelectedExchange &&
+          logsSelectedExchange.outcome &&
+          logsSelectedExchange.outcome.status === 'in_flight'
+        ) {
+          const selectedEvent = logsEvents.find(
+            (event) => (event.id || event.ts_iso || null) === logsSelectedId
+          );
+          const exchangeUrl =
+            selectedEvent &&
+            (selectedEvent.exchange_url ||
+              selectedEvent.log_url ||
+              selectedEvent.log_file);
+          if (selectedEvent && exchangeUrl) {
+            gt3LoadAgentExchange(selectedEvent, exchangeUrl, {
+              preserveQuery: true
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('[gt3] /inferences error:', e);
+        errorEl.textContent =
+          'Could not fetch /inferences (logs). UI remains usable; check server when convenient.';
+        errorEl.classList.remove('d-none');
+      }
+    }
+
+    function gt3RenderLogsList() {
+      const listEl = document.getElementById('logs-event-list');
+      const emptyEl = document.getElementById('logs-empty-placeholder');
+      if (!listEl) return;
+
+      listEl.innerHTML = '';
+
+      const filtered = logsEvents.filter((ev) => {
+        if (logsLaneFilter === 'all') return true;
+        const lane = ev.lane || 'product_inference';
+        return lane === logsLaneFilter;
+      });
+
+      if (emptyEl) {
+        if (!filtered.length) {
+          emptyEl.classList.remove('d-none');
+          emptyEl.textContent = logsEvents.length
+            ? 'No events in this lane filter.'
+            : 'No events yet.';
+        } else {
+          emptyEl.classList.add('d-none');
+        }
+      }
+
+      filtered.forEach((ev) => {
+        const id = ev.id || '(no-id)';
+        const ts = ev.ts_iso || '';
+        const tenant = ev.tenant || 'unknown';
+        const track = (ev.track || 'unknown').toLowerCase();
+        const lane = ev.lane || 'product_inference';
+        const message =
+          lane === 'agent_broker'
+            ? [
+                ev.event || 'agent_broker',
+                ev.run_id ? 'run=' + ev.run_id : null,
+                ev.pass ? 'pass=' + ev.pass : null,
+                ev.model || null,
+                ev.request_chars != null ? ev.request_chars + ' req chars' : null,
+                ev.response_chars != null ? ev.response_chars + ' resp chars' : null,
+                ev.ok === false ? 'ERR' : ev.ok === true ? 'ok' : null
+              ]
+                .filter(Boolean)
+                .join(' · ')
+            : ev.message || ev.label || ev.event || 'inference';
+        const logUrl = ev.log_url || ev.log_file || null;
+        const exchangeUrl = ev.exchange_url || logUrl || null;
+
+        const row = document.createElement('div');
+        row.className = 'gt3-log-row';
+        row.setAttribute('role', 'option');
+        row.setAttribute('tabindex', '0');
+        row.dataset.eventId = id;
+
+        if (logsSelectedId === id) {
+          row.classList.add('selected');
+        }
+
+        const main = document.createElement('div');
+        main.className = 'gt3-log-row-main';
+
+        const msgSpan = document.createElement('div');
+        msgSpan.className = 'gt3-log-row-msg';
+        msgSpan.textContent = message || '(no message)';
+
+        const laneSpan = document.createElement('span');
+        laneSpan.className =
+          'gt3-log-lane-pill ' +
+          (lane === 'agent_broker' ? 'lane-agent' : 'lane-product');
+        laneSpan.textContent = lane === 'agent_broker' ? 'AGENT' : 'PRODUCT';
+
+        const trackSpan = document.createElement('span');
+        trackSpan.className = 'gt3-log-track-pill';
+
+        if (track === 'green') {
+          trackSpan.classList.add('track-green');
+          trackSpan.textContent = 'GREEN';
+        } else if (track === 'orange') {
+          trackSpan.classList.add('track-orange');
+          trackSpan.textContent = 'ORANGE';
+        } else if (track === 'red') {
+          trackSpan.classList.add('track-red');
+          trackSpan.textContent = 'RED';
+        } else {
+          trackSpan.classList.add('track-unknown');
+          trackSpan.textContent =
+            lane === 'agent_broker'
+              ? String(ev.destination || ev.upstream || 'LM').toUpperCase()
+              : (track || 'unknown').toUpperCase();
+        }
+
+        main.appendChild(msgSpan);
+        main.appendChild(laneSpan);
+        main.appendChild(trackSpan);
+
+        const meta = document.createElement('div');
+        meta.className = 'gt3-log-row-meta';
+
+        const tsSpan = document.createElement('span');
+        tsSpan.className = 'gt3-log-ts gt3-mono';
+        const d = ts ? new Date(ts) : null;
+        tsSpan.textContent = d ? gt3FormatTimestamp(d) : '(no time)';
+
+        const tenantSpan = document.createElement('span');
+        tenantSpan.className = 'gt3-log-tenant gt3-mono';
+        tenantSpan.textContent =
+          lane === 'agent_broker' && ev.upstream
+            ? String(ev.upstream)
+            : tenant;
+
+        const idSpan = document.createElement('span');
+        idSpan.className = 'gt3-log-tenant gt3-mono';
+        idSpan.textContent = id.slice(0, 8);
+
+        meta.appendChild(tsSpan);
+        meta.appendChild(tenantSpan);
+        meta.appendChild(idSpan);
+
+        row.appendChild(main);
+        row.appendChild(meta);
+
+        function selectAndOpen() {
+          logsSelectedId = id;
+          gt3RenderLogsListSelectionOnly();
+          if (lane === 'agent_broker' && exchangeUrl) {
+            gt3LoadAgentExchange(ev, exchangeUrl);
+          } else if (logUrl) {
+            window.open(logUrl, '_blank', 'noopener');
+          }
+        }
+
+        row.addEventListener('click', () => {
+          selectAndOpen();
+        });
+        row.addEventListener('keydown', (evt) => {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault();
+            selectAndOpen();
+          }
+        });
+
+        listEl.appendChild(row);
+      });
+
+      if (!logsSelectedId && filtered.length > 0) {
+        logsSelectedId = filtered[0].id || filtered[0].ts_iso || null;
+        gt3RenderLogsListSelectionOnly();
+      } else if (!filtered.length) {
+        logsSelectedId = null;
+      }
+    }
+
+    function gt3RenderLogsListSelectionOnly() {
+      const listEl = document.getElementById('logs-event-list');
+      if (!listEl) return;
+      const rows = listEl.querySelectorAll('.gt3-log-row');
+      rows.forEach((row) => {
+        if (row.dataset.eventId === logsSelectedId) {
+          row.classList.add('selected');
+        } else {
+          row.classList.remove('selected');
+        }
+      });
+    }
+
+    function gt3SetPacketInspectorState(stateName, message) {
+      const emptyEl = document.getElementById('logs-packet-empty');
+      const loadingEl = document.getElementById('logs-packet-loading');
+      const errorEl = document.getElementById('logs-packet-error');
+      const detailEl = document.getElementById('logs-packet-detail');
+      if (emptyEl) emptyEl.classList.toggle('d-none', stateName !== 'empty');
+      if (loadingEl) loadingEl.classList.toggle('d-none', stateName !== 'loading');
+      if (errorEl) {
+        errorEl.classList.toggle('d-none', stateName !== 'error');
+        errorEl.textContent = stateName === 'error' ? message || 'Unable to read exchange.' : '';
+      }
+      if (detailEl) detailEl.classList.toggle('d-none', stateName !== 'detail');
+    }
+
+    async function gt3LoadAgentExchange(event, exchangeUrl, options) {
+      const token = ++logsInspectorLoadToken;
+      const preserveQuery = !!(options && options.preserveQuery);
+      if (!preserveQuery) logsSelectedExchange = null;
+      if (!preserveQuery) logsInspectorQuery = '';
+      const searchEl = document.getElementById('logs-packet-search');
+      if (searchEl && !preserveQuery) searchEl.value = '';
+      if (!preserveQuery) gt3SetPacketInspectorState('loading');
+      try {
+        const response = await fetch(exchangeUrl, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+        const exchange = await response.json();
+        if (token !== logsInspectorLoadToken) return;
+        logsSelectedExchange = exchange;
+        gt3RenderAgentExchange(exchange, event);
+      } catch (error) {
+        if (token !== logsInspectorLoadToken) return;
+        gt3SetPacketInspectorState(
+          'error',
+          'Could not load this LM exchange: ' +
+            (error && error.message ? error.message : String(error))
+        );
+      }
+    }
+
+    function gt3RenderAgentExchange(exchange, event) {
+      if (!exchange) {
+        gt3SetPacketInspectorState('empty');
+        return;
+      }
+      gt3SetPacketInspectorState('detail');
+      const route = exchange.route || {};
+      const source = route.source || {};
+      const destination = route.destination || {};
+      const outcome = exchange.outcome || {};
+      const request = exchange.request || {};
+      const response = exchange.response || {};
+      const requestPacket = request.packet || {};
+      const responsePacket =
+        response.packet != null
+          ? response.packet
+          : response.raw_stream != null
+            ? response.raw_stream
+            : response;
+      const responseContent =
+        response.assistant_content ||
+        response.error ||
+        outcome.detail ||
+        '(No response content captured.)';
+
+      const routeEl = document.getElementById('logs-packet-route');
+      if (routeEl) {
+        routeEl.replaceChildren();
+        const sourceLabel =
+          (source.executor || 'CA (Hanuman)') +
+          (source.ca_location ? ' @ ' + source.ca_location : '');
+        [
+          { kind: 'node', text: sourceLabel },
+          { kind: 'arrow', text: '→' },
+          { kind: 'node', text: 'GT3 control plane' },
+          { kind: 'arrow', text: '→' },
+          {
+            kind: 'node',
+            text:
+              (destination.label || destination.id || event?.destination || 'LM') +
+              (destination.locality ? ' · ' + destination.locality : '')
+          }
+        ].forEach((part) => {
+          const span = document.createElement('span');
+          span.className =
+            part.kind === 'arrow'
+              ? 'gt3-packet-route-arrow'
+              : 'gt3-packet-route-node gt3-mono';
+          span.textContent = part.text;
+          routeEl.appendChild(span);
+        });
+      }
+
+      const metaEl = document.getElementById('logs-packet-meta');
+      if (metaEl) {
+        metaEl.replaceChildren();
+        const meta = [
+          ['run', source.run_id],
+          ['pass', source.pass],
+          ['model', route.model],
+          ['transport', destination.transport],
+          ['status', outcome.status],
+          ['latency', outcome.latency_ms != null ? outcome.latency_ms + ' ms' : null],
+          ['messages', request.message_count],
+          ['stream', request.stream ? 'yes' : 'no']
+        ];
+        meta.forEach(([label, value]) => {
+          if (value == null || value === '') return;
+          const pill = document.createElement('span');
+          pill.className = 'gt3-packet-meta-pill gt3-mono';
+          pill.textContent = label + '=' + value;
+          metaEl.appendChild(pill);
+        });
+      }
+
+      const messagesEl = document.getElementById('logs-request-messages');
+      if (messagesEl) {
+        messagesEl.replaceChildren();
+        const messages = Array.isArray(requestPacket.messages)
+          ? requestPacket.messages
+          : [];
+        messages.forEach((message, index) => {
+          const wrap = document.createElement('div');
+          wrap.className = 'gt3-packet-message';
+          wrap.dataset.role = message.role || 'unknown';
+          const role = document.createElement('div');
+          role.className = 'gt3-packet-role gt3-mono';
+          role.textContent =
+            (message.role || 'unknown') +
+            ' · message ' +
+            (index + 1) +
+            (message.name ? ' · ' + message.name : '');
+          const pre = document.createElement('pre');
+          pre.className = 'gt3-packet-content';
+          const content =
+            typeof message.content === 'string'
+              ? message.content
+              : JSON.stringify(message.content ?? '', null, 2);
+          gt3RenderHighlightedText(pre, content, logsInspectorQuery);
+          wrap.appendChild(role);
+          wrap.appendChild(pre);
+          messagesEl.appendChild(wrap);
+        });
+        if (!messages.length) {
+          const note = document.createElement('div');
+          note.className = 'gt3-card-subtitle gt3-small';
+          note.textContent = 'No OpenAI-format messages were captured.';
+          messagesEl.appendChild(note);
+        }
+      }
+
+      const requestRaw = document.getElementById('logs-request-raw');
+      const responseRaw = document.getElementById('logs-response-raw');
+      const responseText = document.getElementById('logs-response-content');
+      const requestJson = JSON.stringify(requestPacket, null, 2);
+      const responseJson =
+        typeof responsePacket === 'string'
+          ? responsePacket
+          : JSON.stringify(responsePacket, null, 2);
+      gt3RenderHighlightedText(requestRaw, requestJson, logsInspectorQuery);
+      gt3RenderHighlightedText(responseRaw, responseJson, logsInspectorQuery);
+      gt3RenderHighlightedText(responseText, responseContent, logsInspectorQuery);
+
+      const requestSize = document.getElementById('logs-request-size');
+      const responseSize = document.getElementById('logs-response-size');
+      if (requestSize) {
+        requestSize.textContent =
+          (request.packet_chars ?? requestJson.length) + ' chars';
+      }
+      if (responseSize) {
+        const responseChars =
+          response.assistant_content_chars ??
+          response.original_chars ??
+          String(responseContent).length;
+        responseSize.textContent =
+          responseChars + ' chars' + (response.truncated ? ' · truncated' : '');
+      }
+
+      const haystack =
+        requestJson + '\n' + String(responseContent) + '\n' + responseJson;
+      const countEl = document.getElementById('logs-packet-search-count');
+      if (countEl) {
+        const count = gt3CountTextMatches(haystack, logsInspectorQuery);
+        countEl.textContent = logsInspectorQuery
+          ? count + (count === 1 ? ' match' : ' matches')
+          : '';
+      }
+    }
+
+    function gt3RenderHighlightedText(element, text, query) {
+      if (!element) return;
+      element.replaceChildren();
+      const source = String(text == null ? '' : text);
+      const needle = String(query || '').trim();
+      if (!needle) {
+        element.textContent = source;
+        return;
+      }
+      const lower = source.toLocaleLowerCase();
+      const target = needle.toLocaleLowerCase();
+      let cursor = 0;
+      let index = lower.indexOf(target);
+      while (index >= 0) {
+        if (index > cursor) {
+          element.appendChild(document.createTextNode(source.slice(cursor, index)));
+        }
+        const mark = document.createElement('mark');
+        mark.textContent = source.slice(index, index + target.length);
+        element.appendChild(mark);
+        cursor = index + target.length;
+        index = lower.indexOf(target, cursor);
+      }
+      if (cursor < source.length) {
+        element.appendChild(document.createTextNode(source.slice(cursor)));
+      }
+    }
+
+    function gt3CountTextMatches(text, query) {
+      const needle = String(query || '').trim().toLocaleLowerCase();
+      if (!needle) return 0;
+      const haystack = String(text || '').toLocaleLowerCase();
+      let count = 0;
+      let cursor = 0;
+      while ((cursor = haystack.indexOf(needle, cursor)) >= 0) {
+        count += 1;
+        cursor += needle.length;
+      }
+      return count;
+    }
+
+    async function gt3CopyPacketSurface(kind) {
+      if (!logsSelectedExchange) return;
+      const request = logsSelectedExchange.request || {};
+      const response = logsSelectedExchange.response || {};
+      const text =
+        kind === 'request'
+          ? JSON.stringify(request.packet || {}, null, 2)
+          : String(
+              response.assistant_content ||
+                response.raw_stream ||
+                JSON.stringify(response.packet || response, null, 2)
+            );
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+    }
+
+    // -------- Game records tab ----------------------------------------------
+    function gt3GameRecordSafeFilename(id) {
+      return String(id || 'session').replace(/[^a-zA-Z0-9._-]+/g, '_').slice(0, 120);
+    }
+
+    function gt3BuildSessionEssenceMarkdown(data) {
+      const id = (data && data.id) || 'session';
+      const lines = [];
+      lines.push('# Lexiom session timeline');
+      lines.push('');
+      lines.push('**Game record id:** `' + id + '`');
+      lines.push('**Schema:** ' + (data && data.schema ? data.schema : '—'));
+      if (typeof data.event_count === 'number') {
+        lines.push('**Events:** ' + data.event_count);
+      }
+      const spanTxt = gt3EssenceTimeRangeText(data);
+      if (spanTxt) {
+        lines.push('**Session span:** ' + spanTxt);
+      }
+      lines.push('**Exported (UTC):** ' + new Date().toISOString());
+      lines.push('');
+
+      const raw = Array.isArray(data && data.events) ? data.events.slice() : [];
+      raw.sort(function (a, b) {
+        const ta =
+          Date.parse((a && a.ts_server) || (a && a.ts_client) || '') || 0;
+        const tb =
+          Date.parse((b && b.ts_server) || (b && b.ts_client) || '') || 0;
+        if (ta !== tb) return tb - ta;
+        const sa =
+          typeof (a && a.seq_client) === 'number' ? a.seq_client : 0;
+        const sb =
+          typeof (b && b.seq_client) === 'number' ? b.seq_client : 0;
+        return sb - sa;
+      });
+
+      if (!raw.length) {
+        lines.push('_No events in this session._');
+        return lines.join('\n');
+      }
+
+      lines.push('## Chronological events');
+      lines.push('');
+      raw.forEach(function (ev, i) {
+        const t = ev && ev.event_type;
+        const p = (ev && ev.payload) || {};
+        const ts = (ev && ev.ts_server) || (ev && ev.ts_client) || '';
+        lines.push('### ' + (i + 1) + '. `' + (t || '') + '`');
+        if (ts) lines.push('- **Time:** ' + ts);
+        if (typeof ev.seq_client === 'number') {
+          lines.push('- **Client seq:** ' + ev.seq_client);
+        }
+
+        if (t === 'l23_qa_turn') {
+          lines.push('- **Role:** ' + (p.role || '—'));
+          if (p.context === 'ACTION_ITEM') {
+            lines.push('- **Context:** ACTION_ITEM · `' + (p.actionItemId || '') + '`');
+          } else {
+            lines.push(
+              '- **Context:** L2 · topic index ' + String(p.topicIndex != null ? p.topicIndex : '—')
+            );
+          }
+          lines.push('');
+          lines.push('```');
+          lines.push(String(p.text || '').replace(/\r\n/g, '\n'));
+          lines.push('```');
+        } else if (t === 'l24_approved') {
+          lines.push('- **Lane:** ' + gt3LexiomLaneLabel(p.lane) + ' (`' + (p.lane || '') + '`)');
+          lines.push('');
+          lines.push('```');
+          lines.push(String(p.text || '').replace(/\r\n/g, '\n'));
+          lines.push('```');
+        } else if (t === 'action_item_approved') {
+          lines.push('- **Id:** `' + String(p.id || '') + '`');
+          lines.push('');
+          lines.push('```');
+          lines.push(String(p.text || '').replace(/\r\n/g, '\n'));
+          lines.push('```');
+        } else if (t === 'artifact_approved') {
+          lines.push('- **Title:** ' + String(p.title || ''));
+          lines.push('- **Artifact id:** `' + String(p.artifactId || '') + '`');
+          lines.push('');
+          lines.push('```');
+          lines.push(String(p.cardText || '').replace(/\r\n/g, '\n'));
+          lines.push('```');
+        } else {
+          lines.push('');
+          lines.push('```json');
+          try {
+            lines.push(JSON.stringify(ev, null, 2));
+          } catch (e) {
+            lines.push(String(ev));
+          }
+          lines.push('```');
+        }
+        lines.push('');
+      });
+
+      return lines.join('\n');
+    }
+
+    function gt3DownloadSessionTimelineMarkdown() {
+      if (!gameRecordsLastEssence || !gameRecordsLastEssence.id) {
+        return;
+      }
+      const md = gt3BuildSessionEssenceMarkdown(gameRecordsLastEssence);
+      const name =
+        'lexiom-session-' + gt3GameRecordSafeFilename(gameRecordsLastEssence.id) + '.md';
+      const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    async function gt3FetchGameRecords() {
+      const errEl = document.getElementById('game-records-error');
+      const listEl = document.getElementById('game-records-list');
+      const emptyEl = document.getElementById('game-records-empty');
+      if (!listEl) return;
+
+      try {
+        const resp = await fetch('/game-records', { cache: 'no-store' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        const recs = Array.isArray(data.records) ? data.records : [];
+
+        if (errEl) {
+          errEl.classList.add('d-none');
+          errEl.textContent = '';
+        }
+        if (emptyEl) {
+          if (!recs.length) emptyEl.classList.remove('d-none');
+          else emptyEl.classList.add('d-none');
+        }
+
+        listEl.innerHTML = '';
+        recs.forEach((r) => {
+          const id = r.id;
+          const row = document.createElement('div');
+          row.className = 'gt3-log-row';
+          row.setAttribute('role', 'option');
+          row.setAttribute('tabindex', '0');
+          row.dataset.recordId = id;
+          if (gameRecordsSelectedId === id) row.classList.add('selected');
+
+          const main = document.createElement('div');
+          main.className = 'gt3-log-row-main';
+          const msg = document.createElement('div');
+          msg.className = 'gt3-log-row-msg gt3-mono';
+          msg.textContent = id;
+          main.appendChild(msg);
+          row.appendChild(main);
+
+          if (r.last_activity_at) {
+            const meta = document.createElement('div');
+            meta.className = 'gt3-log-row-meta';
+            const tsSpan = document.createElement('span');
+            tsSpan.textContent = gt3FormatHumanTime(r.last_activity_at);
+            meta.appendChild(tsSpan);
+            row.appendChild(meta);
+          }
+
+          function select() {
+            gameRecordsSelectedId = id;
+            gt3RenderGameRecordsListSelection();
+            gt3LoadGameRecordEssence(id);
+          }
+          row.addEventListener('click', select);
+          row.addEventListener('keydown', (evt) => {
+            if (evt.key === 'Enter' || evt.key === ' ') {
+              evt.preventDefault();
+              select();
+            }
+          });
+
+          listEl.appendChild(row);
+        });
+      } catch (e) {
+        console.warn('[gt3] /game-records error:', e);
+        if (errEl) {
+          errEl.textContent =
+            'Could not fetch /game-records. Is the GT3 server running?';
+          errEl.classList.remove('d-none');
+        }
+      }
+    }
+
+    function gt3RenderGameRecordsListSelection() {
+      const listEl = document.getElementById('game-records-list');
+      if (!listEl) return;
+      listEl.querySelectorAll('.gt3-log-row').forEach((row) => {
+        if (row.dataset.recordId === gameRecordsSelectedId) {
+          row.classList.add('selected');
+        } else {
+          row.classList.remove('selected');
+        }
+      });
+    }
+
+    async function gt3LoadGameRecordEssence(id) {
+      const detailEl = document.getElementById('game-records-detail');
+      const emptyEl = document.getElementById('game-records-detail-empty');
+      if (!detailEl) return;
+      gameRecordsLastEssence = null;
+      detailEl.innerHTML =
+        '<div class="gt3-card-subtitle gt3-small">Loading session essence…</div>';
+      if (emptyEl) emptyEl.classList.add('d-none');
+
+      try {
+        const resp = await fetch(
+          '/game-records/' + encodeURIComponent(id) + '/essence',
+          { cache: 'no-store' }
+        );
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        gt3RenderGameRecordDetail(data);
+      } catch (e) {
+        gameRecordsLastEssence = null;
+        detailEl.innerHTML =
+          '<div class="alert alert-warning gt3-logs-alert">Failed to load session essence: ' +
+          (e && e.message ? e.message : String(e)) +
+          '</div>';
+      }
+    }
+
+    function gt3LexiomLaneLabel(lane) {
+      const m = {
+        a: 'L23A / disputes',
+        b: 'Goals (L24b)',
+        c: 'Strategy (L24c)',
+        d: 'Undisputed (L24d)',
+      };
+      return m[lane] || String(lane || '—');
+    }
+
+    function gt3EventTypeLabel(t) {
+      const m = {
+        l23_qa_turn: 'L23 Q&A',
+        l24_approved: 'User-approved L24',
+        action_item_approved: 'Approved action item',
+        artifact_approved: 'Approved artifact'
+      };
+      return m[t] || t || '—';
+    }
+
+    function gt3RenderGameRecordDetail(data) {
+      const detailEl = document.getElementById('game-records-detail');
+      const emptyEl = document.getElementById('game-records-detail-empty');
+      if (!detailEl) return;
+      if (emptyEl) emptyEl.classList.add('d-none');
+
+      gameRecordsLastEssence = data && typeof data === 'object' ? data : null;
+
+      const id = data.id || '';
+      const raw = Array.isArray(data && data.events) ? data.events.slice() : [];
+      raw.sort(function (a, b) {
+        const ta =
+          Date.parse((a && a.ts_server) || (a && a.ts_client) || '') || 0;
+        const tb =
+          Date.parse((b && b.ts_server) || (b && b.ts_client) || '') || 0;
+        if (ta !== tb) return tb - ta;
+        const sa =
+          typeof (a && a.seq_client) === 'number' ? a.seq_client : 0;
+        const sb =
+          typeof (b && b.seq_client) === 'number' ? b.seq_client : 0;
+        return sb - sa;
+      });
+      const n = raw.length;
+
+      detailEl.innerHTML = '';
+
+      const metaRow = document.createElement('div');
+      metaRow.className = 'gt3-card-subtitle gt3-small mb-2';
+      const periodTxt = gt3EssenceTimeRangeText(data) || '';
+      metaRow.textContent =
+        (n ? n + ' event(s)' : 'No events') +
+        (data.schema ? ' · schema ' + data.schema : '') +
+        (periodTxt ? ' · ' + periodTxt : '');
+      detailEl.appendChild(metaRow);
+
+      const links = document.createElement('div');
+      links.className = 'gt3-small mb-3';
+      if (id) {
+        const a1 = document.createElement('a');
+        a1.href = '/logs/' + encodeURIComponent(id) + '/session_events.jsonl';
+        a1.target = '_blank';
+        a1.rel = 'noopener';
+        a1.textContent = 'session_events.jsonl';
+        links.appendChild(a1);
+        links.appendChild(document.createTextNode(' · '));
+        const a2 = document.createElement('a');
+        a2.href = '/logs/browse/' + encodeURIComponent(id);
+        a2.target = '_blank';
+        a2.rel = 'noopener';
+        a2.textContent = 'Raw logs folder';
+        links.appendChild(a2);
+        if (n > 0) {
+          links.appendChild(document.createTextNode(' · '));
+          const a3 = document.createElement('a');
+          a3.href = '#';
+          a3.textContent = 'download timeline';
+          a3.addEventListener('click', function (e) {
+            e.preventDefault();
+            gt3DownloadSessionTimelineMarkdown();
+          });
+          links.appendChild(a3);
+        }
+      }
+      detailEl.appendChild(links);
+
+      if (!n) {
+        const empty = document.createElement('div');
+        empty.className = 'gt3-card-subtitle';
+        empty.textContent =
+          'No session events recorded yet for this folder. Use Lexiom with the same game-record id so the client can POST essence events.';
+        detailEl.appendChild(empty);
+        return;
+      }
+
+      const box = document.createElement('div');
+      box.className = 'mt-2';
+      raw.forEach(function (ev) {
+        const t = ev && ev.event_type;
+        const p = (ev && ev.payload) || {};
+        const tsRaw = (ev && ev.ts_server) || (ev && ev.ts_client) || '';
+        const d = tsRaw ? new Date(tsRaw) : null;
+        const typeLabel = gt3EventTypeLabel(t);
+
+        const head = document.createElement('div');
+        head.className = 'gt3-mono gt3-small mb-1 gt3-card-subtitle';
+        head.textContent =
+          (d && !isNaN(d.getTime()) ? gt3FormatHumanTime(d) : tsRaw || '—') +
+          ' · ' +
+          typeLabel;
+
+        if (t === 'l23_qa_turn') {
+          head.textContent +=
+            ' · ' +
+            (p.role || '?') +
+            ' · ' +
+            (p.context === 'ACTION_ITEM' ? 'action ' + (p.actionItemId || '') : 'L2 topic ' + String(p.topicIndex));
+        } else if (t === 'l24_approved') {
+          head.textContent += ' · ' + gt3LexiomLaneLabel(p.lane);
+        }
+
+        const pre = document.createElement('pre');
+        pre.className = 'gt3-mono gt3-small mb-3 fw-bold';
+        pre.style.whiteSpace = 'pre-wrap';
+        if (t === 'l23_qa_turn') {
+          pre.textContent = p.text || '';
+        } else if (t === 'l24_approved') {
+          pre.textContent = (p.text || '');
+        } else if (t === 'action_item_approved') {
+          pre.textContent = (p.id || '') + '\n' + (p.text || '');
+        } else if (t === 'artifact_approved') {
+          pre.textContent =
+            (p.title || '') + ' (' + (p.artifactId || '') + ')\n' + (p.cardText || '');
+        } else {
+          pre.textContent = JSON.stringify(ev, null, 2);
+        }
+
+        box.appendChild(head);
+        box.appendChild(pre);
+      });
+      detailEl.appendChild(box);
+    }
+
+    // -------- Training examples tab: fetch & render -------------------------
+    /**
+     * Expected /training-examples response:
+     * { "examples": [ { id, ts_iso, tenant, track, use_case, schema_id, file_url? | file_path? } ] }
+     */
+    async function gt3FetchTrainingExamples() {
+      const errorEl = document.getElementById('training-error-alert');
+      const listEl = document.getElementById('training-event-list');
+      const emptyEl = document.getElementById('training-empty-placeholder');
+
+      if (!listEl || !errorEl || !emptyEl) return;
+
+      try {
+        const resp = await fetch('/training-examples', { cache: 'no-store' });
+        if (!resp.ok) {
+          throw new Error('HTTP ' + resp.status);
+        }
+        const data = await resp.json();
+        let examples = [];
+
+        if (Array.isArray(data)) {
+          examples = data;
+        } else if (data && Array.isArray(data.examples)) {
+          examples = data.examples;
+        }
+
+        // Sort by ts_iso (newest first)
+        examples.sort((a, b) => {
+          const ta = Date.parse(a.ts_iso || a.ts || '') || 0;
+          const tb = Date.parse(b.ts_iso || b.ts || '') || 0;
+          return tb - ta;
+        });
+
+        const MAX_EXAMPLES = 200;
+        trainingExamples = examples.slice(0, MAX_EXAMPLES);
+
+        errorEl.classList.add('d-none');
+        errorEl.textContent = '';
+
+        gt3RenderTrainingList();
+
+        if (!trainingExamples.length) {
+          emptyEl.classList.remove('d-none');
+        } else {
+          emptyEl.classList.add('d-none');
+        }
+      } catch (e) {
+        console.warn('[gt3] /training-examples error:', e);
+        errorEl.textContent =
+          'Could not fetch /training-examples. UI remains usable; check server when convenient.';
+        errorEl.classList.remove('d-none');
+      }
+    }
+
+    function gt3RenderTrainingList() {
+      const listEl = document.getElementById('training-event-list');
+      if (!listEl) return;
+
+      listEl.innerHTML = '';
+
+      trainingExamples.forEach((ex) => {
+        const id = ex.id || '(no-id)';
+        const ts = ex.ts_iso || ex.ts || '';
+        const tenant = ex.tenant || 'unknown';
+        const track = (ex.track || 'unknown').toLowerCase();
+        const useCase = ex.use_case || (ex.body && ex.body.use_case) || 'training_example';
+        const schemaId = ex.schema_id || (ex.body && ex.body.schema_id) || '';
+        const fileUrl = ex.file_url || ex.file_path || null;
+
+        let message = useCase;
+        if (schemaId) {
+          message += ' · ' + schemaId;
+        }
+
+        const row = document.createElement('div');
+        row.className = 'gt3-log-row';
+        row.setAttribute('role', 'option');
+        row.setAttribute('tabindex', '0');
+        row.dataset.exampleId = id;
+
+        if (trainingSelectedId === id) {
+          row.classList.add('selected');
+        }
+
+        const main = document.createElement('div');
+        main.className = 'gt3-log-row-main';
+
+        const msgSpan = document.createElement('div');
+        msgSpan.className = 'gt3-log-row-msg';
+        msgSpan.textContent = message || '(no description)';
+
+        const trackSpan = document.createElement('span');
+        trackSpan.className = 'gt3-log-track-pill';
+
+        if (track === 'green') {
+          trackSpan.classList.add('track-green');
+          trackSpan.textContent = 'GREEN';
+        } else if (track === 'orange') {
+          trackSpan.classList.add('track-orange');
+          trackSpan.textContent = 'ORANGE';
+        } else if (track === 'red') {
+          trackSpan.classList.add('track-red');
+          trackSpan.textContent = 'RED';
+        } else {
+          trackSpan.classList.add('track-unknown');
+          trackSpan.textContent = (track || 'unknown').toUpperCase();
+        }
+
+        main.appendChild(msgSpan);
+        main.appendChild(trackSpan);
+
+        const meta = document.createElement('div');
+        meta.className = 'gt3-log-row-meta';
+
+        const tsSpan = document.createElement('span');
+        tsSpan.className = 'gt3-log-ts gt3-mono';
+        const d = ts ? new Date(ts) : null;
+        tsSpan.textContent = d ? gt3FormatTimestamp(d) : '(no time)';
+
+        const tenantSpan = document.createElement('span');
+        tenantSpan.className = 'gt3-log-tenant gt3-mono';
+        tenantSpan.textContent = tenant;
+
+        const idSpan = document.createElement('span');
+        idSpan.className = 'gt3-log-tenant gt3-mono';
+        idSpan.textContent = id.slice(0, 8);
+
+        meta.appendChild(tsSpan);
+        meta.appendChild(tenantSpan);
+        meta.appendChild(idSpan);
+
+        row.appendChild(main);
+        row.appendChild(meta);
+
+        function selectAndOpen() {
+          trainingSelectedId = id;
+          gt3RenderTrainingListSelectionOnly();
+          if (fileUrl) {
+            window.open(fileUrl, '_blank', 'noopener');
+          }
+        }
+
+        row.addEventListener('click', () => {
+          selectAndOpen();
+        });
+        row.addEventListener('keydown', (evt) => {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault();
+            selectAndOpen();
+          }
+        });
+
+        listEl.appendChild(row);
+      });
+
+      if (!trainingSelectedId && trainingExamples.length > 0) {
+        trainingSelectedId =
+          trainingExamples[0].id || trainingExamples[0].ts_iso || trainingExamples[0].ts || null;
+        gt3RenderTrainingListSelectionOnly();
+      } else if (!trainingExamples.length) {
+        trainingSelectedId = null;
+      }
+    }
+
+    function gt3RenderTrainingListSelectionOnly() {
+      const listEl = document.getElementById('training-event-list');
+      if (!listEl) return;
+      const rows = listEl.querySelectorAll('.gt3-log-row');
+      rows.forEach((row) => {
+        if (row.dataset.exampleId === trainingSelectedId) {
+          row.classList.add('selected');
+        } else {
+          row.classList.remove('selected');
+        }
+      });
+    }
+
+    // Runtime config apply
+    async function gt3ApplyConfig() {
+      const providerSel = document.getElementById('cfg-provider');
+      const modelInput = document.getElementById('cfg-model-id');
+      const expressionSel = document.getElementById('cfg-expression');
+      const inferenceSel = document.getElementById('cfg-inference-mode');
+      const statusEl = document.getElementById('cfg-status');
+
+      if (!providerSel || !modelInput || !expressionSel || !inferenceSel || !statusEl)
+        return;
+
+      const llm_provider = providerSel.value.trim();
+      const model_id = modelInput.value.trim();
+      const expression_profile = expressionSel.value.trim();
+      const inference_mode = inferenceSel.value.trim();
+
+      statusEl.textContent = 'Applying configuration...';
+
+      try {
+        const resp = await fetch('/ops/config', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            llm_provider,
+            model_id,
+            expression_profile,
+            inference_mode
+          })
+        });
+
+        if (!resp.ok) {
+          const errBody = await resp.json().catch(() => ({}));
+          const detail = errBody && errBody.detail
+            ? errBody.detail
+            : 'HTTP ' + resp.status;
+          throw new Error(detail);
+        }
+
+        const data = await resp.json();
+        statusEl.textContent =
+          'Configuration updated: provider=' +
+          data.llm_provider +
+          ', model=' +
+          data.model_id +
+          ', expr=' +
+          (data.expression_profile || expression_profile) +
+          ', inference=' +
+          (data.inference_mode || inference_mode);
+
+        // Refresh summary once to reflect new state
+        gt3FetchSummary();
+      } catch (e) {
+        console.warn('[gt3] /ops/config error:', e);
+        statusEl.textContent =
+          'Failed to apply configuration: ' + (e && e.message ? e.message : String(e));
+      }
+    }
+
+    // Refresh everything controlled by the Live toggle
+    function gt3DashboardRefresh() {
+      gt3FetchHealth();
+      gt3FetchSummary();
+      gt3FetchLogs();
+      gt3FetchGameRecords();
+      gt3FetchTrainingExamples();
+    }
+
+    function gt3DashboardStartPolling() {
+      if (dashTimerId !== null) {
+        clearInterval(dashTimerId);
+      }
+      if (!dashLive) return;
+      dashTimerId = setInterval(() => {
+        gt3DashboardRefresh();
+      }, 5000);
+    }
+
+    // --- Navigation & init ---------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+      // Bootstrap tooltips
+      const tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      );
+      tooltipTriggerList.forEach((el) => {
+        new bootstrap.Tooltip(el);
+      });
+
+      // Tab switching
+      const navButtons = document.querySelectorAll('.gt3-nav-btn');
+      const panels = document.querySelectorAll('.gt3-tab-panel');
+
+      function activateTab(targetId) {
+        navButtons.forEach((btn) => {
+          if (btn.dataset.tabTarget === targetId) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+
+        panels.forEach((panel) => {
+          if (panel.id === targetId) {
+            panel.classList.add('active');
+          } else {
+            panel.classList.remove('active');
+          }
+        });
+      }
+
+      navButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tabTarget;
+          if (!target) return;
+          activateTab(target);
+        });
+      });
+
+      // Dashboard live toggle & refresh
+      const liveToggle = document.getElementById('dash-live-toggle');
+      const refreshBtn = document.getElementById('dash-refresh-btn');
+
+      if (liveToggle) {
+        dashLive = liveToggle.checked;
+        gt3SetConfigPanelEnabled(!dashLive);
+        liveToggle.addEventListener('change', () => {
+          dashLive = liveToggle.checked;
+          gt3SetConfigPanelEnabled(!dashLive);
+          if (dashLive) {
+            gt3DashboardRefresh();
+            gt3DashboardStartPolling();
+          } else if (dashTimerId !== null) {
+            clearInterval(dashTimerId);
+            dashTimerId = null;
+          }
+        });
+      } else {
+        gt3SetConfigPanelEnabled(true);
+      }
+
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+          gt3DashboardRefresh();
+        });
+      }
+
+      document.querySelectorAll('[data-lane-filter]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const f = btn.getAttribute('data-lane-filter') || 'all';
+          logsLaneFilter = f;
+          document.querySelectorAll('[data-lane-filter]').forEach((b) => {
+            b.classList.toggle('active', b === btn);
+          });
+          gt3RenderLogsList();
+        });
+      });
+
+      const packetSearch = document.getElementById('logs-packet-search');
+      if (packetSearch) {
+        packetSearch.addEventListener('input', () => {
+          logsInspectorQuery = packetSearch.value || '';
+          if (logsSelectedExchange) {
+            const selectedEvent = logsEvents.find(
+              (event) =>
+                (event.id || event.ts_iso || null) === logsSelectedId
+            );
+            gt3RenderAgentExchange(logsSelectedExchange, selectedEvent || null);
+          }
+        });
+      }
+      const copyRequest = document.getElementById('logs-copy-request');
+      if (copyRequest) {
+        copyRequest.addEventListener('click', () => {
+          gt3CopyPacketSurface('request');
+        });
+      }
+      const copyResponse = document.getElementById('logs-copy-response');
+      if (copyResponse) {
+        copyResponse.addEventListener('click', () => {
+          gt3CopyPacketSurface('response');
+        });
+      }
+
+      const gameRecRefresh = document.getElementById('game-records-refresh');
+      if (gameRecRefresh) {
+        gameRecRefresh.addEventListener('click', () => {
+          gt3FetchGameRecords();
+        });
+      }
+
+      // Config apply button
+      const cfgApplyBtn = document.getElementById('cfg-apply-btn');
+      if (cfgApplyBtn) {
+        cfgApplyBtn.addEventListener('click', () => {
+          if (dashLive) {
+            // Should not happen because button is disabled, but guard anyway
+            return;
+          }
+          gt3ApplyConfig();
+        });
+      }
+
+      // Initial fetch + polling
+      gt3DashboardRefresh();
+      gt3DashboardStartPolling();
+    });
+  </script>
+</body>
+</html>

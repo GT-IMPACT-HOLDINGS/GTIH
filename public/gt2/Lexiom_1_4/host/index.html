@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lexiom 1.4 — Smoke Host</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --ink: #1c1917;
+        --accent: #0f766e;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(160deg, #f4f1ea, #e7eef0);
+        color: var(--ink);
+        min-height: 100vh;
+      }
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 4rem;
+      }
+      h1 {
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin: 0.75rem 0;
+      }
+      button {
+        background: var(--accent);
+        color: #fff;
+        border: 0;
+        padding: 0.55rem 0.9rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      input,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.5rem;
+        border: 1px solid #c4bdb2;
+        border-radius: 6px;
+        background: #fff;
+      }
+      #log,
+      #embed {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid #ddd5c8;
+        white-space: pre-wrap;
+        font-size: 0.85rem;
+        max-height: 280px;
+        overflow: auto;
+      }
+      .hint {
+        color: #57534e;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Lexiom 1.4 smoke host</h1>
+      <p class="hint">
+        Phase (b) demo against <code>/lexiom14/v1</code>. Single-prompt YAML OSN, then document
+        Realization. Package persist ≠ canonical (TRH owns that).
+      </p>
+      <label>GT3 base URL</label>
+      <input id="baseUrl" value="" />
+      <div class="row">
+        <button id="btnMint">1. Mint credential</button>
+        <button id="btnSession" disabled>2. Create session</button>
+      </div>
+      <label>Outcome description (single prompt)</label>
+      <textarea id="msg" rows="3">A short brand philosophy document for Lexiom 1.4</textarea>
+      <div class="row">
+        <button id="btnSend" disabled>3. Generate OSN</button>
+        <button id="btnRealize" disabled>4. Realize document</button>
+      </div>
+      <div id="embed"></div>
+      <div id="log"></div>
+    </main>
+    <script src="../sdk/lexiom14-sdk.js"></script>
+    <script src="../core/lexiom14-core.js"></script>
+    <script src="../embeds/lexiom14-embeds.js"></script>
+    <script>
+      const logEl = document.getElementById('log');
+      const baseInput = document.getElementById('baseUrl');
+      baseInput.value = window.location.origin;
+
+      let credential = null;
+      let sdk = null;
+      let sessionId = null;
+      let unsub = null;
+      let pkg = null;
+
+      function log(line) {
+        logEl.textContent += line + '\n';
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      function ensureSdk() {
+        sdk = Lexiom14Sdk.create({
+          baseUrl: baseInput.value.replace(/\/+$/, ''),
+          getCredential: async () => credential
+        });
+      }
+
+      document.getElementById('btnMint').onclick = async () => {
+        try {
+          credential = await Lexiom14Sdk.mintDemo(baseInput.value, {
+            vertical_id: 'trh',
+            tenant_pseudonym: 'smoke_tenant',
+            app_id: 'lexiom14_host',
+            actor_pseudonym: 'smoke_actor'
+          });
+          ensureSdk();
+          log('minted token scopes=' + (credential.scopes || []).join(','));
+          document.getElementById('btnSession').disabled = false;
+        } catch (e) {
+          log('mint error: ' + e.message);
+        }
+      };
+
+      document.getElementById('btnSession').onclick = async () => {
+        try {
+          const created = await sdk.conversation.create({
+            case_label: 'Smoke document case'
+          });
+          sessionId = created.session_id;
+          log('session ' + sessionId);
+          if (unsub) unsub();
+          unsub = sdk.conversation.subscribe(sessionId, (ev) => {
+            log('event ' + ev.type);
+            if (ev.type === 'buildReadinessChanged' && ev.payload.readiness.ready) {
+              document.getElementById('btnRealize').disabled = false;
+              log('buildReady=true');
+            }
+            if (ev.type === 'realizationCompleted') {
+              pkg = ev.payload.package;
+              log('package ' + pkg.package_id);
+              const handle = sdk.embed.mount({
+                session_id: sessionId,
+                surface: 'evidence_review',
+                container: document.getElementById('embed'),
+                package: pkg,
+                tokens: { colors: { text: '#1c1917', surface: '#fffef9' } }
+              });
+              Lexiom14Embeds.applyTokens(document.getElementById('embed'), {
+                colors: { accent: '#0f766e' }
+              });
+              handle.subscribe((e) => log('embed ' + e.type));
+            }
+          });
+          document.getElementById('btnSend').disabled = false;
+        } catch (e) {
+          log('session error: ' + e.message);
+        }
+      };
+
+      document.getElementById('btnSend').onclick = async () => {
+        try {
+          const generated = await sdk.conversation.generateOsn({
+            session_id: sessionId,
+            outcome_description: document.getElementById('msg').value
+          });
+          log('osn yaml bytes=' + ((generated.osn_yaml && generated.osn_yaml.length) || 0));
+          log('state ready=' + (generated.build_readiness && generated.build_readiness.ready));
+          if (generated.build_readiness && generated.build_readiness.ready) {
+            document.getElementById('btnRealize').disabled = false;
+          }
+        } catch (e) {
+          log('generateOsn error: ' + e.message);
+        }
+      };
+
+      document.getElementById('btnRealize').onclick = async () => {
+        try {
+          const started = await sdk.realization.start({
+            session_id: sessionId,
+            profile: 'document'
+          });
+          log('realization_id ' + started.realization_id);
+        } catch (e) {
+          log('realize error: ' + e.message);
+        }
+      };
+    </script>
+  </body>
+</html>
