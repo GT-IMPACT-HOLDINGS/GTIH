@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # 2. Set the working directory inside the container
-WORKDIR /app
+WORKDIR /
 
 # 3. Copy dependency files first (optimizes build caching)
 COPY package*.json ./
