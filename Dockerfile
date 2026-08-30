@@ -7,8 +7,11 @@ FROM node:22-alpine
 # 3. Copy dependency files first (optimizes build caching)
 COPY package*.json ./
 
+# Copy all files from your current local directory into the container's WORKDIR
+COPY . .
+
 # 5. Copy the rest of your application code
-COPY scripts/ ./scripts/
+#COPY scripts/ ./scripts/
 
 # 4. Install production dependencies
 RUN npm install --only=production
