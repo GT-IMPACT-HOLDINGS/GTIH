@@ -14,7 +14,8 @@ COPY . .
 #COPY scripts/ ./scripts/
 
 # 4. Install production dependencies
-RUN npm install --only=production
+#RUN npm install --only=production
+RUN npm install 
 
 # Step 6: Use a non-root user for security
 USER node
