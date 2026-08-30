@@ -2,7 +2,7 @@
 FROM node:22-alpine
 
 # 2. Set the working directory inside the container
-#WORKDIR /usr/src/app
+WORKDIR /usr/src/app
 
 # 3. Copy dependency files first (optimizes build caching)
 COPY package*.json ./
