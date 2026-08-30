@@ -1,8 +1,8 @@
-# 1. Choose your base runtime image
-FROM node:18-alpine
+# Step 1: Use an official lightweight Node.js image
+FROM node:22-alpine
 
 # 2. Set the working directory inside the container
-#WORKDIR /home/runner/work/GTIH/GTIH/
+WORKDIR /usr/src/app
 
 # 3. Copy dependency files first (optimizes build caching)
 COPY package*.json ./
@@ -12,6 +12,9 @@ RUN npm install --only=production
 
 # 5. Copy the rest of your application code
 COPY . .
+
+# Step 6: Use a non-root user for security
+USER node
 
 # 6. Inform Docker which port the app listens on at runtime
 EXPOSE 3000
