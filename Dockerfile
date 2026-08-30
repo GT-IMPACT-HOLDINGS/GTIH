@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # 5. Copy the rest of your application code
-COPY . .
+COPY scripts/ ./scripts/
 
 # Step 6: Use a non-root user for security
 USER node
