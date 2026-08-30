@@ -2,16 +2,16 @@
 FROM node:22-alpine
 
 # 2. Set the working directory inside the container
-WORKDIR /usr/src/app
+#WORKDIR /usr/src/app
 
 # 3. Copy dependency files first (optimizes build caching)
 COPY package*.json ./
 
-# 4. Install production dependencies
-RUN npm install --only=production
-
 # 5. Copy the rest of your application code
 COPY scripts/ ./scripts/
+
+# 4. Install production dependencies
+RUN npm install --only=production
 
 # Step 6: Use a non-root user for security
 USER node
