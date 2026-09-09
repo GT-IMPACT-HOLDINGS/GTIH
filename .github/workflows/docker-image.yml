@@ -34,3 +34,14 @@ jobs:
       with:
         name: docker-image-artifact
         path: gtih-image.tar
+
+
+  deploy:
+           needs: build
+           runs-on: ubuntu-latest
+           if: github.ref == 'refs/heads/Ogun' && github.event_name == 'push'
+    
+           steps:
+           - name: Trigger Render Deployment
+             run: |
+              curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
