@@ -24,4 +24,4 @@ USER node
 EXPOSE 3000
 
 # 7. Define the command to start your application
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
