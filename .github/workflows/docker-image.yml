@@ -43,7 +43,7 @@ jobs:
         file: ./Dockerfile
         push: true
         # The tag below formats to lower case which GHCR requires
-        tags: ghcr.io/${{ github.repository_owner }}/gtih-image:latest
+        tags: ghcr.io/${{ env.REPO_LOWER }}/gtih-image:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
