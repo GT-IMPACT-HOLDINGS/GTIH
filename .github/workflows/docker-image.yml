@@ -34,3 +34,20 @@ jobs:
       with:
         name: docker-image-artifact
         path: gtih-image.tar
+
+
+      # Loads the tar file back into the local runner's Docker daemon
+    - name: Load Docker image
+      run: |
+        docker load -i gtih-image.tar
+
+    # Runs the container inside the runner environment
+    - name: Run Docker container
+      run: |
+        docker run -d -p 8080:8080 --name test-app gtih-image:latest
+        
+    # Optional: Verify it is running or run automated integration tests
+    - name: Test local container endpoint
+      run: |
+        sleep 5
+        curl -f http://localhost:8080 || exit 1
