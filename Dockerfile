@@ -21,7 +21,7 @@ RUN npm install
 USER node
 
 # 6. Inform Docker which port the app listens on at runtime
-EXPOSE 3000
+EXPOSE 8080
 
 # 7. Define the command to start your application
 #CMD ["npm", "start"]
