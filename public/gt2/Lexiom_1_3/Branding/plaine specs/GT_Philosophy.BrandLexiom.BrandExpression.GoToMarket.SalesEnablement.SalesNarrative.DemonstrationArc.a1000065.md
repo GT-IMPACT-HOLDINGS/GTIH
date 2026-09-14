@@ -1,0 +1,1 @@
+Demonstrate the current journey from OSN seed through gated maturation, human approval, branching, compilation/build handoff, direct evidence inspection, and Causal Lineage Chat. Label inherited-conflict harmonization, Concordance, and executive garden analysis as future or separately simulated capabilities.

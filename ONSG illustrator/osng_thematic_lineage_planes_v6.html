@@ -1,0 +1,1551 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OSNG Volumes — v6 (explore)</title>
+  <style>
+    :root {
+      --ink: #17243d;
+      --muted: #64748b;
+      --line: #7b8ca7;
+      --plane-border: #b8c4d6;
+      --plane-fill: #f8fafc;
+      --node-fill: #ffffff;
+      --node-border: #53657e;
+      --selected: #1267d6;
+      --selected-border: #084da8;
+      --participant: #cfe7ff;
+      --participant-border: #5a9be2;
+      --accent: #1267d6;
+      --focus: #ffb84d;
+      --shadow: 0 12px 30px rgba(24, 45, 79, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 960px;
+      min-height: 100vh;
+      color: var(--ink);
+      background: #ffffff;
+      font: 15px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .app {
+      display: flex;
+      align-items: stretch;
+      gap: 18px;
+      width: 100%;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .controls {
+      flex: 0 0 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 16px 14px;
+      border: 1px solid #d7dfeb;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 6px 20px rgba(24, 45, 79, 0.06);
+    }
+
+    .toolbox-title {
+      margin: 0;
+      color: #4a5c74;
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .reveal-controls,
+    .action-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .action-controls {
+      padding-top: 16px;
+      border-top: 1px solid #d7dfeb;
+    }
+
+    .view-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding-bottom: 4px;
+    }
+
+    .view-switch button {
+      min-height: 32px;
+      padding: 6px 8px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .teaching-note {
+      margin: 0;
+      padding: 10px 11px;
+      border: 1px dashed #c5d2e3;
+      border-radius: 9px;
+      color: #5a6d86;
+      background: #f8fafc;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    button {
+      width: 100%;
+      min-height: 34px;
+      padding: 7px 13px;
+      border: 1px solid #9aabc2;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #ffffff;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    button:hover:not(:disabled) { background: #f1f6fc; }
+    button:focus-visible { outline: 3px solid rgba(255, 184, 77, 0.7); outline-offset: 2px; }
+    button:disabled { opacity: 0.42; cursor: not-allowed; }
+    button.active { color: #ffffff; border-color: var(--selected-border); background: var(--selected); }
+
+    .standard-ancestor-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .standard-ancestor-label {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .standard-ancestor-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .build-scope-control {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .build-scope-label {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .build-scope-select {
+      width: 100%;
+      min-height: 34px;
+      padding: 6px 8px;
+      border: 1px solid #9aabc2;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #ffffff;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .build-scope-select:focus-visible {
+      outline: 3px solid rgba(255, 184, 77, 0.7);
+      outline-offset: 2px;
+    }
+
+    button.compact {
+      width: 34px;
+      min-width: 34px;
+      min-height: 34px;
+      padding: 0;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .status {
+      flex: 1 1 auto;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid #d7dfeb;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .board {
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: calc(100vh - 32px);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .planes {
+      position: absolute;
+      inset: 24px 18px 54px;
+      display: grid;
+      gap: 94px;
+    }
+
+    .planes.count-1 {
+      grid-template-columns: 1fr;
+      max-width: min(720px, 100%);
+      margin-inline: auto;
+    }
+
+    .planes.count-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .planes.count-many {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      max-width: 100%;
+    }
+
+    .layer-theme-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .layer-theme-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .layer-theme-input {
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 34px;
+      height: 34px;
+      padding: 6px 10px;
+      border: 1px solid #9aabc2;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #ffffff;
+      font: inherit;
+      line-height: 1.4;
+      resize: none;
+      overflow: hidden;
+    }
+
+    .layer-theme-input:focus-visible {
+      outline: 3px solid rgba(255, 184, 77, 0.7);
+      outline-offset: 2px;
+    }
+
+    .plane {
+      position: relative;
+      min-width: 0;
+      overflow: visible;
+      border: 2px solid var(--plane-border);
+      border-radius: 18px;
+      background: var(--plane-fill);
+      box-shadow: var(--shadow);
+    }
+
+    .garden {
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .garden.hidden { display: none; }
+
+    .board.view-top .planes { display: none !important; }
+
+    .garden .node {
+      pointer-events: auto;
+    }
+
+    .board.view-top .node {
+      --top-node-font: 12px;
+      width: calc(var(--top-node-font) * 3);
+      height: calc(var(--top-node-font) * 3);
+      min-height: calc(var(--top-node-font) * 3);
+      padding: 0;
+      border-color: transparent;
+      border-radius: 50%;
+      color: var(--ink);
+      background: #ffffff;
+      box-shadow: none;
+      font-size: var(--top-node-font);
+      line-height: 1.15;
+      overflow: visible;
+      text-align: center;
+    }
+
+    .board.view-top .node .node-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: max-content;
+      max-width: 7.5em;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      text-align-last: center;
+      text-wrap: balance;
+      pointer-events: none;
+    }
+
+    .board.view-top .node.root {
+      --top-node-font: 13px;
+      width: calc(var(--top-node-font) * 3);
+      height: calc(var(--top-node-font) * 3);
+      min-height: calc(var(--top-node-font) * 3);
+      box-shadow: none;
+    }
+
+    .board.view-top .node:hover {
+      border-color: transparent;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(18, 103, 214, 0.14);
+    }
+
+    .board.view-top .node.origin {
+      border-color: transparent;
+      color: #ffffff;
+      background: var(--selected);
+    }
+
+    .board.view-top .node.participant {
+      border-color: transparent;
+      color: #123866;
+      background: var(--participant);
+    }
+
+    .board.view-top .node.link-source {
+      border-color: transparent;
+      background: #fff3d4;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+    }
+
+    .volume-boundary {
+      stroke: none;
+      pointer-events: none;
+    }
+
+    .node {
+      position: absolute;
+      z-index: 4;
+      width: 124px;
+      min-height: 48px;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      padding: 8px 10px;
+      border: 2px solid var(--node-border);
+      border-radius: 10px;
+      color: var(--ink);
+      background: var(--node-fill);
+      box-shadow: 0 5px 12px rgba(24, 45, 79, 0.08);
+      font: inherit;
+      font-weight: 700;
+      text-align: center;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .node.root {
+      z-index: 5;
+      border-color: var(--selected-border);
+      box-shadow: 0 5px 12px rgba(24, 45, 79, 0.08), 0 0 0 3px rgba(18, 103, 214, 0.14);
+    }
+
+    .node:hover { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(18, 103, 214, 0.12); }
+    .node.origin { color: #ffffff; border-color: var(--selected-border); background: var(--selected); }
+    .node.participant { color: #123866; border-color: var(--participant-border); background: var(--participant); }
+    .node.link-source { border-color: #d97706; background: #fff3d4; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.18); }
+
+    .edge-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .native-edge,
+    .standard-edge {
+      fill: none;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    .native-edge { stroke: var(--line); stroke-width: 2; marker-end: url(#nativeArrow); }
+    .standard-edge {
+      stroke: #7c4daf;
+      stroke-width: 2.5;
+      stroke-dasharray: 8 7;
+      marker-end: url(#standardArrow);
+      pointer-events: stroke;
+      cursor: pointer;
+    }
+    .standard-edge:hover { stroke: #b4238c; stroke-width: 4; }
+
+    .legend {
+      position: absolute;
+      right: 22px;
+      bottom: 12px;
+      z-index: 5;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 11px;
+      border: 1px solid #d7dfeb;
+      border-radius: 9px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.94);
+      font-size: 13px;
+    }
+
+    .legend.show { display: flex; }
+    .key { display: inline-flex; align-items: center; gap: 7px; }
+    .swatch { width: 19px; height: 14px; border: 2px solid; border-radius: 4px; }
+    .swatch.origin { border-color: var(--selected-border); background: var(--selected); }
+    .swatch.participant { border-color: var(--participant-border); background: var(--participant); }
+
+    .hidden { display: none !important; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .node { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <aside class="controls" aria-label="OSNG presentation controls">
+      <h1 class="toolbox-title">Toolbox</h1>
+      <div class="view-switch" role="group" aria-label="Board view">
+        <button id="sideViewAction" type="button" class="active" aria-pressed="true">Side view</button>
+        <button id="topViewAction" type="button" aria-pressed="false">Top view</button>
+      </div>
+      <div class="reveal-controls">
+        <div class="layer-theme-row">
+          <textarea id="layerThemeInput" class="layer-theme-input" rows="1" placeholder="volume name" aria-label="Volume name"></textarea>
+          <div class="layer-theme-buttons">
+            <button id="createLayer" class="compact" type="button" aria-label="Create volume">+</button>
+            <button id="removeLayer" class="compact" type="button" disabled aria-label="Remove volume">-</button>
+          </div>
+        </div>
+        <div class="standard-ancestor-control">
+          <span class="standard-ancestor-label">intra-volume lineage</span>
+          <div class="standard-ancestor-buttons">
+            <button id="revealNativeLayer" class="compact" type="button" disabled aria-label="Create next OSN generation">+</button>
+            <button id="hideNativeLayer" class="compact" type="button" disabled aria-label="Remove deepest revealed lineage generation">-</button>
+          </div>
+        </div>
+        <div class="standard-ancestor-control">
+          <span class="standard-ancestor-label">inter-volumes lineage</span>
+          <div class="standard-ancestor-buttons">
+            <button id="standardAction" class="compact" type="button" disabled aria-label="Link volume roots">+</button>
+            <button id="deleteStandardAction" class="compact" type="button" disabled aria-label="Delete inter-volume root link">-</button>
+          </div>
+        </div>
+      </div>
+      <div class="action-controls" aria-label="OSN actions">
+        <div class="build-scope-control">
+          <label class="build-scope-label" for="buildScopeSelect">build includes</label>
+          <select id="buildScopeSelect" class="build-scope-select" aria-label="Build closure for simulation">
+            <option value="native_axis" selected>OSN + descendants + native ancestors</option>
+            <option value="with_cited_cones">+ cited standard-ancestor cones</option>
+          </select>
+        </div>
+        <div class="standard-ancestor-control">
+          <span class="standard-ancestor-label">Simulate an OSN build</span>
+          <div class="standard-ancestor-buttons">
+            <button id="buildAction" class="compact" type="button" disabled aria-label="Simulate an OSN build">+</button>
+            <button id="clearAction" class="compact" type="button" disabled aria-label="Clear build highlight">-</button>
+          </div>
+        </div>
+      </div>
+      <p class="teaching-note hidden" id="teachingNote" role="status" aria-live="polite"></p>
+      <div id="status" class="status" aria-live="polite">Enter a volume name and create a volume to begin. Switch to Top view for circular volume boundaries around each trunk.</div>
+    </aside>
+
+    <section id="board" class="board view-side" aria-label="OSNG whiteboard">
+      <div id="planes" class="planes hidden"></div>
+      <div id="garden" class="garden hidden" aria-label="Top view garden"></div>
+
+      <svg id="edges" class="edge-layer hidden" aria-hidden="true">
+        <defs>
+          <marker id="nativeArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#7b8ca7"></path>
+          </marker>
+          <marker id="standardArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c4daf"></path>
+          </marker>
+        </defs>
+        <g id="volumeBoundaries"></g>
+        <g id="nativeEdges"></g>
+        <g id="standardEdges"></g>
+      </svg>
+
+      <div id="legend" class="legend" aria-label="Build highlight legend">
+        <span class="key"><span class="swatch origin"></span> Compilation root</span>
+        <span class="key"><span class="swatch participant"></span> Build participant</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const thematicPlanes = [];
+
+    // v6 experiment: themes are "volumes"; inter-volume standard lineage links roots only.
+    const TEACHING_MAX_LINKS_PER_VOLUME_PAIR = 1;
+    const TEACHING_NOTE_DURATION_MS = 7000;
+
+    const BUILD_SCOPE_LABELS = {
+      native_axis: 'OSN + descendants + native ancestors',
+      with_cited_cones: 'OSN + descendants + native ancestors + cited standard-ancestor cones'
+    };
+
+    // Top-view (Garden) layout — teaching simplification of Lexiom OSNG Garden plants.
+    const TOP_RING_BASE = 92;
+    const TOP_RING_FAN_LOG = 0.38;
+    const TOP_VOLUME_GAP = 48;
+    const TOP_NODE_PAD = 28;
+    const TOP_MIN_VOLUME_RADIUS = 78;
+
+    const TREE_TEMPLATE = [
+      { localId: '0', x: 50, y: 0, parent: null, root: true },
+      { localId: '1', x: 27, y: 49, parent: '0' },
+      { localId: '2', x: 73, y: 49, parent: '0' },
+      { localId: '3', x: 14, y: 80, parent: '1' },
+      { localId: '4', x: 40, y: 80, parent: '1' },
+      { localId: '5', x: 60, y: 80, parent: '2' },
+      { localId: '6', x: 86, y: 80, parent: '2' }
+    ];
+
+    const nodes = [];
+    const byId = new Map();
+    const children = new Map();
+
+    // Each item points from the descendant OSN toward its direct standard ancestor.
+    const standardLinks = [];
+    const visiblePlanes = new Set();
+    const nativeDepthRevealedByPlane = new Map();
+    let mode = null;
+    let linkSourceId = null;
+    let teachingNoteTimer = null;
+    let viewKind = 'side'; // 'side' | 'top'
+    let gardenVolumeLayouts = [];
+
+    const layerThemeInput = document.getElementById('layerThemeInput');
+    const createLayer = document.getElementById('createLayer');
+    const removeLayer = document.getElementById('removeLayer');
+    const revealNativeLayer = document.getElementById('revealNativeLayer');
+    const hideNativeLayer = document.getElementById('hideNativeLayer');
+    const standardAction = document.getElementById('standardAction');
+    const deleteStandardAction = document.getElementById('deleteStandardAction');
+    const buildScopeSelect = document.getElementById('buildScopeSelect');
+    const buildAction = document.getElementById('buildAction');
+    const clearAction = document.getElementById('clearAction');
+    const sideViewAction = document.getElementById('sideViewAction');
+    const topViewAction = document.getElementById('topViewAction');
+    const board = document.getElementById('board');
+    const planes = document.getElementById('planes');
+    const garden = document.getElementById('garden');
+    const edges = document.getElementById('edges');
+    const volumeBoundaries = document.getElementById('volumeBoundaries');
+    const nativeEdges = document.getElementById('nativeEdges');
+    const standardEdges = document.getElementById('standardEdges');
+    const status = document.getElementById('status');
+    const legend = document.getElementById('legend');
+    const teachingNote = document.getElementById('teachingNote');
+
+    createLayer.addEventListener('click', createLayerFromInput);
+    removeLayer.addEventListener('click', removeLayerFromInput);
+    syncLayerThemeButtons();
+    layerThemeInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        createLayerFromInput();
+      }
+    });
+    revealNativeLayer.addEventListener('click', revealNextNativeGeneration);
+    hideNativeLayer.addEventListener('click', hidePreviousNativeGeneration);
+
+    sideViewAction.addEventListener('click', () => setViewKind('side'));
+    topViewAction.addEventListener('click', () => setViewKind('top'));
+
+    standardAction.addEventListener('click', () => {
+      if (mode === 'standard') return resetMode('Inter-volume lineage cancelled.');
+      clearBuildHighlight();
+      mode = 'standard';
+      linkSourceId = null;
+      syncActionButtons();
+      status.textContent = 'Inter-volume lineage: select a volume root OSN first.';
+    });
+
+    deleteStandardAction.addEventListener('click', () => {
+      if (mode === 'delete-standard') return resetMode('Delete inter-volume link cancelled.');
+      clearBuildHighlight();
+      mode = 'delete-standard';
+      linkSourceId = null;
+      syncActionButtons();
+      status.textContent = 'Delete inter-volume link: select the dashed root-to-root arrow.';
+    });
+
+    buildAction.addEventListener('click', () => {
+      if (mode === 'build') return resetMode('Simulate an OSN build cancelled.');
+      clearBuildHighlight();
+      mode = 'build';
+      linkSourceId = null;
+      syncActionButtons();
+      const scope = buildScopeSelect.value;
+      status.textContent = `Simulate an OSN build (${BUILD_SCOPE_LABELS[scope]}): select the compilation root.`;
+    });
+
+    clearAction.addEventListener('click', () => {
+      clearBuildHighlight();
+      resetMode('Build simulation cleared.');
+      refreshActionAvailability();
+    });
+
+    window.addEventListener('resize', () => {
+      if (viewKind === 'top') syncNodeVisibility();
+      else drawEdges();
+    });
+
+    function formatPlaneLabel(raw) {
+      return raw.trim().replace(/\s+/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase());
+    }
+
+    function slugPlaneId(raw) {
+      const slug = raw.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug || 'volume';
+    }
+
+    function isVolumeRoot(node) {
+      return Boolean(node && node.root);
+    }
+
+    function hasVisibleVolumeRoots() {
+      return nodes.some(node => isNodeVisible(node) && isVolumeRoot(node));
+    }
+
+    function resolvePlaneFromInput(raw) {
+      const trimmed = raw.trim();
+      if (!trimmed) return null;
+      const slug = slugPlaneId(trimmed);
+      const label = formatPlaneLabel(trimmed);
+      return thematicPlanes.find(plane => plane.id === slug)
+        || thematicPlanes.find(plane => plane.label.toLowerCase() === label.toLowerCase())
+        || thematicPlanes.find(plane => plane.label.toLowerCase() === trimmed.toLowerCase());
+    }
+
+    function syncLayerThemeButtons() {
+      removeLayer.disabled = thematicPlanes.length === 0;
+    }
+
+    function createLayerFromInput() {
+      const raw = layerThemeInput.value.trim();
+      if (!raw) {
+        status.textContent = 'Enter a volume name before creating a volume.';
+        layerThemeInput.focus();
+        return;
+      }
+
+      const label = formatPlaneLabel(raw);
+      let planeId = slugPlaneId(raw);
+      if (visiblePlanes.has(planeId)) {
+        status.textContent = `A ${label} volume already exists on the board.`;
+        return;
+      }
+
+      let suffix = 2;
+      while (thematicPlanes.some(plane => plane.id === planeId)) {
+        planeId = `${slugPlaneId(raw)}-${suffix}`;
+        suffix += 1;
+      }
+
+      thematicPlanes.push({ id: planeId, label });
+      createPlaneElement(planeId, label);
+      addPlaneNodes(planeId, label);
+      revealPlane(planeId);
+      layerThemeInput.value = '';
+      layerThemeInput.focus();
+      syncLayerThemeButtons();
+    }
+
+    function removeLayerFromInput() {
+      const raw = layerThemeInput.value.trim();
+      if (!raw) {
+        status.textContent = 'Enter a volume name to remove its volume.';
+        layerThemeInput.focus();
+        return;
+      }
+
+      const plane = resolvePlaneFromInput(raw);
+      if (!plane) {
+        status.textContent = `No ${formatPlaneLabel(raw)} volume exists on the board.`;
+        return;
+      }
+
+      removePlane(plane.id);
+      layerThemeInput.value = '';
+      layerThemeInput.focus();
+      status.textContent = `${plane.label} volume removed from the board.`;
+    }
+
+    function removePlane(planeId) {
+      const planeNodeIds = new Set(nodes.filter(node => node.plane === planeId).map(node => node.id));
+
+      for (let i = standardLinks.length - 1; i >= 0; i -= 1) {
+        const link = standardLinks[i];
+        if (planeNodeIds.has(link.from) || planeNodeIds.has(link.to)) standardLinks.splice(i, 1);
+      }
+
+      planeNodeIds.forEach(id => {
+        document.getElementById(`node-${id}`)?.remove();
+        byId.delete(id);
+        children.delete(id);
+      });
+
+      for (let i = nodes.length - 1; i >= 0; i -= 1) {
+        if (nodes[i].plane === planeId) nodes.splice(i, 1);
+      }
+
+      document.querySelector(`.plane[data-plane="${planeId}"]`)?.remove();
+      visiblePlanes.delete(planeId);
+      nativeDepthRevealedByPlane.delete(planeId);
+
+      const index = thematicPlanes.findIndex(plane => plane.id === planeId);
+      if (index >= 0) thematicPlanes.splice(index, 1);
+
+      clearBuildHighlight();
+      if (linkSourceId && planeNodeIds.has(linkSourceId)) resetMode();
+      else if (mode) resetMode();
+
+      syncPlanesLayout();
+      syncNodeVisibility();
+      refreshActionAvailability();
+      syncLayerThemeButtons();
+    }
+
+    function createPlaneElement(planeId, label) {
+      const section = document.createElement('section');
+      section.className = 'plane';
+      section.dataset.plane = planeId;
+      section.setAttribute('aria-label', `${label} volume`);
+      planes.appendChild(section);
+    }
+
+    function addPlaneNodes(planeId, label) {
+      const localToGlobal = new Map();
+      TREE_TEMPLATE.forEach(template => {
+        const id = `${planeId}-${template.localId}`;
+        localToGlobal.set(template.localId, id);
+        const node = {
+          id,
+          plane: planeId,
+          label: template.root ? label : `${label} [${template.localId}]`,
+          x: template.x,
+          y: template.y,
+          parent: template.parent ? localToGlobal.get(template.parent) : null,
+          root: Boolean(template.root)
+        };
+        nodes.push(node);
+        byId.set(id, node);
+        children.set(id, []);
+      });
+      nodes
+        .filter(node => node.plane === planeId && node.parent)
+        .forEach(node => children.get(node.parent).push(node.id));
+      nodes.filter(node => node.plane === planeId).forEach(mountNode);
+    }
+
+    function mountNode(node) {
+      const host = viewKind === 'top'
+        ? garden
+        : document.querySelector(`.plane[data-plane="${node.plane}"]`);
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.id = `node-${node.id}`;
+      button.className = `node graph-element hidden${node.root ? ' root' : ''}`;
+      button.dataset.nodeId = node.id;
+      button.style.left = `${node.x}%`;
+      button.style.top = `${node.y}%`;
+      const label = document.createElement('span');
+      label.className = 'node-label';
+      label.textContent = node.label;
+      button.appendChild(label);
+      const role = node.root ? 'root OSN planted on the' : 'OSN in the';
+      button.setAttribute('aria-label', `${node.label}, ${role} ${planeLabel(node.plane)} volume`);
+      button.addEventListener('click', () => onNodeClick(node.id));
+      host.appendChild(button);
+    }
+
+    function setViewKind(nextKind) {
+      if (nextKind !== 'side' && nextKind !== 'top') return;
+      if (viewKind === nextKind) return;
+      viewKind = nextKind;
+      board.classList.toggle('view-side', viewKind === 'side');
+      board.classList.toggle('view-top', viewKind === 'top');
+      sideViewAction.classList.toggle('active', viewKind === 'side');
+      topViewAction.classList.toggle('active', viewKind === 'top');
+      sideViewAction.setAttribute('aria-pressed', viewKind === 'side');
+      topViewAction.setAttribute('aria-pressed', viewKind === 'top');
+      garden.classList.toggle('hidden', viewKind !== 'top' || visiblePlanes.size === 0);
+      reparentNodesForView();
+      syncPlanesLayout();
+      syncNodeVisibility();
+      status.textContent = viewKind === 'top'
+        ? 'Top view: each volume is a circle around its trunk OSN, enclosing that trunk’s native descendants.'
+        : 'Side view: volumes appear as thematic panels with downward native lineage.';
+    }
+
+    function reparentNodesForView() {
+      nodes.forEach(node => {
+        const element = document.getElementById(`node-${node.id}`);
+        if (!element) return;
+        if (viewKind === 'top') {
+          if (element.parentElement !== garden) garden.appendChild(element);
+        } else {
+          const plane = document.querySelector(`.plane[data-plane="${node.plane}"]`);
+          if (plane && element.parentElement !== plane) plane.appendChild(element);
+          element.style.left = `${node.x}%`;
+          element.style.top = `${node.y}%`;
+        }
+      });
+    }
+
+    function layoutVolumeRadial(planeId) {
+      const root = nodes.find(node => node.plane === planeId && node.root);
+      const positions = Object.create(null);
+      if (!root) return positions;
+      positions[root.id] = { x: 0, y: 0 };
+
+      const sizeMemo = Object.create(null);
+      function subtreeSize(id) {
+        if (sizeMemo[id]) return sizeMemo[id];
+        const kids = children.get(id) || [];
+        let n = 1;
+        kids.forEach(childId => { n += subtreeSize(childId); });
+        sizeMemo[id] = n;
+        return n;
+      }
+
+      function ringForFan(m) {
+        return TOP_RING_BASE * (1 + TOP_RING_FAN_LOG * Math.log(Math.max(1, m)));
+      }
+
+      function place(parentId, sectorStart, sectorEnd) {
+        const kids = children.get(parentId) || [];
+        if (!kids.length) return;
+        const width = sectorEnd - sectorStart;
+        const parentPos = positions[parentId] || { x: 0, y: 0 };
+        const m = kids.length;
+        const R = ringForFan(m);
+        const sizes = kids.map(subtreeSize);
+        const total = sizes.reduce((sum, value) => sum + value, 0) || m;
+        let cursor = sectorStart;
+        kids.forEach((childId, index) => {
+          const childWidth = width * (sizes[index] / total);
+          const angle = cursor + childWidth / 2;
+          positions[childId] = {
+            x: parentPos.x + R * Math.cos(angle),
+            y: parentPos.y + R * Math.sin(angle)
+          };
+          place(childId, cursor, cursor + childWidth);
+          cursor += childWidth;
+        });
+      }
+
+      subtreeSize(root.id);
+      place(root.id, 0, Math.PI * 2);
+      return positions;
+    }
+
+    function placeVolumeCenters(radii) {
+      const n = radii.length;
+      const centers = [];
+      if (n === 0) return centers;
+      if (n === 1) {
+        centers.push({ x: 0, y: 0 });
+        return centers;
+      }
+
+      if (n === 2) {
+        const sep = radii[0] + radii[1] + TOP_VOLUME_GAP;
+        centers.push({ x: -sep / 2, y: 0 });
+        centers.push({ x: sep / 2, y: 0 });
+        return centers;
+      }
+
+      let ring = 0;
+      for (let i = 0; i < n; i += 1) {
+        const j = (i + 1) % n;
+        const chord = radii[i] + radii[j] + TOP_VOLUME_GAP;
+        const needed = chord / (2 * Math.sin(Math.PI / n));
+        ring = Math.max(ring, needed);
+      }
+      for (let i = 0; i < n; i += 1) {
+        const angle = (2 * Math.PI * i) / n - Math.PI / 2;
+        centers.push({ x: Math.cos(angle) * ring, y: Math.sin(angle) * ring });
+      }
+      return centers;
+    }
+
+    function applyTopViewLayout() {
+      gardenVolumeLayouts = [];
+      if (viewKind !== 'top' || visiblePlanes.size === 0) {
+        volumeBoundaries.replaceChildren();
+        return;
+      }
+
+      const boardRect = board.getBoundingClientRect();
+      const inset = { top: 24, right: 18, bottom: 54, left: 18 };
+      const gardenWidth = Math.max(120, boardRect.width - inset.left - inset.right);
+      const gardenHeight = Math.max(120, boardRect.height - inset.top - inset.bottom);
+      const volumeIds = thematicPlanes
+        .map(plane => plane.id)
+        .filter(id => visiblePlanes.has(id));
+
+      const prepared = volumeIds.map(planeId => {
+        const local = layoutVolumeRadial(planeId);
+        let maxR = 0;
+        nodes
+          .filter(node => node.plane === planeId)
+          .forEach(node => {
+            const point = local[node.id];
+            if (!point) return;
+            maxR = Math.max(maxR, Math.hypot(point.x, point.y));
+          });
+        return {
+          planeId,
+          local,
+          radius: Math.max(TOP_MIN_VOLUME_RADIUS, maxR + TOP_NODE_PAD)
+        };
+      });
+
+      const centers = placeVolumeCenters(prepared.map(entry => entry.radius));
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minY = Infinity;
+      let maxY = -Infinity;
+      prepared.forEach((entry, index) => {
+        const center = centers[index];
+        minX = Math.min(minX, center.x - entry.radius);
+        maxX = Math.max(maxX, center.x + entry.radius);
+        minY = Math.min(minY, center.y - entry.radius);
+        maxY = Math.max(maxY, center.y + entry.radius);
+      });
+
+      const spanX = Math.max(1, maxX - minX);
+      const spanY = Math.max(1, maxY - minY);
+      const pad = 28;
+      const scale = Math.min(
+        (gardenWidth - pad * 2) / spanX,
+        (gardenHeight - pad * 2) / spanY
+      );
+      const midX = (minX + maxX) / 2;
+      const midY = (minY + maxY) / 2;
+      const originX = inset.left + gardenWidth / 2;
+      const originY = inset.top + gardenHeight / 2;
+
+      function toBoard(x, y) {
+        return {
+          x: originX + (x - midX) * scale,
+          y: originY + (y - midY) * scale
+        };
+      }
+
+      prepared.forEach((entry, index) => {
+        const center = centers[index];
+        const boardCenter = toBoard(center.x, center.y);
+        const boardRadius = entry.radius * scale;
+        const root = nodes.find(node => node.plane === entry.planeId && node.root);
+        const rootElement = root ? document.getElementById(`node-${root.id}`) : null;
+        let trunkR = TOP_MIN_VOLUME_RADIUS * 0.2;
+        if (rootElement) {
+          trunkR = Math.min(rootElement.offsetWidth, rootElement.offsetHeight) / 2;
+        }
+
+        gardenVolumeLayouts.push({
+          planeId: entry.planeId,
+          cx: boardCenter.x,
+          cy: boardCenter.y,
+          r: boardRadius,
+          trunkR
+        });
+
+        nodes
+          .filter(node => node.plane === entry.planeId)
+          .forEach(node => {
+            const local = entry.local[node.id] || { x: 0, y: 0 };
+            const point = toBoard(center.x + local.x, center.y + local.y);
+            const element = document.getElementById(`node-${node.id}`);
+            if (!element) return;
+            element.style.left = `${point.x}px`;
+            element.style.top = `${point.y}px`;
+          });
+
+        // Re-measure trunk after positioning so the gradient meets the root disc rim.
+        if (rootElement) {
+          gardenVolumeLayouts[gardenVolumeLayouts.length - 1].trunkR =
+            Math.min(rootElement.offsetWidth, rootElement.offsetHeight) / 2;
+        }
+      });
+
+      drawVolumeBoundaries();
+    }
+
+    function drawVolumeBoundaries() {
+      volumeBoundaries.replaceChildren();
+      if (viewKind !== 'top') return;
+
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      volumeBoundaries.appendChild(defs);
+
+      gardenVolumeLayouts.forEach(layout => {
+        const gradId = `volume-wash-${layout.planeId}`;
+        const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+        gradient.setAttribute('id', gradId);
+        gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
+        gradient.setAttribute('cx', layout.cx);
+        gradient.setAttribute('cy', layout.cy);
+        gradient.setAttribute('r', layout.r);
+
+        const trunkFrac = Math.min(0.9, Math.max(0.02, layout.trunkR / Math.max(layout.r, 1)));
+        // Shared wash for every volume: white at the trunk center → light gray at the outer rim.
+        const stops = [
+          { offset: 0, color: '#ffffff' },
+          { offset: trunkFrac, color: '#ffffff' },
+          { offset: 1, color: 'rgba(0, 0, 0, 0.05)' }
+        ];
+        stops.forEach(stopSpec => {
+          const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+          stop.setAttribute('offset', stopSpec.offset);
+          stop.setAttribute('stop-color', stopSpec.color);
+          gradient.appendChild(stop);
+        });
+        defs.appendChild(gradient);
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('class', 'volume-boundary');
+        circle.setAttribute('cx', layout.cx);
+        circle.setAttribute('cy', layout.cy);
+        circle.setAttribute('r', layout.r);
+        circle.setAttribute('fill', `url(#${gradId})`);
+        volumeBoundaries.appendChild(circle);
+      });
+    }
+
+    function revealPlane(planeId) {
+      if (visiblePlanes.has(planeId)) return;
+      visiblePlanes.add(planeId);
+      nativeDepthRevealedByPlane.set(planeId, 0);
+      syncPlanesLayout();
+      syncNodeVisibility();
+      refreshActionAvailability();
+      status.textContent = `${planeLabel(planeId)} volume created with its root OSN. Reveal intra-volume lineage when ready.`;
+    }
+
+    function revealNextNativeGeneration() {
+      let revealed = false;
+      visiblePlanes.forEach(planeId => {
+        const current = nativeDepthRevealedByPlane.get(planeId) ?? -1;
+        const maxDepth = maxNativeDepth(planeId);
+        if (current < maxDepth) {
+          nativeDepthRevealedByPlane.set(planeId, current + 1);
+          revealed = true;
+        }
+      });
+      if (!revealed) return;
+      syncNodeVisibility();
+      refreshActionAvailability();
+      syncRevealNativeButton();
+      const deepest = Math.max(...[...visiblePlanes].map(id => nativeDepthRevealedByPlane.get(id)));
+      if (!canRevealMoreNative()) {
+        status.textContent = 'Full intra-volume lineage is visible on all volumes. Choose an action, then select an OSN.';
+        return;
+      }
+      status.textContent = `Native generation ${deepest + 1} revealed. Click again to expose the next level.`;
+    }
+
+    function hidePreviousNativeGeneration() {
+      let hidden = false;
+      visiblePlanes.forEach(planeId => {
+        const current = nativeDepthRevealedByPlane.get(planeId) ?? 0;
+        if (current > 0) {
+          nativeDepthRevealedByPlane.set(planeId, current - 1);
+          hidden = true;
+        }
+      });
+      if (!hidden) return;
+      clearBuildHighlight();
+      if (linkSourceId) {
+        const source = byId.get(linkSourceId);
+        if (!isNodeVisible(source)) resetMode();
+      }
+      syncNodeVisibility();
+      refreshActionAvailability();
+      syncRevealNativeButton();
+      const shallowest = Math.max(...[...visiblePlanes].map(id => nativeDepthRevealedByPlane.get(id)));
+      status.textContent = shallowest === 0
+        ? 'Only the root OSN remains visible in each volume.'
+        : `Native generation ${shallowest + 1} is now the deepest visible level.`;
+    }
+
+    function syncPlanesLayout() {
+      const count = visiblePlanes.size;
+      planes.classList.toggle('hidden', count === 0 || viewKind === 'top');
+      garden.classList.toggle('hidden', count === 0 || viewKind !== 'top');
+      planes.classList.remove('count-1', 'count-2', 'count-many');
+      if (viewKind === 'side') {
+        if (count === 1) planes.classList.add('count-1');
+        else if (count === 2) planes.classList.add('count-2');
+        else if (count > 2) planes.classList.add('count-many');
+      }
+      if (count === 0) {
+        nativeDepthRevealedByPlane.clear();
+        gardenVolumeLayouts = [];
+        volumeBoundaries.replaceChildren();
+        clearBuildHighlight();
+        resetMode();
+      }
+      syncRevealNativeButton();
+    }
+
+    function syncRevealNativeButton() {
+      revealNativeLayer.disabled = !canRevealMoreNative();
+      hideNativeLayer.disabled = !canHideNativeGeneration();
+    }
+
+    function canRevealMoreNative() {
+      if (visiblePlanes.size === 0) return false;
+      return [...visiblePlanes].some(planeId => {
+        const current = nativeDepthRevealedByPlane.get(planeId) ?? -1;
+        return current < maxNativeDepth(planeId);
+      });
+    }
+
+    function canHideNativeGeneration() {
+      if (visiblePlanes.size === 0) return false;
+      return [...visiblePlanes].some(planeId => (nativeDepthRevealedByPlane.get(planeId) ?? 0) > 0);
+    }
+
+    function getNodeDepth(nodeId) {
+      let depth = 0;
+      let current = byId.get(nodeId);
+      while (current.parent) {
+        depth += 1;
+        current = byId.get(current.parent);
+      }
+      return depth;
+    }
+
+    function maxNativeDepth(planeId) {
+      return Math.max(0, ...nodes.filter(node => node.plane === planeId).map(node => getNodeDepth(node.id)));
+    }
+
+    function isNodeVisible(node) {
+      if (!visiblePlanes.has(node.plane)) return false;
+      const revealedDepth = nativeDepthRevealedByPlane.get(node.plane);
+      if (revealedDepth === undefined) return false;
+      return getNodeDepth(node.id) <= revealedDepth;
+    }
+
+    function syncNodeVisibility() {
+      if (viewKind === 'top') {
+        reparentNodesForView();
+        applyTopViewLayout();
+      } else {
+        volumeBoundaries.replaceChildren();
+        gardenVolumeLayouts = [];
+        nodes.forEach(node => {
+          const element = document.getElementById(`node-${node.id}`);
+          if (!element) return;
+          element.style.left = `${node.x}%`;
+          element.style.top = `${node.y}%`;
+        });
+      }
+      nodes.forEach(node => {
+        const element = document.getElementById(`node-${node.id}`);
+        if (element) element.classList.toggle('hidden', !isNodeVisible(node));
+      });
+      edges.classList.toggle('hidden', visiblePlanes.size === 0);
+      requestAnimationFrame(drawEdges);
+    }
+
+    function planePairKey(planeA, planeB) {
+      return [planeA, planeB].sort().join('::');
+    }
+
+    function planeLabel(planeId) {
+      const plane = thematicPlanes.find(entry => entry.id === planeId);
+      return plane ? plane.label : planeId;
+    }
+
+    function linkPlanePair(link) {
+      const from = byId.get(link.from);
+      const to = byId.get(link.to);
+      return planePairKey(from.plane, to.plane);
+    }
+
+    function countLinksForVolumePair(planeA, planeB) {
+      const key = planePairKey(planeA, planeB);
+      return standardLinks.filter(link => linkPlanePair(link) === key).length;
+    }
+
+    function canAddLinkBetweenPlanes(planeA, planeB) {
+      return countLinksForVolumePair(planeA, planeB) < TEACHING_MAX_LINKS_PER_VOLUME_PAIR;
+    }
+
+    function teachingLimitMessage(planeA, planeB) {
+      return `Teaching simplification: only ${TEACHING_MAX_LINKS_PER_VOLUME_PAIR} inter-volume root link between ${planeLabel(planeA)} and ${planeLabel(planeB)} on this whiteboard — not a Lexiom OSNG rule. Delete the existing link to replace it, or add another volume for another slot.`;
+    }
+
+    function showTeachingNote(message) {
+      clearTimeout(teachingNoteTimer);
+      teachingNote.textContent = message;
+      teachingNote.classList.remove('hidden');
+      teachingNoteTimer = setTimeout(() => {
+        teachingNote.classList.add('hidden');
+        teachingNote.textContent = '';
+        teachingNoteTimer = null;
+      }, TEACHING_NOTE_DURATION_MS);
+    }
+
+    function onNodeClick(nodeId) {
+      if (mode === 'standard') return handleStandardSelection(nodeId);
+      if (mode === 'build') return showBuildClosure(nodeId);
+      if (mode === 'delete-standard') {
+        status.textContent = 'Select a dashed inter-volume root link, not an OSN.';
+        return;
+      }
+      status.textContent = `${byId.get(nodeId).label} selected. Choose an action first.`;
+    }
+
+    function handleStandardSelection(nodeId) {
+      const node = byId.get(nodeId);
+      if (!isVolumeRoot(node)) {
+        status.textContent = 'Inter-volume lineage links only connect volume roots ([0] OSNs).';
+        return;
+      }
+
+      if (!linkSourceId) {
+        const otherVisiblePlanes = [...visiblePlanes].filter(planeId => planeId !== node.plane);
+        if (otherVisiblePlanes.length === 0) {
+          status.textContent = 'Create another volume before adding inter-volume lineage.';
+          return;
+        }
+        const saturated = otherVisiblePlanes.every(planeId => !canAddLinkBetweenPlanes(node.plane, planeId));
+        if (saturated) {
+          showTeachingNote(teachingLimitMessage(node.plane, otherVisiblePlanes[0]));
+          status.textContent = `Cannot add another inter-volume root link from ${planeLabel(node.plane)}.`;
+          return;
+        }
+        linkSourceId = nodeId;
+        document.getElementById(`node-${nodeId}`).classList.add('link-source');
+        status.textContent = `Volume root ${node.label} selected. Now select the root OSN in another volume.`;
+        return;
+      }
+
+      const source = byId.get(linkSourceId);
+      if (source.plane === node.plane) {
+        status.textContent = 'Inter-volume lineage must connect roots from different volumes.';
+        return;
+      }
+
+      if (!canAddLinkBetweenPlanes(source.plane, node.plane)) {
+        showTeachingNote(teachingLimitMessage(source.plane, node.plane));
+        status.textContent = 'That volume pair already has its teaching root link.';
+        return;
+      }
+
+      const duplicate = standardLinks.some(link => link.from === source.id && link.to === node.id);
+      document.getElementById(`node-${source.id}`).classList.remove('link-source');
+      if (!duplicate) standardLinks.push({ from: source.id, to: node.id });
+      drawEdges();
+      resetMode(duplicate
+        ? 'That inter-volume root link already exists.'
+        : `${source.label} now inherits from volume root ${node.label}.`);
+      refreshActionAvailability();
+    }
+
+    function showBuildClosure(originId) {
+      clearBuildHighlight();
+      const scope = buildScopeSelect.value;
+      const closure = calculateBuildClosure(originId, scope);
+      const visibleClosure = [...closure].filter(id => isNodeVisible(byId.get(id)));
+      const hiddenCount = closure.size - visibleClosure.length;
+
+      document.getElementById(`node-${originId}`).classList.add('origin');
+      visibleClosure.forEach(id => {
+        if (id !== originId) document.getElementById(`node-${id}`).classList.add('participant');
+      });
+      legend.classList.add('show');
+      const origin = byId.get(originId);
+      const participantCount = closure.size - 1;
+      let message = `${origin.label} is the compilation root; ${participantCount} additional OSN${participantCount === 1 ? '' : 's'} participate (${BUILD_SCOPE_LABELS[scope]}).`;
+      if (hiddenCount > 0) {
+        message += ` ${hiddenCount} participant${hiddenCount === 1 ? ' is' : 's are'} not yet revealed — use intra-volume lineage + to show them.`;
+      }
+      resetMode(message);
+      refreshActionAvailability();
+    }
+
+    function getStandardAncestorIds(nodeId) {
+      return standardLinks
+        .filter(link => link.from === nodeId)
+        .map(link => link.to);
+    }
+
+    function calculateBuildClosure(originId, scope) {
+      const closure = new Set();
+      const root = byId.get(originId);
+      if (!root) return closure;
+      gatherCompilationOsns(root, scope, closure);
+      return closure;
+    }
+
+    function gatherCompilationOsns(root, scope, closure) {
+      collectDescendantOsns(root.id, closure);
+      collectNativeAncestorOsns(root.id, closure);
+      if (scope === 'with_cited_cones') {
+        getStandardAncestorIds(root.id).forEach(citedId => includeCitedSpecCone(citedId, closure));
+      }
+    }
+
+    function collectDescendantOsns(nodeId, closure) {
+      if (closure.has(nodeId)) return;
+      closure.add(nodeId);
+      (children.get(nodeId) || []).forEach(childId => collectDescendantOsns(childId, closure));
+    }
+
+    function collectNativeAncestorOsns(nodeId, closure) {
+      const node = byId.get(nodeId);
+      if (!node || !node.parent || closure.has(node.parent)) return;
+      closure.add(node.parent);
+      collectNativeAncestorOsns(node.parent, closure);
+    }
+
+    function includeStandardAncestorNodes(nodeId, closure) {
+      getStandardAncestorIds(nodeId).forEach(id => closure.add(id));
+    }
+
+    function includeCitedSpecCone(citedId, closure) {
+      if (!byId.has(citedId)) return;
+      collectDescendantOsns(citedId, closure);
+      collectNativeAncestorOsns(citedId, closure);
+      includeStandardAncestorNodes(citedId, closure);
+    }
+
+    function clearBuildHighlight() {
+      document.querySelectorAll('.node').forEach(node => node.classList.remove('origin', 'participant'));
+      legend.classList.remove('show');
+    }
+
+    function resetMode(message) {
+      if (linkSourceId) document.getElementById(`node-${linkSourceId}`)?.classList.remove('link-source');
+      mode = null;
+      linkSourceId = null;
+      syncActionButtons();
+      if (message) status.textContent = message;
+    }
+
+    function syncActionButtons() {
+      standardAction.classList.toggle('active', mode === 'standard');
+      deleteStandardAction.classList.toggle('active', mode === 'delete-standard');
+      buildAction.classList.toggle('active', mode === 'build');
+      standardAction.setAttribute('aria-pressed', mode === 'standard');
+      deleteStandardAction.setAttribute('aria-pressed', mode === 'delete-standard');
+      buildAction.setAttribute('aria-pressed', mode === 'build');
+    }
+
+    function hasBuildHighlight() {
+      return legend.classList.contains('show') || Boolean(document.querySelector('.node.origin'));
+    }
+
+    function refreshActionAvailability() {
+      const hasVisibleNodes = nodes.some(isNodeVisible);
+      const hasVisibleRoots = hasVisibleVolumeRoots();
+      const multipleVolumes = visiblePlanes.size >= 2;
+      standardAction.disabled = !hasVisibleRoots || !multipleVolumes;
+      deleteStandardAction.disabled = !hasVisibleNodes || standardLinks.length === 0;
+      buildAction.disabled = !hasVisibleNodes;
+      clearAction.disabled = !hasBuildHighlight();
+    }
+
+    function drawEdges() {
+      nativeEdges.replaceChildren();
+      standardEdges.replaceChildren();
+      if (visiblePlanes.size === 0 || edges.classList.contains('hidden')) return;
+      if (viewKind === 'top') drawVolumeBoundaries();
+
+      nodes
+        .filter(node => {
+          if (!node.parent || !visiblePlanes.has(node.plane)) return false;
+          const parent = byId.get(node.parent);
+          return isNodeVisible(node) && isNodeVisible(parent);
+        })
+        .forEach(node => {
+        const path = makeOrthogonalPath(node.id, node.parent, viewKind === 'top');
+        path.setAttribute('class', 'native-edge');
+        nativeEdges.appendChild(path);
+      });
+
+      standardLinks.forEach((link, index) => {
+        const from = byId.get(link.from);
+        const to = byId.get(link.to);
+        if (!isNodeVisible(from) || !isNodeVisible(to)) return;
+        const path = viewKind === 'top'
+          ? makeVolumeBorderPath(from.plane, to.plane)
+          : makeOrthogonalPath(link.from, link.to, true);
+        if (!path) return;
+        path.setAttribute('class', 'standard-edge');
+        path.dataset.linkIndex = index;
+        path.addEventListener('click', () => {
+          if (mode !== 'delete-standard') {
+            status.textContent = 'Choose Delete inter-volume link before selecting a dashed arrow.';
+            return;
+          }
+          const removed = standardLinks[Number(path.dataset.linkIndex)];
+          standardLinks.splice(Number(path.dataset.linkIndex), 1);
+          clearBuildHighlight();
+          const fromLabel = byId.get(removed.from).label;
+          const toLabel = byId.get(removed.to).label;
+          resetMode(`Inter-volume root link from ${fromLabel} to ${toLabel} removed.`);
+          refreshActionAvailability();
+          drawEdges();
+        });
+        standardEdges.appendChild(path);
+      });
+    }
+
+    function makeVolumeBorderPath(fromPlaneId, toPlaneId) {
+      const fromVol = gardenVolumeLayouts.find(entry => entry.planeId === fromPlaneId);
+      const toVol = gardenVolumeLayouts.find(entry => entry.planeId === toPlaneId);
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      if (!fromVol || !toVol) {
+        path.setAttribute('d', 'M 0 0');
+        return path;
+      }
+
+      const dx = toVol.cx - fromVol.cx;
+      const dy = toVol.cy - fromVol.cy;
+      const dist = Math.hypot(dx, dy) || 1;
+      const ux = dx / dist;
+      const uy = dy / dist;
+      // Connect only the invisible volume rims — not the trunk OSNs inside.
+      const maxInset = Math.max(0, (dist - 4) / 2);
+      const fromInset = Math.min(fromVol.r, maxInset);
+      const toInset = Math.min(toVol.r, maxInset);
+      const from = {
+        x: fromVol.cx + ux * fromInset,
+        y: fromVol.cy + uy * fromInset
+      };
+      const to = {
+        x: toVol.cx - ux * toInset,
+        y: toVol.cy - uy * toInset
+      };
+      path.setAttribute('d', `M ${from.x} ${from.y} L ${to.x} ${to.y}`);
+      return path;
+    }
+
+    function makeOrthogonalPath(fromId, toId, crossPlane) {
+      if (viewKind === 'top') return makeCenterAimedPath(fromId, toId);
+
+      const from = nodeAnchor(fromId, toId, true);
+      const to = nodeAnchor(toId, fromId, false);
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      let d;
+      if (crossPlane) {
+        d = `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+      } else {
+        const middleY = (from.y + to.y) / 2;
+        d = `M ${from.x} ${from.y} V ${middleY} H ${to.x} V ${to.y}`;
+      }
+      path.setAttribute('d', d);
+      return path;
+    }
+
+    function nodeCenter(nodeId) {
+      const boardRect = board.getBoundingClientRect();
+      const element = document.getElementById(`node-${nodeId}`);
+      if (!element || element.classList.contains('hidden')) return null;
+      const rect = element.getBoundingClientRect();
+      return {
+        x: rect.left - boardRect.left + rect.width / 2,
+        y: rect.top - boardRect.top + rect.height / 2,
+        r: Math.min(rect.width, rect.height) / 2
+      };
+    }
+
+    function makeCenterAimedPath(fromId, toId) {
+      const fromCenter = nodeCenter(fromId);
+      const toCenter = nodeCenter(toId);
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      if (!fromCenter || !toCenter) {
+        path.setAttribute('d', 'M 0 0');
+        return path;
+      }
+
+      const dx = toCenter.x - fromCenter.x;
+      const dy = toCenter.y - fromCenter.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      const ux = dx / dist;
+      const uy = dy / dist;
+      // Stop on each disc rim so the arrow still aims straight at the button center.
+      const maxInset = Math.max(0, (dist - 4) / 2);
+      const fromInset = Math.min(fromCenter.r, maxInset);
+      const toInset = Math.min(toCenter.r, maxInset);
+      const from = {
+        x: fromCenter.x + ux * fromInset,
+        y: fromCenter.y + uy * fromInset
+      };
+      const to = {
+        x: toCenter.x - ux * toInset,
+        y: toCenter.y - uy * toInset
+      };
+      path.setAttribute('d', `M ${from.x} ${from.y} L ${to.x} ${to.y}`);
+      return path;
+    }
+
+    function nodeAnchor(fromId, otherId, isStart) {
+      const boardRect = board.getBoundingClientRect();
+      const element = document.getElementById(`node-${fromId}`);
+      const otherElement = document.getElementById(`node-${otherId}`);
+      if (!element || !otherElement || element.classList.contains('hidden') || otherElement.classList.contains('hidden')) {
+        return { x: 0, y: 0 };
+      }
+      const rect = element.getBoundingClientRect();
+      const otherRect = otherElement.getBoundingClientRect();
+      const center = { x: rect.left - boardRect.left + rect.width / 2, y: rect.top - boardRect.top + rect.height / 2 };
+      const other = { x: otherRect.left - boardRect.left + otherRect.width / 2, y: otherRect.top - boardRect.top + otherRect.height / 2 };
+      const dx = other.x - center.x;
+      const dy = other.y - center.y;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        const direction = dx >= 0 ? 1 : -1;
+        return { x: center.x + direction * rect.width / 2, y: center.y };
+      }
+      const direction = dy >= 0 ? 1 : -1;
+      return { x: center.x, y: center.y + direction * rect.height / 2 };
+    }
+  </script>
+</body>
+</html>

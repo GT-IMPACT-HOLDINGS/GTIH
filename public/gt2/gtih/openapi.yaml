@@ -1,0 +1,701 @@
+openapi: 3.1.0
+info:
+  title: GTIH GT3 Interface
+  summary: SPA-facing HTTP substrate for the GTIH SDK (Lexiom 1.3 garden)
+  description: |
+    Proposition v0.1. Documents the existing Lexiom 1.3 / GT3 routes that the
+    GTIH SDK (`gtih-sdk`) wraps. Lexiom offers this SDK; TRH calls it directly.
+
+    Tegria wraps GTIH in a Tegria SDK (parallel track) that also integrates domain-related
+    and/or tenant-bounded data from a remote Tegria server (player benefit),
+    increasing the economic value of the unified SDK for that vertical—without
+    changing these GTIH paths.
+
+    This is not Lexiom 1.4 (`/lexiom14/v1/*`). No new server routes are required.
+
+    SDK method names are carried as `x-gtih-sdk` on each operation.
+    Hanuman browser labor (session sync, agent consult) is intentionally omitted.
+  version: gtih/0.1
+  license:
+    name: Proprietary — GT constellation
+
+servers:
+  - url: http://localhost:8080
+    description: Local GT3 product port (npm start)
+
+tags:
+  - name: osng
+    description: Outcome Specification Node Graph — list, load, persist, prune
+  - name: gt3
+    description: Direct product inference (draft proposals; not the agent broker)
+  - name: hanuman
+    description: Realization control plane — prepare, run ticket, status, evidence list, bud GETs
+
+paths:
+  /lexiom13/osn/list:
+    get:
+      tags: [osng]
+      operationId: osngList
+      x-gtih-sdk: gtih.osng.list
+      summary: List live OSN YAML public paths
+      responses:
+        "200":
+          description: Ordered public paths under /gt2/Lexiom_1_3
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OsnListResponse"
+        "500":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/osn/save:
+    post:
+      tags: [osng]
+      operationId: osngSave
+      x-gtih-sdk: gtih.osng.create | gtih.osng.update | gtih.osng.delete
+      summary: Create, update, or prune canonical OSN YAML
+      description: |
+        Single endpoint; body.operation selects the move:
+        - create — canonize mature OSN to disk + parent child link
+        - update — persist approved OSN (graph relationships travel inside osn)
+        - prune — tombstone branch (delete)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OsnSaveRequest"
+      responses:
+        "200":
+          description: Persist result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OsnSaveResponse"
+        "400":
+          $ref: "#/components/responses/ErrorDetail"
+        "404":
+          $ref: "#/components/responses/ErrorDetail"
+        "409":
+          $ref: "#/components/responses/ErrorDetail"
+        "500":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /gt2/Lexiom_1_3/{osnYamlPath}:
+    get:
+      tags: [osng]
+      operationId: osngGetYaml
+      x-gtih-sdk: gtih.osng.getYaml
+      summary: Load one OSN YAML document (static)
+      description: |
+        Path is a public path returned by osngList
+        (e.g. GT_Philosophy.a1000001.osn.yaml or nested Branding/…).
+        Response is raw YAML text (application/yaml or text/plain).
+      parameters:
+        - name: osnYamlPath
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Relative path under /gt2/Lexiom_1_3/
+          style: simple
+          explode: false
+      responses:
+        "200":
+          description: YAML body
+          content:
+            text/yaml:
+              schema:
+                type: string
+            text/plain:
+              schema:
+                type: string
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Missing file
+
+  /inference:
+    post:
+      tags: [gt3]
+      operationId: gt3Infer
+      x-gtih-sdk: gtih.gt3.infer
+      summary: Direct GT3 product inference
+      description: |
+        Prompt construction, persona header, and in-band instruction are SDK concerns.
+        SPA passes a narrative (or lets SDK wrap it); model selection stays server-side.
+      security:
+        - Gt3OpenRouterKey: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/XGt3Tenant"
+        - $ref: "#/components/parameters/XGt3DataTrack"
+        - $ref: "#/components/parameters/XGt3ConsentVersion"
+        - $ref: "#/components/parameters/XLexiomPersonaMode"
+        - $ref: "#/components/parameters/XGt3OpenAiKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InferenceRequest"
+      responses:
+        "200":
+          description: Model display text (in-band tails stripped server-side)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InferenceResponse"
+        "4XX":
+          $ref: "#/components/responses/ErrorDetail"
+        "5XX":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/build/prepare:
+    post:
+      tags: [hanuman]
+      operationId: hanumanPrepare
+      x-gtih-sdk: gtih.hanuman.prepare
+      summary: Prepare compilation worktree (no agent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BuildPrepareRequest"
+      responses:
+        "200":
+          description: Prepared handoff
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuildPrepareResponse"
+        "400":
+          $ref: "#/components/responses/ErrorDetail"
+        "404":
+          $ref: "#/components/responses/ErrorDetail"
+        "500":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/build/run:
+    post:
+      tags: [hanuman]
+      operationId: hanumanRealize
+      x-gtih-sdk: gtih.hanuman.realize
+      summary: Issue CA job ticket and start realization (browser CA owns labor)
+      description: |
+        Returns immediately with status running and ca_session bootstrap.
+        Full SUD labor requires a browser Hanuman worker (Lexiom cockpit today).
+        Tegria SPA may call this for transport proof; completion may need Lexiom CA.
+      security:
+        - Gt3OpenRouterKey: []
+        - {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BuildRunRequest"
+      responses:
+        "200":
+          description: Running handoff + ca_session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuildRunResponse"
+        "400":
+          $ref: "#/components/responses/ErrorDetail"
+        "503":
+          description: Agent broker key missing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+        "500":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/build/status/{runId}:
+    get:
+      tags: [hanuman]
+      operationId: hanumanGetStatus
+      x-gtih-sdk: gtih.hanuman.getStatus
+      summary: Poll RUN_RESULT for a realization
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+      responses:
+        "200":
+          description: Run status / results / bud pointers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BuildStatusResponse"
+        "400":
+          $ref: "#/components/responses/ErrorDetail"
+        "404":
+          $ref: "#/components/responses/ErrorDetail"
+        "500":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/evidence/collections:
+    get:
+      tags: [hanuman]
+      operationId: hanumanListEvidenceCollections
+      x-gtih-sdk: gtih.hanuman.listEvidenceCollections
+      summary: Focus-closure evidence collections for an OSN
+      parameters:
+        - name: osn_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Collection snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvidenceCollectionsResponse"
+        "400":
+          $ref: "#/components/responses/ErrorDetail"
+        "500":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/evidence/artifact/{runId}/{relPath}:
+    get:
+      tags: [hanuman]
+      operationId: hanumanGetEvidenceArtifact
+      x-gtih-sdk: gtih.hanuman.getEvidenceArtifact
+      summary: Fetch a collected evidence artifact from a build run
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - name: relPath
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Path under builds/lexiom13/{runId}/ (may contain slashes)
+          style: simple
+          explode: false
+      responses:
+        "200":
+          description: Artifact bytes
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/preview/{runId}/{relPath}:
+    get:
+      tags: [hanuman]
+      operationId: hanumanGetBudPreview
+      x-gtih-sdk: gtih.hanuman.getBudPreview
+      summary: Serve bud preview tree entry (e.g. software SPA)
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - name: relPath
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+          explode: false
+      responses:
+        "200":
+          description: Preview file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          $ref: "#/components/responses/ErrorDetail"
+
+  /lexiom13/build/{runId}/artifact/{entry}:
+    get:
+      tags: [hanuman]
+      operationId: hanumanGetBudArtifact
+      x-gtih-sdk: gtih.hanuman.getBudArtifact
+      summary: Serve primary bud artifact (e.g. document.md)
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - name: entry
+          in: path
+          required: true
+          schema:
+            type: string
+            example: document.md
+      responses:
+        "200":
+          description: Artifact bytes
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          $ref: "#/components/responses/ErrorDetail"
+
+components:
+  securitySchemes:
+    Gt3OpenRouterKey:
+      type: apiKey
+      in: header
+      name: X-GT3-OpenRouter-Key
+      description: |
+        Optional cockpit/broker key. Also accepted from env
+        GT3_LEXIOM_AGENT_KEY / OPENROUTER_API_KEY on the server for /build/run.
+
+  parameters:
+    RunId:
+      name: runId
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: "^[a-zA-Z0-9_-]+$"
+    XGt3Tenant:
+      name: X-GT3-Tenant
+      in: header
+      required: false
+      schema:
+        type: string
+        default: gt2-lexiom-demo
+    XGt3DataTrack:
+      name: X-GT3-Data-Track
+      in: header
+      required: false
+      schema:
+        type: string
+        default: green
+    XGt3ConsentVersion:
+      name: X-GT3-Consent-Version
+      in: header
+      required: false
+      schema:
+        type: string
+        default: v1
+    XLexiomPersonaMode:
+      name: X-Lexiom-Persona-Mode
+      in: header
+      required: false
+      schema:
+        type: string
+        default: lexiom_13_reasoning
+    XGt3OpenAiKey:
+      name: X-GT3-OpenAI-Key
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Twin of OpenRouter key for product inference (Lexiom gt3-client habit)
+
+  responses:
+    ErrorDetail:
+      description: Lexiom 1.3 error envelope
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorDetail"
+
+  schemas:
+    ErrorDetail:
+      type: object
+      properties:
+        detail:
+          type: string
+      required: [detail]
+
+    OsnListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        paths:
+          type: array
+          items:
+            type: string
+            example: /gt2/Lexiom_1_3/GT_Philosophy.a1000001.osn.yaml
+      required: [paths]
+
+    OsnDocument:
+      type: object
+      description: |
+        Canonical OSN object (YAML-shaped JSON). Graph relationships
+        (parent_osn_ids, child_osn_ids, standard_ancestor_osn_ids) and
+        section content / success_evidences live here — not separate resources.
+      additionalProperties: true
+      properties:
+        id:
+          type: string
+        file_name:
+          type: string
+        graph:
+          type: object
+          additionalProperties: true
+          properties:
+            parent_osn_ids:
+              type: array
+              items:
+                type: string
+            child_osn_ids:
+              type: array
+              items:
+                type: string
+            standard_ancestor_osn_ids:
+              type: array
+              items:
+                type: string
+
+    OsnSaveRequest:
+      oneOf:
+        - $ref: "#/components/schemas/OsnSaveCreate"
+        - $ref: "#/components/schemas/OsnSaveUpdate"
+        - $ref: "#/components/schemas/OsnSavePrune"
+      discriminator:
+        propertyName: operation
+        mapping:
+          create: "#/components/schemas/OsnSaveCreate"
+          update: "#/components/schemas/OsnSaveUpdate"
+          prune: "#/components/schemas/OsnSavePrune"
+
+    OsnSaveCreate:
+      type: object
+      required: [operation, osn, parentOsnId]
+      properties:
+        operation:
+          type: string
+          const: create
+        osn:
+          $ref: "#/components/schemas/OsnDocument"
+        parentOsnId:
+          type: string
+
+    OsnSaveUpdate:
+      type: object
+      required: [operation, osn]
+      properties:
+        operation:
+          type: string
+          const: update
+        osn:
+          $ref: "#/components/schemas/OsnDocument"
+        previousFileName:
+          type: string
+
+    OsnSavePrune:
+      type: object
+      required: [operation, rootOsnId]
+      properties:
+        operation:
+          type: string
+          const: prune
+        rootOsnId:
+          type: string
+        confirmRootPrune:
+          type: boolean
+
+    OsnSaveResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        status:
+          type: string
+          example: ok
+        operation:
+          type: string
+          enum: [create, update, prune]
+        osnId:
+          type: string
+        fileName:
+          type: string
+        sourcePath:
+          type: string
+        parentOsnId:
+          type: string
+        rootOsnId:
+          type: string
+        prunedIds:
+          type: array
+          items:
+            type: string
+        tombstonedFiles:
+          type: array
+          items:
+            type: string
+
+    InferenceRequest:
+      type: object
+      required: [narrative]
+      properties:
+        narrative:
+          type: string
+          description: Full prompt text after SDK persona / in-band wrapping
+
+    InferenceResponse:
+      type: object
+      required: [response]
+      properties:
+        response:
+          type: string
+
+    BuildPrepareRequest:
+      type: object
+      description: |
+        Exactly one OSNG source: canon compilation_root_osn_id, osng_envelope
+        (draft nodes, no Lexiom YAML write), or proposal_run_id under
+        builds/lexiom13-propose/.
+      properties:
+        compilation_root_osn_id:
+          type: string
+          description: Canon OSN id from the Lexiom 1.3 YAML garden
+        osng_envelope:
+          type: object
+          description: Draft OSNG envelope (root_osn_id + nodes) for ephemeral prepare
+          additionalProperties: true
+          properties:
+            root_osn_id:
+              type: string
+            nodes:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+        proposal_run_id:
+          type: string
+          description: Propose run id; server loads OSNG_PROPOSAL.json
+        strategy_id:
+          type: string
+        run_id:
+          type: string
+          description: Optional; server allocates when omitted
+
+    BuildPrepareResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        status:
+          type: string
+          example: prepared
+        run_id:
+          type: string
+        plugin_id:
+          type: string
+        strategy_id:
+          type: string
+        compilation_root_osn_id:
+          type: string
+        source:
+          type: string
+          description: lexiom_yaml_garden | ephemeral_osng_envelope
+        proposal_run_id:
+          type: string
+          nullable: true
+        output_directory:
+          type: string
+
+    BuildRunRequest:
+      type: object
+      properties:
+        compilation_root_osn_id:
+          type: string
+        osng_envelope:
+          type: object
+          additionalProperties: true
+        proposal_run_id:
+          type: string
+        run_id:
+          type: string
+        handoff:
+          type: object
+          additionalProperties: true
+          properties:
+            run_id:
+              type: string
+        ca_location:
+          type: string
+          default: browser_session
+
+    BuildRunResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        status:
+          type: string
+          example: running
+        run_id:
+          type: string
+        session_id:
+          type: string
+        ca_location:
+          type: string
+        executor:
+          type: string
+        ca_session:
+          type: object
+          additionalProperties: true
+          description: Bootstrap for browser Hanuman (URLs + capability_token)
+        handoff:
+          type: object
+          additionalProperties: true
+        detail:
+          type: string
+
+    BuildStatusResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        status:
+          type: string
+          description: e.g. running | completed | agent_failed | agent_unavailable
+        run_id:
+          type: string
+        detail:
+          type: string
+        handoff:
+          type: object
+          additionalProperties: true
+        bud_written:
+          type: boolean
+        ops_mirror:
+          type: object
+          additionalProperties: true
+          nullable: true
+
+    EvidenceCollectionsResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        schema_version:
+          type: string
+          example: lexiom13-evidence-cockpit-sync/1
+        osn_id:
+          type: string
+        polled_at:
+          type: string
+          format: date-time
+        targets:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+            properties:
+              evidence_id:
+                type: string
+              run_id:
+                type: string
+              status:
+                type: string
+              artifact:
+                type: object
+                additionalProperties: true
+                properties:
+                  url:
+                    type: string
+                  file_name:
+                    type: string

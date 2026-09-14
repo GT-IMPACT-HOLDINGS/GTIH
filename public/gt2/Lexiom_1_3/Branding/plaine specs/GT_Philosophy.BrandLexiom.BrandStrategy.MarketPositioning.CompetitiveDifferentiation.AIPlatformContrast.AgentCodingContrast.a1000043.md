@@ -1,0 +1,1 @@
+Lexiom currently explains that Ogun governs the OSN graph used to prepare coding-agent handoffs and human evidence review, rather than claiming that it automatically authorizes or validates execution.

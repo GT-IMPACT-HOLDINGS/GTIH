@@ -49,11 +49,10 @@ The plugin does **not** hard-code product names, discipline labels (UX, CodeShap
 
 ### 3.2 Instruction subgraph (generic)
 
-Include OSNs according to `compilation_scope` and policy:
+Include OSNs according to `compilation_scope` only (see contract §4.1; no silent prefix):
 
-1. **Standard ancestors** (when required) — governance and reusable constraints.
-2. **Compilation root** — product or implementation branch root.
-3. **Descendants** — discipline and sub-discipline OSNs reachable via `graph.child_osn_ids` when scope includes descendants.
+1. **Compilation root** — the triggered OSN.
+2. **Descendants / parents / cited cones** — as that scope names (`self_only`, `self_and_approved_descendants`, `self_plus_parent_context`, or `self_as_axis_center`).
 
 Exclude:
 
@@ -316,8 +315,9 @@ Remaining polish:
 | Role | Example OSN (Lexiom 1.3) |
 |---|---|
 | Standard | `GT_Philosophy.a1000001.osn` |
-| Root | `GT_Philosophy.ProductLexiom.a1000002.osn` |
+| Subtree root | `GT_Philosophy.ProductLexiom.a1000002.osn` (`self_and_approved_descendants`) |
+| Official realization root | `Realization.RealizeProductLexiom.a1000201.osn` (`self_as_axis_center`) |
 | Experience | `GT_Philosophy.ProductLexiom.UX.a1000003.osn` |
 | Implementation | `GT_Philosophy.ProductLexiom.CodeShape.a1000004.osn` |
 
-ProductLexiom currently declares `can_be_compilation_root: true`, `compilation_scope: self_and_approved_descendants`, and `target_tool_profile: static_spa_coding_agent` as one association alias for this plugin. The Lexiom 1.3 POC’s Implementation OSN describes the existing cockpit codebase; a build run targets `output_directory`, not silent rewrite of that canonical tree.
+ProductLexiom currently declares `can_be_compilation_root: true`, `compilation_scope: self_and_approved_descendants` (subtree only), and `target_tool_profile: static_spa_coding_agent`. RealizeProductLexiom is the official Product realization root (`self_as_axis_center`, reciprocal standard ancestor). The Lexiom 1.3 POC’s Implementation OSN describes the existing cockpit codebase; a build run targets `output_directory`, not silent rewrite of that canonical tree.

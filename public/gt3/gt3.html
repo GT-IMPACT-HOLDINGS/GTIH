@@ -789,6 +789,32 @@
                   Model:
                   <span id="dash-agent-broker-model">—</span>
                 </li>
+                <li class="mt-2">
+                  MBTS (model behind the scene):
+                  <div class="row g-2 align-items-center mt-1">
+                    <div class="col-8">
+                      <select
+                        id="mbts-select"
+                        class="form-select form-select-sm gt3-mono gt3-small"
+                      ></select>
+                    </div>
+                    <div class="col-4 text-end">
+                      <button
+                        type="button"
+                        id="mbts-apply-btn"
+                        class="btn btn-sm btn-outline-primary w-100"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    id="mbts-status"
+                    class="gt3-card-subtitle mt-1 gt3-small"
+                  >
+                    Binds sessions started after Apply; in-flight runs keep theirs.
+                  </div>
+                </li>
                 <li>
                   Packet capture:
                   <span id="dash-agent-broker-capture">—</span>
@@ -1561,6 +1587,7 @@
           agentBrokerModelEl.textContent =
             broker.agent_model_id || broker.openrouter_model_id || '—';
         }
+        gt3RenderMbtsSelect(broker);
         if (agentBrokerCaptureEl) {
           agentBrokerCaptureEl.textContent =
             brokerObservability.packet_capture || 'metadata only';
@@ -1608,6 +1635,9 @@
                   ' · ' +
                   (r.executor || '') +
                   (r.ca_location ? ' @ ' + r.ca_location : '') +
+                  (r.mbts_label || r.mbts_id
+                    ? ' · mbts=' + (r.mbts_label || r.mbts_id)
+                    : '') +
                   (budMark ? ' · ' + budMark : '') +
                   (det ? ' — ' + det : '') +
                   '</li>'
@@ -2674,6 +2704,78 @@
       });
     }
 
+    // MBTS (agent-lane model) selection — separate from the product-lane config.
+    let mbtsSelectDirty = false;
+
+    function gt3RenderMbtsSelect(broker) {
+      const sel = document.getElementById('mbts-select');
+      if (!sel) return;
+      const catalog = Array.isArray(broker.mbts_catalog) ? broker.mbts_catalog : [];
+      const currentId = broker.mbts_id || '';
+      const signature = catalog.map((m) => m.id).join('|') + '::' + currentId;
+      if (sel.dataset.signature !== signature) {
+        sel.innerHTML = catalog
+          .map((m) => {
+            const effort = m.reasoning_effort ? ' · ' + m.reasoning_effort : '';
+            return (
+              '<option value="' +
+              m.id +
+              '">' +
+              m.label +
+              effort +
+              ' (' +
+              m.openrouter_slug +
+              ')</option>'
+            );
+          })
+          .join('');
+        if (currentId && !catalog.some((m) => m.id === currentId)) {
+          sel.insertAdjacentHTML(
+            'beforeend',
+            '<option value="' +
+              currentId +
+              '">' +
+              currentId +
+              ' (env override, not in catalog)</option>'
+          );
+        }
+        sel.dataset.signature = signature;
+        mbtsSelectDirty = false;
+      }
+      if (!mbtsSelectDirty && currentId) sel.value = currentId;
+    }
+
+    async function gt3ApplyMbts() {
+      const sel = document.getElementById('mbts-select');
+      const statusEl = document.getElementById('mbts-status');
+      if (!sel || !statusEl) return;
+      statusEl.textContent = 'Applying MBTS...';
+      try {
+        const resp = await fetch('/ops/agent-model', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mbts_id: sel.value })
+        });
+        if (!resp.ok) {
+          const errBody = await resp.json().catch(() => ({}));
+          throw new Error(errBody && errBody.detail ? errBody.detail : 'HTTP ' + resp.status);
+        }
+        const data = await resp.json();
+        mbtsSelectDirty = false;
+        statusEl.textContent =
+          'MBTS = ' +
+          data.mbts_label +
+          ' (' +
+          data.agent_model_id +
+          '). Binds sessions started from now; in-flight runs keep theirs.';
+        gt3FetchSummary();
+      } catch (e) {
+        console.warn('[gt3] /ops/agent-model error:', e);
+        statusEl.textContent =
+          'Failed to set MBTS: ' + (e && e.message ? e.message : String(e));
+      }
+    }
+
     // Runtime config apply
     async function gt3ApplyConfig() {
       const providerSel = document.getElementById('cfg-provider');
@@ -2874,6 +2976,20 @@
             return;
           }
           gt3ApplyConfig();
+        });
+      }
+
+      // MBTS selector (agent lane) — usable while Live polling, unlike the product config panel.
+      const mbtsSelectEl = document.getElementById('mbts-select');
+      if (mbtsSelectEl) {
+        mbtsSelectEl.addEventListener('change', () => {
+          mbtsSelectDirty = true;
+        });
+      }
+      const mbtsApplyBtn = document.getElementById('mbts-apply-btn');
+      if (mbtsApplyBtn) {
+        mbtsApplyBtn.addEventListener('click', () => {
+          gt3ApplyMbts();
         });
       }
 

@@ -1,0 +1,94 @@
+# Outcome Specification Node (OSN)
+#
+# See also: OSNG_Basics_README.md at the Lexiom_1_3 root — filename conventions
+# for reconstructing the OSN Graph and linking evidentiary artifacts from names.
+#
+# An OSN is a human-owned semantic source file. Core fields: id and file_name
+# (must match the on-disk stem), owner, seed, thematic_lenses, output_spec,
+# success_evidences, compilation, and graph. Optional post-build bud is a
+# bloom pointer written only by Lexiom/GT3 after a successful VAL run — never
+# by agents. The seed states intention; thematic_lenses name professional
+# perspectives; output_spec states the outcome contract; success_evidences
+# name how fulfillment will be inspected.
+#
+# Graph links: set graph.parent_osn_ids to the parent OSN id(s) and list this
+# node in each parent's graph.child_osn_ids (reciprocal). Optional
+# standard_ancestor_osn_ids reference organizational standards beyond the
+# local parent chain. On disk, prefer hierarchical stems
+# {ancestor.path}.{leaf}.{unique_id}.osn.yaml so filenames sketch ancestry;
+# when path prefixes and graph.* disagree, graph.* is authoritative.
+schema_version: osn/0.2
+id: Realization.RealizeProductLexiom.a1000201.osn
+file_name: Realization.RealizeProductLexiom.a1000201.osn
+node_type: product
+title: Realize ProductLexiom
+owner:
+  owner_id: dror
+  display_name: Dror Levin
+  role: Product Realization OSN Owner
+graph:
+  parent_osn_ids:
+    - Realization.a1000200.osn
+  child_osn_ids: []
+  standard_ancestor_osn_ids:
+    - GT_Philosophy.ProductLexiom.a1000002.osn
+  derived_from_lens_id: lens.realization.build_entry
+seed: >
+  Make ProductLexiom real as a governed, inspectable SPA delivery from this Realization-plane
+  build entry, gathering the ProductLexiom specification cone without copying that specification.
+thematic_lenses:
+  - lens_id: lens.realization.product.intent
+    name: Realization Intent
+    purpose: State CI/CD, evidence collection, provenance, and build-monitoring intent for ProductLexiom.
+  - lens_id: lens.realization.product.spec_closure
+    name: Spec Closure
+    purpose: Compile from this axis into ProductLexiom's native cone without taking BrandLexiom.
+  - lens_id: lens.realization.product.delivery
+    name: Delivery and Evidence
+    purpose: Map this root to the software-coding builder and inspect the delivered SPA, not this OSN's spec text.
+output_spec: |-
+  1. Enter how Lexiom currently makes ProductLexiom real from a Realization-plane build entry —
+  then explore Realization Intent, Spec Closure, and Delivery and Evidence below for the
+  code-backed rebuild contract.
+
+  ## Realization Intent
+  2. Remain a native child of Realization.a1000200.osn so this node's native plane is Realization,
+  not GT Philosophy.
+  3. Cite ProductLexiom through reciprocal standard_ancestor_osn_ids (ProductLexiom cites this
+  node back); do not list this node under ProductLexiom's child_osn_ids and do not copy
+  ProductLexiom seed, lenses, or output_spec.
+  4. Stay independently buildable (can_be_compilation_root true) as a CI/CD and provenance
+  control point for ProductLexiom realization.
+
+  ## Spec Closure
+  5. Use compilation_scope self_as_axis_center so prepare/run treats this OSN as axis center:
+  walk native ancestors (the Realization trunk) and native descendants, then expand each cited
+  spec as that node + its native descendants + its native ancestors (parents only) + that spec's
+  standard-ancestor nodes (visited-set on the ProductLexiom cycle).
+  6. Include ProductLexiom, UX, CodeShape, GameificationFlow, GT Philosophy, AccessControl, this
+  axis, and the Realization trunk.
+  7. Do not take BrandLexiom or other siblings/uncles of ProductLexiom merely because GT
+  Philosophy was reached.
+
+  ## Delivery and Evidence
+  8. Map target_tool_profile static_spa_coding_agent so this root uses the software-coding builder,
+  the same plugin family as ProductLexiom.
+  9. After a successful VAL run, carry bud on this requesting root so Center Bud opens the
+  delivered SPA without rewriting this node's intention fields.
+  10. Declare direct success evidence as a TEXTUAL_SNIPPET from the delivered SPA source (SUD),
+  never from this OSN's own seed, lenses, or output_spec.
+success_evidences:
+  - evidence_id: sev.realization.product.delivered_spa_snippet
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: >-
+      From the delivered welcome SPA source (the SUD), extract a single readable quoted passage or
+      code excerpt that shows the ProductLexiom application became real from a Realization-plane
+      compile — for example cockpit graph loading of ProductLexiom, a prepare/run handoff rooted
+      at RealizeProductLexiom, or inspectable SPA delivery. The quote must come from the delivered
+      artifact itself, not from this OSN's seed, lenses, or output_spec. Deliver the snippet as the
+      evidence artifact.
+compilation:
+  can_be_compilation_root: true
+  compilation_scope: self_as_axis_center
+  target_tool_profile: static_spa_coding_agent

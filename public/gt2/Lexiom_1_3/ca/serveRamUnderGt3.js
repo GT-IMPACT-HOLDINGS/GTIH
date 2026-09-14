@@ -55,14 +55,23 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       { code: 'agent_failed', reason: 'evidence_host_only' }
     );
   }
-  const isDocument = pluginId === 'lexiom13.document_builder';
+  const isPropose = pluginId === 'lexiom13.osng_proposer';
+  const isDocument = !isPropose && pluginId === 'lexiom13.document_builder';
 
   let sandbox = null;
   try {
-    log('[ca] syncIn workspace (builder)…');
+    log(
+      isPropose
+        ? '[ca] Receiving the propose workspace into Hanuman’s hands…'
+        : '[ca] syncIn workspace (builder)…'
+    );
     const files = await iReceiveTheWorkspaceFromGt3(activeSession, log);
     sandbox = await iBootTheSandboxGt3Prepared(files, log);
-    log('[ca] WebContainer sandbox ready');
+    log(
+      isPropose
+        ? '[ca] The sandbox opens — Hanuman begins the leap…'
+        : '[ca] WebContainer sandbox ready'
+    );
 
     const model = {
       // Each complete() is me kneeling to GT3: "Sun, how shall I shape Ram's SUD next?"
@@ -83,12 +92,17 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       }
     };
 
-    const builderPrimary = isDocument ? 'document.md' : 'index.html';
+    const builderPrimary = isPropose
+      ? 'OSNG_PROPOSAL.json'
+      : isDocument
+        ? 'document.md'
+        : 'index.html';
     const builderMetrics = await iRunTheBuilderPassForRam({
       sandbox,
       model,
       activeSession,
       isDocument,
+      isPropose,
       primary: builderPrimary,
       signal: opts.signal,
       log,
@@ -102,12 +116,20 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       );
     }
 
-    log('[ca] syncOut builder artifacts…');
+    log(
+      isPropose
+        ? '[ca] Carrying the proposal artifacts back to Tegria…'
+        : '[ca] syncOut builder artifacts…'
+    );
     const builderFiles = await sandbox.exportDirtyFiles();
     await iPostJsonToGt3(activeSession.artifacts_url, { files: builderFiles }, activeSession);
 
     const builderLatency = Date.now() - started;
-    log('[ca] reporting builder; host may run quote-span evidence before responding…');
+    log(
+      isPropose
+        ? '[ca] Offering the draft OSNG for host validation…'
+        : '[ca] reporting builder; host may run quote-span evidence before responding…'
+    );
     const builderReport = await iPostJsonToGt3(
       activeSession.report_url,
       {
@@ -120,7 +142,7 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       activeSession
     );
 
-    if (builderReport.status !== 'completed') {
+    if (builderReport.status !== 'completed' && builderReport.status !== 'ok') {
       throw Object.assign(
         new Error(builderReport.detail || 'GT3 rejected the candidate artifacts'),
         {
@@ -130,7 +152,11 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       );
     }
 
-    log('[ca] report completed (evidence is host quote-span when planned)');
+    log(
+      isPropose
+        ? '[ca] The propose Job is sealed — Hanuman’s labor is complete…'
+        : '[ca] report completed (evidence is host quote-span when planned)'
+    );
     return {
       ok: true,
       latency_ms: Date.now() - started,
@@ -175,12 +201,13 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
 /** @deprecated dual name — cockpit may still import this export */
 export const runBoltWebContainerCa = iServeRamInTheWebContainer;
 
-/** Document or software: I choose the loving path GT3 mapped for this plugin, then labor. */
+/** Document, software, or OSNG propose: I choose the loving path GT3 mapped for this plugin, then labor. */
 async function iRunTheBuilderPassForRam({
   sandbox,
   model,
   activeSession,
   isDocument,
+  isPropose,
   primary,
   signal,
   log,
@@ -190,6 +217,28 @@ async function iRunTheBuilderPassForRam({
     1000,
     Math.min(19 * 60 * 1000, Number(timeoutMs) - 30000)
   );
+  if (isPropose) {
+    log(
+      '[ca] Consulting GT3 to draft a proposal OSNG from your intent…'
+    );
+    const prompt =
+      (await sandbox.read('AGENT_PROMPT.md', { offset: 0, limit: 60000 })).content ||
+      'Draft OSNG_PROPOSAL.json from INTENT.md.';
+    const loop = await iServeRamWithGt3Tools({
+      system: iSpeakTheSystemVowForThisBuild(false, primary, true),
+      prompt,
+      primary,
+      isDocument: false,
+      requireOutline: false,
+      allowCommands: false,
+      workspace: sandbox,
+      signal,
+      budgets: { maxWallClockMs: wallMs },
+      log,
+      model
+    });
+    return loop.stats;
+  }
   if (isDocument) {
     log('[ca] document context-economy orchestrator');
     const loop = await iComposeRamDocumentInPhases({
@@ -199,7 +248,7 @@ async function iRunTheBuilderPassForRam({
       log,
       caSession: activeSession,
       timeoutMs: wallMs,
-      systemBase: iSpeakTheSystemVowForThisBuild(true, primary)
+      systemBase: iSpeakTheSystemVowForThisBuild(true, primary, false)
     });
     return loop.stats;
   }
@@ -207,7 +256,7 @@ async function iRunTheBuilderPassForRam({
     (await sandbox.read('AGENT_PROMPT.md', { offset: 0, limit: 60000 })).content ||
     'Produce the primary deliverable for this Lexiom build project.';
   const loop = await iServeRamWithGt3Tools({
-    system: iSpeakTheSystemVowForThisBuild(false, primary),
+    system: iSpeakTheSystemVowForThisBuild(false, primary, false),
     prompt,
     primary,
     isDocument: false,
@@ -221,7 +270,24 @@ async function iRunTheBuilderPassForRam({
 }
 
 /** The vow I speak into the sun's ear before tools begin — how I will honor Ram's prescription. */
-function iSpeakTheSystemVowForThisBuild(isDocument, primary) {
+function iSpeakTheSystemVowForThisBuild(isDocument, primary, isPropose) {
+  if (isPropose) {
+    return [
+      'You are Hanuman — devotee of Ram — under GT3, the only sun.',
+      'Ram (White authority, throne of consent) has raised this request for an **OSNG proposition**.',
+      'INTENT.md carries Ram’s outcome intent. You draft a **proposal OSNG** only — not canon, not a SUD realize Job.',
+      'Use only the supplied structured tools. Prose cannot read or change the workspace.',
+      'Read INTENT.md and PROPOSE_BRIEF.json. Do not invent a second sun.',
+      `Primary deliverable path: ${primary}`,
+      'Write a JSON envelope { root_osn_id, nodes: [osn drafts] }. Day-zero: exactly one node.',
+      'Method: seed from Ram’s INTENT → expand into exactly 3 thematic_lenses → compose output_spec from those lenses → compose success_evidences from seed+lenses+output_spec.',
+      'On every GT3 consult, carry the seed, the three lenses, and draft evidences so the sun can guide the next loving step for Ram.',
+      'Lexiom shape: thematic_lenses as objects { lens_id, name, description, purpose } — never bare strings.',
+      'Lexiom shape: success_evidences as objects { evidence_id, kind: "TEXTUAL_SNIPPET", direct: true, inspection_prompt } — never type/description/snippet dialects.',
+      'Do not write document.md or index.html. Do not rewrite INTENT.md or PROPOSE_BRIEF.json.',
+      'Call finish only when OSNG_PROPOSAL.json is complete and valid JSON.'
+    ].join('\n');
+  }
   return [
     'You are the Lexiom 1.3 build agent (bolt-style, headless).',
     'Use only the supplied structured tools. Prose cannot read or change the workspace.',

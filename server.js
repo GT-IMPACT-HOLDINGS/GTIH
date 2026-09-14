@@ -53,9 +53,17 @@ import {
   saveLexiom13Osn
 } from './lib/lexiom13OsnPersist.js';
 import {
+  startLexiom13OsngPropose,
+  readLexiom13OsngProposeStatus,
+  reportLexiom13OsngProposeSession,
+  OSNG_PROPOSER_PLUGIN_ID
+} from './lib/lexiom13OsnPropose.js';
+import { getCaSession } from './lib/lexiom13CaSessionRegistry.js';
+import {
   prepareLexiom13Build,
   runLexiom13Build,
   readLexiom13BuildStatus,
+  getAgentRun,
   listRecentAgentRuns,
   readSessionWorkspace,
   readSessionWorkspaceFile,
@@ -67,10 +75,14 @@ import {
   EXECUTOR_ID
 } from './lib/lexiom13BuildPlugins.js';
 import { readAgentRuntimeBringup } from './lib/gt3AgentRuntimeBringup.js';
+import { handleAgentChatCompletions } from './lib/gt3AgentOpenAiProxy.js';
 import {
-  DEFAULT_AGENT_OPENROUTER_MODEL,
-  handleAgentChatCompletions
-} from './lib/gt3AgentOpenAiProxy.js';
+  getAgentMbtsById,
+  getRuntimeAgentMbts,
+  listAgentMbts,
+  resolveAgentMbts,
+  setRuntimeAgentMbts
+} from './lib/gt3AgentModelCatalog.js';
 import {
   isValidExchangeId,
   readLmExchange
@@ -114,8 +126,22 @@ const GT3_LEXIOM_DEMO_KEY = process.env.GT3_LEXIOM_DEMO_KEY || '';
 
 // Agent broker (VAL /v1) — separate OpenRouter key for build/evidence cost tracking
 const GT3_LEXIOM_AGENT_KEY = process.env.GT3_LEXIOM_AGENT_KEY || '';
-const GT3_AGENT_OPENROUTER_MODEL =
-  process.env.GT3_AGENT_OPENROUTER_MODEL || DEFAULT_AGENT_OPENROUTER_MODEL;
+/**
+ * MBTS (Model Behind The Scene) for the agent lane. Env seeds it; the GT3 admin
+ * may retarget it at runtime from the ops console. Runtime-only, like /ops/config:
+ * a restart returns to GT3_AGENT_OPENROUTER_MODEL. The agent never chooses.
+ */
+const currentAgentMbts = getRuntimeAgentMbts;
+
+/**
+ * MBTS frozen onto a run's CA job ticket. Unknown runs fall back to the live
+ * choice so an out-of-band call is never left without a sun.
+ * @param {string} runId
+ */
+function agentMbtsForRun(runId) {
+  const run = runId ? getAgentRun(runId) : null;
+  return (run && resolveAgentMbts(run.mbts_id)) || currentAgentMbts();
+}
 const GT3_AGENT_OBSERVABILITY_MAX_CHARS = Math.max(
   10_000,
   parseInt(process.env.GT3_AGENT_OBSERVABILITY_MAX_CHARS || '2000000', 10) ||
@@ -250,6 +276,8 @@ function lexiom13CrossOriginIsolation(req, res, next) {
 }
 app.use('/gt2/Lexiom_1_3', lexiom13CrossOriginIsolation);
 app.use('/gt2/lexiom_1_3', lexiom13CrossOriginIsolation);
+app.use('/TRH%20frontend', lexiom13CrossOriginIsolation);
+app.use('/TRH frontend', lexiom13CrossOriginIsolation);
 
 // Lexiom 1.4 embedded-SaaS API (vertical SDK / TRH). Does not modify Lexiom 1.3.
 app.use('/lexiom14', createLexiom14Router());
@@ -356,6 +384,15 @@ app.get('/gt2/lexiom/', (req, res) => {
 
 // Serve everything under /public at the root (including /favicon.ico)
 app.use(express.static(STATIC_ROOT));
+// TRH browser console (repo-root sibling to Tegria_frontend; not under public/)
+app.use(
+  '/TRH%20frontend',
+  express.static(path.join(__dirname, 'TRH frontend'))
+);
+app.use(
+  '/TRH frontend',
+  express.static(path.join(__dirname, 'TRH frontend'))
+);
 
 app.use('/gt2', express.static(path.join(STATIC_ROOT, 'gt2')));
 // Lowercase Lexiom alias for assets requested under /gt2/lexiom/*.
@@ -990,17 +1027,17 @@ app.get('/healthz', (req, res) => {
 
 /**
  * OpenAI-compatible agent broker (VAL Step 3).
- * Always OpenRouter → Claude (default GT3_AGENT_OPENROUTER_MODEL). Never Anthropic direct.
+ * Always OpenRouter, never a vendor endpoint direct. Model is the live MBTS
+ * chosen by the GT3 admin; unscoped calls have no run to inherit from.
  */
 app.post('/v1/chat/completions', async (req, res) => {
   await handleAgentChatCompletions(req, res, {
     agentKey: GT3_LEXIOM_AGENT_KEY,
     openrouterKey: OPENROUTER_API_KEY,
-    agentModel: GT3_AGENT_OPENROUTER_MODEL,
+    agentMbts: currentAgentMbts(),
     logDir: LOG_DIR,
     ledgerLog,
     recordOpsEvent,
-    httpReferer: process.env.GT3_HTTP_REFERER || null,
     destination: GT3_AGENT_LM_DESTINATION,
     observabilityMaxChars: GT3_AGENT_OBSERVABILITY_MAX_CHARS,
     onComplete: ({ ok, detail }) => {
@@ -1015,6 +1052,8 @@ app.post('/v1/chat/completions', async (req, res) => {
 
 /**
  * OpenAI-compatible CA broker path. Inject run_id + pass for Ops AGENT rows.
+ * The MBTS is whatever was frozen onto this run's ticket, so an admin change
+ * mid-run cannot swap the model under a session already in flight.
  */
 app.post('/v1/agent/:runId/:pass/chat/completions', async (req, res) => {
   const runId = req.params.runId;
@@ -1032,11 +1071,10 @@ app.post('/v1/agent/:runId/:pass/chat/completions', async (req, res) => {
   await handleAgentChatCompletions(req, res, {
     agentKey: GT3_LEXIOM_AGENT_KEY,
     openrouterKey: OPENROUTER_API_KEY,
-    agentModel: GT3_AGENT_OPENROUTER_MODEL,
+    agentMbts: agentMbtsForRun(runId),
     logDir: LOG_DIR,
     ledgerLog,
     recordOpsEvent,
-    httpReferer: process.env.GT3_HTTP_REFERER || null,
     destination: GT3_AGENT_LM_DESTINATION,
     observabilityMaxChars: GT3_AGENT_OBSERVABILITY_MAX_CHARS,
     onComplete: ({ ok, detail }) => {
@@ -1126,6 +1164,57 @@ app.post('/lexiom13/osn/save', async (req, res) => {
     }
     return res.status(status).json({
       detail: e && e.message ? e.message : 'Failed to save OSN'
+    });
+  }
+});
+
+// GTIH brick: narrative/intent → proposed OSNG via browser Hanuman (async CA).
+app.post('/lexiom13/osn/propose', async (req, res) => {
+  try {
+    const headerKey = String(req.get('X-GT3-OpenRouter-Key') || '').trim();
+    if (!(GT3_LEXIOM_AGENT_KEY || OPENROUTER_API_KEY || headerKey)) {
+      return res.status(503).json({
+        detail:
+          'OSNG propose (Hanuman) requires GT3_LEXIOM_AGENT_KEY or OPENROUTER_API_KEY (or X-GT3-OpenRouter-Key).',
+        debug: {
+          phase: 'agent_key_missing',
+          labor: 'hanuman_browser_ca'
+        }
+      });
+    }
+    const result = await startLexiom13OsngPropose(__dirname, req.body || {}, {});
+    return res.json(result);
+  } catch (e) {
+    const status = e && e.statusCode ? e.statusCode : 500;
+    if (status >= 500) {
+      console.error('lexiom13_osn_propose_start_failed', e);
+    }
+    return res.status(status).json({
+      detail: e && e.message ? e.message : 'Failed to start OSNG propose',
+      debug: (e && e.debug) || {
+        phase: 'unhandled',
+        error_name: e && e.name ? e.name : undefined,
+        error_message: e && e.message ? e.message : String(e)
+      }
+    });
+  }
+});
+
+app.get('/lexiom13/osn/propose/status/:runId', async (req, res) => {
+  try {
+    const result = await readLexiom13OsngProposeStatus(__dirname, req.params.runId);
+    return res.json(result);
+  } catch (e) {
+    const status = e && e.statusCode ? e.statusCode : 500;
+    if (status >= 500) {
+      console.error('lexiom13_osn_propose_status_failed', e);
+    }
+    return res.status(status).json({
+      detail: e && e.message ? e.message : 'Failed to read OSNG propose status',
+      debug: (e && e.debug) || {
+        phase: 'status',
+        error_message: e && e.message ? e.message : String(e)
+      }
     });
   }
 });
@@ -1240,7 +1329,12 @@ app.post('/lexiom13/build/session/:sessionId/artifacts', async (req, res) => {
 
 app.post('/lexiom13/build/session/:sessionId/report', async (req, res) => {
   try {
-    const result = await reportLexiom13CaSession(
+    const sessionPeek = getCaSession(req.params.sessionId);
+    const reporter =
+      sessionPeek && sessionPeek.plugin_id === OSNG_PROPOSER_PLUGIN_ID
+        ? reportLexiom13OsngProposeSession
+        : reportLexiom13CaSession;
+    const result = await reporter(
       req.params.sessionId,
       req.body || {},
       req.get('X-GT3-CA-Capability')
@@ -1250,7 +1344,8 @@ app.post('/lexiom13/build/session/:sessionId/report', async (req, res) => {
     const status = e && e.statusCode ? e.statusCode : 500;
     if (status >= 500) console.error('lexiom13_ca_report_failed', e);
     return res.status(status).json({
-      detail: e && e.message ? e.message : 'Failed to apply CA session report'
+      detail: e && e.message ? e.message : 'Failed to apply CA session report',
+      debug: (e && e.debug) || undefined
     });
   }
 });
@@ -2443,8 +2538,14 @@ app.get('/ops/summary', async (req, res) => {
       read_at: new Date().toISOString()
     },
     agent_broker: {
-      openrouter_model_id: GT3_AGENT_OPENROUTER_MODEL,
-      agent_model_id: GT3_AGENT_OPENROUTER_MODEL,
+      openrouter_model_id: currentAgentMbts().openrouter_slug,
+      agent_model_id: currentAgentMbts().openrouter_slug,
+      mbts_id: currentAgentMbts().id,
+      mbts_label: currentAgentMbts().label,
+      mbts_family: currentAgentMbts().family,
+      reasoning_effort: currentAgentMbts().reasoning_effort,
+      mbts_in_catalog: currentAgentMbts().in_catalog,
+      mbts_catalog: listAgentMbts(),
       destination: {
         id: GT3_AGENT_LM_DESTINATION.id,
         label: GT3_AGENT_LM_DESTINATION.label,
@@ -2468,7 +2569,14 @@ app.get('/ops/summary', async (req, res) => {
       last_error_detail: LAST_AGENT_ERROR_DETAIL,
       key_configured: !!(GT3_LEXIOM_AGENT_KEY || OPENROUTER_API_KEY)
     },
-    recent_agent_runs: listRecentAgentRuns(20)
+    recent_agent_runs: listRecentAgentRuns(20).map((run) => {
+      const frozen = run.mbts_id ? resolveAgentMbts(run.mbts_id) : null;
+      return {
+        ...run,
+        mbts_label: frozen ? frozen.label : null,
+        mbts_model_id: frozen ? frozen.openrouter_slug : null
+      };
+    })
   });
 });
 
@@ -2501,6 +2609,40 @@ app.post('/ops/reload-expression-skills', (req, res) => {
       detail: e && e.message ? String(e.message) : String(e)
     });
   }
+});
+
+/**
+ * MBTS selection for the agent lane (GT3 ops console — gt3.html).
+ * Deliberately separate from POST /ops/config, which governs the product lane:
+ * changing product llm_provider must never retarget agent traffic.
+ * Takes effect for sessions started after the change; in-flight runs keep theirs.
+ */
+app.post('/ops/agent-model', (req, res) => {
+  const body = req.body || {};
+  const requested = typeof body.mbts_id === 'string' ? body.mbts_id.trim() : '';
+  const entry = getAgentMbtsById(requested);
+  if (!entry) {
+    return res.status(400).json({
+      detail: `mbts_id must be one of: ${listAgentMbts()
+        .map((m) => m.id)
+        .join(', ')}`
+    });
+  }
+  setRuntimeAgentMbts(entry);
+  console.log(
+    `[ops/agent-model] mbts=${entry.id} slug=${entry.openrouter_slug} family=${entry.family} reasoning_effort=${entry.reasoning_effort || 'n/a'}`
+  );
+  recordOpsEvent('agent_mbts_change', {}, { mbts_id: entry.id });
+  res.json({
+    mbts_id: entry.id,
+    mbts_label: entry.label,
+    mbts_family: entry.family,
+    reasoning_effort: entry.reasoning_effort,
+    agent_model_id: entry.openrouter_slug,
+    mbts_catalog: listAgentMbts(),
+    detail:
+      'MBTS updated. Runs already in flight keep the model frozen at their ticket.'
+  });
 });
 
 const VALID_OPS_LLM_PROVIDERS = new Set([
@@ -2776,6 +2918,7 @@ app.get('/inferences', async (req, res) => {
           transport: rec.transport || 'openai_compatible_http',
           destination_locality: rec.destination_locality || 'remote',
           model: rec.model || null,
+          mbts_id: rec.mbts_id || null,
           run_id: rec.run_id || null,
           pass: rec.pass || null,
           plugin_id: rec.plugin_id || null,
@@ -2979,7 +3122,7 @@ app.listen(PORT, '0.0.0.0', () => {
         : '')
   );
   console.log(
-    `Agent broker: POST /v1/chat/completions → OpenRouter model=${GT3_AGENT_OPENROUTER_MODEL}` +
+    `Agent broker: POST /v1/chat/completions → OpenRouter mbts=${currentAgentMbts().id} model=${currentAgentMbts().openrouter_slug}` +
       `; agent_key=${GT3_LEXIOM_AGENT_KEY ? 'set' : 'unset'}` +
       `; openrouter_key=${OPENROUTER_API_KEY ? 'set' : 'unset'}`
   );
