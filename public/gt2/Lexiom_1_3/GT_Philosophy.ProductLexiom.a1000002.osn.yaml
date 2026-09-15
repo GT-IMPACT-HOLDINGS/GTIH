@@ -67,7 +67,7 @@ output_spec: |-
   without treating Bud as evidence approval.
   
   ## Code Shaping
-  7. Implement Lexiom 1.3 as one inspectable SPA co-hosted on the GT3 Node server beside
+  7. Implement Lexiom 1.3.3 as one inspectable SPA co-hosted on the GT3 Node server beside
   canonical OSN YAML under public/gt2/Lexiom_1_3/ (recursive list with ProductLexiom quartet
   fallback).
   8. Persist canonical changes only through explicit approve to /lexiom13/osn/save create,
