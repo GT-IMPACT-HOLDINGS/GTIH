@@ -49,8 +49,8 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         build-args: |
-          GT3_LEXIOM_DEMO_KEY=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
-          GT3_LEXIOM_AGENT_KEY=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
+          GT3_LEXIOM_DEMO_KEY=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
+          GT3_LEXIOM_AGENT_KEY=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
 
       
 
