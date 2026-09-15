@@ -49,7 +49,7 @@ thematic_lenses:
     name: Code Shaping
     purpose: Keep the POC deterministic, simple, inspectable, and buildable as one SPA.
 output_spec: |-
-  1. Step into Lexiom 1.3.3 as a calm, welcoming SPA where newcomers meet OSNs as owned,
+  1. Step into Lexiom 1.3.4 as a calm, welcoming SPA where newcomers meet OSNs as owned,
   evidence-backed, file-like semantic artifacts — then explore UX and Code Shaping below for how
   to rebuild that product surface.
   
