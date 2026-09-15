@@ -1,9 +1,9 @@
 # Step 1: Use an official lightweight Node.js image
 FROM node:22-alpine
 
-ARG GT3_LEXIOM_DEMO_KEY='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'
+ARG GT3_LEXIOM_DEMO_KEY=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
 
-ARG GT3_LEXIOM_AGENT_KEY='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'
+ARG GT3_LEXIOM_AGENT_KEY=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
 
 # 2. Set the working directory inside the container
 WORKDIR /app
