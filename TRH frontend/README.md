@@ -16,7 +16,13 @@ This tree sits **parallel** to [`Tegria_frontend/`](../Tegria_frontend/) at the 
 
 - Open (with `npm start`): [http://localhost:8080/TRH%20frontend/](http://localhost:8080/TRH%20frontend/)
 
+- Theme follows the browser `prefers-color-scheme` (bright by default; reversed palette in dark mode)
+
 - Primary: `gtih.osng.proposeThenRealizeUntilDone` — propose OSNG → ephemeral prepare (no Lexiom YAML) → Hanuman realize → render SUD + evidence collections
+
+- Left / right sidebars always open (OSNG · Hanuman); no collapse rails
+
+- Left sidebar: proposed OSNG as **YAML** by default; Outcome-only shows prose paragraphs (blue `output_spec`, green evidence narratives); Metadata alone or both → structured YAML (meta mid-gray · spec blue · evidences green); JSON formatter kept behind `setOsngViewFormat('json'|'yaml')` for a later user toggle
 
 - Secondary: **propose only** (`proposeFromIntentUntilDone`, `max_descendants: 0` → single-OSN OSNG)
 

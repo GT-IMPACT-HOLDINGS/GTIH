@@ -75,7 +75,7 @@ Three GTIH capability groups (detail below): **OSNG**, **GT3 inference**, **Hanu
 | Propose status | `gtih.osng.getProposeStatus(run_id)` | `GET /lexiom13/osn/propose/status/:runId` → `awaiting_browser \| running \| ok \| failed` + envelope on ok |
 | Propose labor (browser) | `gtih.hanuman.serveProposeSession(ca_session)` | Lexiom CA WebContainer (`OSNG_PROPOSAL.json`) |
 | Propose until done | `gtih.osng.proposeFromIntentUntilDone(...)` | start → labor → poll |
-| Propose then realize (TRH) | `gtih.osng.proposeThenRealizeUntilDone(...)` | propose → ephemeral prepare → realize → evidence + SUD |
+| Propose then realize (TRH) | `gtih.osng.proposeThenRealizeUntilDone(..., { onEnvelope? })` | propose → ephemeral prepare → realize → evidence + SUD; `onEnvelope` fires when the draft OSNG is ready (before prepare/realize) |
 | Canonize (create) | `gtih.osng.create({ osn, parentOsnId })` | `POST /lexiom13/osn/save` `operation: "create"` |
 | Persist edits | `gtih.osng.update({ osn, previousFileName? })` | same, `operation: "update"` |
 | Prune branch | `gtih.osng.delete({ rootOsnId, confirmRootPrune? })` | same, `operation: "prune"` |
@@ -115,7 +115,7 @@ Browser CA labor is driven by the host via `serveRealizeSession` / `servePropose
 | Realize until done | `realizeUntilDone({ osng_envelope \| compilation_root_osn_id \| handoff })` | prepare → run → labor → poll |
 | Evidence for a Focus OSN | `listEvidenceCollections(osnId)` | `GET /lexiom13/evidence/collections?osn_id=` |
 | Evidence / bud bytes | `getBudArtifactUrl` / `getBudPreviewUrl` / `fetchBudText` / evidence helpers | artifact / preview GETs under `/lexiom13/…` |
-| Propose → realize (TRH) | `gtih.osng.proposeThenRealizeUntilDone(...)` | proposeUntilDone → ephemeral prepare → realizeUntilDone → evidence + SUD |
+| Propose → realize (TRH) | `gtih.osng.proposeThenRealizeUntilDone(..., { onEnvelope? })` | proposeUntilDone → **`onEnvelope`** → ephemeral prepare → realizeUntilDone → evidence + SUD |
 
 **Ephemeral prepare:** draft OSNG from propose can realize without seating nodes on Ram’s White throne (no canon YAML). Handoff `source: "ephemeral_osng_envelope"`. Bud YAML persist is **skipped**; clients still get SUD via `/lexiom13/build/{runId}/artifact/…` or `/preview/…` and evidences via collections.
 

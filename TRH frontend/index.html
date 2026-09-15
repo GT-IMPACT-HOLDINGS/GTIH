@@ -3,22 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TRH — browser console</title>
+  <title>The Reasoning Hub</title>
   <style>
     :root {
       --ink: #111;
       --paper: #f4f4f2;
+      --surface: #fff;
       --muted: #555;
       --rule: #ccc;
       --ok: #1a5c1a;
       --err: #8b1a1a;
-      --rail: 2.25rem;
-      --config-size: 2.25rem;
+      --yaml-chrome: #b5b5b5;
+      --yaml-meta: #6b6b6b;
+      --yaml-spec: #1a5f9e;
+      --yaml-evidences: #1a7a3c;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --ribbon-h: 2.5rem;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #eee;
+        --paper: #0b0b0a;
+        --surface: #161615;
+        --muted: #9a9a96;
+        --rule: #3a3a38;
+        --ok: #7dca7d;
+        --err: #e08080;
+        --yaml-chrome: #5a5a5a;
+        --yaml-meta: #a8a8a8;
+        --yaml-spec: #6ba3d9;
+        --yaml-evidences: #6bc48a;
+        --shadow: rgba(0, 0, 0, 0.45);
+        color-scheme: dark;
+      }
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
       background: var(--paper);
       color: var(--ink);
       font-family: "JetBrains Mono", "Consolas", "Courier New", monospace;
@@ -27,102 +52,91 @@
     }
     .shell {
       display: flex;
-      min-height: 100vh;
+      flex: 1 1 auto;
+      min-height: 0;
       width: 100%;
     }
 
-    /* Top-left config glyph */
+    /* Top config ribbon */
     .config-anchor {
-      position: fixed;
-      top: 0.65rem;
-      left: 0.65rem;
+      position: relative;
       z-index: 40;
+      display: flex;
+      align-items: center;
+      flex: 0 0 var(--ribbon-h);
+      height: var(--ribbon-h);
+      width: 100%;
+      padding: 0 0.75rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--rule);
     }
-    .config-glyph {
-      width: var(--config-size);
-      height: var(--config-size);
+    .ribbon-brand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       margin: 0;
       padding: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .config-glyph {
+      margin: 0;
+      padding: 0.3rem 0.65rem;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      background: #fff;
-      color: var(--ink);
-      border: 1px solid var(--rule);
+      gap: 0.4rem;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
       cursor: pointer;
       font: inherit;
-      font-size: 1.15rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
       line-height: 1;
+      margin-top: 0;
     }
     .config-glyph:hover,
     .config-glyph[aria-expanded="true"] {
+      color: var(--ink);
       background: var(--paper);
+      border-color: var(--rule);
     }
     .config-panel {
       display: none;
       position: absolute;
-      top: calc(100% + 0.35rem);
-      left: 0;
+      top: calc(100% + 1px);
+      left: 0.75rem;
       width: min(26rem, calc(100vw - 1.5rem));
       max-height: min(70vh, 36rem);
       overflow: auto;
-      background: #fff;
+      background: var(--surface);
       border: 1px solid var(--rule);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 24px var(--shadow);
       padding: 0.75rem 1rem 1rem;
     }
     .config-panel.open { display: block; }
     .config-panel .fold { margin: 0.65rem 0; }
     .config-panel .fold:first-child { margin-top: 0; }
 
-    .osng-rail,
-    .hanuman-rail {
-      flex: 0 0 var(--rail);
-      width: var(--rail);
-      writing-mode: vertical-rl;
-      border: none;
-      background: #fff;
-      color: var(--muted);
-      font: inherit;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      cursor: pointer;
-      padding: 1rem 0.35rem;
-    }
-    .osng-rail {
-      transform: rotate(180deg);
-      border-right: 1px solid var(--rule);
-      margin-top: 3rem;
-    }
-    .hanuman-rail {
-      border-left: 1px solid var(--rule);
-    }
-    .osng-rail:hover,
-    .hanuman-rail:hover { color: var(--ink); background: var(--paper); }
-
     .osng-sidebar,
     .hanuman-sidebar {
-      display: none;
+      display: flex;
       flex-direction: column;
-      width: 50%;
-      flex: 0 0 50%;
-      max-width: 50%;
-      background: #fff;
-      min-height: 100vh;
-      max-height: 100vh;
-    }
-    .osng-sidebar { border-right: 1px solid var(--rule); }
-    .hanuman-sidebar { border-left: 1px solid var(--rule); }
-    .shell.osng-open .osng-sidebar { display: flex; }
-    .shell.osng-open .osng-rail { display: none; }
-    .shell.hanuman-open .hanuman-sidebar { display: flex; }
-    .shell.hanuman-open .hanuman-rail { display: none; }
-    .shell.osng-open.hanuman-open .osng-sidebar,
-    .shell.osng-open.hanuman-open .hanuman-sidebar {
       width: 35%;
       flex: 0 0 35%;
       max-width: 35%;
+      background: var(--surface);
+      min-height: 0;
+      max-height: 100%;
+      align-self: stretch;
     }
+    .osng-sidebar { border-right: 1px solid var(--rule); }
+    .hanuman-sidebar { border-left: 1px solid var(--rule); }
 
     .sidebar-head {
       display: flex;
@@ -138,17 +152,64 @@
       font-weight: 600;
       margin: 0;
     }
-    .sidebar-head button {
+    .osng-filters,
+    .hanuman-ribbon {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1rem;
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      flex: 0 0 auto;
+      min-height: 2.45rem;
+      background: var(--surface);
+    }
+    .osng-filters label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
       margin: 0;
-      padding: 0.35rem 0.65rem;
+      color: var(--ink);
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .osng-filters input {
+      width: auto;
+      margin: 0;
+      accent-color: var(--ink);
+    }
+    .osng-download {
+      margin: 0;
+      padding: 0.25rem 0.55rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
       background: transparent;
       color: var(--ink);
       border: 1px solid var(--rule);
       font: inherit;
       font-size: 0.8rem;
+      line-height: 1;
       cursor: pointer;
     }
-    #osngYaml,
+    .osng-download:hover:not(:disabled) {
+      background: var(--paper);
+    }
+    .osng-download:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .osng-download .glyph {
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .hanuman-ribbon {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+    #osngView,
     #out {
       margin: 0;
       padding: 1rem;
@@ -156,23 +217,45 @@
       max-height: none;
       flex: 1 1 auto;
       overflow: auto;
-      background: #fff;
+      background: var(--surface);
       white-space: pre-wrap;
       overflow-wrap: anywhere;
       word-break: break-word;
+    }
+    #osngView .osng-comment { color: var(--muted); }
+    /* YAML chrome (keys + special chars) ≈ 50% lighter than meta value gray */
+    #osngView .osng-yaml-key,
+    #osngView .osng-yaml-punct {
+      color: var(--yaml-chrome);
+    }
+    #osngView .osng-meta {
+      color: var(--yaml-meta);
+    }
+    #osngView .osng-spec {
+      color: var(--yaml-spec);
+    }
+    #osngView .osng-evidences {
+      color: var(--yaml-evidences);
+    }
+    #osngView.osng-outcome-prose {
+      white-space: normal;
+      line-height: 1.55;
+    }
+    #osngView .osng-para {
+      display: block;
+      margin: 0 0 1rem;
+    }
+    #osngView .osng-para:last-child {
+      margin-bottom: 0;
     }
 
     .workspace {
       flex: 1 1 auto;
       min-width: 0;
-      max-width: 56rem;
+      max-width: none;
       margin: 0 auto;
       padding: 2rem 1.25rem 3rem;
       width: 100%;
-    }
-    .shell.osng-open .workspace,
-    .shell.hanuman-open .workspace {
-      max-width: none;
     }
 
     h1 {
@@ -199,7 +282,7 @@
     label { display: block; margin: 0 0 0.35rem; color: var(--muted); }
     textarea, input[type="text"], input[type="number"] {
       width: 100%;
-      background: #fff;
+      background: var(--surface);
       border: 1px solid var(--rule);
       border-radius: 0;
       padding: 0.65rem 0.75rem;
@@ -229,7 +312,7 @@
     pre, .pane {
       margin-top: 0.5rem;
       padding: 1rem;
-      background: #fff;
+      background: var(--surface);
       border: 1px solid var(--rule);
       overflow: auto;
       white-space: pre-wrap;
@@ -241,7 +324,7 @@
       width: 100%;
       min-height: 22rem;
       border: 0;
-      background: #fff;
+      background: var(--surface);
     }
     .ok { color: var(--ok); }
     .err { color: var(--err); }
@@ -249,7 +332,7 @@
       list-style: none;
       padding: 0.75rem 1rem;
       margin: 0.5rem 0 0;
-      background: #fff;
+      background: var(--surface);
       border: 1px solid var(--rule);
       min-height: 4rem;
     }
@@ -264,7 +347,7 @@
     details.fold {
       margin: 0.75rem 0;
       border: 1px solid var(--rule);
-      background: #fff;
+      background: var(--surface);
     }
     details.fold > summary {
       cursor: pointer;
@@ -297,7 +380,7 @@
   <script src="/gt2/gtih/gtih-sdk.js"></script>
 </head>
 <body>
-  <div class="config-anchor" id="configAnchor">
+  <header class="config-anchor" id="configAnchor" role="banner">
     <button
       type="button"
       class="config-glyph"
@@ -306,16 +389,17 @@
       aria-controls="configPanel"
       title="Config"
       aria-label="Open config"
-    >⚙</button>
+    >Config</button>
+    <h1 class="ribbon-brand">The Reasoning Hub</h1>
     <div class="config-panel" id="configPanel" role="dialog" aria-label="Config" hidden>
       <details class="fold" open>
         <summary>About</summary>
         <div class="fold-body">
-          <p class="sub">
+    <p class="sub">
             The Reasoning Hub — GTIH direct.
             Enter runs <code>proposeThenRealizeUntilDone</code>.
-            Lexiom cabinet untouched.
-          </p>
+      Lexiom cabinet untouched.
+    </p>
           <p class="sub">
             <a href="/gt2/gtih/SHARED_OSNG_propose_from_intent.md">SHARED_OSNG_propose_from_intent.md</a>
             · <a href="/gt2/gtih/API.md">API.md</a>
@@ -326,14 +410,14 @@
       <details class="fold" open>
         <summary>Options</summary>
         <div class="fold-body">
-          <div class="row">
-            <div>
-              <label for="cap">max_descendants (0 = single OSN)</label>
-              <input id="cap" type="number" min="0" step="1" value="0" />
-            </div>
-            <div>
+    <div class="row">
+      <div>
+        <label for="cap">max_descendants (0 = single OSN)</label>
+        <input id="cap" type="number" min="0" step="1" value="0" />
+      </div>
+      <div>
               <label for="key">Optional OpenRouter key</label>
-              <input id="key" type="text" autocomplete="off" placeholder="sk-or-…" />
+        <input id="key" type="text" autocomplete="off" placeholder="sk-or-…" />
             </div>
           </div>
           <button type="button" id="proposeOnly" class="secondary">propose only</button>
@@ -347,23 +431,38 @@
         </div>
       </details>
     </div>
-  </div>
+  </header>
 
   <div class="shell" id="shell">
-    <aside class="osng-sidebar" id="osngSidebar" aria-label="OSNG YAML" hidden>
+    <aside class="osng-sidebar" id="osngSidebar" aria-label="OSNG">
       <div class="sidebar-head">
-        <h2>OSNG (YAML)</h2>
-        <button type="button" id="osngCollapse" aria-expanded="true">Collapse</button>
+        <h2 id="osngTitle">OSNG</h2>
       </div>
-      <pre id="osngYaml"># OSNG appears here after propose</pre>
+      <div class="osng-filters" role="group" aria-label="OSNG view filters">
+        <button
+          type="button"
+          class="osng-download"
+          id="osngDownload"
+          title="Download filtered OSNG as YAML"
+          aria-label="Download YAML"
+          disabled
+        >
+          <span class="glyph" aria-hidden="true">⬇</span>
+          YAML
+        </button>
+        <label title="Outcome narrative as paragraphs: output_spec (blue) then evidence texts (green). Not YAML structure.">
+          <input type="checkbox" id="osngFilterOutcome" checked />
+          Outcome
+        </label>
+        <label title="Show remaining OSN / envelope fields (mid-gray). Combine with Outcome for full YAML.">
+          <input type="checkbox" id="osngFilterMeta" />
+          Metadata
+        </label>
+      </div>
+      <pre id="osngView"><span class="osng-comment"># OSNG appears here after propose</span></pre>
     </aside>
-    <button type="button" class="osng-rail" id="osngExpand" aria-expanded="false" aria-controls="osngSidebar">
-      OSNG
-    </button>
 
     <div class="workspace">
-      <h1>TRH</h1>
-
       <section class="stage" aria-labelledby="intent-heading">
         <div class="stage-head">
           <label for="intent" id="intent-heading">SUD-describing prompt / narrative</label>
@@ -394,27 +493,27 @@
       </section>
     </div>
 
-    <button type="button" class="hanuman-rail" id="hanumanExpand" aria-expanded="false" aria-controls="hanumanSidebar">
-      Hanuman
-    </button>
-    <aside class="hanuman-sidebar" id="hanumanSidebar" aria-label="Hanuman under GT3" hidden>
+    <aside class="hanuman-sidebar" id="hanumanSidebar" aria-label="Hanuman under GT3">
       <div class="sidebar-head">
         <h2>Hanuman under GT3</h2>
-        <button type="button" id="hanumanCollapse" aria-expanded="true">Collapse</button>
       </div>
-      <pre id="out" aria-live="polite">// Ram raises · Hanuman labors · GT3 is the sun</pre>
+      <div class="hanuman-ribbon" id="hanumanRibbon">
+        Ram raises · Hanuman labors · GT3 is the sun
+      </div>
+      <pre id="out" aria-live="polite"></pre>
     </aside>
   </div>
   <script>
     (function () {
-      var shell = document.getElementById('shell');
       var osngSidebar = document.getElementById('osngSidebar');
-      var osngYaml = document.getElementById('osngYaml');
-      var osngExpand = document.getElementById('osngExpand');
-      var osngCollapse = document.getElementById('osngCollapse');
-      var hanumanSidebar = document.getElementById('hanumanSidebar');
-      var hanumanExpand = document.getElementById('hanumanExpand');
-      var hanumanCollapse = document.getElementById('hanumanCollapse');
+      var osngView = document.getElementById('osngView');
+      var osngTitle = document.getElementById('osngTitle');
+      var osngFilterOutcome = document.getElementById('osngFilterOutcome');
+      var osngFilterMeta = document.getElementById('osngFilterMeta');
+      var osngDownload = document.getElementById('osngDownload');
+      var lastOsngEnvelope = null;
+      /** Sidebar media: 'yaml' | 'json'. Flip here (or later from UI) without rewriting renderers. */
+      var osngViewFormat = 'yaml';
       var configGlyph = document.getElementById('configGlyph');
       var configPanel = document.getElementById('configPanel');
       var configAnchor = document.getElementById('configAnchor');
@@ -433,20 +532,6 @@
         keyEl.value = (window.gtih && window.gtih.getApiKey && window.gtih.getApiKey()) || '';
       } catch (_e) {}
 
-      function setOsngOpen(open) {
-        shell.classList.toggle('osng-open', !!open);
-        osngSidebar.hidden = !open;
-        osngExpand.setAttribute('aria-expanded', open ? 'true' : 'false');
-        osngCollapse.setAttribute('aria-expanded', open ? 'true' : 'false');
-      }
-
-      function setHanumanOpen(open) {
-        shell.classList.toggle('hanuman-open', !!open);
-        hanumanSidebar.hidden = !open;
-        hanumanExpand.setAttribute('aria-expanded', open ? 'true' : 'false');
-        hanumanCollapse.setAttribute('aria-expanded', open ? 'true' : 'false');
-      }
-
       function setConfigOpen(open) {
         configPanel.classList.toggle('open', !!open);
         configPanel.hidden = !open;
@@ -454,18 +539,6 @@
         configGlyph.setAttribute('aria-label', open ? 'Close config' : 'Open config');
       }
 
-      osngExpand.addEventListener('click', function () {
-        setOsngOpen(true);
-      });
-      osngCollapse.addEventListener('click', function () {
-        setOsngOpen(false);
-      });
-      hanumanExpand.addEventListener('click', function () {
-        setHanumanOpen(true);
-      });
-      hanumanCollapse.addEventListener('click', function () {
-        setHanumanOpen(false);
-      });
       configGlyph.addEventListener('click', function (ev) {
         ev.stopPropagation();
         setConfigOpen(configPanel.hidden);
@@ -480,6 +553,303 @@
           setConfigOpen(false);
         }
       });
+
+      function filterOsngNode(node, showOutcome, showMeta) {
+        var out = {};
+        if (!node || typeof node !== 'object') return out;
+        // Preserve original key order when both filters are on (full YAML).
+        Object.keys(node).forEach(function (k) {
+          var isOutcome = k === 'output_spec' || k === 'success_evidences';
+          if (isOutcome) {
+            if (showOutcome) out[k] = node[k];
+          } else if (showMeta) {
+            out[k] = node[k];
+          }
+        });
+        return out;
+      }
+
+      function filterOsngEnvelope(envelope, showOutcome, showMeta) {
+        if (!envelope) return null;
+        var nodes = Array.isArray(envelope.nodes) ? envelope.nodes : [];
+        var filteredNodes = nodes.map(function (n) {
+          return filterOsngNode(n, showOutcome, showMeta);
+        });
+        if (showMeta) {
+          var doc = {
+            root_osn_id: envelope.root_osn_id,
+            nodes: filteredNodes,
+            meta: envelope.meta
+          };
+          if (doc.root_osn_id == null) delete doc.root_osn_id;
+          if (doc.meta == null) delete doc.meta;
+          return doc;
+        }
+        // Outcome-only: nodes with outcome field content only
+        return { nodes: filteredNodes };
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      /**
+       * Tone for leaf values (not YAML chrome):
+       * - Outcome keys → blue / green (inherited into nested evidence trees)
+       * - Metadata → mid-gray
+       */
+      function resolveYamlValueClass(key, tone, inherited) {
+        tone = tone || {};
+        if (key === 'output_spec' && tone.showOutcome) return 'osng-spec';
+        if (key === 'success_evidences' && tone.showOutcome) return 'osng-evidences';
+        if (inherited === 'osng-spec' || inherited === 'osng-evidences') return inherited;
+        if (tone.showMeta) return 'osng-meta';
+        return inherited || '';
+      }
+
+      function yamlChromeKey(k) {
+        return '<span class="osng-yaml-key">' + escapeHtml(String(k)) + '</span>';
+      }
+
+      function yamlChromePunct(s) {
+        return '<span class="osng-yaml-punct">' + escapeHtml(String(s)) + '</span>';
+      }
+
+      function yamlLeafHtml(text, valueClass) {
+        var html = escapeHtml(String(text));
+        if (valueClass) return '<span class="' + valueClass + '">' + html + '</span>';
+        return html;
+      }
+
+      function yamlPad(level) {
+        return escapeHtml(new Array((level || 0) + 1).join('  '));
+      }
+
+      function yamlObjectLineHtml(k, v, level, tone, inherited) {
+        var pad = yamlPad(level);
+        var valueClass = resolveYamlValueClass(k, tone, inherited);
+        var head = pad + yamlChromeKey(k) + yamlChromePunct(':');
+
+        if (v !== null && typeof v === 'object') {
+          if (Array.isArray(v)) {
+            if (!v.length) return head + ' ' + yamlChromePunct('[]');
+            return head + '\n' + yamlArrayHtml(v, level + 1, tone, valueClass);
+          }
+          if (!Object.keys(v).length) return head + ' ' + yamlChromePunct('{}');
+          return head + '\n' + toYamlHtml(v, level + 1, tone, valueClass);
+        }
+
+        if (typeof v === 'string' && v.indexOf('\n') >= 0) {
+          var blockPad = yamlPad(level + 1);
+          return (
+            head +
+            ' ' +
+            yamlChromePunct('|') +
+            '\n' +
+            v
+              .split('\n')
+              .map(function (line) {
+                return blockPad + yamlLeafHtml(line, valueClass);
+              })
+              .join('\n')
+          );
+        }
+
+        return head + ' ' + yamlLeafHtml(toYaml(v, 0), valueClass);
+      }
+
+      function yamlArrayHtml(arr, level, tone, valueClass) {
+        var pad = yamlPad(level);
+        return arr
+          .map(function (item) {
+            if (item !== null && typeof item === 'object' && !Array.isArray(item)) {
+              var keys = Object.keys(item);
+              if (!keys.length) {
+                return pad + yamlChromePunct('-') + ' ' + yamlChromePunct('{}');
+              }
+              var parts = [];
+              keys.forEach(function (k, idx) {
+                if (idx === 0) {
+                  var first = yamlObjectLineHtml(k, item[k], level + 1, tone, valueClass);
+                  var strip = yamlPad(level + 1);
+                  if (first.indexOf(strip) === 0) {
+                    first = first.slice(strip.length);
+                  }
+                  parts.push(pad + yamlChromePunct('-') + ' ' + first);
+                } else {
+                  parts.push(yamlObjectLineHtml(k, item[k], level + 1, tone, valueClass));
+                }
+              });
+              return parts.join('\n');
+            }
+            return (
+              pad +
+              yamlChromePunct('-') +
+              ' ' +
+              yamlLeafHtml(toYaml(item, 0), valueClass)
+            );
+          })
+          .join('\n');
+      }
+
+      function toYamlHtml(value, indent, tone, valueClass) {
+        var level = indent || 0;
+        tone = tone || {};
+        valueClass = valueClass || '';
+
+        if (value === null || value === undefined) {
+          return yamlLeafHtml('null', valueClass);
+        }
+        if (typeof value !== 'object') {
+          return yamlLeafHtml(toYaml(value, level), valueClass);
+        }
+        if (Array.isArray(value)) {
+          if (!value.length) return yamlChromePunct('[]');
+          return yamlArrayHtml(value, level, tone, valueClass);
+        }
+        var keys = Object.keys(value);
+        if (!keys.length) return yamlChromePunct('{}');
+        return keys
+          .map(function (k) {
+            return yamlObjectLineHtml(k, value[k], level, tone, valueClass);
+          })
+          .join('\n');
+      }
+
+      function wrapOsngTone(key, htmlChunk, tone) {
+        tone = tone || {};
+        if (key === 'output_spec' && tone.showOutcome) {
+          return '<span class="osng-spec">' + htmlChunk + '</span>';
+        }
+        if (key === 'success_evidences' && tone.showOutcome) {
+          return '<span class="osng-evidences">' + htmlChunk + '</span>';
+        }
+        if (tone.showMeta) {
+          return '<span class="osng-meta">' + htmlChunk + '</span>';
+        }
+        return htmlChunk;
+      }
+
+      /** Prefer human-readable evidence text over structural evidence keys. */
+      function evidenceNarrativeText(ev) {
+        if (ev == null) return '';
+        if (typeof ev === 'string') return ev.trim();
+        if (typeof ev !== 'object') return String(ev).trim();
+        var preferred = [
+          'inspection_prompt',
+          'description',
+          'content',
+          'prompt',
+          'narrative',
+          'text'
+        ];
+        for (var i = 0; i < preferred.length; i++) {
+          var v = ev[preferred[i]];
+          if (typeof v === 'string' && v.trim()) return v.trim();
+        }
+        var keys = Object.keys(ev);
+        for (var j = 0; j < keys.length; j++) {
+          var s = ev[keys[j]];
+          if (typeof s === 'string' && s.trim()) return s.trim();
+        }
+        return '';
+      }
+
+      /**
+       * Outcome-only presentation: consecutive paragraphs (blue spec, green evidences),
+       * not canonical YAML / JSON structure.
+       */
+      function outcomeNarrativeHtml(envelope) {
+        var nodes = Array.isArray(envelope && envelope.nodes) ? envelope.nodes : [];
+        var parts = [];
+        nodes.forEach(function (node) {
+          if (!node || typeof node !== 'object') return;
+          if (node.output_spec != null) {
+            var specText =
+              typeof node.output_spec === 'string'
+                ? node.output_spec.trim()
+                : String(node.output_spec).trim();
+            if (specText) {
+              parts.push(
+                '<span class="osng-para osng-spec">' + escapeHtml(specText) + '</span>'
+              );
+            }
+          }
+          var evidences = Array.isArray(node.success_evidences)
+            ? node.success_evidences
+            : [];
+          evidences.forEach(function (ev) {
+            var text = evidenceNarrativeText(ev);
+            if (text) {
+              parts.push(
+                '<span class="osng-para osng-evidences">' + escapeHtml(text) + '</span>'
+              );
+            }
+          });
+        });
+        if (!parts.length) {
+          return '<span class="osng-comment"># No outcome narratives in this OSNG</span>';
+        }
+        return parts.join('\n');
+      }
+
+      /** Format plugins: shared filter → format-specific HTML. Add UI toggle later via setOsngViewFormat. */
+      var osngFormatters = {
+        yaml: {
+          label: 'YAML',
+          emptyHint: '# OSNG appears here after propose',
+          comment: function (text) {
+            return '<span class="osng-comment"># ' + escapeHtml(text) + '</span>';
+          },
+          bodyHtml: function (doc, tone) {
+            return toYamlHtml(doc, 0, tone);
+          }
+        },
+        json: {
+          label: 'JSON',
+          emptyHint: '// OSNG appears here after propose',
+          comment: function (text) {
+            return '<span class="osng-comment">// ' + escapeHtml(text) + '</span>';
+          },
+          bodyHtml: function (doc, tone) {
+            return toJsonHtml(doc, 0, tone);
+          }
+        }
+      };
+
+      function getOsngFormatter(format) {
+        return osngFormatters[format] || osngFormatters.yaml;
+      }
+
+      function updateOsngTitle() {
+        var fmt = getOsngFormatter(osngViewFormat);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        if (osngTitle) {
+          osngTitle.textContent = showMeta ? 'OSNG (' + fmt.label + ')' : 'OSNG';
+        }
+        if (osngSidebar) {
+          osngSidebar.setAttribute(
+            'aria-label',
+            showMeta ? 'OSNG ' + fmt.label : 'OSNG'
+          );
+        }
+      }
+
+      function setOsngViewFormat(format) {
+        if (!osngFormatters[format]) return;
+        osngViewFormat = format;
+        var fmt = getOsngFormatter(format);
+        updateOsngTitle();
+        if (lastOsngEnvelope) {
+          renderOsng(lastOsngEnvelope);
+        } else if (osngView) {
+          osngView.innerHTML = '<span class="osng-comment">' + escapeHtml(fmt.emptyHint) + '</span>';
+        }
+      }
 
       function yamlQuote(str) {
         var s = String(str);
@@ -521,9 +891,9 @@
                 if (!keys.length) return pad + '- {}';
                 var firstKey = keys[0];
                 var firstVal = item[firstKey];
-                var lines = [pad + '- ' + firstKey + ': ' + inlineOrBlock(firstVal, level + 1)];
+                var lines = [pad + '- ' + firstKey + ': ' + yamlInlineOrBlock(firstVal, level + 1)];
                 keys.slice(1).forEach(function (k) {
-                  lines.push(objectLine(k, item[k], level + 1));
+                  lines.push(yamlObjectLine(k, item[k], level + 1));
                 });
                 return lines.join('\n');
               }
@@ -532,18 +902,18 @@
             .join('\n');
         }
         if (typeof value === 'object') {
-          var keys = Object.keys(value);
-          if (!keys.length) return '{}';
-          return keys
+          var objKeys = Object.keys(value);
+          if (!objKeys.length) return '{}';
+          return objKeys
             .map(function (k) {
-              return objectLine(k, value[k], level);
+              return yamlObjectLine(k, value[k], level);
             })
             .join('\n');
         }
         return yamlQuote(String(value));
       }
 
-      function inlineOrBlock(v, level) {
+      function yamlInlineOrBlock(v, level) {
         if (v !== null && typeof v === 'object') {
           if (Array.isArray(v)) {
             if (!v.length) return '[]';
@@ -555,7 +925,7 @@
         return toYaml(v, level);
       }
 
-      function objectLine(k, v, level) {
+      function yamlObjectLine(k, v, level) {
         var pad = new Array(level + 1).join('  ');
         if (v !== null && typeof v === 'object') {
           if (Array.isArray(v)) {
@@ -582,31 +952,141 @@
         return pad + k + ': ' + toYaml(v, 0);
       }
 
-      function envelopeToYaml(envelope) {
-        if (!envelope) return '# No OSNG envelope yet';
-        var doc = {
-          root_osn_id: envelope.root_osn_id || null,
-          nodes: Array.isArray(envelope.nodes) ? envelope.nodes : [],
-          meta: envelope.meta || undefined
-        };
-        if (doc.meta === undefined) delete doc.meta;
-        return (
-          '# Proposed OSNG (draft — not Lexiom canon YAML)\n' + toYaml(doc, 0) + '\n'
-        );
+      function toJsonHtml(value, indent, tone) {
+        var level = indent || 0;
+        var pad = new Array(level + 1).join('  ');
+        var padInner = new Array(level + 2).join('  ');
+        tone = tone || {};
+
+        if (value === null || value === undefined) return 'null';
+        if (typeof value === 'boolean') return value ? 'true' : 'false';
+        if (typeof value === 'number') {
+          return isFinite(value) ? String(value) : 'null';
+        }
+        if (typeof value === 'string') return escapeHtml(JSON.stringify(value));
+
+        if (Array.isArray(value)) {
+          if (!value.length) return '[]';
+          return (
+            '[\n' +
+            value
+              .map(function (item) {
+                return padInner + toJsonHtml(item, level + 1, tone);
+              })
+              .join(',\n') +
+            '\n' +
+            pad +
+            ']'
+          );
+        }
+
+        if (typeof value === 'object') {
+          var keys = Object.keys(value);
+          if (!keys.length) return '{}';
+          return (
+            '{\n' +
+            keys
+              .map(function (k) {
+                var prop =
+                  padInner +
+                  escapeHtml(JSON.stringify(k)) +
+                  ': ' +
+                  toJsonHtml(value[k], level + 1, tone);
+                return wrapOsngTone(k, prop, tone);
+              })
+              .join(',\n') +
+            '\n' +
+            pad +
+            '}'
+          );
+        }
+
+        return escapeHtml(JSON.stringify(String(value)));
+      }
+
+      function envelopeToOsngHtml(envelope, format) {
+        var fmt = getOsngFormatter(format || osngViewFormat);
+        if (!envelope) {
+          return fmt.comment('No OSNG envelope yet');
+        }
+        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        if (!showOutcome && !showMeta) {
+          return fmt.comment('No OSNG fields selected — enable Outcome and/or Metadata');
+        }
+        // Outcome-only: prose paragraphs, not structured media.
+        if (showOutcome && !showMeta) {
+          return outcomeNarrativeHtml(envelope);
+        }
+        var filtered = filterOsngEnvelope(envelope, showOutcome, showMeta);
+        var tone = { showOutcome: showOutcome, showMeta: showMeta };
+        return fmt.bodyHtml(filtered, tone);
       }
 
       function renderOsng(envelope) {
-        osngYaml.textContent = envelopeToYaml(envelope);
+        if (envelope) lastOsngEnvelope = envelope;
+        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        updateOsngTitle();
+        osngView.classList.toggle('osng-outcome-prose', !!(showOutcome && !showMeta));
+        osngView.innerHTML = envelopeToOsngHtml(lastOsngEnvelope, osngViewFormat);
+        if (osngDownload) {
+          osngDownload.disabled = !lastOsngEnvelope;
+        }
+      }
+
+      function downloadOsngYaml() {
+        if (!lastOsngEnvelope) return;
+        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        if (!showOutcome && !showMeta) return;
+        var filtered = filterOsngEnvelope(lastOsngEnvelope, showOutcome, showMeta);
+        var yamlText = toYaml(filtered, 0) + '\n';
+        var blob = new Blob([yamlText], { type: 'text/yaml;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        var root = String((lastOsngEnvelope && lastOsngEnvelope.root_osn_id) || 'osng')
+          .replace(/\.osn$/i, '')
+          .replace(/[^\w.-]+/g, '_');
+        a.href = url;
+        a.download = root + '.yaml';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function refreshOsngView() {
+        updateOsngTitle();
+        if (lastOsngEnvelope) renderOsng(lastOsngEnvelope);
+      }
+
+      setOsngViewFormat(osngViewFormat);
+
+      if (osngFilterOutcome) {
+        osngFilterOutcome.addEventListener('change', refreshOsngView);
+      }
+      if (osngFilterMeta) {
+        osngFilterMeta.addEventListener('change', refreshOsngView);
+      }
+      if (osngDownload) {
+        osngDownload.addEventListener('click', downloadOsngYaml);
+      }
+
+      /** Show proposed OSNG as soon as the envelope lands (before SUD / evidences). */
+      function revealProposedOsng(envelope) {
+        renderOsng(envelope);
+        appendLog(
+          'Hanuman offers a draft OSNG for Ram’s eyes (root: ' +
+            ((envelope && envelope.root_osn_id) || '?') +
+            ') — garden first; SUD leap still ahead…'
+        );
       }
 
       function setBusy(next) {
         busy = !!next;
         intentEl.disabled = busy;
         proposeOnlyBtn.disabled = busy;
-      }
-
-      function revealHanumanLog() {
-        setHanumanOpen(true);
       }
 
       /** Map wire logs / status into Ram–Hanuman–GT3 relationship beats. */
@@ -767,9 +1247,6 @@
         if (!expressed) return;
         out.className = '';
         var prev = out.textContent || '';
-        if (prev.indexOf('// Ram raises') === 0 || prev.indexOf('// Hanuman') === 0) {
-          prev = '';
-        }
         var lines = prev.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
         if (lines[lines.length - 1] === expressed) return;
         lines.push(expressed);
@@ -902,13 +1379,11 @@
           !window.gtih.osng ||
           !window.gtih.osng.proposeThenRealizeUntilDone
         ) {
-          revealHanumanLog();
           out.className = 'err';
           out.textContent = 'gtih-sdk.js not loaded (need proposeThenRealizeUntilDone)';
           return;
         }
         setBusy(true);
-        revealHanumanLog();
         out.className = '';
         out.textContent =
           'Ram raises a propose → realize chain.\nHanuman will labor; GT3 alone is the sun.';
@@ -919,7 +1394,8 @@
           var args = readIntent();
           var result = await window.gtih.osng.proposeThenRealizeUntilDone(args, {
             onLog: appendLog,
-            onStatus: appendStatusBeat
+            onStatus: appendStatusBeat,
+            onEnvelope: revealProposedOsng
           });
           out.className = 'ok';
           appendLog('done: run_id=' + (result.handoff && result.handoff.run_id));
@@ -955,13 +1431,11 @@
           !window.gtih.osng ||
           !window.gtih.osng.proposeFromIntentUntilDone
         ) {
-          revealHanumanLog();
           out.className = 'err';
           out.textContent = 'gtih-sdk.js not loaded (need proposeFromIntentUntilDone)';
           return;
         }
         setBusy(true);
-        revealHanumanLog();
         setConfigOpen(false);
         out.className = '';
         out.textContent =
@@ -973,13 +1447,8 @@
             onStatus: appendStatusBeat
           });
           out.className = 'ok';
-          appendLog(
-            'Hanuman offers a draft OSNG for Ram’s garden (root: ' +
-              (envelope && envelope.root_osn_id) +
-              '). Not yet seated on the White throne.'
-          );
           jsonOut.textContent = JSON.stringify(envelope, null, 2);
-          renderOsng(envelope);
+          revealProposedOsng(envelope);
         } catch (e) {
           out.className = 'err';
           out.textContent = JSON.stringify(
