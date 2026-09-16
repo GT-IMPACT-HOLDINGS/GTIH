@@ -1,0 +1,1 @@
+Lexiom currently explains that mapped build agents receive snapshotted OSN compilation instructions while explicit human actions retain authority over canonical OSN YAML; characterize this as a governed build-agent handoff, not a complete agent lifecycle.

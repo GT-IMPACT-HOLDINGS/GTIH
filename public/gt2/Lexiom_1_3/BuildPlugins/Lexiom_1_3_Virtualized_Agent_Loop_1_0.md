@@ -85,7 +85,7 @@ The canonical tools are:
 
 Document composition is packet-driven: the host resolves prepared nodes, plans, outlines, and source excerpts before each crossing, while the LM receives only `write_file`. A successful required non-empty write is an atomic phase submission: host finalization completes the phase without a second LM crossing merely to call `finish`. Software capability exposes bounded `list_files`, `read_file`, `write_file`, `run_command`, and explicit `finish`. The worker rejects calls outside the phase capability set, malformed arguments, workspace escape, and writes to immutable surfaces. `osng/**`, document `nodes/**`, `sources/**`, and prepared/control files (`OSNG_Basics_README.md`, `HANDOFF.json`, both agent prompts, `EVIDENCE_PLAN.json`, `RUN_RESULT.json`, and document `BUILD_PLAN.json` / `SOURCE_MAP.json` / `BUILD_MANIFEST.json`) are read-only.
 
-Every run has hard worker-enforced step/action, no-progress, per-result, listing/read, command, wall-clock, and (for document builds) cumulative prompt-token / LM-crossing limits defined by the CA Worker Protocol and `BUILD_PLAN.json` token budgets. Crossing admission estimates the serialized messages together with the offered tool schemas. Tool results report truncation. Exhaustion is terminal, not an invitation to continue without accounting. Optional OpenRouter/Claude prompt caching (`GT3_AGENT_PROMPT_CACHE`) is a provider capability only.
+Every run has hard worker-enforced step/action, no-progress, per-result, listing/read, command, wall-clock, and (for document builds) cumulative prompt-token / LM-crossing limits defined by the CA Worker Protocol and `BUILD_PLAN.json` token budgets. Crossing admission estimates the serialized messages together with the offered tool schemas. Tool results report truncation. Exhaustion is terminal, not an invitation to continue without accounting. Prompt caching is a provider capability only and must not alter correctness on a miss: GT3 always sends `session_id` / `prompt_cache_key` for sticky routing, OpenAI-family models cache automatically, and `GT3_AGENT_PROMPT_CACHE` adds Anthropic `cache_control` markup when the MBTS is an Anthropic model.
 
 `finish` requests validation; it does not declare success by itself. Only syncOut followed by plugin-specific primary-artifact validation may produce `completed`. Model stop without `finish`, tool/protocol failure, cancellation, timeout, unavailability, and failed validation resolve explicitly per the [CA Worker Protocol](Lexiom_1_3_CA_Worker_Protocol_1_0.md), never as implicit success.
 
@@ -96,7 +96,7 @@ When the Real Bolt loop sends its accumulated context and tool definitions in a 
 Constraints:
 
 - OpenAI-compat base → GT3 only (never OpenRouter/Anthropic base URLs in the browser)
-- Model id as seen by the agent is an OpenAI-compat alias that GT3 maps to Claude-via-OpenRouter
+- Model id as seen by the agent is an OpenAI-compat alias that GT3 overwrites with the MBTS (Model Behind The Scene) chosen by the GT3 admin; the agent never learns or selects it
 - Agent receives only a **dummy** broker token; real OpenRouter credentials stay server-side (`GT3_LEXIOM_AGENT_KEY` / `OPENROUTER_API_KEY`)
 
 ### 2.3 GT3 to OpenRouter (brokering link)
@@ -105,11 +105,13 @@ GT3 audits the payload stream, injects tracking metrics (at least `run_id`, buil
 
 Every broker hop must be observable in the LM Ops Console per [GT3_Ops_Console_Agent_Traffic_Spec_1_0.md](../../../../GT3_Expression_specs/GT3_Ops_Console_Agent_Traffic_Spec_1_0.md).
 
-### 2.4 OpenRouter to Claude (model fulfillment)
+### 2.4 OpenRouter to the MBTS (model fulfillment)
 
-OpenRouter brokers the request to Claude. Completions return **only** along Claude → OpenRouter → GT3 → agent. GT3 never opens a direct Anthropic peer connection for this loop.
+OpenRouter brokers the request to the **MBTS** — the model the GT3 admin selected from the allowlist in `lib/gt3AgentModelCatalog.js` (Claude Haiku 4.5 by default, GPT-5.5 at medium reasoning effort as the current alternative). Completions return **only** along MBTS → OpenRouter → GT3 → agent. GT3 never opens a direct vendor peer connection for this loop.
 
-**Integrity rule:** every model request and every model response traverses **GT3 ↔ OpenRouter ↔ Claude**. Claude never talks to GT3 or the agent directly; the agent never talks to OpenRouter or Anthropic directly.
+The MBTS is frozen when the CA Job ticket is issued, so both passes of a run share one model even if the admin retargets mid-run. GT3 normalizes the outbound packet to the chosen model's family (Anthropic prompt caching, or OpenAI reasoning effort with `max_completion_tokens`), so the agent's single dialect stays unchanged.
+
+**Integrity rule:** every model request and every model response traverses **GT3 ↔ OpenRouter ↔ MBTS**. The MBTS never talks to GT3 or the agent directly; the agent never talks to OpenRouter or a model vendor directly, and cannot influence which MBTS answers.
 
 ---
 

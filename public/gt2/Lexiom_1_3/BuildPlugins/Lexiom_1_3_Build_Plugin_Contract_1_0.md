@@ -112,18 +112,18 @@ If no plugin is associated, the UI may continue to show a disconnected affordanc
 
 | Plugin id | Spec | Artifact class | Typical subgraph shape |
 |---|---|---|---|
-| `lexiom13.document_builder` | Document Builder Plugin | Prose / policy / narrative documents | Standard ancestor(s) + compilation root + descendants (when scope includes them) |
-| `lexiom13.software_coding_builder` | Software Coding Builder Plugin | Executable software / codebase | Standard ancestor(s) + compilation root + discipline descendants (when scope includes them) |
+| `lexiom13.document_builder` | Document Builder Plugin | Prose / policy / narrative documents | As `compilation_scope` names (subtree vs axis-center) |
+| `lexiom13.software_coding_builder` | Software Coding Builder Plugin | Executable software / codebase | As `compilation_scope` names (subtree vs axis-center) |
 
 **Subgraph resolution (generic):**
 
 1. Start at `compilation_root_osn_id` (clicked node or policy-resolved root).
-2. Include **standard ancestors** when `graph.standard_ancestor_osn_ids` or policy requires them.
-3. Include **descendants** per `compilation.compilation_scope`:
-   - `self_only` — root only (plus ancestors if policy adds them)
+2. Include OSNs **only** as `compilation.compilation_scope` names (no silent graph-root-parent or standard-ancestor prefix):
+   - `self_only` — root only
    - `self_and_approved_descendants` — root + recursive `child_osn_ids`
-   - `self_plus_parent_context` — root + direct parent(s) per scope rules
-4. Exclude tombstoned OSNs and nodes outside the resolved set unless policy explicitly unions branches.
+   - `self_plus_parent_context` — root + direct native parent(s)
+   - `self_as_axis_center` — axis + native descendants + native ancestors (parents only); each cited `standard_ancestor` C is C + C’s native descendants + C’s native ancestors (parents only) + C’s standard-ancestor **nodes**; visited-set on reciprocal citations; no sibling/uncle fan-out
+3. Exclude tombstoned OSNs and nodes outside the resolved set unless policy explicitly unions branches.
 
 Child traversal order is always `graph.child_osn_ids`. When path prefixes disagree with `graph.*`, **`graph.*` wins**.
 
@@ -134,7 +134,7 @@ Existing OSN fields remain the association surface until a dedicated plugin fiel
 | OSN field | Plugin use |
 |---|---|
 | `compilation.can_be_compilation_root` | Whether the node may trigger a build root |
-| `compilation.compilation_scope` | Default inclusion set when gathering OSNs (`self_only`, `self_and_approved_descendants`, `self_plus_parent_context`) |
+| `compilation.compilation_scope` | Default inclusion set when gathering OSNs (`self_only`, `self_and_approved_descendants`, `self_plus_parent_context`, `self_as_axis_center`) |
 | `compilation.target_tool_profile` | Maps to plugin id / profile (e.g. `document_agent` → document builder; `software_coding_agent` or deployment aliases → software-coding builder) |
 
 **Assumption:** Lexiom may later add an explicit `compilation.build_plugin_id` field. Until then, `target_tool_profile` is the association key.
@@ -409,7 +409,7 @@ Plugins should assemble **builder** instructions as a **slim traversal protocol*
 
 | Plugin | Example association (current repo) |
 |---|---|
-| Document builder | Standard: `GT_Philosophy.a1000001.osn`; Root: `GT_Philosophy.BrandLexiom.a1000005.osn` with `can_be_compilation_root: true`, `compilation_scope: self_and_approved_descendants`, `target_tool_profile: document_agent` |
-| Software-coding builder | Standard: `GT_Philosophy.a1000001.osn`; Root: `GT_Philosophy.ProductLexiom.a1000002.osn` with `can_be_compilation_root: true`, `compilation_scope: self_and_approved_descendants`, `target_tool_profile: static_spa_coding_agent` as one profile alias |
+| Document builder | Subtree: `GT_Philosophy.BrandLexiom.a1000005.osn` (`self_and_approved_descendants`); official realization: `Realization.RealizeBrandLexiom.a1000202.osn` (`self_as_axis_center`, `document_agent`) |
+| Software-coding builder | Subtree: `GT_Philosophy.ProductLexiom.a1000002.osn` (`self_and_approved_descendants`); official realization: `Realization.RealizeProductLexiom.a1000201.osn` (`self_as_axis_center`, `static_spa_coding_agent`) |
 
 These examples show how Lexiom 1.3 maps two sibling branches to two plugin types. Other deployments may use different OSN ids, profiles, and artifact names without changing this contract.

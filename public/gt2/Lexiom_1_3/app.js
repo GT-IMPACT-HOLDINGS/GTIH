@@ -6407,6 +6407,7 @@
     const layout = gardenApi.computeGardenLayout({
       osnsById: state.osnsById,
       rootOsns: getGraphRootOsns(),
+      selectedOsnId: state.selectedOsnId,
     });
     const svgHtml = gardenApi.buildGardenSvgHtml(layout, {
       osnsById: state.osnsById,
@@ -7810,22 +7811,70 @@
     });
   }
 
-  function collectCompilationOsns(rootOsn) {
-    const scope = rootOsn && rootOsn.compilation ? rootOsn.compilation.compilation_scope : "self_only";
-    const results = [];
-    const seen = new Set();
+  function collectNativeAncestorOsns(osn, seen, results) {
+    const parentIds = Array.isArray(osn && osn.graph && osn.graph.parent_osn_ids)
+      ? osn.graph.parent_osn_ids
+      : [];
+    parentIds.forEach(function (parentId) {
+      const parent = getOsnById(parentId);
+      if (!parent || seen.has(parent.id)) {
+        return;
+      }
+      seen.add(parent.id);
+      results.push(parent);
+      collectNativeAncestorOsns(parent, seen, results);
+    });
+  }
 
+  function includeStandardAncestorNodes(osn, seen, results) {
+    const standardIds = Array.isArray(osn && osn.graph && osn.graph.standard_ancestor_osn_ids)
+      ? osn.graph.standard_ancestor_osn_ids
+      : [];
+    standardIds.forEach(function (stdId) {
+      const std = getOsnById(stdId);
+      if (std && !seen.has(std.id)) {
+        seen.add(std.id);
+        results.push(std);
+      }
+    });
+  }
+
+  function includeCitedSpecCone(cited, seen, results) {
+    if (!cited) {
+      return;
+    }
+    collectDescendantOsns(cited, seen, results);
+    collectNativeAncestorOsns(cited, seen, results);
+    includeStandardAncestorNodes(cited, seen, results);
+  }
+
+  function gatherCompilationOsns(rootOsn, seen, results) {
+    const scope = rootOsn && rootOsn.compilation ? rootOsn.compilation.compilation_scope : "self_only";
     if (!rootOsn) {
-      return results;
+      return;
+    }
+
+    if (scope === "self_as_axis_center") {
+      collectDescendantOsns(rootOsn, seen, results);
+      collectNativeAncestorOsns(rootOsn, seen, results);
+      const citedIds = Array.isArray(rootOsn.graph && rootOsn.graph.standard_ancestor_osn_ids)
+        ? rootOsn.graph.standard_ancestor_osn_ids
+        : [];
+      citedIds.forEach(function (citedId) {
+        includeCitedSpecCone(getOsnById(citedId), seen, results);
+      });
+      return;
     }
 
     if (scope === "self_and_approved_descendants") {
       collectDescendantOsns(rootOsn, seen, results);
-      return results;
+      return;
     }
 
     if (scope === "self_plus_parent_context") {
-      const parentIds = Array.isArray(rootOsn.graph && rootOsn.graph.parent_osn_ids) ? rootOsn.graph.parent_osn_ids : [];
+      const parentIds = Array.isArray(rootOsn.graph && rootOsn.graph.parent_osn_ids)
+        ? rootOsn.graph.parent_osn_ids
+        : [];
       parentIds.forEach(function (parentId) {
         const parent = getOsnById(parentId);
         if (parent && !seen.has(parent.id)) {
@@ -7837,10 +7886,22 @@
         seen.add(rootOsn.id);
         results.push(rootOsn);
       }
-      return results;
+      return;
     }
 
-    return [rootOsn];
+    if (!seen.has(rootOsn.id)) {
+      seen.add(rootOsn.id);
+      results.push(rootOsn);
+    }
+  }
+
+  function collectCompilationOsns(rootOsn) {
+    const results = [];
+    const seen = new Set();
+    if (rootOsn) {
+      gatherCompilationOsns(rootOsn, seen, results);
+    }
+    return results;
   }
 
   function buildCompilationPreviewText(rootOsn) {

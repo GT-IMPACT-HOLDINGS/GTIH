@@ -35,6 +35,7 @@ graph:
     - GT_Philosophy.ProductLexiom.GameificationFlow.4efab5ba.osn
   standard_ancestor_osn_ids:
     - WebAppSecurity.AccessControl.a1000101.osn
+    - Realization.RealizeProductLexiom.a1000201.osn
   derived_from_lens_id: null
 seed: >
   Demonstrate Lexiom 1.3.3 through a calm, welcoming single-page application where a first-time user
@@ -66,16 +67,18 @@ output_spec: |-
   without treating Bud as evidence approval.
   
   ## Code Shaping
-  7. Implement Lexiom 1.3 as one inspectable SPA co-hosted on the GT3 Node server beside
+  7. Implement Lexiom 1.3.4 as one inspectable SPA co-hosted on the GT3 Node server beside
   canonical OSN YAML under public/gt2/Lexiom_1_3/ (recursive list with ProductLexiom quartet
   fallback).
   8. Persist canonical changes only through explicit approve to /lexiom13/osn/save create,
   update, or prune; keep drafts, evidence approvals, filters, and action history session-only.
   9. Drive mutations through dispatchWhiteMove → white reduce → black side-effects so LM and
   disk writes stay non-silent.
-  10. When Build controls is enabled, map ProductLexiom / UX / CodeShape to the software-coding
-  builder and BrandLexiom to the document builder; show a Build handoff/report child, not the
-  delivered artifact; attach bud after successful VAL.
+  10. When Build controls is enabled, map ProductLexiom / UX / CodeShape / RealizeProductLexiom
+  to the software-coding builder and BrandLexiom / RealizeBrandLexiom to the document builder;
+  treat a ProductLexiom compile as subtree-only (self_and_approved_descendants) and the official
+  Product realization compile as RealizeProductLexiom (self_as_axis_center); show a Build
+  handoff/report child, not the delivered artifact; attach bud after successful VAL.
   11. Poll Focus-closure evidence collections (default 5s) and overlay build-collected artifacts
   on bundled demos without auto-approving them.
   12. Support GT3-backed lens reframing, maturation proposals, optional cockpit title, and
