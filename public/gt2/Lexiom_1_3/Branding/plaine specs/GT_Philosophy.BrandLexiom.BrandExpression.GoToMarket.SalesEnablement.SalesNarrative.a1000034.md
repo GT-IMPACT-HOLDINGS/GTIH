@@ -1,0 +1,1 @@
+Guide discovery, demonstration, and proof language so sales distinguishes currently visible proposal, approval, evidence, lineage, and build behavior from planned inherited-conflict and Concordance capabilities.

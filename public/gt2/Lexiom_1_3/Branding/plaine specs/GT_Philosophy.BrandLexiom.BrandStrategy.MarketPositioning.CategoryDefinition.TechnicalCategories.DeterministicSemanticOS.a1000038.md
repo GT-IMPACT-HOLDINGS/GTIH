@@ -1,0 +1,1 @@
+Lexiom currently explains the implemented Lexiom 1.3 POC as a deterministic human-approval and persistence boundary between probabilistic GT3 drafts and canonical OSN YAML, without implying control over general enterprise state.

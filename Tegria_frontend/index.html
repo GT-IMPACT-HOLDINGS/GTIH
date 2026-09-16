@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      Chromium picks the *last matching* icon. An unscoped link after dark/light
+      always matches and stole dark mode. Order: default → dark → light.
+      JS below covers Firefox (still ignores media on rel=icon).
+    -->
+    <link id="favicon" rel="icon" type="image/png" href="/favicon.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/favicon-dark.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/favicon.png"
+      media="(prefers-color-scheme: light)"
+    />
+    <link id="apple-touch-icon" rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tegria</title>
+    <script>
+      (function syncTegriaFavicon() {
+        var light = "/favicon.png";
+        var dark = "/favicon-dark.png";
+        function apply() {
+          var useDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var href = useDark ? dark : light;
+          var icon = document.getElementById("favicon");
+          if (icon && icon.getAttribute("href") !== href) {
+            icon.setAttribute("href", href);
+          }
+          var apple = document.getElementById("apple-touch-icon");
+          if (apple && apple.getAttribute("href") !== href) {
+            apple.setAttribute("href", href);
+          }
+        }
+        apply();
+        try {
+          window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", apply);
+        } catch (_e) {
+          /* older Safari */
+          try {
+            window
+              .matchMedia("(prefers-color-scheme: dark)")
+              .addListener(apply);
+          } catch (_e2) {}
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

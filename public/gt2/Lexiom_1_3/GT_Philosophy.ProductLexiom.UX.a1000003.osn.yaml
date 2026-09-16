@@ -71,7 +71,9 @@ output_spec: |-
   below), always reserve sibling ◀/▶ slots (lit only when available), clip rather than scroll, and
   refit via ResizeObserver.
   9. Provide full-graph mode from the left-corner toggle with Side view (cabinet-wide indented
-  tree) and Top view / OSNG Garden (radial multi-tree; solid native / dashed cross-tree arrows)
+  tree) and Top view / OSNG Garden (radial plants at Product/Brand compilation trunks as well as
+  graph roots; subtree-weighted rings; zoom label LOD; solid native arrows; dashed cross-tree
+  stems with arrowheads at both ends; reciprocal standard-ancestor pairs as one dash-dot stem)
   kinds; center/right hidden; navigation-only chrome; Escape or toggle exits; selecting an OSN
   returns to cockpit.
   10. Wire arrow-key Focus moves (Left/Right siblings, Up parent, Down first child), ignored while
