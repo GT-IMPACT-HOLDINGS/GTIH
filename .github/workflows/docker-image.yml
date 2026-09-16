@@ -48,9 +48,6 @@ jobs:
         tags: ghcr.io/${{ env.REPO_LOWER }}/gtih-image:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        build-args: |
-          GT3_LEXIOM_DEMO_KEY=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
-          GT3_LEXIOM_AGENT_KEY=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
 
       
 
