@@ -18,17 +18,17 @@
 Vertical UIs must not each invent a `fetch` map. Integration order of *layers* (not a calendar that postpones Tegria):
 
 1. **OpenAPI** names the stable HTTP garden (`gtih/0.1`).
-2. **`gtih-sdk.ts`** implements it as `window.gtih` (thin wrappers).
-3. **Lexiom, TRH, Tegria SPA, and Tegria SDK** consume GTIH **concurrently**; Tegria’s wrapper adds vertical capital when that track needs it.
+2. **`gtih-sdk.js`** implements it as `window.gtih` (thin wrappers) and **owns connectivity** (autodiscovered GTIH origin from the script URL).
+3. **Lexiom, TRH, Tegria SPA, and Tegria SDK** consume GTIH **concurrently** by loading that one SDK asset; Tegria’s wrapper adds vertical capital when that track needs it.
 
 ```text
-Lexiom / TRH / Tegria SPA  →  GTIH SDK (operationIds)  →  OpenAPI paths  →  GT3
+Lexiom / TRH / Tegria SPA  →  GTIH SDK (operationIds + baseUrl)  →  OpenAPI paths  →  GT3
 Tegria UI (parallel)       →  Tegria SDK wrapper
                               ├→ GTIH SDK              →  GT3
                               └→ remote Tegria server  →  domain / tenant-bounded player data
 ```
 
-OpenAPI here is the **GTIH contract**; GTIH SDK is the **shared hand** to GT3; Tegria’s wrapper is where **domain/tenant value** accumulates for that vertical without forking the garden—developed **alongside**, not after, GTIH.
+**Clean cut:** UI hosts do not proxy or hardcode `/lexiom13` / ports. Pre-execution knowledge is only the absolute URL of `gtih-sdk.js` on the GTIH host.
 
 Not Lexiom 1.4 Bearer/SSE (`/lexiom14/v1/*`). GTIH behavior stays Lexiom 1.3-identical.
 

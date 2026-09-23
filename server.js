@@ -196,10 +196,45 @@ const gt3RuntimeLlm = {
   })()
 };
 
-const CORS_ORIGINS = (process.env.CORS_ORIGINS || '*')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
+/**
+ * Deploy target switch — flip to 'prod' so Tegria on Render can call this GTIH host.
+ * Default 'dev' keeps open localhost CORS. Keep in sync with Tegria_frontend/src/deployTarget.ts.
+ */
+const DEPLOY_TARGET = 'dev'; // 'dev' | 'prod'
+const HARDWIRED_ORIGINS = {
+  tegriaProd: 'https://tgfe-image-latest.onrender.com',
+  gtihProd: 'https://gtih-image-latest.onrender.com',
+  tegriaDev: 'http://localhost:5173',
+  gtihDev: 'http://localhost:8080'
+};
+
+const CORS_ALLOW_HEADERS = [
+  'Content-Type',
+  'Accept',
+  'Authorization',
+  'X-GT3-OpenRouter-Key',
+  'X-GT3-OpenAI-Key',
+  'X-GT3-CA-Capability',
+  'X-GT3-CA-Location',
+  'X-GT3-CA-Executor',
+  'X-GT3-Plugin-Id',
+  'X-GT3-Run-Id',
+  'X-GT3-Agent-Pass',
+  'X-GT3-Build-Phase',
+  'X-GT3-Cache-Sticky',
+  'X-GT3-Tenant',
+  'X-GT3-Data-Track',
+  'X-GT3-Consent-Version',
+  'X-Lexiom-Persona-Mode'
+];
+
+const CORS_ORIGINS =
+  DEPLOY_TARGET === 'prod'
+    ? [HARDWIRED_ORIGINS.tegriaProd, HARDWIRED_ORIGINS.tegriaDev]
+    : (process.env.CORS_ORIGINS || '*')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
 const LEDGER_PATH = process.env.LEDGER_PATH || 'ledger.jsonl';
 const SERVER_VERSION = 'v.poc.017';
 
@@ -263,17 +298,45 @@ app.use('/lexiom14', (req, res, next) => {
   }
   next();
 });
-if (CORS_ORIGINS.includes('*')) app.use(cors());
-else app.use(cors({ origin: CORS_ORIGINS, credentials: true }));
+if (CORS_ORIGINS.includes('*')) {
+  // Default cors() reflects Access-Control-Request-Headers — required for
+  // Tegria (:5173) → GT3 Hanuman consult preflights. Do not pin allowedHeaders
+  // under '*' or browsers NetworkError before /v1/agent is reached.
+  app.use(cors());
+} else {
+  app.use(
+    cors({
+      origin: CORS_ORIGINS,
+      credentials: true,
+      allowedHeaders: CORS_ALLOW_HEADERS
+    })
+  );
+}
 app.use(morgan('dev'));
+console.log(
+  `[deploy] DEPLOY_TARGET=${DEPLOY_TARGET} cors=${CORS_ORIGINS.join(',')}`
+);
 
 /** WebContainers require COOP/COEP for SharedArrayBuffer on Lexiom 1.3 SPA. */
 function lexiom13CrossOriginIsolation(req, res, next) {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
-  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  // CA modules must be importable by foreign COEP pages (Tegria/TRH off GTIH origin).
+  const url = String(req.originalUrl || req.url || '');
+  if (/\/Lexiom_1_3\/ca(\/|$)/i.test(url) || /\/lexiom_1_3\/ca(\/|$)/i.test(url)) {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  } else {
+    res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  }
   next();
 }
+
+/** GTIH SDK is the single cross-origin asset vertical UIs load from the GTIH host. */
+function gtihSdkCrossOriginAsset(_req, res, next) {
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+}
+app.use('/gt2/gtih', gtihSdkCrossOriginAsset);
 app.use('/gt2/Lexiom_1_3', lexiom13CrossOriginIsolation);
 app.use('/gt2/lexiom_1_3', lexiom13CrossOriginIsolation);
 app.use('/TRH%20frontend', lexiom13CrossOriginIsolation);
@@ -3056,8 +3119,17 @@ function startBuildsStaticServer() {
     return null;
   }
   const buildsApp = express();
-  if (CORS_ORIGINS.includes('*')) buildsApp.use(cors());
-  else buildsApp.use(cors({ origin: CORS_ORIGINS, credentials: true }));
+  if (CORS_ORIGINS.includes('*')) {
+    buildsApp.use(cors());
+  } else {
+    buildsApp.use(
+      cors({
+        origin: CORS_ORIGINS,
+        credentials: true,
+        allowedHeaders: CORS_ALLOW_HEADERS
+      })
+    );
+  }
   buildsApp.use(morgan('dev'));
   buildsApp.use(
     express.static(BUILDS_ROOT, {

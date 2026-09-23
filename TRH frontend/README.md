@@ -16,6 +16,8 @@ This tree sits **parallel** to [`Tegria_frontend/`](../Tegria_frontend/) at the 
 
 - Open (with `npm start`): [http://localhost:8080/TRH%20frontend/](http://localhost:8080/TRH%20frontend/)
 
+- Loads GTIH via `<script src="/gt2/gtih/gtih-sdk.js">` (same origin). When TRH is hosted on a **different** web server, change **only** that script `src` to the absolute GTIH SDK URL (e.g. `https://<gtih-host>/gt2/gtih/gtih-sdk.js`) — no other GTIH path/port config.
+
 - Theme follows the browser `prefers-color-scheme` (bright by default; reversed palette in dark mode)
 
 - Primary: `gtih.osng.proposeThenRealizeUntilDone` — propose OSNG → ephemeral prepare (no Lexiom YAML) → Hanuman realize → render SUD + evidence collections

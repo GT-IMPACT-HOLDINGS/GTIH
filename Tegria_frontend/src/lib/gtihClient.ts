@@ -1,4 +1,12 @@
-/** Thin GTIH client for Tegria Vite app (async Hanuman propose). */
+/**
+ * Thin Tegria facade over the GTIH SDK.
+ * Connectivity (host, port, paths, CA module) lives only in gtih-sdk.js.
+ * Which GTIH host is chosen via DEPLOY_TARGET in src/deployTarget.ts.
+ */
+
+import { resolveGtihSdkUrl } from "../deployTarget";
+
+export { resolveGtihSdkUrl };
 
 export type OsngProposeResult = {
   status?: string;
@@ -26,6 +34,26 @@ export type ProposeStatusResult = {
   debug?: unknown;
   meta?: Record<string, unknown>;
 };
+
+type GtihClient = {
+  getBaseUrl?: () => string;
+  osng: {
+    proposeFromIntentUntilDone: (
+      args: { intent: string; max_descendants?: number },
+      opts?: {
+        onLog?: (line: string) => void;
+        onStatus?: (st: ProposeStartResult | ProposeStatusResult) => void;
+      }
+    ) => Promise<OsngProposeResult>;
+  };
+};
+
+declare global {
+  interface Window {
+    gtih?: GtihClient;
+    createGtihClient?: (config?: { baseUrl?: string }) => GtihClient;
+  }
+}
 
 export class OsngProposeError extends Error {
   status: number;
@@ -62,116 +90,66 @@ export function formatProposeError(err: unknown): string {
     }
     return parts.join("\n");
   }
+  if (err && typeof err === "object") {
+    const e = err as {
+      message?: string;
+      status?: number;
+      detail?: string;
+      debug?: unknown;
+      body?: unknown;
+    };
+    if (e.status != null || e.detail != null || e.debug != null) {
+      return formatProposeError(
+        new OsngProposeError(e.detail || e.message || "OSNG propose failed", {
+          status: Number(e.status) || 502,
+          detail: e.detail,
+          debug: e.debug,
+          body: e.body,
+        })
+      );
+    }
+  }
   if (err instanceof Error) return err.message;
   return String(err);
 }
 
-function openRouterHeaders(): Record<string, string> {
-  const headers: Record<string, string> = {
-    Accept: "application/json",
-  };
-  try {
-    const key = localStorage.getItem("lexiom_gt3_api_key");
-    if (key) headers["X-GT3-OpenRouter-Key"] = key;
-  } catch {
-    /* ignore */
+let loadPromise: Promise<GtihClient> | null = null;
+
+export function loadGtihSdk(sdkUrl = resolveGtihSdkUrl()): Promise<GtihClient> {
+  if (typeof window !== "undefined" && window.gtih?.osng?.proposeFromIntentUntilDone) {
+    return Promise.resolve(window.gtih);
   }
-  return headers;
-}
+  if (loadPromise) return loadPromise;
 
-export async function proposeFromIntent(args: {
-  intent: string;
-  max_descendants?: number;
-}): Promise<ProposeStartResult> {
-  const intent = String(args.intent || "").trim();
-  if (!intent) throw new Error("intent must be non-empty");
-
-  const headers = {
-    ...openRouterHeaders(),
-    "Content-Type": "application/json",
-  };
-
-  const res = await fetch("/lexiom13/osn/propose", {
-    method: "POST",
-    headers,
-    cache: "no-store",
-    body: JSON.stringify({
-      intent,
-      max_descendants:
-        args.max_descendants !== undefined ? Number(args.max_descendants) : 0,
-    }),
-  });
-  const data = (await res.json().catch(() => null)) as ProposeStartResult & {
-    detail?: string;
-    debug?: unknown;
-  };
-  if (!res.ok) {
-    throw new OsngProposeError(
-      (data && data.detail) || `HTTP ${res.status}`,
-      {
-        status: res.status,
-        detail: data?.detail,
-        debug: data?.debug,
-        body: data,
-      }
+  loadPromise = new Promise<GtihClient>((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[data-gtih-sdk="1"]'
     );
-  }
-  return data;
-}
-
-export async function getProposeStatus(
-  runId: string
-): Promise<ProposeStatusResult> {
-  const id = String(runId || "").trim();
-  if (!id) throw new Error("run_id required");
-  const res = await fetch(
-    `/lexiom13/osn/propose/status/${encodeURIComponent(id)}`,
-    {
-      method: "GET",
-      headers: openRouterHeaders(),
-      cache: "no-store",
+    if (existing && window.gtih?.osng?.proposeFromIntentUntilDone) {
+      resolve(window.gtih);
+      return;
     }
-  );
-  const data = (await res.json().catch(() => null)) as ProposeStatusResult & {
-    detail?: string;
-    debug?: unknown;
-  };
-  if (!res.ok) {
-    throw new OsngProposeError(
-      (data && data.detail) || `HTTP ${res.status}`,
-      {
-        status: res.status,
-        detail: data?.detail,
-        debug: data?.debug,
-        body: data,
+
+    const script = document.createElement("script");
+    script.src = sdkUrl;
+    script.async = true;
+    script.dataset.gtihSdk = "1";
+    script.onload = () => {
+      if (window.gtih?.osng?.proposeFromIntentUntilDone) {
+        resolve(window.gtih);
+      } else {
+        reject(new Error("gtih-sdk.js loaded but window.gtih is missing"));
       }
-    );
-  }
-  return data;
+    };
+    script.onerror = () => {
+      reject(new Error(`Failed to load GTIH SDK from ${sdkUrl}`));
+    };
+    document.head.appendChild(script);
+  });
+
+  return loadPromise;
 }
 
-async function serveProposeSession(
-  caSession: Record<string, unknown>,
-  opts?: { onLog?: (line: string) => void }
-): Promise<unknown> {
-  // Variable URL so Vite does not try to resolve the Lexiom CA module at build time.
-  const caModuleUrl = `${window.location.origin}/gt2/Lexiom_1_3/ca/serveRamUnderGt3.js`;
-  const mod = await import(/* @vite-ignore */ caModuleUrl);
-  const run =
-    mod.runBoltWebContainerCa || mod.iServeRamInTheWebContainer;
-  if (typeof run !== "function") {
-    throw new Error("serveRamUnderGt3 module missing runBoltWebContainerCa");
-  }
-  return run(caSession, { onLog: opts?.onLog });
-}
-
-function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-/**
- * Start → browser Hanuman → poll until envelope or failure.
- */
 export async function proposeFromIntentUntilDone(
   args: { intent: string; max_descendants?: number },
   opts?: {
@@ -179,52 +157,11 @@ export async function proposeFromIntentUntilDone(
     onStatus?: (st: ProposeStartResult | ProposeStatusResult) => void;
   }
 ): Promise<OsngProposeResult> {
-  const started = await proposeFromIntent(args);
-  opts?.onStatus?.(started);
-
-  if (started.ca_session) {
-    try {
-      await serveProposeSession(started.ca_session, { onLog: opts?.onLog });
-    } catch (laborErr) {
-      const after = await getProposeStatus(started.run_id).catch(() => null);
-      if (after?.status === "ok" && after.envelope) return after.envelope;
-      throw new OsngProposeError(
-        after?.detail ||
-          (laborErr instanceof Error ? laborErr.message : String(laborErr)),
-        {
-          status: 502,
-          detail: after?.detail,
-          debug:
-            after?.debug ||
-            {
-              phase: "hanuman_labor",
-              error_message:
-                laborErr instanceof Error ? laborErr.message : String(laborErr),
-            },
-          body: after,
-        }
-      );
-    }
+  const gtih = await loadGtihSdk();
+  try {
+    return await gtih.osng.proposeFromIntentUntilDone(args, opts);
+  } catch (e) {
+    if (e instanceof OsngProposeError) throw e;
+    throw e;
   }
-
-  const maxWaitMs = 20 * 60 * 1000;
-  const t0 = Date.now();
-  while (Date.now() - t0 < maxWaitMs) {
-    const st = await getProposeStatus(started.run_id);
-    opts?.onStatus?.(st);
-    if (st.status === "ok" && st.envelope) return st.envelope;
-    if (st.status === "failed") {
-      throw new OsngProposeError(st.detail || "OSNG propose failed", {
-        status: 502,
-        detail: st.detail,
-        debug: st.debug,
-        body: st,
-      });
-    }
-    await sleep(1500);
-  }
-  throw new OsngProposeError("OSNG propose poll timeout", {
-    status: 504,
-    debug: { phase: "poll_timeout", run_id: started.run_id },
-  });
 }

@@ -1,12 +1,25 @@
 /**
  * GTIH browser SDK (thin) — Lexiom 1.3 / GT3 substrate.
  * OSNG propose + Hanuman prepare/realize/evidence (+ TRH propose→realize chain).
+ *
+ * Connectivity owner: load this file from the GTIH origin. Default clients
+ * autodiscover baseUrl from the script URL so Tegria/TRH need only that one asset.
  */
 (function (global) {
   'use strict';
 
   var API_KEY_STORAGE_KEY = 'lexiom_gt3_api_key';
-  var CA_MODULE_URL = '/gt2/Lexiom_1_3/ca/serveRamUnderGt3.js';
+  var CA_MODULE_PATH = '/gt2/Lexiom_1_3/ca/serveRamUnderGt3.js';
+  var CA_SESSION_URL_KEYS = [
+    'workspace_manifest_url',
+    'file_path_template',
+    'artifacts_url',
+    'report_url',
+    'heartbeat_url',
+    'cancel_url',
+    'gt3_consult_path',
+    'broker_path'
+  ];
   var TERMINAL_REALIZE_STATUSES = {
     completed: true,
     agent_failed: true,
@@ -16,9 +29,48 @@
     timeout: true
   };
 
+  function resolveSdkScriptUrl() {
+    if (typeof document === 'undefined') return '';
+    try {
+      if (document.currentScript && document.currentScript.src) {
+        return String(document.currentScript.src);
+      }
+    } catch (_e) {
+      /* ignore */
+    }
+    var scripts = document.getElementsByTagName('script');
+    for (var i = scripts.length - 1; i >= 0; i--) {
+      var src = scripts[i] && scripts[i].src ? String(scripts[i].src) : '';
+      if (/gtih-sdk\.js(\?|#|$)/i.test(src)) return src;
+    }
+    return '';
+  }
+
+  function originFromUrl(href) {
+    if (!href) return '';
+    try {
+      var base =
+        typeof location !== 'undefined' && location.href ? location.href : undefined;
+      return new URL(href, base).origin;
+    } catch (_e) {
+      return '';
+    }
+  }
+
+  /** Empty string = same-origin relative paths (TRH hosted on GT3). */
+  function resolveDefaultBaseUrl() {
+    return originFromUrl(resolveSdkScriptUrl());
+  }
+
   function createGtihClient(config) {
     var cfg = config || {};
-    var baseUrl = String(cfg.baseUrl != null ? cfg.baseUrl : '').replace(/\/+$/, '');
+    var baseUrl = String(
+      cfg.baseUrl != null ? cfg.baseUrl : resolveDefaultBaseUrl()
+    ).replace(/\/+$/, '');
+
+    function getBaseUrl() {
+      return baseUrl;
+    }
 
     function getApiKey() {
       if (typeof cfg.getApiKey === 'function') {
@@ -44,8 +96,30 @@
     }
 
     function joinUrl(path) {
-      if (!baseUrl) return path;
-      return baseUrl + path;
+      var p = String(path || '');
+      if (!p) return baseUrl || '';
+      if (/^https?:\/\//i.test(p) || /^blob:/i.test(p) || /^data:/i.test(p)) {
+        return p;
+      }
+      if (!baseUrl) return p;
+      if (p.charAt(0) !== '/') p = '/' + p;
+      return baseUrl + p;
+    }
+
+    function absolutizeCaSession(session) {
+      if (!session || typeof session !== 'object') return session;
+      if (!baseUrl) return session;
+      var out = {};
+      for (var k in session) {
+        if (Object.prototype.hasOwnProperty.call(session, k)) out[k] = session[k];
+      }
+      for (var i = 0; i < CA_SESSION_URL_KEYS.length; i++) {
+        var key = CA_SESSION_URL_KEYS[i];
+        if (out[key] != null && out[key] !== '') {
+          out[key] = joinUrl(out[key]);
+        }
+      }
+      return out;
     }
 
     async function jsonFetch(method, path, body, extraHeaders) {
@@ -135,22 +209,31 @@
 
     /**
      * Browser labor: boot Lexiom CA WebContainer for a propose or realize ca_session.
+     * CA module + ticket URLs always resolve against GTIH baseUrl (not the UI origin).
      */
     async function serveCaSession(caSession, opts) {
       var o = opts || {};
       if (!caSession || !caSession.session_id) {
         throw new Error('ca_session required');
       }
-      var mod = await import(CA_MODULE_URL);
+      var laborSession = absolutizeCaSession(caSession);
+      var caModuleUrl = joinUrl(CA_MODULE_PATH);
+      var mod = await import(caModuleUrl);
       var run =
         mod && (mod.runBoltWebContainerCa || mod.iServeRamInTheWebContainer);
       if (typeof run !== 'function') {
         throw new Error('serveRamUnderGt3 module missing runBoltWebContainerCa');
       }
-      return run(caSession, {
+      var gtihBase =
+        baseUrl ||
+        (typeof window !== 'undefined' && window.location
+          ? window.location.origin
+          : '');
+      return run(laborSession, {
         onLog: o.onLog,
         onPassChange: o.onPassChange,
-        signal: o.signal
+        signal: o.signal,
+        gtihBaseUrl: gtihBase
       });
     }
 
@@ -620,7 +703,8 @@
         fetchBudText: fetchBudText
       },
       getApiKey: getApiKey,
-      setApiKey: setApiKey
+      setApiKey: setApiKey,
+      getBaseUrl: getBaseUrl
     };
   }
 

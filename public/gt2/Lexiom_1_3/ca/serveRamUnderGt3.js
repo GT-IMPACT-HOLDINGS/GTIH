@@ -30,7 +30,8 @@ const DEFAULT_WC_CDN =
  * @param {{
  *   onLog?: (s: string) => void,
  *   onPassChange?: (pass: string, session: object) => void,
- *   signal?: AbortSignal
+ *   signal?: AbortSignal,
+ *   gtihBaseUrl?: string
  * }} [opts]
  */
 export async function iServeRamInTheWebContainer(caSession, opts = {}) {
@@ -44,6 +45,15 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       reason: 'session_missing'
     });
   }
+
+  const gtihBaseUrl = String(opts.gtihBaseUrl || '')
+    .trim()
+    .replace(/\/+$/, '');
+  const gtihOrigin =
+    gtihBaseUrl ||
+    (typeof window !== 'undefined' && window.location
+      ? window.location.origin
+      : '');
 
   const activeSession = caSession;
   const pluginId = caSession.plugin_id || '';
@@ -77,7 +87,10 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       // Each complete() is me kneeling to GT3: "Sun, how shall I shape Ram's SUD next?"
       complete: (messages, tools, completeOpts = {}) => {
         const pathGt3OpenedForMe = activeSession.gt3_consult_path || '';
-        const gt3ConsultUrl = new URL(pathGt3OpenedForMe, window.location.origin).href;
+        const gt3ConsultUrl = new URL(
+          pathGt3OpenedForMe,
+          gtihOrigin ? gtihOrigin + '/' : window.location.origin
+        ).href;
         const credentialGt3GaveMe = activeSession.gt3_consult_credential || '';
         return iConsultTheGt3Lm(
           gt3ConsultUrl,

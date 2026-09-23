@@ -17,6 +17,21 @@ Normative machine contract: [`openapi.yaml`](./openapi.yaml). Rationale: [`OPENA
 
 ---
 
+## Integration — single SDK asset (cross-origin clean cut)
+
+Vertical UIs (Tegria, TRH off-host) obtain **one** pre-execution asset: `gtih-sdk.js` from the **GTIH host**.
+
+1. Load `<script src="https://<gtih-host>/gt2/gtih/gtih-sdk.js">` (Tegria: `DEPLOY_TARGET` in `Tegria_frontend/src/deployTarget.ts`).
+2. Default `window.gtih` **autodiscovers** `baseUrl` from that script’s origin (override via `createGtihClient({ baseUrl })`).
+3. All `/lexiom13/*`, `/inference`, and CA module URLs resolve against that base — **not** the UI origin.
+4. UI hosts must set **COOP/COEP** for WebContainer labor; GTIH serves the SDK + `/gt2/Lexiom_1_3/ca/*` with **`Cross-Origin-Resource-Policy: cross-origin`**.
+
+**Temporary hard-wire (until real prod env):** flip `DEPLOY_TARGET` (`'dev'` \| `'prod'`) in both `Tegria_frontend/src/deployTarget.ts` and `server.js`. Default `'dev'` = localhost. `'prod'` = Render hosts (`gtih-image-latest` / `tgfe-image-latest`) + CORS allowlist.
+
+Consumers must **not** encode GTIH ports or path maps in app config beyond the SDK script URL.
+
+---
+
 ## Diagram (for review)
 
 ```mermaid
@@ -125,8 +140,8 @@ Without a Hanuman worker, `realize` may stay `running` until timeout. `/build/ru
 
 ## Auth (v0.1)
 
-- Most `/lexiom13/*`: no login cookies — same-origin GT3.
-- Inference / run: optional OpenRouter key via GTIH SDK.
+- Most `/lexiom13/*`: no login cookies. Cross-origin UIs call via GTIH SDK `baseUrl` (CORS on GT3).
+- Inference / run: optional OpenRouter key via GTIH SDK (`X-GT3-OpenRouter-Key`).
 - Not Lexiom 1.4 Bearer tokens.
 
 ---
