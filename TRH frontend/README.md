@@ -20,11 +20,15 @@ This tree sits **parallel** to [`Tegria_frontend/`](../Tegria_frontend/) at the 
 
 - Theme follows the browser `prefers-color-scheme` (bright by default; reversed palette in dark mode)
 
-- Primary: `gtih.osng.proposeThenRealizeUntilDone` — propose OSNG → ephemeral prepare (no Lexiom YAML) → Hanuman realize → render SUD + evidence collections
+- Desired outcome autofocuses on load; after a raise (and across browser refresh) the last intent is the empty-box placeholder (localStorage) — **Tab** concretizes it for edit / continue / Enter again. Once a SUD is shown in Outcome, the field title becomes **Desired change** (reshape the OSNG); it reverts when Outcome is cleared.
+
+- Primary: `gtih.osng.proposeThenRealizeUntilDone` — propose OSNG → ephemeral prepare (no Lexiom YAML) → Hanuman realize → render Outcome then Evidences only when each has content
 
 - Left / right sidebars always open (OSNG · Hanuman); no collapse rails
 
-- Left sidebar: proposed OSNG as **YAML** by default; Outcome-only shows prose paragraphs (blue `output_spec`, green evidence narratives); Metadata alone or both → structured YAML (meta mid-gray · spec blue · evidences green); JSON formatter kept behind `setOsngViewFormat('json'|'yaml')` for a later user toggle
+- Left sidebar: proposed OSNG as **YAML** by default; Outcome Spec-only shows **editable** prose paragraphs (blue `output_spec`, green evidence narratives — blur/input commits into the envelope); after a SUD exists, editing Outcome Spec / evidences reveals a **▶** that calls `gtih.hanuman.realizeUntilDone({ osng_envelope })` then refreshes Outcome / Evidences; Metadata alone or both → structured YAML (meta mid-gray · spec blue · evidences green); JSON formatter kept behind `setOsngViewFormat('json'|'yaml')` for a later user toggle
+
+- Right sidebar (Agentic Delegation): **Subject Matter** / **OSNG Machinery** filters mirror left Outcome Spec / Neural Geometry — Subject Matter (default on) keeps intent→garden→SUD→evidences story beats; OSNG Machinery (default off) shows how Hanuman builds/uses the structural knowledge graph (propose/prepare/Jobs/phase); both on = full chronological stream (machinery lines mid-gray); neither = empty hint. Subject Matter lines use **light purple** during OSNG expansion and **dark purple** during SUD realization. Expand ends on the sealed propose Job; prepare opens realize with an explicit cut beat. While Hanuman labors, a `| / - \` spinner trails the log. Hard error JSON pierces the filter.
 
 - Secondary: **propose only** (`proposeFromIntentUntilDone`, `max_descendants: 0` → single-OSN OSNG)
 
