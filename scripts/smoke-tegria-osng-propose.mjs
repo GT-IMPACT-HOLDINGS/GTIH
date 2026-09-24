@@ -32,6 +32,11 @@ try {
   console.log(`goto ${tegriaUrl}`);
   await page.goto(tegriaUrl, { waitUntil: 'networkidle', timeout: 60000 });
 
+  // Day-zero: empty garden — open Ask Anything via create-volume (+).
+  const createVolume = page.getByRole('button', { name: /create a new volume/i });
+  await createVolume.waitFor({ state: 'visible', timeout: 30000 });
+  await createVolume.click();
+
   const textarea = page.locator('textarea[placeholder="Ask anything..."]');
   await textarea.waitFor({ state: 'visible', timeout: 30000 });
   await textarea.fill(intent);

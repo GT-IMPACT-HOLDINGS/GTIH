@@ -17,6 +17,9 @@
       --yaml-meta: #6b6b6b;
       --yaml-spec: #1a5f9e;
       --yaml-evidences: #1a7a3c;
+      /* Subject beats: light = OSNG expand; dark = SUD realize */
+      --hanuman-subject-expand: #9a7bb8;
+      --hanuman-subject-realize: #4a1f6e;
       --shadow: rgba(0, 0, 0, 0.08);
       --ribbon-h: 2.5rem;
       color-scheme: light;
@@ -34,6 +37,8 @@
         --yaml-meta: #a8a8a8;
         --yaml-spec: #6ba3d9;
         --yaml-evidences: #6bc48a;
+        --hanuman-subject-expand: #c9b0e0;
+        --hanuman-subject-realize: #8b5cbf;
         --shadow: rgba(0, 0, 0, 0.45);
         color-scheme: dark;
       }
@@ -63,6 +68,7 @@
       z-index: 40;
       display: flex;
       align-items: center;
+      gap: 0.55rem;
       flex: 0 0 var(--ribbon-h);
       height: var(--ribbon-h);
       width: 100%;
@@ -71,10 +77,6 @@
       border-bottom: 1px solid var(--rule);
     }
     .ribbon-brand {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
       margin: 0;
       padding: 0;
       font-size: 0.95rem;
@@ -82,23 +84,23 @@
       letter-spacing: -0.02em;
       color: var(--ink);
       white-space: nowrap;
-      pointer-events: none;
     }
     .config-glyph {
       margin: 0;
-      padding: 0.3rem 0.65rem;
+      padding: 0;
+      width: 1.75rem;
+      height: 1.75rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      justify-content: center;
+      flex: 0 0 auto;
       background: transparent;
       color: var(--muted);
       border: 1px solid transparent;
       cursor: pointer;
       font: inherit;
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
+      font-size: 1.05rem;
       line-height: 1;
-      margin-top: 0;
     }
     .config-glyph:hover,
     .config-glyph[aria-expanded="true"] {
@@ -146,25 +148,34 @@
       padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--rule);
       flex: 0 0 auto;
+      box-sizing: border-box;
+      height: 2.85rem;
+      min-height: 2.85rem;
     }
     .sidebar-head h2 {
       font-size: 0.95rem;
       font-weight: 600;
       margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .osng-filters,
-    .hanuman-ribbon {
+    .hanuman-filters {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: center;
       gap: 0.5rem 1rem;
-      padding: 0.55rem 1rem;
+      padding: 0 1rem;
       border-bottom: 1px solid var(--rule);
       flex: 0 0 auto;
-      min-height: 2.45rem;
+      box-sizing: border-box;
+      height: 2.65rem;
+      min-height: 2.65rem;
       background: var(--surface);
     }
-    .osng-filters label {
+    .osng-filters label,
+    .hanuman-filters label {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
@@ -174,12 +185,15 @@
       cursor: pointer;
       user-select: none;
     }
-    .osng-filters input {
+    .osng-filters input,
+    .hanuman-filters input {
       width: auto;
       margin: 0;
       accent-color: var(--ink);
     }
-    .osng-download {
+    .osng-download,
+    .sud-download,
+    .osng-rerealize {
       margin: 0;
       padding: 0.25rem 0.55rem;
       display: inline-flex;
@@ -193,21 +207,25 @@
       line-height: 1;
       cursor: pointer;
     }
-    .osng-download:hover:not(:disabled) {
+    .osng-download:hover:not(:disabled),
+    .sud-download:hover:not(:disabled),
+    .osng-rerealize:hover:not(:disabled) {
       background: var(--paper);
     }
-    .osng-download:disabled {
+    .osng-download:disabled,
+    .sud-download:disabled,
+    .osng-rerealize:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
-    .osng-download .glyph {
+    .osng-download .glyph,
+    .sud-download .glyph,
+    .osng-rerealize .glyph {
       font-size: 0.95rem;
       line-height: 1;
     }
-    .hanuman-ribbon {
-      color: var(--muted);
-      font-size: 0.8rem;
-      line-height: 1.35;
+    .osng-rerealize[hidden] {
+      display: none !important;
     }
     #osngView,
     #out {
@@ -221,6 +239,15 @@
       white-space: pre-wrap;
       overflow-wrap: anywhere;
       word-break: break-word;
+    }
+    #out .hanuman-comment { color: var(--muted); }
+    #out .hanuman-subject-expand { color: var(--hanuman-subject-expand); }
+    #out .hanuman-subject-realize { color: var(--hanuman-subject-realize); }
+    #out .hanuman-structure { color: var(--yaml-meta); }
+    #out .hanuman-ink { color: var(--ink); }
+    #out .hanuman-spinner {
+      color: var(--muted);
+      font-weight: 600;
     }
     #osngView .osng-comment { color: var(--muted); }
     /* YAML chrome (keys + special chars) ≈ 50% lighter than meta value gray */
@@ -248,14 +275,57 @@
     #osngView .osng-para:last-child {
       margin-bottom: 0;
     }
+    #osngView .osng-para[contenteditable] {
+      outline: none;
+      cursor: text;
+      min-height: 1.2em;
+    }
+    #osngView .osng-para[contenteditable]:focus {
+      outline: 1px solid var(--rule);
+      outline-offset: 2px;
+      background: var(--paper);
+    }
+    #osngView .osng-para[contenteditable]:empty::before {
+      content: attr(data-placeholder);
+      color: var(--muted);
+    }
 
     .workspace {
       flex: 1 1 auto;
       min-width: 0;
       max-width: none;
-      margin: 0 auto;
-      padding: 2rem 1.25rem 3rem;
+      margin: 0;
+      padding: 0;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      align-self: stretch;
+      background: var(--paper);
+    }
+    .workspace-head {
+      background: var(--surface);
+    }
+    .workspace-head h2 label {
+      margin: 0;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+    /* Spacer matching side filter ribbons so the intent box aligns with OSNG / Hanuman panes. */
+    .workspace-rail {
+      flex: 0 0 auto;
+      box-sizing: border-box;
+      height: 2.65rem;
+      min-height: 2.65rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--surface);
+    }
+    .workspace-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 0.75rem 1.25rem 3rem;
     }
 
     h1 {
@@ -268,6 +338,12 @@
       font-size: 0.95rem;
       font-weight: 600;
       margin: 0;
+    }
+    .stage-head h2 label {
+      margin: 0;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
     }
     .sub {
       color: var(--muted);
@@ -369,6 +445,9 @@
     }
 
     .stage { margin: 1.25rem 0 0; }
+    .workspace-body > .stage:first-child {
+      margin-top: 0;
+    }
     .stage-head {
       display: flex;
       align-items: baseline;
@@ -387,9 +466,9 @@
       id="configGlyph"
       aria-expanded="false"
       aria-controls="configPanel"
-      title="Config"
-      aria-label="Open config"
-    >Config</button>
+      title="Preferences"
+      aria-label="Open preferences"
+    >⚙</button>
     <h1 class="ribbon-brand">The Reasoning Hub</h1>
     <div class="config-panel" id="configPanel" role="dialog" aria-label="Config" hidden>
       <details class="fold" open>
@@ -434,71 +513,88 @@
   </header>
 
   <div class="shell" id="shell">
-    <aside class="osng-sidebar" id="osngSidebar" aria-label="OSNG">
+    <aside class="osng-sidebar" id="osngSidebar" aria-label="System Pack">
       <div class="sidebar-head">
-        <h2 id="osngTitle">OSNG</h2>
+        <h2 id="osngTitle">System Pack</h2>
+        <button
+          type="button"
+          class="osng-rerealize"
+          id="osngRerealize"
+          title="Re-realize altered Outcome Spec / evidences with Hanuman"
+          aria-label="Re-realize with Hanuman"
+          hidden
+        >
+          <span class="glyph" aria-hidden="true">▶</span>
+        </button>
       </div>
-      <div class="osng-filters" role="group" aria-label="OSNG view filters">
+      <div class="osng-filters" role="group" aria-label="System Pack view filters">
         <button
           type="button"
           class="osng-download"
           id="osngDownload"
           title="Download filtered OSNG as YAML"
-          aria-label="Download YAML"
+          aria-label="Download"
           disabled
         >
           <span class="glyph" aria-hidden="true">⬇</span>
-          YAML
         </button>
-        <label title="Outcome narrative as paragraphs: output_spec (blue) then evidence texts (green). Not YAML structure.">
+        <label title="Outcome Spec narrative as paragraphs: output_spec (blue) then evidence texts (green). Not YAML structure.">
           <input type="checkbox" id="osngFilterOutcome" checked />
-          Outcome
+          Outcome Spec
         </label>
-        <label title="Show remaining OSN / envelope fields (mid-gray). Combine with Outcome for full YAML.">
+        <label title="Show Neural Geometry fields (mid-gray). Combine with Outcome Spec for full YAML.">
           <input type="checkbox" id="osngFilterMeta" />
-          Metadata
+          Neural Geometry
         </label>
       </div>
-      <pre id="osngView"><span class="osng-comment"># OSNG appears here after propose</span></pre>
+      <pre id="osngView"></pre>
     </aside>
 
     <div class="workspace">
-      <section class="stage" aria-labelledby="intent-heading">
-        <div class="stage-head">
-          <label for="intent" id="intent-heading">SUD-describing prompt / narrative</label>
-        </div>
-        <textarea
-          id="intent"
-          placeholder="Describe the outcome you want the SUD to realize…"
-          aria-describedby="intent-hint"
-        ></textarea>
-        <p class="hint" id="intent-hint">Enter → propose &amp; realize · Shift+Enter → new line</p>
-      </section>
+      <div class="sidebar-head workspace-head">
+          <h2 id="intent-heading"><label for="intent">Desired Outcome</label></h2>
+      </div>
+      <div class="workspace-rail" aria-hidden="true"></div>
+      <div class="workspace-body">
+        <section class="stage" aria-labelledby="intent-heading">
+          <textarea
+            id="intent"
+            autofocus
+            autocomplete="off"
+            placeholder="Describe the outcome you want the SUD to realize…"
+          ></textarea>
+        </section>
 
-      <section class="stage" aria-labelledby="sud-heading">
-        <div class="stage-head">
-          <h2 id="sud-heading">SUD</h2>
-          <div id="sudMeta" class="muted">Waiting for realization…</div>
-        </div>
-        <div id="sudPane" class="pane"></div>
-      </section>
+        <section class="stage" id="sudStage" aria-labelledby="sud-heading" hidden>
+          <div class="stage-head">
+            <h2 id="sud-heading">Outcome</h2>
+            <div id="sudMeta" class="sud-meta"></div>
+          </div>
+          <div id="sudPane" class="pane"></div>
+        </section>
 
-      <section class="stage" aria-labelledby="evidence-heading">
-        <div class="stage-head">
-          <h2 id="evidence-heading">Evidences</h2>
-        </div>
-        <ul id="evidenceList" class="evidence-list">
-          <li class="muted">Waiting for evidence collections…</li>
-        </ul>
-      </section>
+        <section class="stage" id="evidenceStage" aria-labelledby="evidence-heading" hidden>
+          <div class="stage-head">
+            <h2 id="evidence-heading">Evidences</h2>
+          </div>
+          <ul id="evidenceList" class="evidence-list"></ul>
+        </section>
+      </div>
     </div>
 
-    <aside class="hanuman-sidebar" id="hanumanSidebar" aria-label="Hanuman under GT3">
+    <aside class="hanuman-sidebar" id="hanumanSidebar" aria-label="Agentic Delegation">
       <div class="sidebar-head">
-        <h2>Hanuman under GT3</h2>
+        <h2>Agentic Delegation</h2>
       </div>
-      <div class="hanuman-ribbon" id="hanumanRibbon">
-        Ram raises · Hanuman labors · GT3 is the sun
+      <div class="hanuman-filters" role="group" aria-label="Hanuman log filters">
+        <label title="Subject Matter progress: intent→OSNG expand (light purple) ends when the propose Job is sealed; SUD realize (dark purple) begins at prepare. Ram raises · Hanuman labors · GT3 is the sun.">
+          <input type="checkbox" id="hanumanFilterSubject" checked />
+          Subject Matter
+        </label>
+        <label title="OSNG Machinery: propose, prepare, Jobs, phase &amp; status — how Hanuman builds and uses the structural knowledge graph for Ram. Combine with Subject Matter for the full stream.">
+          <input type="checkbox" id="hanumanFilterStructure" />
+          OSNG Machinery
+        </label>
       </div>
       <pre id="out" aria-live="polite"></pre>
     </aside>
@@ -511,32 +607,125 @@
       var osngFilterOutcome = document.getElementById('osngFilterOutcome');
       var osngFilterMeta = document.getElementById('osngFilterMeta');
       var osngDownload = document.getElementById('osngDownload');
+      var osngRerealizeBtn = document.getElementById('osngRerealize');
       var lastOsngEnvelope = null;
+      /** Fingerprint of Outcome Spec + evidence narratives at last SUD realization. */
+      var osngBaselineOutcome = null;
+      var osngOutcomeDirty = false;
+      var sudPresent = false;
       /** Sidebar media: 'yaml' | 'json'. Flip here (or later from UI) without rewriting renderers. */
       var osngViewFormat = 'yaml';
       var configGlyph = document.getElementById('configGlyph');
       var configPanel = document.getElementById('configPanel');
       var configAnchor = document.getElementById('configAnchor');
       var out = document.getElementById('out');
+      var hanumanFilterSubject = document.getElementById('hanumanFilterSubject');
+      var hanumanFilterStructure = document.getElementById('hanumanFilterStructure');
+      /** Tagged Hanuman beats: { text, subject, structure, arc }. Filters strip layers; full stream retained.
+       *  arc: 'expand' (intent→OSNG) | 'realize' (SUD labor) — colors subject lines light vs dark purple. */
+      var hanumanLogEntries = [];
+      var hanumanArc = 'expand';
+      var HANUMAN_LOG_BUFFER = 100;
+      var HANUMAN_LOG_VISIBLE = 40;
+      var HANUMAN_SPINNER_FRAMES = ['|', '/', '-', '\\'];
+      var hanumanSpinnerTimer = null;
+      var hanumanSpinnerFrame = 0;
       var proposeOnlyBtn = document.getElementById('proposeOnly');
       var intentEl = document.getElementById('intent');
       var capEl = document.getElementById('cap');
       var keyEl = document.getElementById('key');
+      var sudStage = document.getElementById('sudStage');
+      var evidenceStage = document.getElementById('evidenceStage');
       var sudMeta = document.getElementById('sudMeta');
       var sudPane = document.getElementById('sudPane');
       var evidenceList = document.getElementById('evidenceList');
       var jsonOut = document.getElementById('jsonOut');
+      var intentHeadingLabel = document.querySelector('#intent-heading label');
       var busy = false;
+      var INTENT_PLACEHOLDER_DEFAULT =
+        'Describe the outcome you want the SUD to realize…';
+      var LAST_INTENT_KEY = 'trh.lastIntent.v1';
+      var lastIntentRecall = '';
 
       try {
         keyEl.value = (window.gtih && window.gtih.getApiKey && window.gtih.getApiKey()) || '';
       } catch (_e) {}
 
+      function loadLastIntentRecall() {
+        try {
+          lastIntentRecall = String(localStorage.getItem(LAST_INTENT_KEY) || '').trim();
+        } catch (_e) {
+          lastIntentRecall = '';
+        }
+      }
+
+      function saveLastIntentRecall(text) {
+        lastIntentRecall = String(text || '').trim();
+        try {
+          if (lastIntentRecall) {
+            localStorage.setItem(LAST_INTENT_KEY, lastIntentRecall);
+          }
+        } catch (_e) {}
+      }
+
+      function applyIntentPlaceholder() {
+        if (!intentEl) return;
+        intentEl.placeholder = lastIntentRecall || INTENT_PLACEHOLDER_DEFAULT;
+      }
+
+      /** After a raise: clear the box; last intent becomes the Tab-to-accept placeholder. */
+      function refreshIntentForNextRaise(committed) {
+        if (committed) saveLastIntentRecall(committed);
+        if (intentEl) {
+          intentEl.value = '';
+          applyIntentPlaceholder();
+        }
+      }
+
+      /** Tab with empty box: concretize last-intent placeholder into editable value. */
+      function concretizeIntentPlaceholder() {
+        if (!intentEl) return false;
+        if (String(intentEl.value || '').length > 0) return false;
+        if (!lastIntentRecall) return false;
+        intentEl.value = lastIntentRecall;
+        var len = intentEl.value.length;
+        try {
+          intentEl.setSelectionRange(len, len);
+        } catch (_e) {}
+        return true;
+      }
+
+      /** First beat: empty box + last-intent placeholder (survives browser refresh); caret ready. */
+      loadLastIntentRecall();
+      if (intentEl) {
+        var restoredValue = String(intentEl.value || '').trim();
+        if (restoredValue) {
+          // Browser form restore: keep as recall, then show as placeholder not value.
+          saveLastIntentRecall(restoredValue);
+        }
+        intentEl.value = '';
+        intentEl.setAttribute('autocomplete', 'off');
+      }
+      applyIntentPlaceholder();
+      if (intentEl && typeof intentEl.focus === 'function') {
+        try {
+          intentEl.focus({ preventScroll: true });
+        } catch (_focusErr) {
+          intentEl.focus();
+        }
+      }
+
+      window.addEventListener('pagehide', function () {
+        if (!intentEl) return;
+        var live = String(intentEl.value || '').trim();
+        if (live) saveLastIntentRecall(live);
+      });
+
       function setConfigOpen(open) {
         configPanel.classList.toggle('open', !!open);
         configPanel.hidden = !open;
         configGlyph.setAttribute('aria-expanded', open ? 'true' : 'false');
-        configGlyph.setAttribute('aria-label', open ? 'Close config' : 'Open config');
+        configGlyph.setAttribute('aria-label', open ? 'Close preferences' : 'Open preferences');
       }
 
       configGlyph.addEventListener('click', function (ev) {
@@ -735,10 +924,8 @@
       }
 
       /** Prefer human-readable evidence text over structural evidence keys. */
-      function evidenceNarrativeText(ev) {
-        if (ev == null) return '';
-        if (typeof ev === 'string') return ev.trim();
-        if (typeof ev !== 'object') return String(ev).trim();
+      function evidenceNarrativeFieldKey(ev) {
+        if (!ev || typeof ev !== 'object') return null;
         var preferred = [
           'inspection_prompt',
           'description',
@@ -749,46 +936,66 @@
         ];
         for (var i = 0; i < preferred.length; i++) {
           var v = ev[preferred[i]];
-          if (typeof v === 'string' && v.trim()) return v.trim();
+          if (typeof v === 'string' && v.trim()) return preferred[i];
         }
         var keys = Object.keys(ev);
         for (var j = 0; j < keys.length; j++) {
-          var s = ev[keys[j]];
-          if (typeof s === 'string' && s.trim()) return s.trim();
+          if (typeof ev[keys[j]] === 'string' && String(ev[keys[j]]).trim()) {
+            return keys[j];
+          }
         }
+        return 'inspection_prompt';
+      }
+
+      function evidenceNarrativeText(ev) {
+        if (ev == null) return '';
+        if (typeof ev === 'string') return ev.trim();
+        if (typeof ev !== 'object') return String(ev).trim();
+        var key = evidenceNarrativeFieldKey(ev);
+        if (key && typeof ev[key] === 'string') return ev[key].trim();
         return '';
       }
 
       /**
-       * Outcome-only presentation: consecutive paragraphs (blue spec, green evidences),
+       * Outcome-only presentation: editable paragraphs (blue spec, green evidences),
        * not canonical YAML / JSON structure.
        */
       function outcomeNarrativeHtml(envelope) {
         var nodes = Array.isArray(envelope && envelope.nodes) ? envelope.nodes : [];
         var parts = [];
-        nodes.forEach(function (node) {
+        nodes.forEach(function (node, nodeIndex) {
           if (!node || typeof node !== 'object') return;
           if (node.output_spec != null) {
             var specText =
               typeof node.output_spec === 'string'
-                ? node.output_spec.trim()
-                : String(node.output_spec).trim();
-            if (specText) {
-              parts.push(
-                '<span class="osng-para osng-spec">' + escapeHtml(specText) + '</span>'
-              );
-            }
+                ? node.output_spec
+                : String(node.output_spec);
+            parts.push(
+              '<span class="osng-para osng-spec" contenteditable="true" ' +
+                'spellcheck="true" role="textbox" aria-label="Outcome Spec" ' +
+                'data-osng-node="' +
+                nodeIndex +
+                '" data-osng-field="spec" data-placeholder="Outcome Spec…">' +
+                escapeHtml(specText) +
+                '</span>'
+            );
           }
           var evidences = Array.isArray(node.success_evidences)
             ? node.success_evidences
             : [];
-          evidences.forEach(function (ev) {
+          evidences.forEach(function (ev, evIndex) {
             var text = evidenceNarrativeText(ev);
-            if (text) {
-              parts.push(
-                '<span class="osng-para osng-evidences">' + escapeHtml(text) + '</span>'
-              );
-            }
+            parts.push(
+              '<span class="osng-para osng-evidences" contenteditable="true" ' +
+                'spellcheck="true" role="textbox" aria-label="Success evidence" ' +
+                'data-osng-node="' +
+                nodeIndex +
+                '" data-osng-field="evidence" data-osng-ev="' +
+                evIndex +
+                '" data-placeholder="Success evidence…">' +
+                escapeHtml(text) +
+                '</span>'
+            );
           });
         });
         if (!parts.length) {
@@ -797,11 +1004,267 @@
         return parts.join('\n');
       }
 
+      function editablePlainText(el) {
+        return String(el.innerText != null ? el.innerText : el.textContent || '')
+          .replace(/\u00a0/g, ' ')
+          .replace(/\r\n/g, '\n')
+          .replace(/\r/g, '\n');
+      }
+
+      function commitOsngEditable(el) {
+        if (!el || !lastOsngEnvelope || !Array.isArray(lastOsngEnvelope.nodes)) return;
+        var nodeIndex = Number(el.getAttribute('data-osng-node'));
+        if (!isFinite(nodeIndex) || nodeIndex < 0) return;
+        var node = lastOsngEnvelope.nodes[nodeIndex];
+        if (!node || typeof node !== 'object') return;
+        var field = el.getAttribute('data-osng-field');
+        var text = editablePlainText(el);
+        if (field === 'spec') {
+          node.output_spec = text;
+          refreshOsngOutcomeDirty();
+          return;
+        }
+        if (field === 'evidence') {
+          var evIndex = Number(el.getAttribute('data-osng-ev'));
+          if (!isFinite(evIndex) || evIndex < 0) return;
+          if (!Array.isArray(node.success_evidences)) node.success_evidences = [];
+          var ev = node.success_evidences[evIndex];
+          if (typeof ev === 'string' || ev == null) {
+            node.success_evidences[evIndex] = text;
+            refreshOsngOutcomeDirty();
+            return;
+          }
+          if (typeof ev === 'object') {
+            var key = evidenceNarrativeFieldKey(ev);
+            ev[key || 'inspection_prompt'] = text;
+            refreshOsngOutcomeDirty();
+          }
+        }
+      }
+
+      function extractOutcomeFingerprint(envelope) {
+        var nodes = Array.isArray(envelope && envelope.nodes) ? envelope.nodes : [];
+        return nodes.map(function (node) {
+          if (!node || typeof node !== 'object') return null;
+          var evidences = Array.isArray(node.success_evidences)
+            ? node.success_evidences
+            : [];
+          return {
+            output_spec:
+              node.output_spec == null ? null : String(node.output_spec),
+            evidences: evidences.map(function (ev) {
+              if (typeof ev === 'string') return ev;
+              if (ev && typeof ev === 'object') {
+                var key = evidenceNarrativeFieldKey(ev);
+                return key ? String(ev[key] != null ? ev[key] : '') : '';
+              }
+              return String(ev == null ? '' : ev);
+            })
+          };
+        });
+      }
+
+      function captureOsngOutcomeBaseline() {
+        osngBaselineOutcome = extractOutcomeFingerprint(lastOsngEnvelope);
+        osngOutcomeDirty = false;
+        updateOsngRerealizeButton();
+      }
+
+      function refreshOsngOutcomeDirty() {
+        if (!sudPresent || !osngBaselineOutcome || !lastOsngEnvelope) {
+          osngOutcomeDirty = false;
+        } else {
+          osngOutcomeDirty =
+            JSON.stringify(osngBaselineOutcome) !==
+            JSON.stringify(extractOutcomeFingerprint(lastOsngEnvelope));
+        }
+        updateOsngRerealizeButton();
+      }
+
+      function updateOsngRerealizeButton() {
+        if (!osngRerealizeBtn) return;
+        var show = !!(
+          sudPresent &&
+          osngOutcomeDirty &&
+          lastOsngEnvelope &&
+          !busy
+        );
+        osngRerealizeBtn.hidden = !show;
+        osngRerealizeBtn.disabled = !!busy;
+      }
+
+      /**
+       * Re-realize from the edited System Pack: ephemeral prepare → Hanuman realize → evidence + SUD.
+       * Skips propose; uses gtih.hanuman.realizeUntilDone({ osng_envelope }).
+       */
+      async function requestOsngRerealize() {
+        if (!lastOsngEnvelope || busy) return;
+        if (osngView) {
+          var live = osngView.querySelectorAll('[data-osng-field]');
+          for (var i = 0; i < live.length; i++) {
+            commitOsngEditable(live[i]);
+          }
+        }
+        refreshOsngOutcomeDirty();
+        if (!osngOutcomeDirty || !sudPresent) return;
+
+        if (
+          !window.gtih ||
+          !window.gtih.hanuman ||
+          !window.gtih.hanuman.realizeUntilDone
+        ) {
+          appendBeat(
+            beat(
+              'gtih-sdk.js not loaded (need hanuman.realizeUntilDone)',
+              true,
+              true,
+              'realize'
+            )
+          );
+          return;
+        }
+
+        if (keyEl && keyEl.value && keyEl.value.trim()) {
+          window.gtih.setApiKey(keyEl.value.trim());
+        }
+
+        var envelope = {
+          root_osn_id: lastOsngEnvelope.root_osn_id,
+          nodes: lastOsngEnvelope.nodes,
+          meta: lastOsngEnvelope.meta
+        };
+        if (envelope.root_osn_id == null) delete envelope.root_osn_id;
+        if (envelope.meta == null) delete envelope.meta;
+
+        setBusy(true);
+        hanumanArc = 'realize';
+        appendBeat(
+          beat(
+            'Ram asks Hanuman to re-realize the altered Outcome Spec / evidences…',
+            true,
+            true,
+            'realize'
+          )
+        );
+
+        try {
+          var realized = await window.gtih.hanuman.realizeUntilDone(
+            { osng_envelope: envelope },
+            {
+              onLog: appendLog,
+              onStatus: function (st) {
+                appendStatusBeat({ phase: 'realize', status: st });
+              }
+            }
+          );
+          var handoff = realized.handoff || {};
+          var status = realized.status;
+          var osnId = handoff.compilation_root_osn_id || envelope.root_osn_id;
+
+          var evidence = null;
+          try {
+            appendLog('phase: collect evidence listings');
+            evidence = await window.gtih.hanuman.listEvidenceCollections(osnId);
+          } catch (evErr) {
+            evidence = {
+              osn_id: osnId,
+              targets: [],
+              detail: (evErr && evErr.message) || String(evErr)
+            };
+          }
+
+          var sud = null;
+          try {
+            appendLog('phase: fetch SUD artifact');
+            sud = await window.gtih.hanuman.fetchBudText(
+              handoff.run_id,
+              handoff.plugin_id
+            );
+          } catch (sudErr) {
+            var pluginId = handoff.plugin_id;
+            var isDoc = pluginId === 'lexiom13.document_builder';
+            sud = {
+              entry: isDoc ? 'document.md' : 'index.html',
+              media_kind: isDoc ? 'document' : 'software',
+              url: isDoc
+                ? window.gtih.hanuman.getBudArtifactUrl(handoff.run_id, 'document.md')
+                : window.gtih.hanuman.getBudPreviewUrl(handoff.run_id, 'index.html'),
+              text: null,
+              error: (sudErr && sudErr.message) || String(sudErr)
+            };
+          }
+
+          out.className = 'ok';
+          appendLog('done: run_id=' + (handoff.run_id || '?'));
+          showResults({
+            envelope: lastOsngEnvelope,
+            handoff: handoff,
+            status: status,
+            evidence: evidence,
+            sud: sud
+          });
+        } catch (e) {
+          out.className = 'err';
+          var payload = {
+            error: e && e.message ? e.message : String(e),
+            detail: e && e.detail != null ? e.detail : undefined,
+            status: e && e.status != null ? e.status : undefined,
+            debug: e && e.debug != null ? e.debug : undefined,
+            body: e && e.body != null ? e.body : undefined
+          };
+          hanumanLogEntries = [];
+          out.textContent = JSON.stringify(payload, null, 2);
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      function bindOsngEditable() {
+        if (!osngView || osngView._osngEditBound) return;
+        osngView._osngEditBound = true;
+        osngView.addEventListener('focusout', function (ev) {
+          var el = ev.target;
+          if (!el || !el.getAttribute || !el.getAttribute('data-osng-field')) return;
+          if (!osngView.contains(el)) return;
+          commitOsngEditable(el);
+        });
+        osngView.addEventListener('input', function (ev) {
+          var el = ev.target;
+          if (!el || !el.getAttribute || !el.getAttribute('data-osng-field')) return;
+          if (!osngView.contains(el)) return;
+          commitOsngEditable(el);
+        });
+        osngView.addEventListener('keydown', function (ev) {
+          var el = ev.target;
+          if (!el || !el.getAttribute || !el.getAttribute('data-osng-field')) return;
+          if (!osngView.contains(el)) return;
+          // Keep Enter as newline inside Outcome Spec / evidences (do not bubble to shell).
+          if (ev.key === 'Enter') ev.stopPropagation();
+        });
+        osngView.addEventListener('paste', function (ev) {
+          var el = ev.target;
+          if (!el || !el.closest) return;
+          var editable = el.closest('[data-osng-field]');
+          if (!editable || !osngView.contains(editable)) return;
+          ev.preventDefault();
+          var plain = '';
+          try {
+            plain = (ev.clipboardData || window.clipboardData).getData('text/plain');
+          } catch (_e) {}
+          if (document.queryCommandSupported && document.queryCommandSupported('insertText')) {
+            document.execCommand('insertText', false, plain);
+          } else {
+            editable.textContent = (editable.textContent || '') + plain;
+          }
+          commitOsngEditable(editable);
+        });
+      }
+
       /** Format plugins: shared filter → format-specific HTML. Add UI toggle later via setOsngViewFormat. */
       var osngFormatters = {
         yaml: {
           label: 'YAML',
-          emptyHint: '# OSNG appears here after propose',
+          emptyHint: '',
           comment: function (text) {
             return '<span class="osng-comment"># ' + escapeHtml(text) + '</span>';
           },
@@ -811,7 +1274,7 @@
         },
         json: {
           label: 'JSON',
-          emptyHint: '// OSNG appears here after propose',
+          emptyHint: '',
           comment: function (text) {
             return '<span class="osng-comment">// ' + escapeHtml(text) + '</span>';
           },
@@ -828,13 +1291,14 @@
       function updateOsngTitle() {
         var fmt = getOsngFormatter(osngViewFormat);
         var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        var base = 'System Pack';
         if (osngTitle) {
-          osngTitle.textContent = showMeta ? 'OSNG (' + fmt.label + ')' : 'OSNG';
+          osngTitle.textContent = showMeta ? base + ' (' + fmt.label + ')' : base;
         }
         if (osngSidebar) {
           osngSidebar.setAttribute(
             'aria-label',
-            showMeta ? 'OSNG ' + fmt.label : 'OSNG'
+            showMeta ? base + ' ' + fmt.label : base
           );
         }
       }
@@ -847,7 +1311,7 @@
         if (lastOsngEnvelope) {
           renderOsng(lastOsngEnvelope);
         } else if (osngView) {
-          osngView.innerHTML = '<span class="osng-comment">' + escapeHtml(fmt.emptyHint) + '</span>';
+          osngView.innerHTML = '';
         }
       }
 
@@ -1012,7 +1476,7 @@
         var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
         var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
         if (!showOutcome && !showMeta) {
-          return fmt.comment('No OSNG fields selected — enable Outcome and/or Metadata');
+          return fmt.comment('No System Pack fields selected — enable Outcome Spec and/or Neural Geometry');
         }
         // Outcome-only: prose paragraphs, not structured media.
         if (showOutcome && !showMeta) {
@@ -1028,6 +1492,13 @@
         var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
         var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
         updateOsngTitle();
+        // Commit any in-flight Outcome Spec / evidence edits before re-render.
+        if (osngView) {
+          var live = osngView.querySelectorAll('[data-osng-field]');
+          for (var i = 0; i < live.length; i++) {
+            commitOsngEditable(live[i]);
+          }
+        }
         osngView.classList.toggle('osng-outcome-prose', !!(showOutcome && !showMeta));
         osngView.innerHTML = envelopeToOsngHtml(lastOsngEnvelope, osngViewFormat);
         if (osngDownload) {
@@ -1037,6 +1508,13 @@
 
       function downloadOsngYaml() {
         if (!lastOsngEnvelope) return;
+        // Flush edits so download matches what Ram sees.
+        if (osngView) {
+          var live = osngView.querySelectorAll('[data-osng-field]');
+          for (var i = 0; i < live.length; i++) {
+            commitOsngEditable(live[i]);
+          }
+        }
         var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
         var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
         if (!showOutcome && !showMeta) return;
@@ -1062,6 +1540,7 @@
       }
 
       setOsngViewFormat(osngViewFormat);
+      bindOsngEditable();
 
       if (osngFilterOutcome) {
         osngFilterOutcome.addEventListener('change', refreshOsngView);
@@ -1072,152 +1551,415 @@
       if (osngDownload) {
         osngDownload.addEventListener('click', downloadOsngYaml);
       }
+      if (osngRerealizeBtn) {
+        osngRerealizeBtn.addEventListener('click', function () {
+          requestOsngRerealize();
+        });
+      }
 
       /** Show proposed OSNG as soon as the envelope lands (before SUD / evidences). */
       function revealProposedOsng(envelope) {
         renderOsng(envelope);
-        appendLog(
-          'Hanuman offers a draft OSNG for Ram’s eyes (root: ' +
+        hanumanArc = 'expand';
+        appendBeat({
+          text:
+            'Hanuman offers a draft OSNG for Ram’s eyes (root: ' +
             ((envelope && envelope.root_osn_id) || '?') +
-            ') — garden first; SUD leap still ahead…'
-        );
+            ') — garden first; SUD leap still ahead…',
+          subject: true,
+          structure: false,
+          arc: 'expand'
+        });
       }
 
       function setBusy(next) {
         busy = !!next;
         intentEl.disabled = busy;
         proposeOnlyBtn.disabled = busy;
+        updateOsngRerealizeButton();
+        if (busy) {
+          startHanumanSpinner();
+        } else {
+          stopHanumanSpinner();
+        }
+        if (!busy && intentEl && typeof intentEl.focus === 'function') {
+          try {
+            intentEl.focus({ preventScroll: true });
+          } catch (_e) {
+            intentEl.focus();
+          }
+        }
       }
 
-      /** Map wire logs / status into Ram–Hanuman–GT3 relationship beats. */
+      function hanumanSpinnerHtml() {
+        var ch =
+          HANUMAN_SPINNER_FRAMES[hanumanSpinnerFrame % HANUMAN_SPINNER_FRAMES.length];
+        return (
+          '<span class="hanuman-spinner" aria-hidden="true">' +
+          escapeHtml(ch) +
+          '</span>'
+        );
+      }
+
+      function tickHanumanSpinner() {
+        if (!busy) return;
+        hanumanSpinnerFrame =
+          (hanumanSpinnerFrame + 1) % HANUMAN_SPINNER_FRAMES.length;
+        var el = out && out.querySelector('.hanuman-spinner');
+        if (el) {
+          el.textContent =
+            HANUMAN_SPINNER_FRAMES[hanumanSpinnerFrame];
+          return;
+        }
+        renderHanumanLog();
+      }
+
+      function startHanumanSpinner() {
+        if (hanumanSpinnerTimer != null) return;
+        hanumanSpinnerFrame = 0;
+        renderHanumanLog();
+        hanumanSpinnerTimer = setInterval(tickHanumanSpinner, 120);
+      }
+
+      function stopHanumanSpinner() {
+        if (hanumanSpinnerTimer != null) {
+          clearInterval(hanumanSpinnerTimer);
+          hanumanSpinnerTimer = null;
+        }
+        // Do not wipe hard-error JSON that replaced the log pane.
+        if (out && !/\berr\b/.test(out.className || '')) {
+          renderHanumanLog();
+        }
+      }
+
+      function beat(text, subject, structure, arc) {
+        var entry = {
+          text: String(text || '').trim(),
+          subject: !!subject,
+          structure: !!structure
+        };
+        if (entry.subject) {
+          entry.arc = arc === 'realize' || arc === 'expand' ? arc : hanumanArc;
+        }
+        return entry;
+      }
+
+      function noteHanumanArcFromWire(line) {
+        if (/^phase:\s*propose/i.test(line) || /^starting propose/i.test(line)) {
+          hanumanArc = 'expand';
+          return;
+        }
+        // Prepare is the discrete cut: expand (propose) ends; realize (SUD) begins.
+        if (/^phase:\s*prepare/i.test(line)) {
+          hanumanArc = 'realize';
+          return;
+        }
+        if (
+          /^phase:\s*realize/i.test(line) ||
+          /^phase:\s*Hanuman realize/i.test(line) ||
+          /^phase:\s*collect evidence/i.test(line) ||
+          /^phase:\s*fetch SUD/i.test(line)
+        ) {
+          hanumanArc = 'realize';
+        }
+      }
+
+      /** Map wire logs / status into Ram–Hanuman–GT3 relationship beats (tagged for Subject / Structure). */
       function expressHanumanLog(rawLine) {
         var line = String(rawLine || '').trim();
         if (!line) return null;
+        noteHanumanArcFromWire(line);
 
         if (/^phase:\s*propose OSNG/i.test(line)) {
-          return 'Ram has raised an OSNG proposition — Hanuman opens the propose Job under GT3…';
+          return beat(
+            'Ram has raised an OSNG proposition — Hanuman opens the propose Job (advised by GT3)…',
+            false,
+            true,
+            'expand'
+          );
         }
         if (/^phase:\s*prepare from proposed/i.test(line)) {
-          return 'GT3 prepares an ephemeral garden from Hanuman’s draft so Ram may later authorize a leap…';
+          // Clear cut on Subject: last expand was sealed / draft OSNG; this opens realize (dark purple).
+          return beat(
+            'Propose rests — Ram’s OSNG garden stands; Hanuman turns from expansion to realizing the SUD…',
+            true,
+            true,
+            'realize'
+          );
         }
         if (/^phase:\s*prepare\b/i.test(line)) {
-          return 'GT3 prepares the frozen country from Ram’s garden…';
+          return beat(
+            'GT3 prepares the frozen country from Ram’s garden — realization begins…',
+            true,
+            true,
+            'realize'
+          );
         }
         if (/^phase:\s*realize \(issue CA ticket\)/i.test(line)) {
-          return 'GT3 issues Hanuman a realize Job — devotion with hands, never the White throne…';
+          return beat(
+            'GT3 issues Hanuman a realize Job — devotion with hands, never the White throne…',
+            false,
+            true,
+            'realize'
+          );
         }
         if (/^phase:\s*Hanuman realize labor/i.test(line)) {
-          return 'Hanuman leaps into the sandbox to realize the SUD Ram’s OSNG prescribed…';
+          return beat(
+            'Hanuman leaps into the sandbox to realize the SUD Ram’s OSNG prescribed…',
+            false,
+            true,
+            'realize'
+          );
         }
         if (/^phase:\s*collect evidence/i.test(line)) {
-          return 'GT3 gathers evidence listings so Ram may inspect what love built…';
+          return beat(
+            'GT3 gathers evidence listings so Ram may inspect what love built…',
+            true,
+            false,
+            'realize'
+          );
         }
         if (/^phase:\s*fetch SUD/i.test(line)) {
-          return 'Fetching the SUD artifact for Ram’s eyes…';
+          return beat('Fetching the SUD artifact for Ram’s eyes…', true, false, 'realize');
         }
         if (/^starting propose/i.test(line)) {
-          return line;
+          return beat(line, false, true, 'expand');
         }
         if (/^done:/i.test(line)) {
-          return 'The chain rests — Ram alone may seat what remains draft upon the White throne.';
+          return beat(
+            'The chain rests — Ram alone may seat what remains draft upon the White throne.',
+            true,
+            true
+          );
         }
 
         if (/Receiving the propose workspace|syncIn workspace \(osng propose\)/i.test(line)) {
-          return 'Hanuman receives Ram’s propose workspace into his hands…';
+          return beat(
+            'Hanuman receives Ram’s propose workspace into his hands…',
+            false,
+            true,
+            'expand'
+          );
         }
         var syncInFiles = line.match(/syncIn\s+(\d+)\s+files/i);
         if (syncInFiles) {
-          return 'The Job’s frozen country is ready (' + syncInFiles[1] + ' files)…';
+          return beat(
+            'The Job’s frozen country is ready (' + syncInFiles[1] + ' files)…',
+            false,
+            true
+          );
         }
         if (/sandbox opens|WebContainer sandbox ready/i.test(line)) {
-          return 'The sandbox opens — Hanuman begins the leap under the GT3 sun…';
+          return beat(
+            'The sandbox opens — Hanuman begins the leap under the GT3 sun…',
+            false,
+            true
+          );
         }
         if (/Consulting GT3 to draft|osng propose tool loop/i.test(line)) {
-          return 'Hanuman consults GT3 to draft a proposal OSNG from Ram’s intent…';
+          return beat(
+            'Hanuman consults GT3 to draft a proposal OSNG from Ram’s intent…',
+            true,
+            true,
+            'expand'
+          );
         }
         if (/document context-economy|syncIn workspace \(builder\)/i.test(line)) {
-          return 'Hanuman begins builder labor for the SUD Ram prescribed…';
+          hanumanArc = 'realize';
+          return beat(
+            'Hanuman begins builder labor for the SUD Ram prescribed…',
+            true,
+            false,
+            'realize'
+          );
         }
 
         var step = line.match(/tool step\s+(\d+)\s*\/\s*(\d+)/i);
         if (step) {
           var n = Number(step[1]);
+          // Same wire shape for propose and realize Jobs — prose + arc must follow hanumanArc.
+          if (hanumanArc === 'realize') {
+            if (n === 1) {
+              return beat(
+                'Hanuman begins the first realize tool step for Ram’s SUD…',
+                true,
+                false,
+                'realize'
+              );
+            }
+            if (n % 3 === 0) {
+              return beat(
+                'Another kneel to GT3 — building the SUD for Ram (step ' + n + ')…',
+                false,
+                true,
+                'realize'
+              );
+            }
+            return beat(
+              'Hanuman wields another realize tool turn (advised by GT3) for Ram (step ' + n + ')…',
+              false,
+              true,
+              'realize'
+            );
+          }
           if (n === 1) {
-            return 'Hanuman reads Ram’s intent and takes the first loving tool step…';
+            return beat(
+              'Hanuman reads Ram’s intent and takes the first loving tool step…',
+              true,
+              false,
+              'expand'
+            );
           }
           if (n === 2) {
-            return 'Expanding Ram’s seed into three thematic lenses…';
+            return beat('Expanding Ram’s seed into three thematic lenses…', true, false, 'expand');
           }
           if (n === 3) {
-            return 'Composing the output_spec through those lenses…';
+            return beat('Composing the output_spec through those lenses…', true, false, 'expand');
           }
           if (n === 4) {
-            return 'Shaping success evidences so Ram may later inspect the SUD…';
+            return beat(
+              'Shaping success evidences so Ram may later inspect the SUD…',
+              true,
+              false,
+              'expand'
+            );
           }
           if (n % 3 === 0) {
-            return 'Another kneel to GT3 — refining the draft for Ram (step ' + n + ')…';
+            return beat(
+              'Another kneel to GT3 — refining the draft for Ram (step ' + n + ')…',
+              false,
+              true,
+              'expand'
+            );
           }
-          return 'Hanuman wields another tool turn under GT3 for Ram (step ' + n + ')…';
+          return beat(
+            'Hanuman wields another tool turn (advised by GT3) for Ram (step ' + n + ')…',
+            false,
+            true,
+            'expand'
+          );
         }
 
         var wrote = line.match(/wrote\s+(\S+)/i);
         if (wrote) {
           var p = wrote[1].replace(/[()]/g, '').trim();
           if (/OSNG_PROPOSAL\.json/i.test(p)) {
-            return 'Hanuman writes OSNG_PROPOSAL.json — a draft garden for Ram, not yet canon…';
+            return beat(
+              'Hanuman writes OSNG_PROPOSAL.json — a draft garden for Ram, not yet canon…',
+              false,
+              true,
+              'expand'
+            );
           }
           if (/INTENT\.md|AGENT_PROMPT|PROPOSE_BRIEF/i.test(p)) return null;
           if (/document\.md|index\.html/i.test(p)) {
-            return 'Hanuman offers the SUD primary (' + p + ') for GT3 to show Ram…';
+            hanumanArc = 'realize';
+            return beat(
+              'Hanuman offers the SUD primary (' + p + ') for GT3 to show Ram…',
+              true,
+              false,
+              'realize'
+            );
           }
-          return 'Offering an artifact for Ram: ' + p + '…';
+          return beat('Offering an artifact for Ram: ' + p + '…', true, false);
         }
 
         if (/Carrying the proposal|syncOut propose/i.test(line)) {
-          return 'Hanuman carries the proposal artifacts back to GT3 for Ram…';
+          return beat(
+            'Hanuman carries the proposal artifacts back to GT3 for Ram…',
+            false,
+            true,
+            'expand'
+          );
         }
         if (/Offering the draft OSNG|reporting propose primary/i.test(line)) {
-          return 'Offering the draft OSNG for host validation — Ram still holds the throne…';
+          return beat(
+            'Offering the draft OSNG for host validation — Ram still holds the throne…',
+            true,
+            true,
+            'expand'
+          );
         }
         if (/propose Job is sealed|propose report completed/i.test(line)) {
-          return 'The propose Job is sealed — Hanuman’s labor for Ram is complete…';
+          return beat(
+            'The propose Job is sealed — Hanuman’s expansion for Ram is complete…',
+            true,
+            true,
+            'expand'
+          );
         }
         if (/syncOut builder|reporting builder/i.test(line)) {
-          return 'Returning realize artifacts to GT3 so Ram may see what love built…';
+          hanumanArc = 'realize';
+          return beat(
+            'Returning realize artifacts to GT3 so Ram may see what love built…',
+            false,
+            true,
+            'realize'
+          );
         }
         if (/report completed/i.test(line)) {
-          return 'GT3 accepts Hanuman’s report — evidence may still gather for Ram…';
+          return beat(
+            'GT3 accepts Hanuman’s report — evidence may still gather for Ram…',
+            true,
+            true
+          );
         }
         if (/WebContainer torn down/i.test(line)) {
-          return 'Hanuman rests; the sandbox closes…';
+          return beat('Hanuman rests; the sandbox closes…', false, true);
         }
         if (/gt3 consult error/i.test(line)) {
-          return line.replace(/^\[ca\]\s*/i, 'Consult with the sun faltered: ');
+          return beat(
+            line.replace(/^\[ca\]\s*/i, 'Consult with the sun faltered: '),
+            true,
+            true
+          );
         }
         if (/report failed/i.test(line)) {
-          return line.replace(/^\[ca\]\s*/i, 'Could not report to GT3 for Ram: ');
+          return beat(
+            line.replace(/^\[ca\]\s*/i, 'Could not report to GT3 for Ram: '),
+            true,
+            true
+          );
         }
         if (/^\[ca\]\s*skip file/i.test(line)) return null;
         if (/^\[ca\]/.test(line)) {
-          return line.replace(/^\[ca\]\s*/i, '').trim() || null;
+          var stripped = line.replace(/^\[ca\]\s*/i, '').trim();
+          return stripped ? beat(stripped, false, true) : null;
         }
         if (/^propose status:/i.test(line) || /^status\[/i.test(line)) return null;
-        return line;
+        return beat(line, true, true);
       }
 
       function expressProposeStatus(status) {
         var s = String(status || '');
         if (s === 'awaiting_browser') {
-          return 'Ram’s propose Job awaits Hanuman’s leap into the garden sandbox…';
+          hanumanArc = 'expand';
+          return beat(
+            'Ram’s propose Job awaits Hanuman’s leap into the garden sandbox…',
+            false,
+            true,
+            'expand'
+          );
         }
         if (s === 'running') {
-          return 'Hanuman labors for Ram — seed, three lenses, output_spec, evidences — under GT3…';
+          hanumanArc = 'expand';
+          return beat(
+            'Hanuman labors for Ram — seed, three lenses, output_spec, evidences — (advised by GT3)…',
+            true,
+            true,
+            'expand'
+          );
         }
         return null;
       }
 
       function expressChainStatus(st) {
         if (!st) return null;
+        if (st.phase === 'propose') {
+          hanumanArc = 'expand';
+        } else if (st.phase === 'realize') {
+          hanumanArc = 'realize';
+        }
         if (st.phase === 'propose' && st.status) {
           return expressProposeStatus(st.status.status || st.status);
         }
@@ -1225,13 +1967,28 @@
           var rs = st.status && (st.status.status || st.status);
           if (typeof rs === 'string') {
             if (/awaiting|pending/i.test(rs)) {
-              return 'Realize Job pending — Hanuman stands ready to leap for Ram…';
+              return beat(
+                'Realize Job pending — Hanuman stands ready to leap for Ram…',
+                false,
+                true,
+                'realize'
+              );
             }
             if (/running/i.test(rs)) {
-              return 'Hanuman realizes Ram’s prescribed SUD under the GT3 sun…';
+              return beat(
+                'Hanuman realizes Ram’s prescribed SUD under the GT3 sun…',
+                true,
+                true,
+                'realize'
+              );
             }
             if (/ok|completed/i.test(rs)) {
-              return 'Realize labor complete — GT3 holds the artifacts for Ram…';
+              return beat(
+                'Realize labor complete — GT3 holds the artifacts for Ram…',
+                true,
+                true,
+                'realize'
+              );
             }
           }
           return null;
@@ -1242,37 +1999,230 @@
         return null;
       }
 
+      function hanumanFiltersOn() {
+        return {
+          subject: !!(hanumanFilterSubject && hanumanFilterSubject.checked),
+          structure: !!(hanumanFilterStructure && hanumanFilterStructure.checked)
+        };
+      }
+
+      function beatVisible(entry, filters) {
+        if (!entry || !entry.text) return false;
+        if (entry.subject && filters.subject) return true;
+        if (entry.structure && filters.structure) return true;
+        return false;
+      }
+
+      function beatToneClass(entry, filters) {
+        var bothPrisms = filters.subject && filters.structure;
+        if (bothPrisms && entry.structure && !entry.subject) {
+          return 'hanuman-structure';
+        }
+        if (entry.subject && filters.subject) {
+          return entry.arc === 'realize'
+            ? 'hanuman-subject-realize'
+            : 'hanuman-subject-expand';
+        }
+        return 'hanuman-ink';
+      }
+
+      function renderHanumanLog() {
+        if (!out) return;
+        var filters = hanumanFiltersOn();
+        var spinnerTail = busy ? '\n' + hanumanSpinnerHtml() : '';
+        if (!filters.subject && !filters.structure) {
+          out.className = out.className.replace(/\b(ok|err)\b/g, '').trim();
+          out.innerHTML =
+            '<span class="hanuman-comment"># No Hanuman layers selected — enable Subject Matter and/or OSNG Machinery</span>' +
+            spinnerTail;
+          return;
+        }
+        var visible = hanumanLogEntries.filter(function (e) {
+          return beatVisible(e, filters);
+        });
+        if (!visible.length) {
+          if (busy) {
+            out.innerHTML = hanumanSpinnerHtml();
+            return;
+          }
+          var hint =
+            filters.subject && !filters.structure
+              ? '# No subject beats yet'
+              : !filters.subject && filters.structure
+                ? '# No structure beats yet'
+                : '# No Hanuman beats yet';
+          out.innerHTML = '<span class="hanuman-comment">' + escapeHtml(hint) + '</span>';
+          return;
+        }
+        var slice = visible.slice(-HANUMAN_LOG_VISIBLE);
+        out.innerHTML =
+          slice
+            .map(function (e) {
+              return (
+                '<span class="' +
+                beatToneClass(e, filters) +
+                '">' +
+                escapeHtml(e.text) +
+                '</span>'
+              );
+            })
+            .join('\n') +
+          spinnerTail;
+      }
+
+      function clearHanumanLog() {
+        hanumanLogEntries = [];
+        hanumanArc = 'expand';
+        if (out) {
+          out.className = '';
+          out.innerHTML = busy ? hanumanSpinnerHtml() : '';
+        }
+      }
+
+      function appendBeat(entry) {
+        if (!entry || !entry.text) return;
+        var last = hanumanLogEntries[hanumanLogEntries.length - 1];
+        if (
+          last &&
+          last.text === entry.text &&
+          !!last.subject === !!entry.subject &&
+          !!last.structure === !!entry.structure &&
+          (last.arc || '') === (entry.arc || '')
+        ) {
+          return;
+        }
+        var stored = {
+          text: entry.text,
+          subject: !!entry.subject,
+          structure: !!entry.structure
+        };
+        if (stored.subject) {
+          stored.arc =
+            entry.arc === 'realize' || entry.arc === 'expand' ? entry.arc : hanumanArc;
+        }
+        hanumanLogEntries.push(stored);
+        if (hanumanLogEntries.length > HANUMAN_LOG_BUFFER) {
+          hanumanLogEntries = hanumanLogEntries.slice(-HANUMAN_LOG_BUFFER);
+        }
+        if (out) out.className = out.className.replace(/\berr\b/g, '').trim();
+        renderHanumanLog();
+      }
+
       function appendLog(line) {
         var expressed = expressHanumanLog(line);
         if (!expressed) return;
-        out.className = '';
-        var prev = out.textContent || '';
-        var lines = prev.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-        if (lines[lines.length - 1] === expressed) return;
-        lines.push(expressed);
-        out.textContent = lines.slice(-40).join('\n');
+        appendBeat(expressed);
       }
 
       function appendStatusBeat(st) {
         var expressed = expressChainStatus(st) || expressProposeStatus(st && st.status);
         if (!expressed) return;
-        appendLog(expressed);
+        appendBeat(expressed);
+      }
+
+      if (hanumanFilterSubject) {
+        hanumanFilterSubject.addEventListener('change', renderHanumanLog);
+      }
+      if (hanumanFilterStructure) {
+        hanumanFilterStructure.addEventListener('change', renderHanumanLog);
+      }
+
+      function setSudStageVisible(visible) {
+        if (sudStage) sudStage.hidden = !visible;
+        sudPresent = !!visible;
+        updateIntentHeading(sudPresent);
+        if (!sudPresent) {
+          osngBaselineOutcome = null;
+          osngOutcomeDirty = false;
+        }
+        updateOsngRerealizeButton();
+      }
+
+      function updateIntentHeading(sudPresent) {
+        if (!intentHeadingLabel) return;
+        intentHeadingLabel.textContent = sudPresent ? 'Desired change' : 'Desired Outcome';
+      }
+
+      function setEvidenceStageVisible(visible) {
+        if (evidenceStage) evidenceStage.hidden = !visible;
+      }
+
+      function resetResultStages() {
+        setSudStageVisible(false);
+        setEvidenceStageVisible(false);
+        if (sudMeta) sudMeta.innerHTML = '';
+        if (sudPane) sudPane.innerHTML = '';
+        if (evidenceList) evidenceList.innerHTML = '';
+      }
+
+      function sudDownloadFileName(sud) {
+        var name = String((sud && sud.entry) || 'outcome').trim();
+        if (!name) name = 'outcome';
+        return name.replace(/[^\w.-]+/g, '_') || 'outcome';
+      }
+
+      function triggerBlobDownload(blob, fileName) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function downloadSudArtifact(sud) {
+        if (!sud) return;
+        var fileName = sudDownloadFileName(sud);
+        if (sud.url) {
+          fetch(sud.url)
+            .then(function (res) {
+              if (!res.ok) throw new Error('SUD download failed HTTP ' + res.status);
+              return res.blob();
+            })
+            .then(function (blob) {
+              triggerBlobDownload(blob, fileName);
+            })
+            .catch(function (err) {
+              appendBeat(
+                beat(
+                  'Could not download outcome: ' +
+                    (err && err.message ? err.message : String(err)),
+                  true,
+                  true
+                )
+              );
+            });
+          return;
+        }
+        var text = sud.text != null ? String(sud.text) : sud.error != null ? String(sud.error) : '';
+        triggerBlobDownload(new Blob([text], { type: 'text/plain;charset=utf-8' }), fileName);
       }
 
       function renderSud(sud) {
         sudPane.innerHTML = '';
+        sudMeta.innerHTML = '';
         if (!sud) {
-          sudMeta.textContent = 'No SUD artifact';
+          setSudStageVisible(false);
           return;
         }
-        sudMeta.textContent =
-          (sud.media_kind || 'artifact') +
-          ' · ' +
-          (sud.entry || '') +
-          (sud.url ? ' · ' + sud.url : '');
+        setSudStageVisible(true);
+        captureOsngOutcomeBaseline();
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'sud-download';
+        btn.title = 'Download outcome';
+        btn.setAttribute('aria-label', 'Download outcome');
+        btn.innerHTML = '<span class="glyph" aria-hidden="true">⬇</span>';
+        btn.disabled = !(sud.url || sud.text != null || sud.error != null);
+        btn.addEventListener('click', function () {
+          downloadSudArtifact(sud);
+        });
+        sudMeta.appendChild(btn);
         if (sud.media_kind === 'software' && sud.url) {
           var iframe = document.createElement('iframe');
-          iframe.title = 'SUD preview';
+          iframe.title = 'Outcome preview';
           iframe.src = sud.url;
           sudPane.appendChild(iframe);
           return;
@@ -1290,14 +2240,10 @@
         evidenceList.innerHTML = '';
         var targets = (evidence && evidence.targets) || [];
         if (!targets.length) {
-          var empty = document.createElement('li');
-          empty.className = 'muted';
-          empty.textContent =
-            (evidence && evidence.detail) ||
-            'No evidence targets collected yet for this Focus OSN.';
-          evidenceList.appendChild(empty);
+          setEvidenceStageVisible(false);
           return;
         }
+        setEvidenceStageVisible(true);
         targets.forEach(function (t) {
           var li = document.createElement('li');
           var title = document.createElement('div');
@@ -1379,19 +2325,23 @@
           !window.gtih.osng ||
           !window.gtih.osng.proposeThenRealizeUntilDone
         ) {
+          clearHanumanLog();
           out.className = 'err';
           out.textContent = 'gtih-sdk.js not loaded (need proposeThenRealizeUntilDone)';
           return;
         }
         setBusy(true);
-        out.className = '';
-        out.textContent =
-          'Ram raises a propose → realize chain.\nHanuman will labor; GT3 alone is the sun.';
-        sudMeta.textContent = 'Realizing…';
-        sudPane.innerHTML = '';
-        evidenceList.innerHTML = '<li class="muted">Collecting after realize…</li>';
+        clearHanumanLog();
+        appendBeat(
+          beat('Ram raises a propose → realize chain.', true, true, 'expand')
+        );
+        appendBeat(
+          beat('Hanuman will labor; GT3 alone is the sun.', true, true, 'expand')
+        );
+        resetResultStages();
         try {
           var args = readIntent();
+          refreshIntentForNextRaise(args.intent);
           var result = await window.gtih.osng.proposeThenRealizeUntilDone(args, {
             onLog: appendLog,
             onStatus: appendStatusBeat,
@@ -1409,14 +2359,27 @@
             debug: e && e.debug != null ? e.debug : undefined,
             body: e && e.body != null ? e.body : undefined
           };
+          hanumanLogEntries = [];
           out.textContent = JSON.stringify(payload, null, 2);
-          sudMeta.textContent = 'Realize failed — see Hanuman progression';
+          resetResultStages();
         } finally {
           setBusy(false);
         }
       }
 
       intentEl.addEventListener('keydown', function (ev) {
+        if (
+          ev.key === 'Tab' &&
+          !ev.shiftKey &&
+          !ev.ctrlKey &&
+          !ev.metaKey &&
+          !ev.altKey
+        ) {
+          if (concretizeIntentPlaceholder()) {
+            ev.preventDefault();
+          }
+          return;
+        }
         if (ev.key !== 'Enter' || ev.shiftKey || ev.ctrlKey || ev.metaKey || ev.altKey) {
           return;
         }
@@ -1431,17 +2394,24 @@
           !window.gtih.osng ||
           !window.gtih.osng.proposeFromIntentUntilDone
         ) {
+          clearHanumanLog();
           out.className = 'err';
           out.textContent = 'gtih-sdk.js not loaded (need proposeFromIntentUntilDone)';
           return;
         }
         setBusy(true);
         setConfigOpen(false);
-        out.className = '';
-        out.textContent =
-          'Ram has raised an OSNG proposition.\nHanuman opens the Job under GT3…';
+        clearHanumanLog();
+        appendBeat(
+          beat('Ram has raised an OSNG proposition.', true, true, 'expand')
+        );
+        appendBeat(
+          beat('Hanuman opens the Job (advised by GT3)…', false, true, 'expand')
+        );
+        resetResultStages();
         try {
           var args = readIntent();
+          refreshIntentForNextRaise(args.intent);
           var envelope = await window.gtih.osng.proposeFromIntentUntilDone(args, {
             onLog: appendLog,
             onStatus: appendStatusBeat
@@ -1451,6 +2421,7 @@
           revealProposedOsng(envelope);
         } catch (e) {
           out.className = 'err';
+          hanumanLogEntries = [];
           out.textContent = JSON.stringify(
             {
               error: e && e.message ? e.message : String(e),
