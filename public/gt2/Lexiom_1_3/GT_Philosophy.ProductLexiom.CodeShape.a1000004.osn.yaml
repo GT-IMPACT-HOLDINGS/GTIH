@@ -75,7 +75,8 @@ output_spec: |-
   remount), and prune (tombstone subtree via collectBranchSubtreeIds); write new children beside
   the primary parent.
   4. Keep id === file_name hierarchical identity; treat graph.* as authoritative across nested
-  directories (including Branding/); warn on parent/child reciprocity mismatches.
+  directories (including Branding/, security/, Realization/); warn on parent/child reciprocity
+  mismatches.
   5. Promote NewBranch_* placeholder leaves to matured title slugs before first canonize create;
   normalizeLoadedOsn attaches runtime maturity for immature shells.
   6. Discover bundled evidences via versioned filename probes (v2 then v1) under evidences/.
@@ -125,8 +126,9 @@ output_spec: |-
   22. Poll GET /lexiom13/evidence/collections?osn_id= every 5s (pause when document.hidden);
   overlay evidenceBuildResolvedByKey without changing approvals.
   23. Guard concurrent work with lens/maturation/persist/prune/causal in-flight flags; honor
-  compilation_scope for prepare subgraphs; drive rounds through dispatchWhiteMove → white reduce
-  → black side-effects.
+  compilation_scope literally for prepare subgraphs (self_only, self_and_approved_descendants,
+  self_plus_parent_context, self_as_axis_center) with no silent prefix; drive rounds through
+  dispatchWhiteMove → white reduce → black side-effects.
 success_evidences:
   - evidence_id: sev.code.direct_snippet_review
     kind: TEXTUAL_SNIPPET

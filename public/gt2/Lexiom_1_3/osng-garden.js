@@ -9,9 +9,14 @@
   var FULL_GRAPH_KIND_CLASSICAL = "classical";
   var FULL_GRAPH_KIND_GARDEN = "garden";
 
-  var DEFAULT_RING = 72;
-  var DEFAULT_D0 = 280;
-  var DEFAULT_D_FAR = 520;
+  var DEFAULT_RING = 78;
+  var RING_FAN_LOG = 0.38;
+  var PLANT_GAP = 64;
+  var FOCUS_PLANT_SCALE = 1.12;
+  var LOD_FAR_SCALE = 1.28;
+  var LOD_MID_SCALE = 2.15;
+  var DEFAULT_D0 = 320;
+  var DEFAULT_D_FAR = 720;
   var SPRING_ITERS = 90;
   var NODE_RADIUS = 5.5;
   var LABEL_OFFSET_Y = 14;
@@ -246,7 +251,41 @@
       : [];
   }
 
-  function resolveRootId(osnId, osnsById) {
+  function isCompilationRootOsn(osn) {
+    return !!(osn && osn.compilation && osn.compilation.can_be_compilation_root);
+  }
+
+  function isGraphRootOsn(osn, osnsById) {
+    var parentId = getPrimaryParentId(osn);
+    return !parentId || !osnsById.has(parentId);
+  }
+
+  /**
+   * Garden plant trunk: a graph root, or a compilation root that owns native children.
+   * ProductLexiom / BrandLexiom become their own plants while remaining native children of
+   * GT Philosophy; Realize* leaves stay in the Realization plant.
+   */
+  function isPlantTrunk(osn, osnsById) {
+    if (!osn) {
+      return false;
+    }
+    if (isGraphRootOsn(osn, osnsById)) {
+      return true;
+    }
+    if (!isCompilationRootOsn(osn)) {
+      return false;
+    }
+    var kids = getChildIds(osn);
+    var i;
+    for (i = 0; i < kids.length; i += 1) {
+      if (osnsById.has(kids[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function resolvePlantId(osnId, osnsById) {
     var current = osnsById.get(osnId);
     var seen = Object.create(null);
     while (current) {
@@ -255,6 +294,9 @@
         return id;
       }
       seen[id] = true;
+      if (isPlantTrunk(current, osnsById)) {
+        return id;
+      }
       var parentId = getPrimaryParentId(current);
       if (!parentId || !osnsById.has(parentId)) {
         return id;
@@ -264,10 +306,49 @@
     return String(osnId);
   }
 
+  function collectPlantTrunkOsns(osnsById, graphRootOsns) {
+    var trunks = [];
+    var seen = Object.create(null);
+    function add(osn) {
+      if (!osn || !osn.id || seen[osn.id]) {
+        return;
+      }
+      seen[osn.id] = true;
+      trunks.push(osn);
+    }
+    (graphRootOsns || []).forEach(add);
+    osnsById.forEach(function (osn) {
+      if (isPlantTrunk(osn, osnsById)) {
+        add(osn);
+      }
+    });
+    return trunks;
+  }
+
+  function collectFocusSpineIds(selectedId, osnsById) {
+    var ids = Object.create(null);
+    var current = osnsById.get(selectedId);
+    var seen = Object.create(null);
+    while (current) {
+      var id = String(current.id);
+      if (seen[id]) {
+        break;
+      }
+      seen[id] = true;
+      ids[id] = true;
+      var parentId = getPrimaryParentId(current);
+      if (!parentId || !osnsById.has(parentId)) {
+        break;
+      }
+      current = osnsById.get(parentId);
+    }
+    return ids;
+  }
+
   function partitionThematicTrees(osnsById, rootOsns) {
     var trees = [];
     var nodeToRoot = Object.create(null);
-    var rootList = (rootOsns || []).map(function (osn) {
+    var rootList = collectPlantTrunkOsns(osnsById, rootOsns).map(function (osn) {
       return String(osn.id);
     });
 
@@ -285,7 +366,7 @@
     });
 
     osnsById.forEach(function (_osn, osnId) {
-      var rootId = resolveRootId(osnId, osnsById);
+      var rootId = resolvePlantId(osnId, osnsById);
       nodeToRoot[String(osnId)] = rootId;
       var index = rootIndex[rootId];
       if (index == null) {
@@ -304,15 +385,34 @@
   }
 
   function layoutRadialTree(rootId, osnsById, ringRadius) {
-    var R = typeof ringRadius === "number" && ringRadius > 0 ? ringRadius : DEFAULT_RING;
+    var baseR = typeof ringRadius === "number" && ringRadius > 0 ? ringRadius : DEFAULT_RING;
     var positions = Object.create(null);
     positions[rootId] = { x: 0, y: 0 };
+    var sizeMemo = Object.create(null);
 
     function childrenOf(parentId) {
       var parent = osnsById.get(parentId);
       return getChildIds(parent).filter(function (childId) {
-        return osnsById.has(childId) && resolveRootId(childId, osnsById) === rootId;
+        return osnsById.has(childId) && resolvePlantId(childId, osnsById) === rootId;
       });
+    }
+
+    function subtreeSize(id) {
+      if (sizeMemo[id]) {
+        return sizeMemo[id];
+      }
+      var kids = childrenOf(id);
+      var n = 1;
+      var i;
+      for (i = 0; i < kids.length; i += 1) {
+        n += subtreeSize(kids[i]);
+      }
+      sizeMemo[id] = n;
+      return n;
+    }
+
+    function ringForFan(m) {
+      return baseR * (1 + RING_FAN_LOG * Math.log(Math.max(1, m)));
     }
 
     function place(parentId, sectorStart, sectorEnd) {
@@ -323,20 +423,31 @@
       var width = sectorEnd - sectorStart;
       var parentPos = positions[parentId] || { x: 0, y: 0 };
       var m = kids.length;
-      var j;
-      for (j = 0; j < m; j += 1) {
-        var childId = kids[j];
-        var angle = sectorStart + ((j + 0.5) * width) / m;
-        positions[childId] = {
+      var R = ringForFan(m);
+      var sizes = [];
+      var total = 0;
+      var i;
+      for (i = 0; i < m; i += 1) {
+        sizes[i] = subtreeSize(kids[i]);
+        total += sizes[i];
+      }
+      if (total <= 0) {
+        total = m;
+      }
+      var cursor = sectorStart;
+      for (i = 0; i < m; i += 1) {
+        var childWidth = width * (sizes[i] / total);
+        var angle = cursor + childWidth / 2;
+        positions[kids[i]] = {
           x: parentPos.x + R * Math.cos(angle),
           y: parentPos.y + R * Math.sin(angle),
         };
-        var childWidth = width / m;
-        var childStart = sectorStart + j * childWidth;
-        place(childId, childStart, childStart + childWidth);
+        place(kids[i], cursor, cursor + childWidth);
+        cursor += childWidth;
       }
     }
 
+    subtreeSize(rootId);
     place(rootId, 0, Math.PI * 2);
     return positions;
   }
@@ -362,22 +473,50 @@
         var k = key(fromRoot, toRoot);
         weights[k] = (weights[k] || 0) + 1;
       });
+      var parentId = getPrimaryParentId(osn);
+      if (!parentId || !osnsById.has(parentId)) {
+        return;
+      }
+      var parentRoot = nodeToRoot[String(parentId)];
+      if (!parentRoot || parentRoot === fromRoot) {
+        return;
+      }
+      var stemKey = key(fromRoot, parentRoot);
+      weights[stemKey] = (weights[stemKey] || 0) + 2;
     });
     return weights;
   }
 
-  function desiredDistance(rootA, rootB, weights, d0, dFar) {
+  function plantRadiusFromTree(tree) {
+    var maxR = 0;
+    Object.keys(tree.localPositions || {}).forEach(function (id) {
+      var p = tree.localPositions[id];
+      if (!p) {
+        return;
+      }
+      var r = Math.sqrt(p.x * p.x + p.y * p.y);
+      if (r > maxR) {
+        maxR = r;
+      }
+    });
+    return maxR;
+  }
+
+  function desiredDistance(rootA, rootB, weights, d0, dFar, radiusByRoot) {
+    var packed =
+      (radiusByRoot && radiusByRoot[rootA] ? radiusByRoot[rootA] : 0) +
+      (radiusByRoot && radiusByRoot[rootB] ? radiusByRoot[rootB] : 0) +
+      PLANT_GAP;
     var k = rootA < rootB ? rootA + "\0" + rootB : rootB + "\0" + rootA;
     var w = weights[k] || 0;
-    if (w <= 0) {
-      return dFar;
-    }
-    return d0 / (1 + w);
+    var linkD = w <= 0 ? dFar : d0 / (1 + w);
+    return Math.max(packed, linkD);
   }
 
   function placeTreeCenters(rootIds, weights, options) {
     var d0 = (options && options.d0) || DEFAULT_D0;
     var dFar = (options && options.dFar) || DEFAULT_D_FAR;
+    var radiusByRoot = (options && options.radiusByRoot) || Object.create(null);
     var centers = Object.create(null);
     var n = rootIds.length;
     var i;
@@ -417,10 +556,10 @@
           var dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
           var ux = dx / dist;
           var uy = dy / dist;
-          var target = desiredDistance(a, b, weights, d0, dFar);
+          var target = desiredDistance(a, b, weights, d0, dFar, radiusByRoot);
 
-          // Soft repulsion to avoid collapse.
-          var minSep = Math.min(d0 * 0.45, target * 0.7);
+          // Soft repulsion to avoid collapse; packed plant radii already live in target.
+          var minSep = Math.min(target, Math.max(d0 * 0.45, target * 0.82));
           if (dist < minSep) {
             var push = (minSep - dist) * 0.35;
             forces[a].x -= ux * push;
@@ -478,10 +617,37 @@
     return edges;
   }
 
-  function collectCrossEdges(osnsById, nodeToRoot) {
+  function collectNativeBridgeEdges(osnsById, nodeToRoot) {
     var edges = [];
     osnsById.forEach(function (osn, osnId) {
       var fromRoot = nodeToRoot[String(osnId)];
+      var parentId = getPrimaryParentId(osn);
+      if (!parentId || !osnsById.has(parentId)) {
+        return;
+      }
+      var parentRoot = nodeToRoot[String(parentId)];
+      if (!fromRoot || !parentRoot || parentRoot === fromRoot) {
+        return;
+      }
+      edges.push({
+        from: String(parentId),
+        to: String(osnId),
+        kind: "native",
+      });
+    });
+    return edges;
+  }
+
+  function citesStandardAncestor(osn, ancestorId) {
+    return getStandardAncestorIds(osn).indexOf(String(ancestorId)) !== -1;
+  }
+
+  function collectCrossEdges(osnsById, nodeToRoot) {
+    var edges = [];
+    var seenReciprocal = Object.create(null);
+    osnsById.forEach(function (osn, osnId) {
+      var fromId = String(osnId);
+      var fromRoot = nodeToRoot[fromId];
       getStandardAncestorIds(osn).forEach(function (ancestorId) {
         if (!osnsById.has(ancestorId)) {
           return;
@@ -490,8 +656,24 @@
         if (!toRoot || !fromRoot || toRoot === fromRoot) {
           return;
         }
+        var ancestorOsn = osnsById.get(ancestorId);
+        var reciprocal = citesStandardAncestor(ancestorOsn, fromId);
+        if (reciprocal) {
+          var pairKey =
+            fromId < ancestorId ? fromId + "\0" + ancestorId : ancestorId + "\0" + fromId;
+          if (seenReciprocal[pairKey]) {
+            return;
+          }
+          seenReciprocal[pairKey] = true;
+          edges.push({
+            from: fromId,
+            to: String(ancestorId),
+            kind: "cross-reciprocal",
+          });
+          return;
+        }
         edges.push({
-          from: String(osnId),
+          from: fromId,
           to: String(ancestorId),
           kind: "cross",
         });
@@ -501,11 +683,12 @@
   }
 
   /**
-   * @param {{ osnsById: Map, rootOsns: Array, ringRadius?: number, d0?: number, dFar?: number }} input
+   * @param {{ osnsById: Map, rootOsns: Array, selectedOsnId?: string, ringRadius?: number, d0?: number, dFar?: number }} input
    */
   function computeGardenLayout(input) {
     var osnsById = input && input.osnsById;
     var rootOsns = (input && input.rootOsns) || [];
+    var selectedId = input && input.selectedOsnId ? String(input.selectedOsnId) : "";
     if (!osnsById) {
       return {
         nodes: [],
@@ -525,6 +708,15 @@
       tree.localPositions = layoutRadialTree(tree.rootId, osnsById, ring);
     });
 
+    var focusPlantId = selectedId ? nodeToRoot[selectedId] || resolvePlantId(selectedId, osnsById) : "";
+    var focusSpine = selectedId ? collectFocusSpineIds(selectedId, osnsById) : Object.create(null);
+    var radiusByRoot = Object.create(null);
+    trees.forEach(function (tree) {
+      var localR = plantRadiusFromTree(tree);
+      var scale = focusPlantId && tree.rootId === focusPlantId ? FOCUS_PLANT_SCALE : 1;
+      radiusByRoot[tree.rootId] = localR * scale;
+    });
+
     var weights = countCrossTreeLinks(osnsById, nodeToRoot);
     var rootIds = trees.map(function (tree) {
       return tree.rootId;
@@ -532,6 +724,7 @@
     var centers = placeTreeCenters(rootIds, weights, {
       d0: input && input.d0,
       dFar: input && input.dFar,
+      radiusByRoot: radiusByRoot,
     });
 
     var colorByRoot = Object.create(null);
@@ -549,14 +742,21 @@
     trees.forEach(function (tree) {
       var c = centers[tree.rootId] || { x: 0, y: 0 };
       var palette = colorByRoot[tree.rootId] || {};
+      var plantScale = focusPlantId && tree.rootId === focusPlantId ? FOCUS_PLANT_SCALE : 1;
+      var otherPlant = !!(focusPlantId && tree.rootId !== focusPlantId);
       Object.keys(tree.localPositions).forEach(function (nodeId) {
         var local = tree.localPositions[nodeId];
+        var osn = osnsById.get(nodeId);
         world[nodeId] = {
           id: nodeId,
-          x: local.x + c.x,
-          y: local.y + c.y,
+          x: local.x * plantScale + c.x,
+          y: local.y * plantScale + c.y,
           rootId: tree.rootId,
           isRoot: nodeId === tree.rootId,
+          isPlantRoot: nodeId === tree.rootId,
+          isCompileRoot: isCompilationRootOsn(osn),
+          isFocusSpine: !!focusSpine[nodeId],
+          isOtherPlant: otherPlant,
           color: palette.color,
           colorGlow: palette.colorGlow,
           colorDim: palette.colorDim,
@@ -569,9 +769,9 @@
     var nodes = Object.keys(world).map(function (id) {
       return world[id];
     });
-    var edges = collectNativeEdges(trees, osnsById).concat(
-      collectCrossEdges(osnsById, nodeToRoot)
-    );
+    var edges = collectNativeEdges(trees, osnsById)
+      .concat(collectNativeBridgeEdges(osnsById, nodeToRoot))
+      .concat(collectCrossEdges(osnsById, nodeToRoot));
 
     var minX = Infinity;
     var minY = Infinity;
@@ -665,10 +865,16 @@
     var crossHue = (PLANE_HUE_START + PLANE_HUE_END) / 2;
     var crossColor = hslToCss(crossHue, PLANE_SAT, PLANE_LIGHT);
     var markerCross =
-      '<marker id="lexiom-garden-arrow-cross" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">' +
+      '<marker id="lexiom-garden-arrow-cross" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto" markerUnits="strokeWidth" overflow="visible">' +
       '<path d="M 0 0 L 10 5 L 0 10 z" fill="' +
       escapeHtml(crossColor) +
-      '" opacity="0.9"></path>' +
+      '"></path>' +
+      "</marker>";
+    var markerCrossStart =
+      '<marker id="lexiom-garden-arrow-cross-start" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="strokeWidth" overflow="visible">' +
+      '<path d="M 0 0 L 10 5 L 0 10 z" fill="' +
+      escapeHtml(crossColor) +
+      '"></path>' +
       "</marker>";
 
     var nodeById = Object.create(null);
@@ -683,18 +889,24 @@
         if (!from || !to) {
           return "";
         }
-        var isCross = edge.kind === "cross";
-        var cls = isCross
-          ? "lexiom-garden-edge lexiom-garden-edge-cross"
-          : "lexiom-garden-edge lexiom-garden-edge-native";
+        var isCross = edge.kind === "cross" || edge.kind === "cross-reciprocal";
+        var isReciprocal = edge.kind === "cross-reciprocal";
+        var otherPlant = from.isOtherPlant && to.isOtherPlant ? " is-other-plant" : "";
+        var cls = isReciprocal
+          ? "lexiom-garden-edge lexiom-garden-edge-cross lexiom-garden-edge-cross-reciprocal"
+          : isCross
+            ? "lexiom-garden-edge lexiom-garden-edge-cross"
+            : "lexiom-garden-edge lexiom-garden-edge-native";
+        cls += otherPlant;
         var stroke = isCross
           ? crossColor
           : from.color || to.color || "currentColor";
-        var marker = isCross
+        var markerEnd = isCross
           ? "url(#lexiom-garden-arrow-cross)"
           : "url(#lexiom-garden-arrow-native-" +
             (typeof from.planeIndex === "number" ? from.planeIndex : 0) +
             ")";
+        var markerStart = isCross ? "url(#lexiom-garden-arrow-cross-start)" : "";
         var dx = to.x - from.x;
         var dy = to.y - from.y;
         var len = Math.sqrt(dx * dx + dy * dy) || 1;
@@ -703,10 +915,17 @@
         var y1 = from.y + (dy / len) * inset;
         var x2 = to.x - (dx / len) * inset;
         var y2 = to.y - (dy / len) * inset;
+        var title = isReciprocal
+          ? "Reciprocal standard ancestor"
+          : isCross
+            ? "Standard ancestor"
+            : "";
         return (
-          '<line class="' +
+          '<g class="' +
           cls +
-          '" style="stroke:' +
+          '">' +
+          (title ? "<title>" + title + "</title>" : "") +
+          '<line style="stroke:' +
           escapeHtml(stroke) +
           "; color:" +
           escapeHtml(stroke) +
@@ -718,9 +937,12 @@
           x2 +
           '" y2="' +
           y2 +
-          '" marker-end="' +
-          marker +
-          '"></line>'
+          '"' +
+          (markerStart ? ' marker-start="' + markerStart + '"' : "") +
+          ' marker-end="' +
+          markerEnd +
+          '"></line>' +
+          "</g>"
         );
       })
       .join("");
@@ -732,6 +954,10 @@
         var hoverCaption = escapeHtml(hoverCaptionForNode(osn, helpers));
         var selected = node.id === selectedId ? " is-selected" : "";
         var rootClass = node.isRoot ? " is-root" : "";
+        var plantRootClass = node.isPlantRoot ? " is-plant-root" : "";
+        var compileClass = node.isCompileRoot ? " is-compile-root" : "";
+        var spineClass = node.isFocusSpine ? " is-focus-spine" : "";
+        var otherClass = node.isOtherPlant ? " is-other-plant" : "";
         var color = node.color || "currentColor";
         var glow = node.colorGlow || "rgba(77, 170, 252, 0.45)";
         var discR = node.isRoot ? NODE_RADIUS + 1.5 : NODE_RADIUS;
@@ -757,6 +983,10 @@
           '<g class="lexiom-garden-node' +
           selected +
           rootClass +
+          plantRootClass +
+          compileClass +
+          spineClass +
+          otherClass +
           '" data-osn-id="' +
           escapeHtml(node.id) +
           '" data-plane-index="' +
@@ -793,8 +1023,14 @@
       })
       .join("");
 
+    var hasFocusPlant = (layout.nodes || []).some(function (node) {
+      return node.isOtherPlant;
+    });
+
     return (
-      '<svg id="lexiom-osng-garden" class="lexiom-osng-garden" role="img" aria-label="Top view" viewBox="' +
+      '<svg id="lexiom-osng-garden" class="lexiom-osng-garden' +
+      (hasFocusPlant ? " has-focus-plant" : "") +
+      '" role="img" aria-label="Top view" viewBox="' +
       escapeHtml(viewBox) +
       '" data-min-x="' +
       bounds.minX +
@@ -804,10 +1040,13 @@
       width +
       '" data-vb-h="' +
       height +
-      '">' +
+      '" data-base-vb-w="' +
+      width +
+      '" data-lod="far">' +
       "<defs>" +
       markerDefs +
       markerCross +
+      markerCrossStart +
       "</defs>" +
       '<g class="lexiom-garden-edges">' +
       edgeHtml +
@@ -817,6 +1056,100 @@
       "</g>" +
       "</svg>"
     );
+  }
+
+  function labelPriority(nodeEl) {
+    if (!nodeEl) {
+      return 9;
+    }
+    if (nodeEl.classList.contains("is-selected")) {
+      return 0;
+    }
+    if (nodeEl.classList.contains("is-plant-root")) {
+      return 1;
+    }
+    if (nodeEl.classList.contains("is-compile-root") || nodeEl.classList.contains("is-focus-spine")) {
+      return 2;
+    }
+    return 4;
+  }
+
+  function cullOverlappingLabels(svg) {
+    var nodes = Array.prototype.slice.call(svg.querySelectorAll(".lexiom-garden-node"));
+    nodes.forEach(function (nodeEl) {
+      nodeEl.classList.remove("is-label-culled");
+    });
+    var kept = [];
+    nodes
+      .slice()
+      .sort(function (a, b) {
+        return labelPriority(a) - labelPriority(b);
+      })
+      .forEach(function (nodeEl) {
+        var text = nodeEl.querySelector(".lexiom-garden-node-label");
+        if (!text) {
+          return;
+        }
+        var box;
+        try {
+          box = text.getBBox();
+        } catch (_error) {
+          return;
+        }
+        var transform = nodeEl.getAttribute("transform") || "";
+        var match = transform.match(/translate\(([-0-9.]+)\s+([-0-9.]+)\)/);
+        var tx = match ? Number(match[1]) : 0;
+        var ty = match ? Number(match[2]) : 0;
+        var abs = {
+          x: tx + box.x,
+          y: ty + box.y,
+          w: box.width,
+          h: box.height,
+        };
+        var overlaps = kept.some(function (other) {
+          return !(
+            abs.x + abs.w < other.x ||
+            other.x + other.w < abs.x ||
+            abs.y + abs.h < other.y ||
+            other.y + other.h < abs.y
+          );
+        });
+        if (overlaps) {
+          nodeEl.classList.add("is-label-culled");
+        } else {
+          kept.push(abs);
+        }
+      });
+  }
+
+  function refreshGardenLod(svg) {
+    if (!svg) {
+      return;
+    }
+    var vb = getViewBox(svg);
+    if (!vb) {
+      return;
+    }
+    var baseW = parseFloat(svg.getAttribute("data-base-vb-w"));
+    if (!Number.isFinite(baseW) || baseW <= 0) {
+      baseW = vb.width;
+      svg.setAttribute("data-base-vb-w", String(baseW));
+    }
+    var scale = baseW / vb.width;
+    var lod = "far";
+    if (scale >= LOD_MID_SCALE) {
+      lod = "near";
+    } else if (scale >= LOD_FAR_SCALE) {
+      lod = "mid";
+    }
+    svg.setAttribute("data-lod", lod);
+    if (lod === "near") {
+      cullOverlappingLabels(svg);
+    } else {
+      Array.prototype.forEach.call(svg.querySelectorAll(".lexiom-garden-node.is-label-culled"), function (nodeEl) {
+        nodeEl.classList.remove("is-label-culled");
+      });
+    }
   }
 
   function getViewBox(svg) {
@@ -847,6 +1180,7 @@
     svg.setAttribute("data-min-y", String(vb.minY));
     svg.setAttribute("data-vb-w", String(vb.width));
     svg.setAttribute("data-vb-h", String(vb.height));
+    refreshGardenLod(svg);
   }
 
   function clientToSvgDelta(svg, dx, dy) {
@@ -944,6 +1278,7 @@
     panZoomState.viewBox = getViewBox(svg);
     panZoomState.bound = true;
     startFocusHaloAnimation(svg);
+    refreshGardenLod(svg);
 
     svg.addEventListener(
       "wheel",

@@ -17,7 +17,9 @@ const IMMUTABLE_CONTROL_FILES = new Set([
   'run_result.json',
   'build_plan.json',
   'source_map.json',
-  'build_manifest.json'
+  'build_manifest.json',
+  'intent.md',
+  'propose_brief.json'
 ]);
 
 export const SOFTWARE_COMMANDS = Object.freeze(['node', 'npm', 'npx']);

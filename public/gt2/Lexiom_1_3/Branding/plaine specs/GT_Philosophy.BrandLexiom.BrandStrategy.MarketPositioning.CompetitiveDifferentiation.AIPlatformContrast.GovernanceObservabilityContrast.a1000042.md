@@ -1,0 +1,1 @@
+Lexiom currently explains that the current POC gates canonical OSN writes through explicit human actions and carries explicitly linked standard ancestors into lineage context and build snapshots; policy enforcement, live conflict detection, and Concordance resolution are not implemented.

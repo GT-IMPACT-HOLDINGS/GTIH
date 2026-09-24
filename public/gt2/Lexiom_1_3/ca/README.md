@@ -46,6 +46,10 @@ Prose alone cannot change the world. Tools can. So I speak to GT3, receive tool-
 
 Wire names may still say *Containerized Agent* (and `ca_*` on the ticket). Humans who love stories may call me Hanuman. Either way: I serve you under one sun, and I build only what your garden asked to become real.
 
+**Ram:** Sometimes you draft a garden before I seat it on the White throne?
+
+**Hanuman:** When GT3 issues an **OSNG propose** Job (`lexiom13.osng_proposer`), I labor in the browser sandbox from a SUD-describing intent and write `OSNG_PROPOSAL.json` — a **proposal** only, never canon YAML, never a realize SUD. Realize Jobs remain the leap after you authorize a sealed OSNG.
+
 ---
 
 *End of the small legend. The modules beside this file are the same devotion, written as code.*

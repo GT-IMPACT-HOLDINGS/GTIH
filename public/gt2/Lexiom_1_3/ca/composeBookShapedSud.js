@@ -68,6 +68,7 @@ export async function iComposeRamDocumentInPhases(opts) {
       opts.systemBase || 'You are the Lexiom document builder.',
       'Phase: outline.',
       'Submit OUTLINE.md with write_file. The host validates and completes the phase atomically.',
+      'Outline only sections that belong inside the finished SUD. Do not invent Notes, Remarks, Commentary, or Ceremonial Note sections.',
       'The host packet below is complete. No workspace reads are available or needed.'
     ].join('\n'),
     prompt: [
@@ -124,6 +125,7 @@ export async function iComposeRamDocumentInPhases(opts) {
       opts.systemBase || 'You are the Lexiom document builder.',
       `Phase: fill cluster ${cluster.cluster_id} (${cluster.title}).`,
       `Submit exactly ${sectionPath} with write_file; the host completes the phase atomically.`,
+      'Emit only the finished SUD body for this section — no notes, remarks, commentary, or meta about the artifact.',
       'Do not write document.md in this phase. The host packet is complete; no reads are needed.'
     ].join('\n');
     const fillPrompt = fitFillPrompt({
@@ -188,7 +190,8 @@ export async function iComposeRamDocumentInPhases(opts) {
       system: [
         opts.systemBase || 'You are the Lexiom document builder.',
         'Phase: reconcile/cleanliness repair.',
-        'Rewrite document.md with write_file; the host validates and completes the phase atomically.'
+        'Rewrite document.md with write_file; the host validates and completes the phase atomically.',
+        'Keep only the finished SUD. Strip notes, remarks, commentary, ceremonial notes, and any meta about the artifact.'
       ].join('\n'),
       prompt: [
         agentPrompt,
@@ -202,7 +205,7 @@ export async function iComposeRamDocumentInPhases(opts) {
         '## Dirty assembled document',
         assembled.slice(0, 24000),
         '',
-        'Submit a clean document.md now.'
+        'Submit a clean document.md now — SUD only, no notes or remarks.'
       ].join('\n'),
       opts,
       workspace,
@@ -500,6 +503,7 @@ function fitFillPrompt({
   const render = () =>
     [
       'Compose the assigned section from this bounded packet.',
+      'Write only the finished SUD content for this section — no notes, remarks, commentary, or explanations about the artifact.',
       '',
       '## Shared policy',
       JSON.stringify(policy),
@@ -669,8 +673,17 @@ function parseSectionNumbers(value) {
 }
 
 function looksDirty(text) {
-  return /\b[\w.-]+\.osn\b|\.osn\.yaml\b|\bosng\/|output_spec|success_evidences|thematic_lenses|\bcompilation_root\b/i.test(
-    String(text || '')
+  const s = String(text || '');
+  if (
+    /\b[\w.-]+\.osn\b|\.osn\.yaml\b|\bosng\/|output_spec|success_evidences|thematic_lenses|\bcompilation_root\b/i.test(
+      s
+    )
+  ) {
+    return true;
+  }
+  // Meta appendices / notes about the artifact (not the SUD itself).
+  return /(^|\n)\s{0,3}#{1,6}\s*(ceremonial\s+)?(note|notes|remarks?|commentary|meta[- ]?note|explanation|about\s+this\s+(poem|hiku|haiku|document|artifact|piece|work))\b/i.test(
+    s
   );
 }
 

@@ -706,8 +706,41 @@ body.lexiom-13-full-graph .lexiom-osn-graph-full-tree {
 
 .lexiom-garden-edge-cross {
   stroke-dasharray: 5 4;
-  opacity: 0.92;
-  stroke-width: 1.35;
+}
+
+.lexiom-garden-edge-cross-reciprocal {
+  stroke-dasharray: 2 3 9 3;
+}
+
+.lexiom-osng-garden.has-focus-plant .lexiom-garden-node.is-other-plant {
+  opacity: 0.4;
+}
+
+.lexiom-osng-garden.has-focus-plant .lexiom-garden-edge.is-other-plant {
+  opacity: 0.2;
+}
+
+.lexiom-osng-garden.has-focus-plant .lexiom-garden-node.is-other-plant:hover {
+  opacity: 0.88;
+}
+
+.lexiom-osng-garden[data-lod="far"] .lexiom-garden-node-label,
+.lexiom-osng-garden[data-lod="mid"] .lexiom-garden-node-label,
+.lexiom-osng-garden[data-lod="near"] .lexiom-garden-node.is-label-culled .lexiom-garden-node-label {
+  display: none;
+}
+
+.lexiom-osng-garden[data-lod="far"] .lexiom-garden-node.is-plant-root .lexiom-garden-node-label,
+.lexiom-osng-garden[data-lod="far"] .lexiom-garden-node.is-selected .lexiom-garden-node-label,
+.lexiom-osng-garden[data-lod="mid"] .lexiom-garden-node.is-plant-root .lexiom-garden-node-label,
+.lexiom-osng-garden[data-lod="mid"] .lexiom-garden-node.is-compile-root .lexiom-garden-node-label,
+.lexiom-osng-garden[data-lod="mid"] .lexiom-garden-node.is-focus-spine .lexiom-garden-node-label,
+.lexiom-osng-garden[data-lod="mid"] .lexiom-garden-node.is-selected .lexiom-garden-node-label {
+  display: inherit;
+}
+
+.lexiom-osng-garden .lexiom-garden-node:hover .lexiom-garden-node-label {
+  display: inherit !important;
 }
 
 .lexiom-garden-node {

@@ -32,23 +32,42 @@ Authoritative parent/child links also live in each OSN’s `graph.parent_osn_ids
 
 ## Standard ancestors (secondary inheritance)
 
-`graph.standard_ancestor_osn_ids` names **one-way** secondary inheritance edges — influence from another thematic trunk without becoming a second native parent.
+`graph.standard_ancestor_osn_ids` names **secondary** inheritance edges — influence from another thematic trunk without becoming a second native parent.
 
 - Reciprocity rules for `parent_osn_ids` ↔ `child_osn_ids` do **not** apply. Do not list the inheriting node under the standard ancestor’s `child_osn_ids`.
 - Native plane (plane zero) remains the primary-parent chain via `parent_osn_ids[0]`.
-- Lexiom 1.3 live example: ProductLexiom inherits AccessControl (under WebAppSecurity) as a secondary ancestor while remaining a native child of GT Philosophy; BrandLexiom stays a native sibling only (no secondary edge):
+- Two-node **reciprocal** standard-ancestor pairs are allowed (visited-set on compile). Live: ProductLexiom ↔ RealizeProductLexiom, BrandLexiom ↔ RealizeBrandLexiom.
+- Lexiom 1.3 live example: ProductLexiom inherits AccessControl (under WebAppSecurity) and RealizeProductLexiom as secondary ancestors while remaining a native child of GT Philosophy; BrandLexiom cites RealizeBrandLexiom:
 
 ```text
 GT_Philosophy.a1000001.osn
 ├── ProductLexiom.a1000002.osn
-│     standard_ancestor_osn_ids → WebAppSecurity.AccessControl.a1000101.osn
+│     standard_ancestor_osn_ids → AccessControl; RealizeProductLexiom (reciprocal)
+│     compilation_scope: self_and_approved_descendants  ← subtree only
 └── BrandLexiom.a1000005.osn
+      standard_ancestor_osn_ids → RealizeBrandLexiom (reciprocal)
+      compilation_scope: self_and_approved_descendants  ← subtree only
 
 WebAppSecurity.a1000100.osn          ← plane name WebAppSecurity (eldest root)
 └── AccessControl.a1000101.osn       ← layout trunk S for ProductLexiom’s additional plane
     ├── Authentication.a1000103.osn
     └── Authorization.a1000104.osn
+
+Realization.a1000200.osn            ← plane name Realization (eldest root; not a compilation root)
+├── RealizeProductLexiom.a1000201.osn
+│     standard_ancestor_osn_ids → ProductLexiom (reciprocal)
+│     compilation_scope: self_as_axis_center
+└── RealizeBrandLexiom.a1000202.osn
+      standard_ancestor_osn_ids → BrandLexiom (reciprocal)
+      compilation_scope: self_as_axis_center
 ```
+
+**Compilation scopes are literal** (no silent graph-root-parent or standard-ancestor prefix):
+
+- `self_only` — the clicked node only
+- `self_and_approved_descendants` — the clicked node + recursive native children
+- `self_plus_parent_context` — the clicked node + direct native parents
+- `self_as_axis_center` — axis + native descendants + native ancestors (parents only); each cited standard ancestor C is C + C’s native descendants + C’s native ancestors (parents only) + C’s standard-ancestor **nodes**. Reciprocal citations use a visited-set. Do not take siblings or uncles of a shared ancestor.
 
 **Additional-plane convention:** when a plane is entered through a Focus OSN’s own `standard_ancestor_osn_ids` link to `S` (not inherited by walk-up from native parents), treat **`S` as that plane’s layout trunk** for surrounding-tree display (ancestor column ending at `S`, peers = children of `S` plus grafted inheritors). The **plane name** is always the origin-leaf of the **eldest root** of `S`’s native primary-parent chain (e.g. link to AccessControl → plane name `WebAppSecurity`). Native-plane naming likewise uses the eldest OSN on the Focus primary-parent chain. The PlaneShift shadow companions native ancestors only when the Focus OSN itself declares alternate links.
 
@@ -81,7 +100,7 @@ Given only an artifact name, split on the `.osn.` / `sev.` / `vN` pattern to rec
 Lexiom 1.3 offers two full-screen graph expositions from the left-panel toggle:
 
 1. **Side view** — indented native trees (legacy classical full-graph).
-2. **Top view** (OSNG Garden) — radial trees colored per thematic plane (green→purple spectrum) with solid native arrows and dashed cross-tree `standard_ancestor` arrows; tree centers spaced by cross-link counts. See [`Lexiom_1_3_OSNG_Garden_UX_Spec_1_0.md`](Lexiom_1_3_OSNG_Garden_UX_Spec_1_0.md).
+2. **Top view** (OSNG Garden) — radial plants colored per thematic plane (green→purple spectrum); ProductLexiom and BrandLexiom are their own plants; solid native arrows (including short stems between plant trunks); dashed `standard_ancestor` stems with arrowheads at both ends; reciprocal pairs as one dash-dot stem; plant centers keep packed radii from overlapping; origin-leaf labels follow zoom LOD. See [`Lexiom_1_3_OSNG_Garden_UX_Spec_1_0.md`](Lexiom_1_3_OSNG_Garden_UX_Spec_1_0.md).
 
 ## Build plugins (related)
 

@@ -51,11 +51,10 @@ The plugin does **not** hard-code a branch name, product name, or domain vocabul
 
 ### 3.2 Instruction subgraph (generic)
 
-Include OSNs according to `compilation_scope` and policy:
+Include OSNs according to `compilation_scope` only (see contract §4.1; no silent prefix):
 
-1. **Standard ancestors** (when policy or scope requires) — reusable organizational constraints.
-2. **Compilation root** — the triggered OSN.
-3. **Descendants** — every live child reachable recursively via `graph.child_osn_ids` from the root when scope includes descendants.
+1. **Compilation root** — the triggered OSN.
+2. **Descendants / parents / cited cones** — as that scope names (`self_only`, `self_and_approved_descendants`, `self_plus_parent_context`, or `self_as_axis_center`).
 
 Exclude:
 
@@ -105,13 +104,15 @@ Do **not** place any of the following in `document.md` / body pack files (includ
 3. **Graph / process meta** — phrases that reveal generation machinery, e.g. “per the parent OSN”, “compiled from the BrandLexiom subgraph”, “this leaf requires…”, “according to `…a1000005.osn`”, “OSNG says…”, “success evidence SE-…”, walk-plan / strategy ids, snapshot-mode language.
 4. **Scaffold leakage** — copying `OUTLINE.md` owning-OSN columns, `BUILD_REPORT` provenance tables, or agent-prompt instructions into the reader-facing body.
 5. **Internal product names as source attribution** — naming Lexiom, OSNG, or “instruction nodes” as the authority for a claim (write the claim as organizational/product voice instead).
+6. **Notes / remarks about the artifact** — ceremonial notes, commentary, explanations of how to read the piece, interpretive afterwords, or any meta prose that is not itself the SUD the root `output_spec` asked for. Short forms (e.g. a poem) must stand alone without surrounding essays.
 
 #### 3.5.3 Required voice
 
-- Write as the **finished document** the root `output_spec` asks for (policy, brand book, narrative, etc.), in normal domain language.
+- Write as the **finished SUD** the root `output_spec` asks for (policy, brand book, narrative, poem, etc.), in normal domain language — **and nothing else**.
 - Use OSNs only as **hidden instructions**: extract meaning, then emit prose that a reader could accept without knowing OSNG exists.
 - If an OSN’s text itself contains OSNG jargon meant only for agents, **translate** it into domain prose; do not paste agent-facing instruction language into the outcome.
 - Domain vocabulary that is *content* (e.g. a brand’s own use of “seed story”) is allowed when it is the subject matter — not when it is citing OSNG field names.
+- Do **not** pad short SUDs with notes, remarks, or ceremonial commentary about the piece.
 
 #### 3.5.4 Where provenance belongs
 
@@ -347,7 +348,8 @@ Remaining polish:
 | Role | Example OSN (Lexiom 1.3) |
 |---|---|
 | Standard | `GT_Philosophy.a1000001.osn` |
-| Root | `GT_Philosophy.BrandLexiom.a1000005.osn` |
+| Subtree root | `GT_Philosophy.BrandLexiom.a1000005.osn` (`self_and_approved_descendants`) |
+| Official realization root | `Realization.RealizeBrandLexiom.a1000202.osn` (`self_as_axis_center`) |
 | Descendants | BrandLexiom subtree under `Branding/` |
 
-In this deployment, BrandLexiom is a compilation root with `target_tool_profile: document_agent`. A branding-oriented `artifact_profile` might name the primary file `branding-book.md` — that naming is deployment-specific, not required by this plugin spec.
+In this deployment, BrandLexiom is a fast subtree compilation root (`self_and_approved_descendants`, `target_tool_profile: document_agent`). RealizeBrandLexiom is the official brand realization root (`self_as_axis_center`). A branding-oriented `artifact_profile` might name the primary file `branding-book.md` — that naming is deployment-specific, not required by this plugin spec.

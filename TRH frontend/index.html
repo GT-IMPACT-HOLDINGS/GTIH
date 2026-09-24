@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Reasoning Hub</title>
+  <style>
+    :root {
+      --ink: #111;
+      --paper: #f4f4f2;
+      --surface: #fff;
+      --muted: #555;
+      --rule: #ccc;
+      --ok: #1a5c1a;
+      --err: #8b1a1a;
+      --yaml-chrome: #b5b5b5;
+      --yaml-meta: #6b6b6b;
+      --yaml-spec: #1a5f9e;
+      --yaml-evidences: #1a7a3c;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --ribbon-h: 2.5rem;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #eee;
+        --paper: #0b0b0a;
+        --surface: #161615;
+        --muted: #9a9a96;
+        --rule: #3a3a38;
+        --ok: #7dca7d;
+        --err: #e08080;
+        --yaml-chrome: #5a5a5a;
+        --yaml-meta: #a8a8a8;
+        --yaml-spec: #6ba3d9;
+        --yaml-evidences: #6bc48a;
+        --shadow: rgba(0, 0, 0, 0.45);
+        color-scheme: dark;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "JetBrains Mono", "Consolas", "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .shell {
+      display: flex;
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+    }
+
+    /* Top config ribbon */
+    .config-anchor {
+      position: relative;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      flex: 0 0 var(--ribbon-h);
+      height: var(--ribbon-h);
+      width: 100%;
+      padding: 0 0.75rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--rule);
+    }
+    .ribbon-brand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      padding: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .config-glyph {
+      margin: 0;
+      padding: 0.3rem 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-top: 0;
+    }
+    .config-glyph:hover,
+    .config-glyph[aria-expanded="true"] {
+      color: var(--ink);
+      background: var(--paper);
+      border-color: var(--rule);
+    }
+    .config-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 1px);
+      left: 0.75rem;
+      width: min(26rem, calc(100vw - 1.5rem));
+      max-height: min(70vh, 36rem);
+      overflow: auto;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      box-shadow: 0 8px 24px var(--shadow);
+      padding: 0.75rem 1rem 1rem;
+    }
+    .config-panel.open { display: block; }
+    .config-panel .fold { margin: 0.65rem 0; }
+    .config-panel .fold:first-child { margin-top: 0; }
+
+    .osng-sidebar,
+    .hanuman-sidebar {
+      display: flex;
+      flex-direction: column;
+      width: 35%;
+      flex: 0 0 35%;
+      max-width: 35%;
+      background: var(--surface);
+      min-height: 0;
+      max-height: 100%;
+      align-self: stretch;
+    }
+    .osng-sidebar { border-right: 1px solid var(--rule); }
+    .hanuman-sidebar { border-left: 1px solid var(--rule); }
+
+    .sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      flex: 0 0 auto;
+    }
+    .sidebar-head h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .osng-filters,
+    .hanuman-ribbon {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1rem;
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      flex: 0 0 auto;
+      min-height: 2.45rem;
+      background: var(--surface);
+    }
+    .osng-filters label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .osng-filters input {
+      width: auto;
+      margin: 0;
+      accent-color: var(--ink);
+    }
+    .osng-download {
+      margin: 0;
+      padding: 0.25rem 0.55rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      font: inherit;
+      font-size: 0.8rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .osng-download:hover:not(:disabled) {
+      background: var(--paper);
+    }
+    .osng-download:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .osng-download .glyph {
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .hanuman-ribbon {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+    #osngView,
+    #out {
+      margin: 0;
+      padding: 1rem;
+      border: 0;
+      max-height: none;
+      flex: 1 1 auto;
+      overflow: auto;
+      background: var(--surface);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    #osngView .osng-comment { color: var(--muted); }
+    /* YAML chrome (keys + special chars) ≈ 50% lighter than meta value gray */
+    #osngView .osng-yaml-key,
+    #osngView .osng-yaml-punct {
+      color: var(--yaml-chrome);
+    }
+    #osngView .osng-meta {
+      color: var(--yaml-meta);
+    }
+    #osngView .osng-spec {
+      color: var(--yaml-spec);
+    }
+    #osngView .osng-evidences {
+      color: var(--yaml-evidences);
+    }
+    #osngView.osng-outcome-prose {
+      white-space: normal;
+      line-height: 1.55;
+    }
+    #osngView .osng-para {
+      display: block;
+      margin: 0 0 1rem;
+    }
+    #osngView .osng-para:last-child {
+      margin-bottom: 0;
+    }
+
+    .workspace {
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: none;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .sub {
+      color: var(--muted);
+      margin: 0.5rem 0 0;
+      font-size: 0.85rem;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin: 0.35rem 0 0;
+    }
+    label { display: block; margin: 0 0 0.35rem; color: var(--muted); }
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 0;
+      padding: 0.65rem 0.75rem;
+      font: inherit;
+      color: var(--ink);
+    }
+    textarea { min-height: 7rem; resize: vertical; }
+    textarea:disabled { opacity: 0.55; }
+    .row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: end; }
+    .row > div { flex: 1; min-width: 8rem; }
+    button {
+      margin-top: 0.75rem;
+      font: inherit;
+      padding: 0.55rem 1rem;
+      background: var(--ink);
+      color: var(--paper);
+      border: none;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.45; cursor: wait; }
+    button.secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      margin-left: 0;
+    }
+    pre, .pane {
+      margin-top: 0.5rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 28rem;
+    }
+    .pane { min-height: 8rem; }
+    .pane iframe {
+      width: 100%;
+      min-height: 22rem;
+      border: 0;
+      background: var(--surface);
+    }
+    .ok { color: var(--ok); }
+    .err { color: var(--err); }
+    .evidence-list {
+      list-style: none;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0 0;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      min-height: 4rem;
+    }
+    .evidence-list li {
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .evidence-list li:last-child { border-bottom: 0; }
+    .muted { color: var(--muted); font-size: 0.85rem; }
+    a { color: var(--ink); }
+
+    details.fold {
+      margin: 0.75rem 0;
+      border: 1px solid var(--rule);
+      background: var(--surface);
+    }
+    details.fold > summary {
+      cursor: pointer;
+      padding: 0.55rem 0.75rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      list-style: none;
+      user-select: none;
+    }
+    details.fold > summary::-webkit-details-marker { display: none; }
+    details.fold > summary::before {
+      content: "▸ ";
+      color: var(--ink);
+    }
+    details.fold[open] > summary::before { content: "▾ "; }
+    details.fold > .fold-body {
+      padding: 0 0.75rem 0.85rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .stage { margin: 1.25rem 0 0; }
+    .stage-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.35rem;
+    }
+  </style>
+  <script src="/gt2/gtih/gtih-sdk.js"></script>
+</head>
+<body>
+  <header class="config-anchor" id="configAnchor" role="banner">
+    <button
+      type="button"
+      class="config-glyph"
+      id="configGlyph"
+      aria-expanded="false"
+      aria-controls="configPanel"
+      title="Config"
+      aria-label="Open config"
+    >Config</button>
+    <h1 class="ribbon-brand">The Reasoning Hub</h1>
+    <div class="config-panel" id="configPanel" role="dialog" aria-label="Config" hidden>
+      <details class="fold" open>
+        <summary>About</summary>
+        <div class="fold-body">
+    <p class="sub">
+            The Reasoning Hub — GTIH direct.
+            Enter runs <code>proposeThenRealizeUntilDone</code>.
+      Lexiom cabinet untouched.
+    </p>
+          <p class="sub">
+            <a href="/gt2/gtih/SHARED_OSNG_propose_from_intent.md">SHARED_OSNG_propose_from_intent.md</a>
+            · <a href="/gt2/gtih/API.md">API.md</a>
+          </p>
+        </div>
+      </details>
+
+      <details class="fold" open>
+        <summary>Options</summary>
+        <div class="fold-body">
+    <div class="row">
+      <div>
+        <label for="cap">max_descendants (0 = single OSN)</label>
+        <input id="cap" type="number" min="0" step="1" value="0" />
+      </div>
+      <div>
+              <label for="key">Optional OpenRouter key</label>
+        <input id="key" type="text" autocomplete="off" placeholder="sk-or-…" />
+            </div>
+          </div>
+          <button type="button" id="proposeOnly" class="secondary">propose only</button>
+        </div>
+      </details>
+
+      <details class="fold">
+        <summary>Envelope / status JSON</summary>
+        <div class="fold-body">
+          <pre id="jsonOut">// envelope / handoff / status JSON appears here after a run</pre>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <div class="shell" id="shell">
+    <aside class="osng-sidebar" id="osngSidebar" aria-label="OSNG">
+      <div class="sidebar-head">
+        <h2 id="osngTitle">OSNG</h2>
+      </div>
+      <div class="osng-filters" role="group" aria-label="OSNG view filters">
+        <button
+          type="button"
+          class="osng-download"
+          id="osngDownload"
+          title="Download filtered OSNG as YAML"
+          aria-label="Download YAML"
+          disabled
+        >
+          <span class="glyph" aria-hidden="true">⬇</span>
+          YAML
+        </button>
+        <label title="Outcome narrative as paragraphs: output_spec (blue) then evidence texts (green). Not YAML structure.">
+          <input type="checkbox" id="osngFilterOutcome" checked />
+          Outcome
+        </label>
+        <label title="Show remaining OSN / envelope fields (mid-gray). Combine with Outcome for full YAML.">
+          <input type="checkbox" id="osngFilterMeta" />
+          Metadata
+        </label>
+      </div>
+      <pre id="osngView"><span class="osng-comment"># OSNG appears here after propose</span></pre>
+    </aside>
+
+    <div class="workspace">
+      <section class="stage" aria-labelledby="intent-heading">
+        <div class="stage-head">
+          <label for="intent" id="intent-heading">SUD-describing prompt / narrative</label>
+        </div>
+        <textarea
+          id="intent"
+          placeholder="Describe the outcome you want the SUD to realize…"
+          aria-describedby="intent-hint"
+        ></textarea>
+        <p class="hint" id="intent-hint">Enter → propose &amp; realize · Shift+Enter → new line</p>
+      </section>
+
+      <section class="stage" aria-labelledby="sud-heading">
+        <div class="stage-head">
+          <h2 id="sud-heading">SUD</h2>
+          <div id="sudMeta" class="muted">Waiting for realization…</div>
+        </div>
+        <div id="sudPane" class="pane"></div>
+      </section>
+
+      <section class="stage" aria-labelledby="evidence-heading">
+        <div class="stage-head">
+          <h2 id="evidence-heading">Evidences</h2>
+        </div>
+        <ul id="evidenceList" class="evidence-list">
+          <li class="muted">Waiting for evidence collections…</li>
+        </ul>
+      </section>
+    </div>
+
+    <aside class="hanuman-sidebar" id="hanumanSidebar" aria-label="Hanuman under GT3">
+      <div class="sidebar-head">
+        <h2>Hanuman under GT3</h2>
+      </div>
+      <div class="hanuman-ribbon" id="hanumanRibbon">
+        Ram raises · Hanuman labors · GT3 is the sun
+      </div>
+      <pre id="out" aria-live="polite"></pre>
+    </aside>
+  </div>
+  <script>
+    (function () {
+      var osngSidebar = document.getElementById('osngSidebar');
+      var osngView = document.getElementById('osngView');
+      var osngTitle = document.getElementById('osngTitle');
+      var osngFilterOutcome = document.getElementById('osngFilterOutcome');
+      var osngFilterMeta = document.getElementById('osngFilterMeta');
+      var osngDownload = document.getElementById('osngDownload');
+      var lastOsngEnvelope = null;
+      /** Sidebar media: 'yaml' | 'json'. Flip here (or later from UI) without rewriting renderers. */
+      var osngViewFormat = 'yaml';
+      var configGlyph = document.getElementById('configGlyph');
+      var configPanel = document.getElementById('configPanel');
+      var configAnchor = document.getElementById('configAnchor');
+      var out = document.getElementById('out');
+      var proposeOnlyBtn = document.getElementById('proposeOnly');
+      var intentEl = document.getElementById('intent');
+      var capEl = document.getElementById('cap');
+      var keyEl = document.getElementById('key');
+      var sudMeta = document.getElementById('sudMeta');
+      var sudPane = document.getElementById('sudPane');
+      var evidenceList = document.getElementById('evidenceList');
+      var jsonOut = document.getElementById('jsonOut');
+      var busy = false;
+
+      try {
+        keyEl.value = (window.gtih && window.gtih.getApiKey && window.gtih.getApiKey()) || '';
+      } catch (_e) {}
+
+      function setConfigOpen(open) {
+        configPanel.classList.toggle('open', !!open);
+        configPanel.hidden = !open;
+        configGlyph.setAttribute('aria-expanded', open ? 'true' : 'false');
+        configGlyph.setAttribute('aria-label', open ? 'Close config' : 'Open config');
+      }
+
+      configGlyph.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        setConfigOpen(configPanel.hidden);
+      });
+      document.addEventListener('click', function (ev) {
+        if (!configPanel.hidden && !configAnchor.contains(ev.target)) {
+          setConfigOpen(false);
+        }
+      });
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && !configPanel.hidden) {
+          setConfigOpen(false);
+        }
+      });
+
+      function filterOsngNode(node, showOutcome, showMeta) {
+        var out = {};
+        if (!node || typeof node !== 'object') return out;
+        // Preserve original key order when both filters are on (full YAML).
+        Object.keys(node).forEach(function (k) {
+          var isOutcome = k === 'output_spec' || k === 'success_evidences';
+          if (isOutcome) {
+            if (showOutcome) out[k] = node[k];
+          } else if (showMeta) {
+            out[k] = node[k];
+          }
+        });
+        return out;
+      }
+
+      function filterOsngEnvelope(envelope, showOutcome, showMeta) {
+        if (!envelope) return null;
+        var nodes = Array.isArray(envelope.nodes) ? envelope.nodes : [];
+        var filteredNodes = nodes.map(function (n) {
+          return filterOsngNode(n, showOutcome, showMeta);
+        });
+        if (showMeta) {
+          var doc = {
+            root_osn_id: envelope.root_osn_id,
+            nodes: filteredNodes,
+            meta: envelope.meta
+          };
+          if (doc.root_osn_id == null) delete doc.root_osn_id;
+          if (doc.meta == null) delete doc.meta;
+          return doc;
+        }
+        // Outcome-only: nodes with outcome field content only
+        return { nodes: filteredNodes };
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      /**
+       * Tone for leaf values (not YAML chrome):
+       * - Outcome keys → blue / green (inherited into nested evidence trees)
+       * - Metadata → mid-gray
+       */
+      function resolveYamlValueClass(key, tone, inherited) {
+        tone = tone || {};
+        if (key === 'output_spec' && tone.showOutcome) return 'osng-spec';
+        if (key === 'success_evidences' && tone.showOutcome) return 'osng-evidences';
+        if (inherited === 'osng-spec' || inherited === 'osng-evidences') return inherited;
+        if (tone.showMeta) return 'osng-meta';
+        return inherited || '';
+      }
+
+      function yamlChromeKey(k) {
+        return '<span class="osng-yaml-key">' + escapeHtml(String(k)) + '</span>';
+      }
+
+      function yamlChromePunct(s) {
+        return '<span class="osng-yaml-punct">' + escapeHtml(String(s)) + '</span>';
+      }
+
+      function yamlLeafHtml(text, valueClass) {
+        var html = escapeHtml(String(text));
+        if (valueClass) return '<span class="' + valueClass + '">' + html + '</span>';
+        return html;
+      }
+
+      function yamlPad(level) {
+        return escapeHtml(new Array((level || 0) + 1).join('  '));
+      }
+
+      function yamlObjectLineHtml(k, v, level, tone, inherited) {
+        var pad = yamlPad(level);
+        var valueClass = resolveYamlValueClass(k, tone, inherited);
+        var head = pad + yamlChromeKey(k) + yamlChromePunct(':');
+
+        if (v !== null && typeof v === 'object') {
+          if (Array.isArray(v)) {
+            if (!v.length) return head + ' ' + yamlChromePunct('[]');
+            return head + '\n' + yamlArrayHtml(v, level + 1, tone, valueClass);
+          }
+          if (!Object.keys(v).length) return head + ' ' + yamlChromePunct('{}');
+          return head + '\n' + toYamlHtml(v, level + 1, tone, valueClass);
+        }
+
+        if (typeof v === 'string' && v.indexOf('\n') >= 0) {
+          var blockPad = yamlPad(level + 1);
+          return (
+            head +
+            ' ' +
+            yamlChromePunct('|') +
+            '\n' +
+            v
+              .split('\n')
+              .map(function (line) {
+                return blockPad + yamlLeafHtml(line, valueClass);
+              })
+              .join('\n')
+          );
+        }
+
+        return head + ' ' + yamlLeafHtml(toYaml(v, 0), valueClass);
+      }
+
+      function yamlArrayHtml(arr, level, tone, valueClass) {
+        var pad = yamlPad(level);
+        return arr
+          .map(function (item) {
+            if (item !== null && typeof item === 'object' && !Array.isArray(item)) {
+              var keys = Object.keys(item);
+              if (!keys.length) {
+                return pad + yamlChromePunct('-') + ' ' + yamlChromePunct('{}');
+              }
+              var parts = [];
+              keys.forEach(function (k, idx) {
+                if (idx === 0) {
+                  var first = yamlObjectLineHtml(k, item[k], level + 1, tone, valueClass);
+                  var strip = yamlPad(level + 1);
+                  if (first.indexOf(strip) === 0) {
+                    first = first.slice(strip.length);
+                  }
+                  parts.push(pad + yamlChromePunct('-') + ' ' + first);
+                } else {
+                  parts.push(yamlObjectLineHtml(k, item[k], level + 1, tone, valueClass));
+                }
+              });
+              return parts.join('\n');
+            }
+            return (
+              pad +
+              yamlChromePunct('-') +
+              ' ' +
+              yamlLeafHtml(toYaml(item, 0), valueClass)
+            );
+          })
+          .join('\n');
+      }
+
+      function toYamlHtml(value, indent, tone, valueClass) {
+        var level = indent || 0;
+        tone = tone || {};
+        valueClass = valueClass || '';
+
+        if (value === null || value === undefined) {
+          return yamlLeafHtml('null', valueClass);
+        }
+        if (typeof value !== 'object') {
+          return yamlLeafHtml(toYaml(value, level), valueClass);
+        }
+        if (Array.isArray(value)) {
+          if (!value.length) return yamlChromePunct('[]');
+          return yamlArrayHtml(value, level, tone, valueClass);
+        }
+        var keys = Object.keys(value);
+        if (!keys.length) return yamlChromePunct('{}');
+        return keys
+          .map(function (k) {
+            return yamlObjectLineHtml(k, value[k], level, tone, valueClass);
+          })
+          .join('\n');
+      }
+
+      function wrapOsngTone(key, htmlChunk, tone) {
+        tone = tone || {};
+        if (key === 'output_spec' && tone.showOutcome) {
+          return '<span class="osng-spec">' + htmlChunk + '</span>';
+        }
+        if (key === 'success_evidences' && tone.showOutcome) {
+          return '<span class="osng-evidences">' + htmlChunk + '</span>';
+        }
+        if (tone.showMeta) {
+          return '<span class="osng-meta">' + htmlChunk + '</span>';
+        }
+        return htmlChunk;
+      }
+
+      /** Prefer human-readable evidence text over structural evidence keys. */
+      function evidenceNarrativeText(ev) {
+        if (ev == null) return '';
+        if (typeof ev === 'string') return ev.trim();
+        if (typeof ev !== 'object') return String(ev).trim();
+        var preferred = [
+          'inspection_prompt',
+          'description',
+          'content',
+          'prompt',
+          'narrative',
+          'text'
+        ];
+        for (var i = 0; i < preferred.length; i++) {
+          var v = ev[preferred[i]];
+          if (typeof v === 'string' && v.trim()) return v.trim();
+        }
+        var keys = Object.keys(ev);
+        for (var j = 0; j < keys.length; j++) {
+          var s = ev[keys[j]];
+          if (typeof s === 'string' && s.trim()) return s.trim();
+        }
+        return '';
+      }
+
+      /**
+       * Outcome-only presentation: consecutive paragraphs (blue spec, green evidences),
+       * not canonical YAML / JSON structure.
+       */
+      function outcomeNarrativeHtml(envelope) {
+        var nodes = Array.isArray(envelope && envelope.nodes) ? envelope.nodes : [];
+        var parts = [];
+        nodes.forEach(function (node) {
+          if (!node || typeof node !== 'object') return;
+          if (node.output_spec != null) {
+            var specText =
+              typeof node.output_spec === 'string'
+                ? node.output_spec.trim()
+                : String(node.output_spec).trim();
+            if (specText) {
+              parts.push(
+                '<span class="osng-para osng-spec">' + escapeHtml(specText) + '</span>'
+              );
+            }
+          }
+          var evidences = Array.isArray(node.success_evidences)
+            ? node.success_evidences
+            : [];
+          evidences.forEach(function (ev) {
+            var text = evidenceNarrativeText(ev);
+            if (text) {
+              parts.push(
+                '<span class="osng-para osng-evidences">' + escapeHtml(text) + '</span>'
+              );
+            }
+          });
+        });
+        if (!parts.length) {
+          return '<span class="osng-comment"># No outcome narratives in this OSNG</span>';
+        }
+        return parts.join('\n');
+      }
+
+      /** Format plugins: shared filter → format-specific HTML. Add UI toggle later via setOsngViewFormat. */
+      var osngFormatters = {
+        yaml: {
+          label: 'YAML',
+          emptyHint: '# OSNG appears here after propose',
+          comment: function (text) {
+            return '<span class="osng-comment"># ' + escapeHtml(text) + '</span>';
+          },
+          bodyHtml: function (doc, tone) {
+            return toYamlHtml(doc, 0, tone);
+          }
+        },
+        json: {
+          label: 'JSON',
+          emptyHint: '// OSNG appears here after propose',
+          comment: function (text) {
+            return '<span class="osng-comment">// ' + escapeHtml(text) + '</span>';
+          },
+          bodyHtml: function (doc, tone) {
+            return toJsonHtml(doc, 0, tone);
+          }
+        }
+      };
+
+      function getOsngFormatter(format) {
+        return osngFormatters[format] || osngFormatters.yaml;
+      }
+
+      function updateOsngTitle() {
+        var fmt = getOsngFormatter(osngViewFormat);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        if (osngTitle) {
+          osngTitle.textContent = showMeta ? 'OSNG (' + fmt.label + ')' : 'OSNG';
+        }
+        if (osngSidebar) {
+          osngSidebar.setAttribute(
+            'aria-label',
+            showMeta ? 'OSNG ' + fmt.label : 'OSNG'
+          );
+        }
+      }
+
+      function setOsngViewFormat(format) {
+        if (!osngFormatters[format]) return;
+        osngViewFormat = format;
+        var fmt = getOsngFormatter(format);
+        updateOsngTitle();
+        if (lastOsngEnvelope) {
+          renderOsng(lastOsngEnvelope);
+        } else if (osngView) {
+          osngView.innerHTML = '<span class="osng-comment">' + escapeHtml(fmt.emptyHint) + '</span>';
+        }
+      }
+
+      function yamlQuote(str) {
+        var s = String(str);
+        if (s.indexOf('\n') >= 0) {
+          return (
+            '|\n' +
+            s
+              .split('\n')
+              .map(function (line) {
+                return '  ' + line;
+              })
+              .join('\n')
+          );
+        }
+        if (/^[\w./:@+-]+$/.test(s) && !/^(true|false|null|yes|no)$/i.test(s)) {
+          return s;
+        }
+        return JSON.stringify(s);
+      }
+
+      function toYaml(value, indent) {
+        var level = indent || 0;
+        var pad = new Array(level + 1).join('  ');
+        if (value === null || value === undefined) return 'null';
+        if (typeof value === 'boolean' || typeof value === 'number') return String(value);
+        if (typeof value === 'string') {
+          var q = yamlQuote(value);
+          if (q.indexOf('\n') === 0 || q.charAt(0) === '|') {
+            return q.replace(/^\|\n/, '|\n' + pad);
+          }
+          return q;
+        }
+        if (Array.isArray(value)) {
+          if (!value.length) return '[]';
+          return value
+            .map(function (item) {
+              if (item !== null && typeof item === 'object' && !Array.isArray(item)) {
+                var keys = Object.keys(item);
+                if (!keys.length) return pad + '- {}';
+                var firstKey = keys[0];
+                var firstVal = item[firstKey];
+                var lines = [pad + '- ' + firstKey + ': ' + yamlInlineOrBlock(firstVal, level + 1)];
+                keys.slice(1).forEach(function (k) {
+                  lines.push(yamlObjectLine(k, item[k], level + 1));
+                });
+                return lines.join('\n');
+              }
+              return pad + '- ' + toYaml(item, 0);
+            })
+            .join('\n');
+        }
+        if (typeof value === 'object') {
+          var objKeys = Object.keys(value);
+          if (!objKeys.length) return '{}';
+          return objKeys
+            .map(function (k) {
+              return yamlObjectLine(k, value[k], level);
+            })
+            .join('\n');
+        }
+        return yamlQuote(String(value));
+      }
+
+      function yamlInlineOrBlock(v, level) {
+        if (v !== null && typeof v === 'object') {
+          if (Array.isArray(v)) {
+            if (!v.length) return '[]';
+            return '\n' + toYaml(v, level + 1);
+          }
+          if (!Object.keys(v).length) return '{}';
+          return '\n' + toYaml(v, level + 1);
+        }
+        return toYaml(v, level);
+      }
+
+      function yamlObjectLine(k, v, level) {
+        var pad = new Array(level + 1).join('  ');
+        if (v !== null && typeof v === 'object') {
+          if (Array.isArray(v)) {
+            if (!v.length) return pad + k + ': []';
+            return pad + k + ':\n' + toYaml(v, level + 1);
+          }
+          if (!Object.keys(v).length) return pad + k + ': {}';
+          return pad + k + ':\n' + toYaml(v, level + 1);
+        }
+        if (typeof v === 'string' && v.indexOf('\n') >= 0) {
+          var blockPad = new Array(level + 2).join('  ');
+          return (
+            pad +
+            k +
+            ': |\n' +
+            v
+              .split('\n')
+              .map(function (line) {
+                return blockPad + line;
+              })
+              .join('\n')
+          );
+        }
+        return pad + k + ': ' + toYaml(v, 0);
+      }
+
+      function toJsonHtml(value, indent, tone) {
+        var level = indent || 0;
+        var pad = new Array(level + 1).join('  ');
+        var padInner = new Array(level + 2).join('  ');
+        tone = tone || {};
+
+        if (value === null || value === undefined) return 'null';
+        if (typeof value === 'boolean') return value ? 'true' : 'false';
+        if (typeof value === 'number') {
+          return isFinite(value) ? String(value) : 'null';
+        }
+        if (typeof value === 'string') return escapeHtml(JSON.stringify(value));
+
+        if (Array.isArray(value)) {
+          if (!value.length) return '[]';
+          return (
+            '[\n' +
+            value
+              .map(function (item) {
+                return padInner + toJsonHtml(item, level + 1, tone);
+              })
+              .join(',\n') +
+            '\n' +
+            pad +
+            ']'
+          );
+        }
+
+        if (typeof value === 'object') {
+          var keys = Object.keys(value);
+          if (!keys.length) return '{}';
+          return (
+            '{\n' +
+            keys
+              .map(function (k) {
+                var prop =
+                  padInner +
+                  escapeHtml(JSON.stringify(k)) +
+                  ': ' +
+                  toJsonHtml(value[k], level + 1, tone);
+                return wrapOsngTone(k, prop, tone);
+              })
+              .join(',\n') +
+            '\n' +
+            pad +
+            '}'
+          );
+        }
+
+        return escapeHtml(JSON.stringify(String(value)));
+      }
+
+      function envelopeToOsngHtml(envelope, format) {
+        var fmt = getOsngFormatter(format || osngViewFormat);
+        if (!envelope) {
+          return fmt.comment('No OSNG envelope yet');
+        }
+        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        if (!showOutcome && !showMeta) {
+          return fmt.comment('No OSNG fields selected — enable Outcome and/or Metadata');
+        }
+        // Outcome-only: prose paragraphs, not structured media.
+        if (showOutcome && !showMeta) {
+          return outcomeNarrativeHtml(envelope);
+        }
+        var filtered = filterOsngEnvelope(envelope, showOutcome, showMeta);
+        var tone = { showOutcome: showOutcome, showMeta: showMeta };
+        return fmt.bodyHtml(filtered, tone);
+      }
+
+      function renderOsng(envelope) {
+        if (envelope) lastOsngEnvelope = envelope;
+        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        updateOsngTitle();
+        osngView.classList.toggle('osng-outcome-prose', !!(showOutcome && !showMeta));
+        osngView.innerHTML = envelopeToOsngHtml(lastOsngEnvelope, osngViewFormat);
+        if (osngDownload) {
+          osngDownload.disabled = !lastOsngEnvelope;
+        }
+      }
+
+      function downloadOsngYaml() {
+        if (!lastOsngEnvelope) return;
+        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        if (!showOutcome && !showMeta) return;
+        var filtered = filterOsngEnvelope(lastOsngEnvelope, showOutcome, showMeta);
+        var yamlText = toYaml(filtered, 0) + '\n';
+        var blob = new Blob([yamlText], { type: 'text/yaml;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        var root = String((lastOsngEnvelope && lastOsngEnvelope.root_osn_id) || 'osng')
+          .replace(/\.osn$/i, '')
+          .replace(/[^\w.-]+/g, '_');
+        a.href = url;
+        a.download = root + '.yaml';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function refreshOsngView() {
+        updateOsngTitle();
+        if (lastOsngEnvelope) renderOsng(lastOsngEnvelope);
+      }
+
+      setOsngViewFormat(osngViewFormat);
+
+      if (osngFilterOutcome) {
+        osngFilterOutcome.addEventListener('change', refreshOsngView);
+      }
+      if (osngFilterMeta) {
+        osngFilterMeta.addEventListener('change', refreshOsngView);
+      }
+      if (osngDownload) {
+        osngDownload.addEventListener('click', downloadOsngYaml);
+      }
+
+      /** Show proposed OSNG as soon as the envelope lands (before SUD / evidences). */
+      function revealProposedOsng(envelope) {
+        renderOsng(envelope);
+        appendLog(
+          'Hanuman offers a draft OSNG for Ram’s eyes (root: ' +
+            ((envelope && envelope.root_osn_id) || '?') +
+            ') — garden first; SUD leap still ahead…'
+        );
+      }
+
+      function setBusy(next) {
+        busy = !!next;
+        intentEl.disabled = busy;
+        proposeOnlyBtn.disabled = busy;
+      }
+
+      /** Map wire logs / status into Ram–Hanuman–GT3 relationship beats. */
+      function expressHanumanLog(rawLine) {
+        var line = String(rawLine || '').trim();
+        if (!line) return null;
+
+        if (/^phase:\s*propose OSNG/i.test(line)) {
+          return 'Ram has raised an OSNG proposition — Hanuman opens the propose Job under GT3…';
+        }
+        if (/^phase:\s*prepare from proposed/i.test(line)) {
+          return 'GT3 prepares an ephemeral garden from Hanuman’s draft so Ram may later authorize a leap…';
+        }
+        if (/^phase:\s*prepare\b/i.test(line)) {
+          return 'GT3 prepares the frozen country from Ram’s garden…';
+        }
+        if (/^phase:\s*realize \(issue CA ticket\)/i.test(line)) {
+          return 'GT3 issues Hanuman a realize Job — devotion with hands, never the White throne…';
+        }
+        if (/^phase:\s*Hanuman realize labor/i.test(line)) {
+          return 'Hanuman leaps into the sandbox to realize the SUD Ram’s OSNG prescribed…';
+        }
+        if (/^phase:\s*collect evidence/i.test(line)) {
+          return 'GT3 gathers evidence listings so Ram may inspect what love built…';
+        }
+        if (/^phase:\s*fetch SUD/i.test(line)) {
+          return 'Fetching the SUD artifact for Ram’s eyes…';
+        }
+        if (/^starting propose/i.test(line)) {
+          return line;
+        }
+        if (/^done:/i.test(line)) {
+          return 'The chain rests — Ram alone may seat what remains draft upon the White throne.';
+        }
+
+        if (/Receiving the propose workspace|syncIn workspace \(osng propose\)/i.test(line)) {
+          return 'Hanuman receives Ram’s propose workspace into his hands…';
+        }
+        var syncInFiles = line.match(/syncIn\s+(\d+)\s+files/i);
+        if (syncInFiles) {
+          return 'The Job’s frozen country is ready (' + syncInFiles[1] + ' files)…';
+        }
+        if (/sandbox opens|WebContainer sandbox ready/i.test(line)) {
+          return 'The sandbox opens — Hanuman begins the leap under the GT3 sun…';
+        }
+        if (/Consulting GT3 to draft|osng propose tool loop/i.test(line)) {
+          return 'Hanuman consults GT3 to draft a proposal OSNG from Ram’s intent…';
+        }
+        if (/document context-economy|syncIn workspace \(builder\)/i.test(line)) {
+          return 'Hanuman begins builder labor for the SUD Ram prescribed…';
+        }
+
+        var step = line.match(/tool step\s+(\d+)\s*\/\s*(\d+)/i);
+        if (step) {
+          var n = Number(step[1]);
+          if (n === 1) {
+            return 'Hanuman reads Ram’s intent and takes the first loving tool step…';
+          }
+          if (n === 2) {
+            return 'Expanding Ram’s seed into three thematic lenses…';
+          }
+          if (n === 3) {
+            return 'Composing the output_spec through those lenses…';
+          }
+          if (n === 4) {
+            return 'Shaping success evidences so Ram may later inspect the SUD…';
+          }
+          if (n % 3 === 0) {
+            return 'Another kneel to GT3 — refining the draft for Ram (step ' + n + ')…';
+          }
+          return 'Hanuman wields another tool turn under GT3 for Ram (step ' + n + ')…';
+        }
+
+        var wrote = line.match(/wrote\s+(\S+)/i);
+        if (wrote) {
+          var p = wrote[1].replace(/[()]/g, '').trim();
+          if (/OSNG_PROPOSAL\.json/i.test(p)) {
+            return 'Hanuman writes OSNG_PROPOSAL.json — a draft garden for Ram, not yet canon…';
+          }
+          if (/INTENT\.md|AGENT_PROMPT|PROPOSE_BRIEF/i.test(p)) return null;
+          if (/document\.md|index\.html/i.test(p)) {
+            return 'Hanuman offers the SUD primary (' + p + ') for GT3 to show Ram…';
+          }
+          return 'Offering an artifact for Ram: ' + p + '…';
+        }
+
+        if (/Carrying the proposal|syncOut propose/i.test(line)) {
+          return 'Hanuman carries the proposal artifacts back to GT3 for Ram…';
+        }
+        if (/Offering the draft OSNG|reporting propose primary/i.test(line)) {
+          return 'Offering the draft OSNG for host validation — Ram still holds the throne…';
+        }
+        if (/propose Job is sealed|propose report completed/i.test(line)) {
+          return 'The propose Job is sealed — Hanuman’s labor for Ram is complete…';
+        }
+        if (/syncOut builder|reporting builder/i.test(line)) {
+          return 'Returning realize artifacts to GT3 so Ram may see what love built…';
+        }
+        if (/report completed/i.test(line)) {
+          return 'GT3 accepts Hanuman’s report — evidence may still gather for Ram…';
+        }
+        if (/WebContainer torn down/i.test(line)) {
+          return 'Hanuman rests; the sandbox closes…';
+        }
+        if (/gt3 consult error/i.test(line)) {
+          return line.replace(/^\[ca\]\s*/i, 'Consult with the sun faltered: ');
+        }
+        if (/report failed/i.test(line)) {
+          return line.replace(/^\[ca\]\s*/i, 'Could not report to GT3 for Ram: ');
+        }
+        if (/^\[ca\]\s*skip file/i.test(line)) return null;
+        if (/^\[ca\]/.test(line)) {
+          return line.replace(/^\[ca\]\s*/i, '').trim() || null;
+        }
+        if (/^propose status:/i.test(line) || /^status\[/i.test(line)) return null;
+        return line;
+      }
+
+      function expressProposeStatus(status) {
+        var s = String(status || '');
+        if (s === 'awaiting_browser') {
+          return 'Ram’s propose Job awaits Hanuman’s leap into the garden sandbox…';
+        }
+        if (s === 'running') {
+          return 'Hanuman labors for Ram — seed, three lenses, output_spec, evidences — under GT3…';
+        }
+        return null;
+      }
+
+      function expressChainStatus(st) {
+        if (!st) return null;
+        if (st.phase === 'propose' && st.status) {
+          return expressProposeStatus(st.status.status || st.status);
+        }
+        if (st.phase === 'realize') {
+          var rs = st.status && (st.status.status || st.status);
+          if (typeof rs === 'string') {
+            if (/awaiting|pending/i.test(rs)) {
+              return 'Realize Job pending — Hanuman stands ready to leap for Ram…';
+            }
+            if (/running/i.test(rs)) {
+              return 'Hanuman realizes Ram’s prescribed SUD under the GT3 sun…';
+            }
+            if (/ok|completed/i.test(rs)) {
+              return 'Realize labor complete — GT3 holds the artifacts for Ram…';
+            }
+          }
+          return null;
+        }
+        if (st.status && typeof st.status === 'string') {
+          return expressProposeStatus(st.status);
+        }
+        return null;
+      }
+
+      function appendLog(line) {
+        var expressed = expressHanumanLog(line);
+        if (!expressed) return;
+        out.className = '';
+        var prev = out.textContent || '';
+        var lines = prev.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        if (lines[lines.length - 1] === expressed) return;
+        lines.push(expressed);
+        out.textContent = lines.slice(-40).join('\n');
+      }
+
+      function appendStatusBeat(st) {
+        var expressed = expressChainStatus(st) || expressProposeStatus(st && st.status);
+        if (!expressed) return;
+        appendLog(expressed);
+      }
+
+      function renderSud(sud) {
+        sudPane.innerHTML = '';
+        if (!sud) {
+          sudMeta.textContent = 'No SUD artifact';
+          return;
+        }
+        sudMeta.textContent =
+          (sud.media_kind || 'artifact') +
+          ' · ' +
+          (sud.entry || '') +
+          (sud.url ? ' · ' + sud.url : '');
+        if (sud.media_kind === 'software' && sud.url) {
+          var iframe = document.createElement('iframe');
+          iframe.title = 'SUD preview';
+          iframe.src = sud.url;
+          sudPane.appendChild(iframe);
+          return;
+        }
+        var pre = document.createElement('pre');
+        pre.style.margin = '0';
+        pre.style.border = '0';
+        pre.style.maxHeight = 'none';
+        pre.style.padding = '0';
+        pre.textContent = sud.text != null ? sud.text : sud.error || '(empty)';
+        sudPane.appendChild(pre);
+      }
+
+      function renderEvidence(evidence) {
+        evidenceList.innerHTML = '';
+        var targets = (evidence && evidence.targets) || [];
+        if (!targets.length) {
+          var empty = document.createElement('li');
+          empty.className = 'muted';
+          empty.textContent =
+            (evidence && evidence.detail) ||
+            'No evidence targets collected yet for this Focus OSN.';
+          evidenceList.appendChild(empty);
+          return;
+        }
+        targets.forEach(function (t) {
+          var li = document.createElement('li');
+          var title = document.createElement('div');
+          title.textContent =
+            (t.evidence_id || t.target_id || 'evidence') +
+            ' · ' +
+            (t.status || 'unknown') +
+            (t.kind ? ' · ' + t.kind : '');
+          li.appendChild(title);
+          if (t.artifact && t.artifact.url) {
+            var a = document.createElement('a');
+            a.href = t.artifact.url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = t.artifact.file_name || t.artifact.url;
+            li.appendChild(a);
+          } else if (t.notes) {
+            var notes = document.createElement('div');
+            notes.className = 'muted';
+            notes.textContent = t.notes;
+            li.appendChild(notes);
+          }
+          evidenceList.appendChild(li);
+        });
+      }
+
+      function showResults(payload) {
+        renderOsng(payload.envelope);
+        renderSud(payload.sud);
+        renderEvidence(payload.evidence);
+        jsonOut.textContent = JSON.stringify(
+          {
+            envelope: payload.envelope,
+            handoff: {
+              run_id: payload.handoff && payload.handoff.run_id,
+              plugin_id: payload.handoff && payload.handoff.plugin_id,
+              source: payload.handoff && payload.handoff.source,
+              compilation_root_osn_id:
+                payload.handoff && payload.handoff.compilation_root_osn_id
+            },
+            status: payload.status && {
+              status: payload.status.status,
+              detail: payload.status.detail,
+              bud: payload.status.bud || null,
+              bud_written: payload.status.bud_written
+            },
+            evidence_summary: {
+              osn_id: payload.evidence && payload.evidence.osn_id,
+              target_count:
+                (payload.evidence &&
+                  payload.evidence.targets &&
+                  payload.evidence.targets.length) ||
+                0
+            }
+          },
+          null,
+          2
+        );
+      }
+
+      function readIntent() {
+        if (keyEl.value.trim()) {
+          window.gtih.setApiKey(keyEl.value.trim());
+        }
+        var intent = String(intentEl.value || '').trim();
+        if (!intent) {
+          throw new Error('intent must be non-empty');
+        }
+        return {
+          intent: intent,
+          max_descendants: Number(capEl.value || 0)
+        };
+      }
+
+      async function runProposeRealize() {
+        if (busy) return;
+        if (
+          !window.gtih ||
+          !window.gtih.osng ||
+          !window.gtih.osng.proposeThenRealizeUntilDone
+        ) {
+          out.className = 'err';
+          out.textContent = 'gtih-sdk.js not loaded (need proposeThenRealizeUntilDone)';
+          return;
+        }
+        setBusy(true);
+        out.className = '';
+        out.textContent =
+          'Ram raises a propose → realize chain.\nHanuman will labor; GT3 alone is the sun.';
+        sudMeta.textContent = 'Realizing…';
+        sudPane.innerHTML = '';
+        evidenceList.innerHTML = '<li class="muted">Collecting after realize…</li>';
+        try {
+          var args = readIntent();
+          var result = await window.gtih.osng.proposeThenRealizeUntilDone(args, {
+            onLog: appendLog,
+            onStatus: appendStatusBeat,
+            onEnvelope: revealProposedOsng
+          });
+          out.className = 'ok';
+          appendLog('done: run_id=' + (result.handoff && result.handoff.run_id));
+          showResults(result);
+        } catch (e) {
+          out.className = 'err';
+          var payload = {
+            error: e && e.message ? e.message : String(e),
+            detail: e && e.detail != null ? e.detail : undefined,
+            status: e && e.status != null ? e.status : undefined,
+            debug: e && e.debug != null ? e.debug : undefined,
+            body: e && e.body != null ? e.body : undefined
+          };
+          out.textContent = JSON.stringify(payload, null, 2);
+          sudMeta.textContent = 'Realize failed — see Hanuman progression';
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      intentEl.addEventListener('keydown', function (ev) {
+        if (ev.key !== 'Enter' || ev.shiftKey || ev.ctrlKey || ev.metaKey || ev.altKey) {
+          return;
+        }
+        ev.preventDefault();
+        runProposeRealize();
+      });
+
+      proposeOnlyBtn.addEventListener('click', async function () {
+        if (busy) return;
+        if (
+          !window.gtih ||
+          !window.gtih.osng ||
+          !window.gtih.osng.proposeFromIntentUntilDone
+        ) {
+          out.className = 'err';
+          out.textContent = 'gtih-sdk.js not loaded (need proposeFromIntentUntilDone)';
+          return;
+        }
+        setBusy(true);
+        setConfigOpen(false);
+        out.className = '';
+        out.textContent =
+          'Ram has raised an OSNG proposition.\nHanuman opens the Job under GT3…';
+        try {
+          var args = readIntent();
+          var envelope = await window.gtih.osng.proposeFromIntentUntilDone(args, {
+            onLog: appendLog,
+            onStatus: appendStatusBeat
+          });
+          out.className = 'ok';
+          jsonOut.textContent = JSON.stringify(envelope, null, 2);
+          revealProposedOsng(envelope);
+        } catch (e) {
+          out.className = 'err';
+          out.textContent = JSON.stringify(
+            {
+              error: e && e.message ? e.message : String(e),
+              detail: e && e.detail != null ? e.detail : undefined,
+              debug: e && e.debug != null ? e.debug : undefined,
+              body: e && e.body != null ? e.body : undefined
+            },
+            null,
+            2
+          );
+        } finally {
+          setBusy(false);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

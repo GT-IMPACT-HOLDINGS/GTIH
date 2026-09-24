@@ -67,8 +67,8 @@ output_spec: |-
   /inference) without collapsing GT3 reusable core into one-off UI code.
   3. Host ProductLexiom and BrandLexiom as sibling branches under GT_Philosophy in one OSN graph
   (full-graph mode shows both domains; BrandLexiom files live under Branding/).
-  4. Map build plugins by branch: software-coding for ProductLexiom scopes and document builder
-  for BrandLexiom scopes.
+  4. Map build plugins by branch: software-coding for ProductLexiom scopes and RealizeProductLexiom;
+  document builder for BrandLexiom scopes and RealizeBrandLexiom.
   5. Keep the center Build card as a handoff/report (plugin, strategy, run, artifacts), not the
   delivered software or brand document itself.
   6. Frame Lexiom 1.3 persona text so Lexiom assists without speaking as the human owner or
@@ -96,8 +96,9 @@ output_spec: |-
   OSN so the delivered SUD is openable in Center separately from the Build handoff/report card.
   17. Keep a session action log of select/edit/approve/build/causal events for inspectability
   without claiming a durable Move ledger.
-  18. Honor compilation_scope when gathering the prepare subgraph (self_only /
-  self_and_approved_descendants / self_plus_parent_context).
+  18. Honor compilation_scope literally when gathering the prepare subgraph (self_only /
+  self_and_approved_descendants / self_plus_parent_context / self_as_axis_center) with no silent
+  graph-root-parent or standard-ancestor prefix.
   19. Parse causal answers into APPROVED_CAUSES / inferred / missing sections so lineage remains
   reviewable.
   20. Warn on OSNG parent/child reciprocity mismatches at load so graph integrity is visible.

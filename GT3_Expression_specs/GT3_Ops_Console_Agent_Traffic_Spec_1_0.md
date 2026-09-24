@@ -84,13 +84,27 @@ Alongside existing “Traffic (since server start)” which today shows product 
 | `agent_broker_ok` / `agent_broker_error` | Split of outcomes |
 | `agent_broker_last_5m` | Same shape for last 5 minutes |
 | `openrouter_model_id` | Model id GT3 actually sent to OpenRouter for agent lane (may differ from product Dashboard model) |
+| `mbts_id` / `mbts_label` / `mbts_family` / `reasoning_effort` | Live MBTS selection for the agent lane |
+| `mbts_catalog` | Allowlist the Dashboard renders as the MBTS dropdown |
 | `last_agent_error_detail` | Optional truncated last failure reason |
 
 **Known divergence (today):** none for bringup/broker Dashboard once Docker bringup is deployed; `bud_written` is implemented on `recent_agent_runs[]` after successful VAL + bud persist.
 
 ### 4.3 Config boundary
 
-`POST /ops/config` continues to govern **product** provider / inference mode / expression profile. Agent-lane Claude-via-OpenRouter model may be env-driven (`GT3_AGENT_OPENROUTER_MODEL` or equivalent) and shown read-only on Dashboard unless a later revision explicitly adds editable agent-model controls. Do not silently retarget agent traffic when the operator changes product `llm_provider` to `ollama` / `mock`.
+`POST /ops/config` continues to govern **product** provider / inference mode / expression profile. Do not silently retarget agent traffic when the operator changes product `llm_provider` to `ollama` / `mock`.
+
+The agent lane has its own control: **`POST /ops/agent-model`** selects the MBTS (Model Behind The Scene) from a server-side allowlist (`lib/gt3AgentModelCatalog.js`), seeded by `GT3_AGENT_OPENROUTER_MODEL`. It is runtime-only — a restart returns to the env seed — and `mbts_id` outside the catalog is rejected with 400.
+
+**Session binding.** The MBTS is frozen onto the CA job ticket when `POST /lexiom13/build/run` issues it, and recorded on the agent run. `POST /v1/agent/:runId/:pass/chat/completions` resolves the model from that run, so builder and evidence passes of one run always share one model and an admin change mid-run cannot swap the model underneath a session in flight. Unscoped `POST /v1/chat/completions` uses the live choice. `mbts_id` is GT3-internal: it is never forwarded in `ca_session` / `ca_job`, and no request header can select a model. The agent still sends a placeholder model id that the broker overwrites.
+
+**Evidence pass.** Host-side quote-span evidence collection calls OpenRouter directly rather than through the broker, so it does not appear as an `agent_broker` row. It reads the MBTS frozen on the run record, falling back to the live admin choice — one run means one model across builder and evidence.
+
+**OpenRouter attribution.** Both lanes declare an app so the OpenRouter "App" column is never `Unknown`. **Ogun** is the application, owned by **GTIH.pbc**; **Hanuman** is the agent that runs the build inside it. `lib/gt3OpenRouterAttribution.js` emits `HTTP-Referer` of `<base>/hanuman-build` for the broker and `<base>/evidence-collection` for the evidence pass, with `X-Title` of `Build | Hanuman | Ogun | GTIH.pbc` and `Evidence collection | Ogun | GTIH.pbc` (ASCII pipes, coarsest-last: what, who, app, owner). `GT3_HTTP_REFERER` overrides the base only; lane paths are always appended so the two stay distinguishable.
+
+**Provider shape.** The broker normalizes the outbound packet per MBTS family. `anthropic`: optional `cache_control: {type: ephemeral}` prompt caching when `GT3_AGENT_PROMPT_CACHE` is set. `openai_reasoning`: injects `reasoning.effort`, drops `temperature` / `top_p`, and maps `max_tokens` to `max_completion_tokens`.
+
+**Prompt caching.** Every MBTS family benefits, by different means. GT3 always sends `session_id` (the `run_id`, also as `X-Session-Id`) so OpenRouter pins the run to one provider endpoint and stickiness activates on the first success rather than only after an observed hit; the host evidence pass sends the same session so it lands on the warm provider. For `openai_reasoning` GT3 additionally sends OpenAI's `prompt_cache_key` carrying the phase-level sticky key — those models cache automatically above ~1024 prompt tokens, so `GT3_AGENT_PROMPT_CACHE` is not required and is a no-op for them. The flag governs only Anthropic `cache_control` markup. `prompt_cache_mode` on each ledger row records which applied: `anthropic_explicit`, `openai_automatic`, or `provider_automatic`. Correctness must never depend on a hit.
 
 ---
 
@@ -274,7 +288,8 @@ Reuse existing Dashboard Live toggle + Refresh:
 | Dashboard bringup card | Implemented (Step 2) |
 | Dashboard agent broker traffic | Implemented (Step 3) — `/ops/summary.agent_broker` |
 | Logs `/inferences` AGENT lane | Implemented (Step 3) — `lane: agent_broker` |
-| VAL `POST /v1/chat/completions` | Implemented (Step 3) — OpenRouter only; default model `anthropic/claude-haiku-4.5` via `GT3_AGENT_OPENROUTER_MODEL`; auth `X-GT3-OpenRouter-Key` → `GT3_LEXIOM_AGENT_KEY` → `OPENROUTER_API_KEY` |
+| VAL `POST /v1/chat/completions` | Implemented (Step 3) — OpenRouter only; MBTS defaults to `anthropic/claude-haiku-4.5`, seeded by `GT3_AGENT_OPENROUTER_MODEL` and admin-selectable via `POST /ops/agent-model`; auth `X-GT3-OpenRouter-Key` → `GT3_LEXIOM_AGENT_KEY` → `OPENROUTER_API_KEY` |
+| MBTS admin selection | Implemented — allowlist `lib/gt3AgentModelCatalog.js`, `POST /ops/agent-model`, Dashboard dropdown; runtime-only, frozen per run ticket |
 | Streaming | Non-stream review path + SSE passthrough when `stream: true` |
 | Builder `/run` | Implemented — CA `browser_session` + `bolt_webcontainer`; async `running`; SPA WebContainer worker; poll `GET /lexiom13/build/status/:runId` |
 | Recent agent runs / `bud_written` | `recent_agent_runs` exposed; `bud_written` set after successful bud persist |

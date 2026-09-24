@@ -32,7 +32,8 @@ graph:
   child_osn_ids:
     - GT_Philosophy.BrandLexiom.BrandStrategy.a1000006.osn
     - GT_Philosophy.BrandLexiom.BrandExpression.a1000007.osn
-  standard_ancestor_osn_ids: []
+  standard_ancestor_osn_ids:
+    - Realization.RealizeBrandLexiom.a1000202.osn
   derived_from_lens_id: lens.constellation.value_flow
 source_spec:
   document: Branding/branding_spec.md
@@ -61,8 +62,10 @@ output_spec: |-
   BrandStrategy and BrandExpression children discoverable in the same OSN graph as
   ProductLexiom.
   3. Remain a document_agent compilation root (compilation_scope
-  self_and_approved_descendants) so prepare/run maps this branch to
-  lexiom13.document_builder rather than the software-coding builder.
+  self_and_approved_descendants: this node and native descendants only) so a
+  BrandLexiom click is a fast subtree compile; cite RealizeBrandLexiom as a
+  reciprocal standard ancestor and leave the official full brand realization
+  compile to RealizeBrandLexiom (self_as_axis_center).
   4. After a successful document VAL run, carry a bud bloom pointing at the delivered
   branding-book document.md so Center Bud can open the SUD without rewriting seed, lenses,
   or output_spec.
@@ -98,11 +101,11 @@ compilation:
   target_tool_profile: document_agent
 bud:
   schema_version: lexiom13-bud/1
-  run_id: mt331yzc_3807ecab
+  run_id: mtlfi5sl_6085ffe6
   plugin_id: lexiom13.document_builder
   media_kind: document
   entry_file_name: document.md
   preview_path: null
-  artifact_path: /lexiom13/build/mt331yzc_3807ecab/artifact/document.md
+  artifact_path: /lexiom13/build/mtlfi5sl_6085ffe6/artifact/document.md
   status: ready
-  completed_at: "2026-08-21T15:09:07.928Z"
+  completed_at: "2026-09-03T11:17:56.371Z"
