@@ -20,6 +20,7 @@
       /* Subject beats: light = OSNG expand; dark = SUD realize */
       --hanuman-subject-expand: #9a7bb8;
       --hanuman-subject-realize: #4a1f6e;
+      --hanuman-labor: #5a6a7a;
       --shadow: rgba(0, 0, 0, 0.08);
       --ribbon-h: 2.5rem;
       color-scheme: light;
@@ -39,14 +40,21 @@
         --yaml-evidences: #6bc48a;
         --hanuman-subject-expand: #c9b0e0;
         --hanuman-subject-realize: #8b5cbf;
+        --hanuman-labor: #8a9aaa;
         --shadow: rgba(0, 0, 0, 0.45);
         color-scheme: dark;
       }
     }
     * { box-sizing: border-box; }
+    html {
+      height: 100%;
+      overflow: hidden;
+    }
     body {
       margin: 0;
-      min-height: 100vh;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       background: var(--paper);
@@ -60,6 +68,7 @@
       flex: 1 1 auto;
       min-height: 0;
       width: 100%;
+      overflow: hidden;
     }
 
     /* Top config ribbon */
@@ -136,6 +145,7 @@
       min-height: 0;
       max-height: 100%;
       align-self: stretch;
+      overflow: hidden;
     }
     .osng-sidebar { border-right: 1px solid var(--rule); }
     .hanuman-sidebar { border-left: 1px solid var(--rule); }
@@ -234,16 +244,24 @@
       border: 0;
       max-height: none;
       flex: 1 1 auto;
+      min-height: 0;
       overflow: auto;
+      overscroll-behavior: contain;
       background: var(--surface);
       white-space: pre-wrap;
       overflow-wrap: anywhere;
       word-break: break-word;
+      outline: none;
+    }
+    #osngView:focus-visible,
+    #out:focus-visible {
+      box-shadow: inset 0 0 0 1px var(--rule);
     }
     #out .hanuman-comment { color: var(--muted); }
     #out .hanuman-subject-expand { color: var(--hanuman-subject-expand); }
     #out .hanuman-subject-realize { color: var(--hanuman-subject-realize); }
     #out .hanuman-structure { color: var(--yaml-meta); }
+    #out .hanuman-labor { color: var(--hanuman-labor); }
     #out .hanuman-ink { color: var(--ink); }
     #out .hanuman-spinner {
       color: var(--muted);
@@ -302,6 +320,7 @@
       min-height: 0;
       align-self: stretch;
       background: var(--paper);
+      overflow: hidden;
     }
     .workspace-head {
       background: var(--surface);
@@ -325,6 +344,7 @@
       flex: 1 1 auto;
       min-height: 0;
       overflow: auto;
+      overscroll-behavior: contain;
       padding: 0.75rem 1.25rem 3rem;
     }
 
@@ -413,10 +433,50 @@
       min-height: 4rem;
     }
     .evidence-list li {
-      padding: 0.55rem 0;
+      padding: 0.35rem 0;
       border-bottom: 1px solid var(--rule);
     }
     .evidence-list li:last-child { border-bottom: 0; }
+    .result-row {
+      display: grid;
+      grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem;
+      gap: 0.75rem;
+      align-items: baseline;
+      width: 100%;
+      margin: 0;
+      padding: 0.35rem 0;
+      background: transparent;
+      border: 0;
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.85rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .result-row:hover:not(:disabled) .result-row-type {
+      text-decoration: underline;
+    }
+    .result-row:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .result-row-id {
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+    }
+    .result-row-type {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .result-row-status {
+      font-weight: 600;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .result-row-status[data-status="C"] { color: var(--ok); }
+    .result-row-status[data-status="A"] { color: var(--ink); }
+    .result-row-status[data-status="M"] { color: var(--err); }
     .muted { color: var(--muted); font-size: 0.85rem; }
     a { color: var(--ink); }
 
@@ -454,6 +514,283 @@
       justify-content: space-between;
       gap: 0.75rem;
       margin-bottom: 0.35rem;
+    }
+    .sud-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .pane.pane-compact {
+      min-height: 0;
+      max-height: none;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      margin-top: 0.5rem;
+    }
+    .result-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      background: transparent;
+      overscroll-behavior: contain;
+    }
+    .result-modal[hidden] {
+      display: none !important;
+    }
+    /* Graphical layer: blurs cockpit text/graphics under the focused modal. */
+    .result-modal-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+      pointer-events: auto;
+    }
+    /* Fixed 90% of TRH cockpit (viewport); same aspect ratio as the cockpit. */
+    .result-modal-panel {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      width: 90vw;
+      height: 90vh;
+      max-width: 90vw;
+      max-height: 90vh;
+      flex: 0 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      box-shadow: 0 12px 40px var(--shadow);
+      color: var(--ink);
+      overscroll-behavior: contain;
+    }
+    .result-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex: 0 0 auto;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+    }
+    .result-modal-head h2,
+    .result-modal-identity {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem;
+      gap: 0.75rem;
+      align-items: baseline;
+      min-width: 0;
+      flex: 1 1 auto;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0;
+      overflow: hidden;
+    }
+    .result-modal-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 0 0 auto;
+    }
+    .result-modal-nav {
+      margin: 0;
+      padding: 0.25rem 0.55rem;
+      flex: 0 0 auto;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      font: inherit;
+      font-size: 0.85rem;
+      line-height: 1;
+      cursor: pointer;
+      font-variant-numeric: tabular-nums;
+    }
+    .result-modal-nav:hover:not(:disabled) {
+      background: var(--paper);
+    }
+    .result-modal-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .result-modal-close {
+      margin: 0;
+      padding: 0.25rem 0.55rem;
+      flex: 0 0 auto;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      font: inherit;
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .result-modal-close:hover {
+      background: var(--paper);
+    }
+    .result-modal-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(11rem, 1fr) minmax(0, 2.4fr) minmax(11rem, 1fr);
+      grid-template-rows: minmax(0, 1fr);
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: contain;
+      background: var(--surface);
+      border-top: 0;
+    }
+    .result-modal-side,
+    .result-modal-center {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .result-modal-lp {
+      border-right: 1px solid var(--rule);
+    }
+    .result-modal-rp {
+      border-left: 1px solid var(--rule);
+    }
+    .result-modal-center {
+      display: grid;
+      grid-template-rows: minmax(0, 1.65fr) minmax(0, 1fr);
+    }
+    .result-modal-tp {
+      min-height: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border-bottom: 1px solid var(--rule);
+    }
+    .result-modal-tp pre {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      max-height: none;
+      flex: 1 1 auto;
+      background: transparent;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .result-modal-tp iframe {
+      display: block;
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 100%;
+      border: 0;
+      background: var(--paper);
+    }
+    /* Content emerges from panel surface (open + gallery prev/next). */
+    @keyframes result-modal-content-emerge {
+      from {
+        opacity: 0;
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+      }
+    }
+    @keyframes result-modal-shell-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    .result-modal.is-shell-entering .result-modal-scrim,
+    .result-modal.is-shell-entering .result-modal-panel {
+      animation: result-modal-shell-in 0.85s ease-out both;
+    }
+    .result-modal-tp.is-emerging > * {
+      animation: result-modal-content-emerge 2s ease-out both;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .result-modal.is-shell-entering .result-modal-scrim,
+      .result-modal.is-shell-entering .result-modal-panel,
+      .result-modal-tp.is-emerging > * {
+        animation: none;
+      }
+    }
+    .result-modal-chat {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+    }
+    .result-modal-chat-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 0.65rem 0.75rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+    .result-modal-chat-input {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 0.35rem;
+      padding: 0.5rem 0.65rem;
+      border-top: 1px solid var(--rule);
+      background: var(--surface);
+    }
+    .result-modal-chat-input input {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+    }
+    .result-modal-chat-input input:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .result-modal-chat-input button {
+      flex: 0 0 auto;
+      margin: 0;
+      padding: 0.35rem 0.55rem;
+      font-size: 0.75rem;
+    }
+    .result-modal-chat-msg {
+      margin: 0 0 0.55rem;
+      padding: 0.35rem 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .result-modal-chat-msg:last-child {
+      margin-bottom: 0;
+    }
+    .result-modal-chat-msg[data-role='user'] {
+      color: var(--ink);
+    }
+    .result-modal-chat-msg[data-role='assistant'] {
+      color: var(--muted);
+    }
+    .result-modal-chat-msg[data-role='error'] {
+      color: var(--err);
+    }
+    .result-modal-chat-msg .result-modal-apply {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.55rem;
     }
   </style>
   <script src="/gt2/gtih/gtih-sdk.js"></script>
@@ -532,8 +869,8 @@
           type="button"
           class="osng-download"
           id="osngDownload"
-          title="Download filtered OSNG as YAML"
-          aria-label="Download"
+          title="Download full OSNG as YAML"
+          aria-label="Download full OSNG as YAML"
           disabled
         >
           <span class="glyph" aria-hidden="true">⬇</span>
@@ -547,7 +884,7 @@
           Neural Geometry
         </label>
       </div>
-      <pre id="osngView"></pre>
+      <pre id="osngView" tabindex="0" role="region" aria-label="System Pack content"></pre>
     </aside>
 
     <div class="workspace">
@@ -565,12 +902,13 @@
           ></textarea>
         </section>
 
+        <!-- Outcome / Evidences: compact entry points; full body opens in #resultModal. -->
         <section class="stage" id="sudStage" aria-labelledby="sud-heading" hidden>
           <div class="stage-head">
             <h2 id="sud-heading">Outcome</h2>
             <div id="sudMeta" class="sud-meta"></div>
           </div>
-          <div id="sudPane" class="pane"></div>
+          <div id="sudPane" class="pane pane-compact"></div>
         </section>
 
         <section class="stage" id="evidenceStage" aria-labelledby="evidence-heading" hidden>
@@ -595,9 +933,115 @@
           <input type="checkbox" id="hanumanFilterStructure" />
           OSNG Machinery
         </label>
+        <label title="Hanuman Labor: structured CA events only — tools, FS writes, GT3 consults, lifecycle stages. Inside the leap; not host phase lines or TRH narrative.">
+          <input type="checkbox" id="hanumanFilterLabor" />
+          Hanuman Labor
+        </label>
       </div>
-      <pre id="out" aria-live="polite"></pre>
+      <pre id="out" tabindex="0" role="region" aria-label="Agentic Delegation log" aria-live="polite"></pre>
     </aside>
+  </div>
+
+  <div
+    id="resultModal"
+    class="result-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="resultModalTitle"
+    hidden
+  >
+    <div class="result-modal-scrim" aria-hidden="true"></div>
+    <div class="result-modal-panel" role="document">
+      <div class="result-modal-head">
+        <h2 id="resultModalTitle" class="result-modal-identity">
+          <span class="result-row-id" id="resultModalId">—</span>
+          <span class="result-row-type" id="resultModalType">—</span>
+          <span class="result-row-status" id="resultModalStatus" data-status="M">M</span>
+        </h2>
+        <div class="result-modal-actions">
+          <button
+            type="button"
+            class="result-modal-nav"
+            id="resultModalPrev"
+            title="Previous sample"
+            aria-label="Previous sample"
+          >&lt;-</button>
+          <button
+            type="button"
+            class="result-modal-nav"
+            id="resultModalNext"
+            title="Next sample"
+            aria-label="Next sample"
+          >-&gt;</button>
+          <button
+            type="button"
+            class="sud-download"
+            id="resultModalDownload"
+            title="Download"
+            aria-label="Download"
+            hidden
+          >
+            <span class="glyph" aria-hidden="true">⬇</span>
+          </button>
+          <button type="button" class="result-modal-close" id="resultModalClose" aria-label="Close">
+            X
+          </button>
+        </div>
+      </div>
+      <div class="result-modal-body" id="resultModalBody">
+        <aside
+          class="result-modal-side result-modal-lp result-modal-chat"
+          id="resultModalLp"
+          aria-label="Lineage inquiry with Hanuman"
+        >
+          <div class="result-modal-chat-body" id="resultModalLpBody"></div>
+          <div class="result-modal-chat-input">
+            <input
+              type="text"
+              id="resultModalLpInput"
+              placeholder="Inquire lineage…"
+              autocomplete="off"
+            />
+            <button type="button" class="secondary" id="resultModalLpAsk">Ask</button>
+          </div>
+        </aside>
+        <div class="result-modal-center">
+          <div class="result-modal-tp" id="resultModalTp" aria-label="Sample content"></div>
+          <div
+            class="result-modal-chat result-modal-bp"
+            id="resultModalBp"
+            aria-label="Esoteric knowledge via GT3"
+          >
+            <div class="result-modal-chat-body" id="resultModalBpBody"></div>
+            <div class="result-modal-chat-input">
+              <input
+                type="text"
+                id="resultModalBpInput"
+                placeholder="Ask the world…"
+                autocomplete="off"
+              />
+              <button type="button" class="secondary" id="resultModalBpAsk">Ask</button>
+            </div>
+          </div>
+        </div>
+        <aside
+          class="result-modal-side result-modal-rp result-modal-chat"
+          id="resultModalRp"
+          aria-label="Edit OSNG with Hanuman"
+        >
+          <div class="result-modal-chat-body" id="resultModalRpBody"></div>
+          <div class="result-modal-chat-input">
+            <input
+              type="text"
+              id="resultModalRpInput"
+              placeholder="Propose OSNG change…"
+              autocomplete="off"
+            />
+            <button type="button" class="secondary" id="resultModalRpAsk">Ask</button>
+          </div>
+        </aside>
+      </div>
+    </div>
   </div>
   <script>
     (function () {
@@ -621,15 +1065,18 @@
       var out = document.getElementById('out');
       var hanumanFilterSubject = document.getElementById('hanumanFilterSubject');
       var hanumanFilterStructure = document.getElementById('hanumanFilterStructure');
-      /** Tagged Hanuman beats: { text, subject, structure, arc }. Filters strip layers; full stream retained.
-       *  arc: 'expand' (intent→OSNG) | 'realize' (SUD labor) — colors subject lines light vs dark purple. */
+      var hanumanFilterLabor = document.getElementById('hanumanFilterLabor');
+      /** Tagged Hanuman beats: { text, subject, structure, labor, arc }. Filters strip layers; full stream retained.
+       *  arc: 'expand' (intent→OSNG) | 'realize' (SUD labor) — colors subject lines light vs dark purple.
+       *  labor: structured CA onLaborEvent only (tools / FS / consult / lifecycle). */
       var hanumanLogEntries = [];
       var hanumanArc = 'expand';
-      var HANUMAN_LOG_BUFFER = 100;
-      var HANUMAN_LOG_VISIBLE = 40;
+      /** Ring buffer only — full filtered history is painted; panels scroll independently. */
+      var HANUMAN_LOG_BUFFER = 500;
       var HANUMAN_SPINNER_FRAMES = ['|', '/', '-', '\\'];
       var hanumanSpinnerTimer = null;
       var hanumanSpinnerFrame = 0;
+      var hanumanStickToBottom = true;
       var proposeOnlyBtn = document.getElementById('proposeOnly');
       var intentEl = document.getElementById('intent');
       var capEl = document.getElementById('cap');
@@ -639,6 +1086,41 @@
       var sudMeta = document.getElementById('sudMeta');
       var sudPane = document.getElementById('sudPane');
       var evidenceList = document.getElementById('evidenceList');
+      var resultModal = document.getElementById('resultModal');
+      var resultModalTitle = document.getElementById('resultModalTitle');
+      var resultModalId = document.getElementById('resultModalId');
+      var resultModalType = document.getElementById('resultModalType');
+      var resultModalStatus = document.getElementById('resultModalStatus');
+      var resultModalBody = document.getElementById('resultModalBody');
+      var resultModalTp = document.getElementById('resultModalTp');
+      var resultModalClose = document.getElementById('resultModalClose');
+      var resultModalDownload = document.getElementById('resultModalDownload');
+      var resultModalPrev = document.getElementById('resultModalPrev');
+      var resultModalNext = document.getElementById('resultModalNext');
+      var resultModalLpBody = document.getElementById('resultModalLpBody');
+      var resultModalLpInput = document.getElementById('resultModalLpInput');
+      var resultModalLpAsk = document.getElementById('resultModalLpAsk');
+      var resultModalRpBody = document.getElementById('resultModalRpBody');
+      var resultModalRpInput = document.getElementById('resultModalRpInput');
+      var resultModalRpAsk = document.getElementById('resultModalRpAsk');
+      var resultModalBpBody = document.getElementById('resultModalBpBody');
+      var resultModalBpInput = document.getElementById('resultModalBpInput');
+      var resultModalBpAsk = document.getElementById('resultModalBpAsk');
+      var lpThread = [];
+      var rpThread = [];
+      var bpThread = [];
+      var lpBusy = false;
+      var rpBusy = false;
+      var bpBusy = false;
+      var lastSud = null;
+      var lastEvidenceTargets = [];
+      /** Gallery for modal ←/→ : [{ kind:'sud'|'evidence', serial, target? }] */
+      var resultGallery = [];
+      var resultGalleryIndex = -1;
+      var resultModalOpener = null;
+      var resultModalDownloadHandler = null;
+      /** Text shown in TP for the current sample (sent to LP/RP as FOCUS_CONTENT.md). */
+      var resultModalFocusContent = '';
       var jsonOut = document.getElementById('jsonOut');
       var intentHeadingLabel = document.querySelector('#intent-heading label');
       var busy = false;
@@ -738,8 +1220,26 @@
         }
       });
       document.addEventListener('keydown', function (ev) {
-        if (ev.key === 'Escape' && !configPanel.hidden) {
-          setConfigOpen(false);
+        if (ev.key === 'Escape') {
+          if (resultModal && !resultModal.hidden) {
+            closeResultModal();
+            return;
+          }
+          if (!configPanel.hidden) {
+            setConfigOpen(false);
+          }
+          return;
+        }
+        if (resultModal && !resultModal.hidden) {
+          if (ev.key === 'ArrowLeft') {
+            ev.preventDefault();
+            stepResultGallery(-1);
+            return;
+          }
+          if (ev.key === 'ArrowRight') {
+            ev.preventDefault();
+            stepResultGallery(1);
+          }
         }
       });
 
@@ -1152,6 +1652,7 @@
             { osng_envelope: envelope },
             {
               onLog: appendLog,
+              onLaborEvent: appendLaborEvent,
               onStatus: function (st) {
                 appendStatusBeat({ phase: 'realize', status: st });
               }
@@ -1499,8 +2000,10 @@
             commitOsngEditable(live[i]);
           }
         }
+        var prevScroll = osngView ? osngView.scrollTop : 0;
         osngView.classList.toggle('osng-outcome-prose', !!(showOutcome && !showMeta));
         osngView.innerHTML = envelopeToOsngHtml(lastOsngEnvelope, osngViewFormat);
+        if (osngView) osngView.scrollTop = prevScroll;
         if (osngDownload) {
           osngDownload.disabled = !lastOsngEnvelope;
         }
@@ -1508,18 +2011,20 @@
 
       function downloadOsngYaml() {
         if (!lastOsngEnvelope) return;
-        // Flush edits so download matches what Ram sees.
+        // Flush edits so download matches the live envelope, not a filtered view.
         if (osngView) {
           var live = osngView.querySelectorAll('[data-osng-field]');
           for (var i = 0; i < live.length; i++) {
             commitOsngEditable(live[i]);
           }
         }
-        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
-        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
-        if (!showOutcome && !showMeta) return;
-        var filtered = filterOsngEnvelope(lastOsngEnvelope, showOutcome, showMeta);
-        var yamlText = toYaml(filtered, 0) + '\n';
+        // Always the full normalized OSNG — view filters only affect the sidebar preview.
+        var doc = {
+          root_osn_id: lastOsngEnvelope.root_osn_id,
+          nodes: Array.isArray(lastOsngEnvelope.nodes) ? lastOsngEnvelope.nodes : []
+        };
+        if (doc.root_osn_id == null) delete doc.root_osn_id;
+        var yamlText = toYaml(doc, 0) + '\n';
         var blob = new Blob([yamlText], { type: 'text/yaml;charset=utf-8' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
@@ -1568,6 +2073,7 @@
             ') — garden first; SUD leap still ahead…',
           subject: true,
           structure: false,
+          labor: false,
           arc: 'expand'
         });
       }
@@ -1632,14 +2138,31 @@
         }
       }
 
-      function beat(text, subject, structure, arc) {
+      /**
+       * @param {string} text
+       * @param {boolean|object} subjectOrOpts — legacy (subject, structure, arc) or { subject, structure, labor, arc }
+       */
+      function beat(text, subjectOrOpts, structure, arc) {
+        var opts =
+          subjectOrOpts &&
+          typeof subjectOrOpts === 'object' &&
+          !Array.isArray(subjectOrOpts)
+            ? subjectOrOpts
+            : {
+                subject: !!subjectOrOpts,
+                structure: !!structure,
+                labor: false,
+                arc: arc
+              };
         var entry = {
           text: String(text || '').trim(),
-          subject: !!subject,
-          structure: !!structure
+          subject: !!opts.subject,
+          structure: !!opts.structure,
+          labor: !!opts.labor
         };
         if (entry.subject) {
-          entry.arc = arc === 'realize' || arc === 'expand' ? arc : hanumanArc;
+          entry.arc =
+            opts.arc === 'realize' || opts.arc === 'expand' ? opts.arc : hanumanArc;
         }
         return entry;
       }
@@ -1811,10 +2334,15 @@
             );
           }
           if (n === 2) {
-            return beat('Expanding Ram’s seed into three thematic lenses…', true, false, 'expand');
+            return beat(
+              'Writing mid-method seed and three thematic lenses into the propose garden…',
+              true,
+              false,
+              'expand'
+            );
           }
           if (n === 3) {
-            return beat('Composing the output_spec through those lenses…', true, false, 'expand');
+            return beat('Folding those lenses into the finished output_spec…', true, false, 'expand');
           }
           if (n === 4) {
             return beat(
@@ -1944,7 +2472,7 @@
         if (s === 'running') {
           hanumanArc = 'expand';
           return beat(
-            'Hanuman labors for Ram — seed, three lenses, output_spec, evidences — (advised by GT3)…',
+            'Hanuman labors for Ram — mid-method seed & three lenses, then allowlisted output_spec & evidences — (advised by GT3)…',
             true,
             true,
             'expand'
@@ -2002,7 +2530,8 @@
       function hanumanFiltersOn() {
         return {
           subject: !!(hanumanFilterSubject && hanumanFilterSubject.checked),
-          structure: !!(hanumanFilterStructure && hanumanFilterStructure.checked)
+          structure: !!(hanumanFilterStructure && hanumanFilterStructure.checked),
+          labor: !!(hanumanFilterLabor && hanumanFilterLabor.checked)
         };
       }
 
@@ -2010,12 +2539,26 @@
         if (!entry || !entry.text) return false;
         if (entry.subject && filters.subject) return true;
         if (entry.structure && filters.structure) return true;
+        if (entry.labor && filters.labor) return true;
         return false;
       }
 
       function beatToneClass(entry, filters) {
-        var bothPrisms = filters.subject && filters.structure;
-        if (bothPrisms && entry.structure && !entry.subject) {
+        // Labor-only facts stay slate; subject purple wins when both layers visible.
+        if (
+          entry.labor &&
+          filters.labor &&
+          !(entry.subject && filters.subject) &&
+          !(entry.structure && filters.structure)
+        ) {
+          return 'hanuman-labor';
+        }
+        if (
+          filters.subject &&
+          filters.structure &&
+          entry.structure &&
+          !entry.subject
+        ) {
           return 'hanuman-structure';
         }
         if (entry.subject && filters.subject) {
@@ -2023,18 +2566,27 @@
             ? 'hanuman-subject-realize'
             : 'hanuman-subject-expand';
         }
+        if (entry.labor && filters.labor) return 'hanuman-labor';
+        if (entry.structure && filters.structure) return 'hanuman-structure';
         return 'hanuman-ink';
+      }
+
+      function isScrolledNearBottom(el, thresholdPx) {
+        if (!el) return true;
+        var slack = typeof thresholdPx === 'number' ? thresholdPx : 56;
+        return el.scrollHeight - el.scrollTop - el.clientHeight <= slack;
       }
 
       function renderHanumanLog() {
         if (!out) return;
         var filters = hanumanFiltersOn();
         var spinnerTail = busy ? '\n' + hanumanSpinnerHtml() : '';
-        if (!filters.subject && !filters.structure) {
+        if (!filters.subject && !filters.structure && !filters.labor) {
           out.className = out.className.replace(/\b(ok|err)\b/g, '').trim();
           out.innerHTML =
-            '<span class="hanuman-comment"># No Hanuman layers selected — enable Subject Matter and/or OSNG Machinery</span>' +
+            '<span class="hanuman-comment"># No Hanuman layers selected — enable Subject Matter, OSNG Machinery, and/or Hanuman Labor</span>' +
             spinnerTail;
+          if (hanumanStickToBottom) out.scrollTop = out.scrollHeight;
           return;
         }
         var visible = hanumanLogEntries.filter(function (e) {
@@ -2043,20 +2595,26 @@
         if (!visible.length) {
           if (busy) {
             out.innerHTML = hanumanSpinnerHtml();
+            if (hanumanStickToBottom) out.scrollTop = out.scrollHeight;
             return;
           }
+          var onCount =
+            (filters.subject ? 1 : 0) +
+            (filters.structure ? 1 : 0) +
+            (filters.labor ? 1 : 0);
           var hint =
-            filters.subject && !filters.structure
+            onCount === 1 && filters.subject
               ? '# No subject beats yet'
-              : !filters.subject && filters.structure
+              : onCount === 1 && filters.structure
                 ? '# No structure beats yet'
-                : '# No Hanuman beats yet';
+                : onCount === 1 && filters.labor
+                  ? '# No labor events yet'
+                  : '# No Hanuman beats yet';
           out.innerHTML = '<span class="hanuman-comment">' + escapeHtml(hint) + '</span>';
           return;
         }
-        var slice = visible.slice(-HANUMAN_LOG_VISIBLE);
         out.innerHTML =
-          slice
+          visible
             .map(function (e) {
               return (
                 '<span class="' +
@@ -2068,14 +2626,19 @@
             })
             .join('\n') +
           spinnerTail;
+        if (hanumanStickToBottom) {
+          out.scrollTop = out.scrollHeight;
+        }
       }
 
       function clearHanumanLog() {
         hanumanLogEntries = [];
         hanumanArc = 'expand';
+        hanumanStickToBottom = true;
         if (out) {
           out.className = '';
           out.innerHTML = busy ? hanumanSpinnerHtml() : '';
+          out.scrollTop = 0;
         }
       }
 
@@ -2087,6 +2650,7 @@
           last.text === entry.text &&
           !!last.subject === !!entry.subject &&
           !!last.structure === !!entry.structure &&
+          !!last.labor === !!entry.labor &&
           (last.arc || '') === (entry.arc || '')
         ) {
           return;
@@ -2094,7 +2658,8 @@
         var stored = {
           text: entry.text,
           subject: !!entry.subject,
-          structure: !!entry.structure
+          structure: !!entry.structure,
+          labor: !!entry.labor
         };
         if (stored.subject) {
           stored.arc =
@@ -2106,6 +2671,72 @@
         }
         if (out) out.className = out.className.replace(/\berr\b/g, '').trim();
         renderHanumanLog();
+      }
+
+      /** Format structured CA onLaborEvent — factual only, no TRH narrative invent. */
+      function formatLaborEvent(evt) {
+        if (!evt || typeof evt !== 'object' || evt.source !== 'ca') return '';
+        var kind = String(evt.kind || '');
+        var stepBit =
+          evt.step != null
+            ? ' · step ' +
+              evt.step +
+              (evt.max_steps != null ? '/' + evt.max_steps : '')
+            : '';
+        var okBit =
+          evt.ok === true ? ' ok' : evt.ok === false ? ' fail' : '';
+        if (kind === 'tool') {
+          return (
+            'tool ' +
+            String(evt.name || '?') +
+            (evt.path ? ' ' + evt.path : '') +
+            okBit +
+            (evt.detail ? ' · ' + evt.detail : '') +
+            stepBit
+          );
+        }
+        if (kind === 'consult') {
+          return (
+            'consult' +
+            okBit +
+            (evt.latency_ms != null ? ' · ' + evt.latency_ms + 'ms' : '') +
+            (evt.tool_call_count != null
+              ? ' · ' + evt.tool_call_count + ' tools'
+              : '') +
+            (evt.detail ? ' · ' + evt.detail : '') +
+            stepBit
+          );
+        }
+        if (kind === 'fs') {
+          return (
+            'fs ' +
+            String(evt.name || 'write') +
+            (evt.path ? ' ' + evt.path : '') +
+            okBit +
+            (evt.detail ? ' · ' + evt.detail : '')
+          );
+        }
+        if (kind === 'lifecycle') {
+          return (
+            'lifecycle ' +
+            String(evt.stage || '?') +
+            okBit +
+            (evt.path ? ' · ' + evt.path : '') +
+            (evt.detail ? ' · ' + evt.detail : '')
+          );
+        }
+        return kind ? kind + okBit + stepBit : '';
+      }
+
+      function appendLaborEvent(evt) {
+        var text = formatLaborEvent(evt);
+        if (!text) return;
+        appendBeat({
+          text: text,
+          subject: false,
+          structure: false,
+          labor: true
+        });
       }
 
       function appendLog(line) {
@@ -2125,6 +2756,14 @@
       }
       if (hanumanFilterStructure) {
         hanumanFilterStructure.addEventListener('change', renderHanumanLog);
+      }
+      if (hanumanFilterLabor) {
+        hanumanFilterLabor.addEventListener('change', renderHanumanLog);
+      }
+      if (out) {
+        out.addEventListener('scroll', function () {
+          hanumanStickToBottom = isScrolledNearBottom(out);
+        });
       }
 
       function setSudStageVisible(visible) {
@@ -2150,10 +2789,849 @@
       function resetResultStages() {
         setSudStageVisible(false);
         setEvidenceStageVisible(false);
+        lastSud = null;
+        lastEvidenceTargets = [];
+        resultGallery = [];
+        resultGalleryIndex = -1;
+        clearModalChatThreads();
+        closeResultModal();
         if (sudMeta) sudMeta.innerHTML = '';
         if (sudPane) sudPane.innerHTML = '';
         if (evidenceList) evidenceList.innerHTML = '';
       }
+
+      function isResultModalOpen() {
+        return !!(resultModal && !resultModal.hidden);
+      }
+
+      function rebuildResultGallery() {
+        resultGallery = [];
+        if (lastSud) {
+          resultGallery.push({ kind: 'sud', serial: 0 });
+        }
+        lastEvidenceTargets.forEach(function (t, index) {
+          resultGallery.push({
+            kind: 'evidence',
+            serial: index + 1,
+            target: t,
+            targetIndex: index
+          });
+        });
+        if (resultGalleryIndex >= resultGallery.length) {
+          resultGalleryIndex = resultGallery.length ? resultGallery.length - 1 : -1;
+        }
+        updateResultModalNav();
+      }
+
+      function updateResultModalNav() {
+        var open = isResultModalOpen();
+        var hasMany = resultGallery.length > 1;
+        var at = resultGalleryIndex;
+        if (resultModalPrev) {
+          resultModalPrev.disabled = !open || !hasMany || at <= 0;
+        }
+        if (resultModalNext) {
+          resultModalNext.disabled =
+            !open || !hasMany || at < 0 || at >= resultGallery.length - 1;
+        }
+      }
+
+      function openResultGalleryAt(index, opener) {
+        if (index < 0 || index >= resultGallery.length) return;
+        var entry = resultGallery[index];
+        resultGalleryIndex = index;
+        var focusEl = opener || resultModalOpener;
+        if (entry.kind === 'sud') {
+          openSudInModal(focusEl, { fromGallery: true });
+        } else {
+          openEvidenceInModal(entry.target, focusEl, {
+            fromGallery: true,
+            galleryIndex: index
+          });
+        }
+        updateResultModalNav();
+      }
+
+      function stepResultGallery(delta) {
+        if (!isResultModalOpen() || resultGallery.length < 2) return;
+        var next = resultGalleryIndex + delta;
+        if (next < 0 || next >= resultGallery.length) return;
+        openResultGalleryAt(next, resultModalOpener);
+      }
+
+      function clearResultModalDownload() {
+        resultModalDownloadHandler = null;
+        if (!resultModalDownload) return;
+        resultModalDownload.hidden = true;
+        resultModalDownload.disabled = true;
+        resultModalDownload.onclick = null;
+      }
+
+      function wireResultModalDownload(o) {
+        if (!resultModalDownload) return;
+        clearResultModalDownload();
+        if (!(o.downloadUrl || o.downloadText != null || o.onDownload)) return;
+        resultModalDownload.hidden = false;
+        resultModalDownload.disabled = false;
+        resultModalDownloadHandler = function () {
+          if (o.onDownload) {
+            o.onDownload();
+            return;
+          }
+          if (o.downloadUrl) {
+            fetch(o.downloadUrl)
+              .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.blob();
+              })
+              .then(function (blob) {
+                triggerBlobDownload(blob, o.downloadName || 'download');
+              })
+              .catch(function (err) {
+                appendBeat(
+                  beat(
+                    'Could not download: ' +
+                      (err && err.message ? err.message : String(err)),
+                    true,
+                    true
+                  )
+                );
+              });
+            return;
+          }
+          triggerBlobDownload(
+            new Blob([String(o.downloadText || '')], {
+              type: 'text/plain;charset=utf-8'
+            }),
+            o.downloadName || 'download.txt'
+          );
+        };
+        resultModalDownload.onclick = function () {
+          if (resultModalDownloadHandler) resultModalDownloadHandler();
+        };
+      }
+
+      function closeResultModal() {
+        if (!resultModal) return;
+        resultModal.hidden = true;
+        resultModal.classList.remove('is-shell-entering');
+        if (resultModalTp) {
+          resultModalTp.classList.remove('is-emerging');
+          resultModalTp.innerHTML = '';
+        }
+        clearResultModalDownload();
+        resultGalleryIndex = -1;
+        updateResultModalNav();
+        var opener = resultModalOpener;
+        resultModalOpener = null;
+        if (opener && typeof opener.focus === 'function') {
+          try {
+            opener.focus({ preventScroll: true });
+          } catch (_e) {
+            opener.focus();
+          }
+        }
+      }
+
+      /** Drop host_span provenance comment banners from displayed evidence text. */
+      function stripEvidenceSpanDisplayHeaders(text) {
+        return String(text == null ? '' : text).replace(
+          /^(?:<!--\s*lexiom13-evidence-span[\s\S]*?-->\s*\r?\n)?(?:<!--\s*source:\s*[^\r\n]*-->\s*\r?\n)*(?:\r?\n)?/,
+          ''
+        );
+      }
+
+      function mapResultStatusCode(rawStatus, hasPayload) {
+        var s = String(rawStatus || '')
+          .trim()
+          .toLowerCase();
+        if (s === 'approved' || s === 'a') return 'A';
+        if (s === 'collected' || s === 'c') return 'C';
+        if (s === 'completed' || s === 'ok' || s === 'ready') {
+          return hasPayload ? 'C' : 'M';
+        }
+        if (!s && hasPayload) return 'C';
+        return 'M';
+      }
+
+      function resultStatusLabel(code) {
+        if (code === 'A') return 'Approved';
+        if (code === 'C') return 'Collected';
+        return 'Missing';
+      }
+
+      function sudResultType(sud) {
+        if (!sud) return 'SUD';
+        if (sud.media_kind === 'software') return 'SOFTWARE';
+        if (sud.media_kind === 'document' || sud.text != null) return 'DOCUMENT';
+        if (sud.media_kind) return String(sud.media_kind).toUpperCase();
+        return 'SUD';
+      }
+
+      /** Same ID · type · status fields as cockpit result rows. */
+      function sudIdentity(sud) {
+        var hasPayload = !!(sud && (sud.url || sud.text != null));
+        return {
+          serial: 0,
+          type: sudResultType(sud),
+          statusCode: sud && sud.error ? 'M' : mapResultStatusCode(sud && sud.status, hasPayload)
+        };
+      }
+
+      function evidenceIdentity(target, serial) {
+        var t = target || {};
+        var hasArtifact = !!(t.artifact && t.artifact.url);
+        return {
+          serial: serial != null ? serial : '?',
+          type: String(t.kind || 'TEXTUAL_SNIPPET').trim() || 'TEXTUAL_SNIPPET',
+          statusCode: mapResultStatusCode(t.status, hasArtifact)
+        };
+      }
+
+      function setResultModalIdentity(identity) {
+        var id = identity || {};
+        var serial = id.serial != null ? id.serial : '—';
+        var type = id.type || '—';
+        var statusCode = id.statusCode || 'M';
+        if (resultModalId) resultModalId.textContent = String(serial);
+        if (resultModalType) resultModalType.textContent = type;
+        if (resultModalStatus) {
+          resultModalStatus.textContent = statusCode;
+          resultModalStatus.setAttribute('data-status', statusCode);
+        }
+        if (resultModalTitle) {
+          resultModalTitle.setAttribute(
+            'aria-label',
+            'Sample ' +
+              serial +
+              ', type ' +
+              type +
+              ', status ' +
+              resultStatusLabel(statusCode)
+          );
+        }
+      }
+
+      function prefersReducedMotion() {
+        try {
+          return !!(
+            window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          );
+        } catch (_e) {
+          return false;
+        }
+      }
+
+      /** Restart 2s emerge of TP content only (head stripe stays sharp). */
+      function playResultModalContentEmerge(skip) {
+        if (!resultModalTp) return;
+        resultModalTp.classList.remove('is-emerging');
+        if (skip || prefersReducedMotion()) return;
+        void resultModalTp.offsetWidth;
+        resultModalTp.classList.add('is-emerging');
+      }
+
+      function openResultModal(opts) {
+        var o = opts || {};
+        if (!resultModal || !resultModalTp || !resultModalTitle) return;
+        var wasOpen = isResultModalOpen();
+        resultModalOpener =
+          o.opener && o.opener.nodeType === 1
+            ? o.opener
+            : wasOpen
+              ? resultModalOpener
+              : document.activeElement && document.activeElement !== document.body
+                ? document.activeElement
+                : null;
+        setResultModalIdentity(o.identity);
+        resultModalTp.innerHTML = '';
+        resultModalFocusContent = '';
+
+        if (o.text != null) {
+          var pre = document.createElement('pre');
+          pre.textContent = stripEvidenceSpanDisplayHeaders(o.text);
+          resultModalTp.appendChild(pre);
+          if (String(o.text) !== 'Loading…') resultModalFocusContent = pre.textContent;
+        } else if (o.iframe && o.url) {
+          var iframe = document.createElement('iframe');
+          iframe.title =
+            (o.identity && o.identity.type) ||
+            (o.identity && o.identity.serial != null
+              ? 'Sample ' + o.identity.serial
+              : 'Preview');
+          iframe.src = o.url;
+          resultModalTp.appendChild(iframe);
+        } else if (o.url) {
+          var loading = document.createElement('p');
+          loading.className = 'muted';
+          loading.textContent = 'Loading…';
+          resultModalTp.appendChild(loading);
+        } else {
+          var empty = document.createElement('p');
+          empty.className = 'muted';
+          empty.textContent = o.error || '(empty)';
+          resultModalTp.appendChild(empty);
+        }
+
+        wireResultModalDownload(o);
+
+        var skipEmerge =
+          o.skipEmerge === true ||
+          (o.text != null && String(o.text) === 'Loading…');
+
+        if (!wasOpen) {
+          resultModal.classList.remove('is-shell-entering');
+          resultModal.hidden = false;
+          if (!prefersReducedMotion()) {
+            void resultModal.offsetWidth;
+            resultModal.classList.add('is-shell-entering');
+          }
+        } else {
+          resultModal.hidden = false;
+        }
+        playResultModalContentEmerge(skipEmerge);
+        updateResultModalNav();
+        if (resultModalClose) {
+          try {
+            resultModalClose.focus({ preventScroll: true });
+          } catch (_fe) {
+            resultModalClose.focus();
+          }
+        }
+      }
+
+      function looksLikeTextArtifact(url, contentType) {
+        var path = String(url || '').split('?')[0].toLowerCase();
+        if (/\.(html?|htm)$/.test(path)) return false;
+        if (/\.(md|txt|json|csv|log|yaml|yml|xml)$/.test(path)) return true;
+        var ct = String(contentType || '').toLowerCase();
+        if (ct.indexOf('text/html') === 0) return false;
+        return ct.indexOf('text/') === 0 || ct.indexOf('json') >= 0 || ct.indexOf('xml') >= 0;
+      }
+
+      function openEvidenceInModal(target, opener, navOpts) {
+        var t = target || {};
+        var art = t.artifact || {};
+        var url = art.url;
+        if (!(navOpts && navOpts.fromGallery)) {
+          var found = -1;
+          for (var gi = 0; gi < resultGallery.length; gi++) {
+            if (
+              resultGallery[gi].kind === 'evidence' &&
+              resultGallery[gi].target === t
+            ) {
+              found = gi;
+              break;
+            }
+          }
+          if (found < 0) {
+            for (var gj = 0; gj < resultGallery.length; gj++) {
+              if (
+                resultGallery[gj].kind === 'evidence' &&
+                resultGallery[gj].target &&
+                resultGallery[gj].target.evidence_id === t.evidence_id &&
+                resultGallery[gj].target.target_id === t.target_id
+              ) {
+                found = gj;
+                break;
+              }
+            }
+          }
+          if (found >= 0) resultGalleryIndex = found;
+        }
+        var serial = '?';
+        if (resultGalleryIndex >= 0 && resultGallery[resultGalleryIndex]) {
+          serial = resultGallery[resultGalleryIndex].serial;
+        } else if (typeof (navOpts && navOpts.galleryIndex) === 'number') {
+          var g = resultGallery[navOpts.galleryIndex];
+          serial = g ? g.serial : navOpts.galleryIndex;
+        }
+        var identity = evidenceIdentity(t, serial);
+        var loadToken = resultGalleryIndex;
+        if (!url) {
+          openResultModal({
+            identity: identity,
+            text: t.notes || '(no artifact)',
+            opener: opener
+          });
+          return;
+        }
+        openResultModal({
+          identity: identity,
+          text: 'Loading…',
+          opener: opener,
+          downloadUrl: url,
+          downloadName: art.file_name || 'evidence'
+        });
+        fetch(url)
+          .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            var ct = res.headers.get('content-type') || '';
+            if (looksLikeTextArtifact(url, ct)) {
+              return res.text().then(function (text) {
+                return { mode: 'text', text: text, ct: ct };
+              });
+            }
+            return { mode: 'iframe', ct: ct };
+          })
+          .then(function (got) {
+            if (!isResultModalOpen() || resultGalleryIndex !== loadToken) return;
+            if (got.mode === 'text') {
+              openResultModal({
+                identity: identity,
+                text: got.text,
+                opener: opener,
+                downloadUrl: url,
+                downloadName: art.file_name || 'evidence'
+              });
+              return;
+            }
+            openResultModal({
+              identity: identity,
+              iframe: true,
+              url: url,
+              opener: opener,
+              downloadUrl: url,
+              downloadName: art.file_name || 'evidence'
+            });
+          })
+          .catch(function (err) {
+            if (!isResultModalOpen() || resultGalleryIndex !== loadToken) return;
+            openResultModal({
+              identity: identity,
+              error:
+                'Could not load evidence: ' +
+                (err && err.message ? err.message : String(err)),
+              opener: opener,
+              downloadUrl: url,
+              downloadName: art.file_name || 'evidence'
+            });
+          });
+      }
+
+      function openSudInModal(opener, navOpts) {
+        var sud = lastSud;
+        if (!sud) return;
+        if (!(navOpts && navOpts.fromGallery)) {
+          resultGalleryIndex = 0;
+        }
+        var identity = sudIdentity(sud);
+        if (sud.media_kind === 'software' && sud.url) {
+          openResultModal({
+            identity: identity,
+            iframe: true,
+            url: sud.url,
+            opener: opener,
+            onDownload: function () {
+              downloadSudArtifact(sud);
+            },
+            downloadUrl: sud.url,
+            downloadName: sudDownloadFileName(sud)
+          });
+          return;
+        }
+        openResultModal({
+          identity: identity,
+          text: sud.text != null ? sud.text : sud.error || '(empty)',
+          opener: opener,
+          onDownload: function () {
+            downloadSudArtifact(sud);
+          },
+          downloadText: sud.text != null ? sud.text : sud.error,
+          downloadName: sudDownloadFileName(sud)
+        });
+      }
+
+      function clearModalChatThreads() {
+        lpThread = [];
+        rpThread = [];
+        bpThread = [];
+        lpBusy = false;
+        rpBusy = false;
+        bpBusy = false;
+        renderModalChatBody('lp');
+        renderModalChatBody('rp');
+        renderModalChatBody('bp');
+        setModalChatBusy('lp', false);
+        setModalChatBusy('rp', false);
+        setModalChatBusy('bp', false);
+      }
+
+      function modalChatPanelEls(panel) {
+        if (panel === 'lp') {
+          return {
+            body: resultModalLpBody,
+            input: resultModalLpInput,
+            ask: resultModalLpAsk,
+            thread: lpThread
+          };
+        }
+        if (panel === 'rp') {
+          return {
+            body: resultModalRpBody,
+            input: resultModalRpInput,
+            ask: resultModalRpAsk,
+            thread: rpThread
+          };
+        }
+        return {
+          body: resultModalBpBody,
+          input: resultModalBpInput,
+          ask: resultModalBpAsk,
+          thread: bpThread
+        };
+      }
+
+      function setModalChatBusy(panel, busy) {
+        if (panel === 'lp') lpBusy = !!busy;
+        else if (panel === 'rp') rpBusy = !!busy;
+        else bpBusy = !!busy;
+        var els = modalChatPanelEls(panel);
+        if (els.input) els.input.disabled = !!busy;
+        if (els.ask) els.ask.disabled = !!busy;
+      }
+
+      function renderModalChatBody(panel) {
+        var els = modalChatPanelEls(panel);
+        if (!els.body) return;
+        els.body.innerHTML = '';
+        els.thread.forEach(function (msg, index) {
+          var div = document.createElement('div');
+          div.className = 'result-modal-chat-msg';
+          div.setAttribute('data-role', msg.role || 'assistant');
+          div.textContent = String(msg.content || '');
+          if (
+            panel === 'rp' &&
+            msg.role === 'assistant' &&
+            msg.envelope &&
+            msg.envelope.nodes
+          ) {
+            var applyBtn = document.createElement('button');
+            applyBtn.type = 'button';
+            applyBtn.className = 'secondary result-modal-apply';
+            if (msg.applied) {
+              applyBtn.disabled = true;
+              applyBtn.textContent = 'Applied';
+            } else {
+              applyBtn.textContent = 'Apply to System Pack';
+              applyBtn.addEventListener('click', function () {
+                applyRpEnvelope(msg, applyBtn);
+              });
+            }
+            div.appendChild(document.createElement('br'));
+            div.appendChild(applyBtn);
+          }
+          els.body.appendChild(div);
+          void index;
+        });
+        try {
+          els.body.scrollTop = els.body.scrollHeight;
+        } catch (_e) {}
+      }
+
+      function appendModalChat(panel, role, content, extra) {
+        var els = modalChatPanelEls(panel);
+        var entry = {
+          role: role,
+          content: String(content == null ? '' : content),
+          at: Date.now()
+        };
+        if (extra && extra.envelope) entry.envelope = extra.envelope;
+        if (extra && extra.focus) entry.focus = extra.focus;
+        els.thread.push(entry);
+        renderModalChatBody(panel);
+        return entry;
+      }
+
+      function currentModalFocusSample() {
+        var serial = null;
+        var type = null;
+        var status = null;
+        if (resultModalId) serial = resultModalId.textContent;
+        if (resultModalType) type = resultModalType.textContent;
+        if (resultModalStatus) status = resultModalStatus.textContent;
+        var g =
+          resultGalleryIndex >= 0 ? resultGallery[resultGalleryIndex] : null;
+        var summary = '';
+        if (g && g.kind === 'sud' && lastSud) {
+          summary =
+            lastSud.entry ||
+            (lastSud.text != null
+              ? String(lastSud.text).slice(0, 240)
+              : lastSud.error || '');
+        } else if (g && g.kind === 'evidence' && g.target) {
+          summary =
+            (g.target.evidence_id || g.target.target_id || '') +
+            (g.target.artifact && g.target.artifact.file_name
+              ? ' · ' + g.target.artifact.file_name
+              : '');
+        }
+        return {
+          serial: serial,
+          type: type,
+          status: status,
+          kind: g ? g.kind : null,
+          summary: String(summary || '').slice(0, 400)
+        };
+      }
+
+      function evidenceSummaryForModal() {
+        return lastEvidenceTargets.map(function (t, index) {
+          return {
+            serial: index + 1,
+            evidence_id: t.evidence_id || null,
+            target_id: t.target_id || null,
+            kind: t.kind || null,
+            status: t.status || null
+          };
+        });
+      }
+
+      function threadForModalAsk(panel) {
+        var els = modalChatPanelEls(panel);
+        return els.thread
+          .filter(function (m) {
+            return m.role === 'user' || m.role === 'assistant';
+          })
+          .map(function (m) {
+            return { role: m.role, content: m.content };
+          });
+      }
+
+      function applyRpEnvelope(msgOrEnvelope, btn) {
+        var envelope =
+          msgOrEnvelope && msgOrEnvelope.envelope
+            ? msgOrEnvelope.envelope
+            : msgOrEnvelope;
+        if (!envelope || !Array.isArray(envelope.nodes)) return;
+        lastOsngEnvelope = {
+          root_osn_id: envelope.root_osn_id,
+          nodes: envelope.nodes
+        };
+        if (msgOrEnvelope && msgOrEnvelope.envelope) {
+          msgOrEnvelope.applied = true;
+        }
+        renderOsng(lastOsngEnvelope);
+        refreshOsngOutcomeDirty();
+        appendModalChat(
+          'rp',
+          'assistant',
+          'Applied revised OSNG to the System Pack. Use ▶ in the sidebar to re-realize the SUD when ready.'
+        );
+        renderModalChatBody('rp');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Applied';
+        }
+      }
+
+      async function askModalHanumanPanel(panel, contract) {
+        var els = modalChatPanelEls(panel);
+        if (!els.input || (panel === 'lp' ? lpBusy : rpBusy)) return;
+        var question = String(els.input.value || '').trim();
+        if (!question) return;
+        if (
+          !lastOsngEnvelope ||
+          !Array.isArray(lastOsngEnvelope.nodes) ||
+          !lastOsngEnvelope.nodes.length
+        ) {
+          appendModalChat(
+            panel,
+            'error',
+            'No draft OSNG in the System Pack yet — raise an outcome first.'
+          );
+          return;
+        }
+        if (!window.gtih || !window.gtih.hanuman || !window.gtih.hanuman.modalChatUntilDone) {
+          appendModalChat(panel, 'error', 'GTIH SDK modalChatUntilDone unavailable.');
+          return;
+        }
+        var focus = currentModalFocusSample();
+        var focusContent = resultModalFocusContent;
+        if (!focusContent && focus.kind === 'sud' && lastSud && lastSud.text != null) {
+          focusContent = String(lastSud.text);
+        }
+        els.input.value = '';
+        appendModalChat(panel, 'user', question, { focus: focus });
+        setModalChatBusy(panel, true);
+        appendModalChat(panel, 'assistant', 'Hanuman is leaping…');
+        try {
+          var result = await window.gtih.hanuman.modalChatUntilDone(
+            {
+              contract: contract,
+              question: question,
+              osng_envelope: lastOsngEnvelope,
+              focus_sample: focus,
+              focus_content: focusContent,
+              evidence_summary: evidenceSummaryForModal(),
+              thread: threadForModalAsk(panel).slice(0, -1)
+            },
+            {
+              onLaborEvent: function (evt) {
+                if (typeof appendLaborEvent === 'function') appendLaborEvent(evt);
+              },
+              onLog: function (line) {
+                if (typeof appendLog === 'function') appendLog(line);
+              }
+            }
+          );
+          // Replace the leaping placeholder with the reply.
+          var thread = modalChatPanelEls(panel).thread;
+          if (
+            thread.length &&
+            thread[thread.length - 1].role === 'assistant' &&
+            thread[thread.length - 1].content === 'Hanuman is leaping…'
+          ) {
+            thread.pop();
+          }
+          var reply = (result && result.reply) || '(empty reply)';
+          var extra = {};
+          if (contract === 'edit_osng' && result && result.envelope) {
+            extra.envelope = result.envelope;
+          }
+          appendModalChat(panel, 'assistant', reply, extra);
+          if (contract === 'edit_osng' && result && result.proposal_warning) {
+            appendModalChat(
+              panel,
+              'error',
+              'Revised OSNG was not usable (' +
+                (result.proposal_warning.detail || result.proposal_warning.reason || 'invalid') +
+                ') — nothing to Apply. Ask again to retry the revision.'
+            );
+          }
+        } catch (err) {
+          var threadErr = modalChatPanelEls(panel).thread;
+          if (
+            threadErr.length &&
+            threadErr[threadErr.length - 1].role === 'assistant' &&
+            threadErr[threadErr.length - 1].content === 'Hanuman is leaping…'
+          ) {
+            threadErr.pop();
+          }
+          appendModalChat(
+            panel,
+            'error',
+            (err && err.detail) ||
+              (err && err.message) ||
+              String(err) ||
+              'Modal chat failed'
+          );
+        } finally {
+          setModalChatBusy(panel, false);
+        }
+      }
+
+      async function askModalBpPanel() {
+        if (!resultModalBpInput || bpBusy) return;
+        var question = String(resultModalBpInput.value || '').trim();
+        if (!question) return;
+        if (!window.gtih || !window.gtih.gt3 || !window.gtih.gt3.infer) {
+          appendModalChat('bp', 'error', 'GTIH SDK gt3.infer unavailable.');
+          return;
+        }
+        resultModalBpInput.value = '';
+        appendModalChat('bp', 'user', question);
+        setModalChatBusy('bp', true);
+        appendModalChat('bp', 'assistant', 'Asking GT3…');
+        try {
+          var narrative =
+            'Answer as general / esoteric world knowledge. Do not invent OSNG lineage, SUD contents, or Lexiom garden facts.\n\nQuestion: ' +
+            question;
+          var got = await window.gtih.gt3.infer(narrative);
+          var thread = bpThread;
+          if (
+            thread.length &&
+            thread[thread.length - 1].role === 'assistant' &&
+            thread[thread.length - 1].content === 'Asking GT3…'
+          ) {
+            thread.pop();
+          }
+          var text =
+            (got && (got.text || got.response)) ||
+            (got && got.ok === false && got.error) ||
+            '(empty)';
+          if (got && got.ok === false) {
+            appendModalChat('bp', 'error', String(text));
+          } else {
+            appendModalChat('bp', 'assistant', String(text));
+          }
+        } catch (err) {
+          var threadErr = bpThread;
+          if (
+            threadErr.length &&
+            threadErr[threadErr.length - 1].role === 'assistant' &&
+            threadErr[threadErr.length - 1].content === 'Asking GT3…'
+          ) {
+            threadErr.pop();
+          }
+          appendModalChat(
+            'bp',
+            'error',
+            (err && err.message) || String(err) || 'Infer failed'
+          );
+        } finally {
+          setModalChatBusy('bp', false);
+        }
+      }
+
+      if (resultModalClose) {
+        resultModalClose.addEventListener('click', closeResultModal);
+      }
+      if (resultModalPrev) {
+        resultModalPrev.addEventListener('click', function () {
+          stepResultGallery(-1);
+        });
+      }
+      if (resultModalNext) {
+        resultModalNext.addEventListener('click', function () {
+          stepResultGallery(1);
+        });
+      }
+      if (resultModal) {
+        resultModal.addEventListener('click', function (ev) {
+          var t = ev.target;
+          if (
+            t === resultModal ||
+            (t && t.classList && t.classList.contains('result-modal-scrim'))
+          ) {
+            closeResultModal();
+          }
+        });
+      }
+      if (resultModalLpAsk) {
+        resultModalLpAsk.addEventListener('click', function () {
+          askModalHanumanPanel('lp', 'lineage_readonly');
+        });
+      }
+      if (resultModalRpAsk) {
+        resultModalRpAsk.addEventListener('click', function () {
+          askModalHanumanPanel('rp', 'edit_osng');
+        });
+      }
+      if (resultModalBpAsk) {
+        resultModalBpAsk.addEventListener('click', function () {
+          askModalBpPanel();
+        });
+      }
+      function wireModalChatEnter(input, handler) {
+        if (!input) return;
+        input.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' && !ev.shiftKey) {
+            ev.preventDefault();
+            handler();
+          }
+        });
+      }
+      wireModalChatEnter(resultModalLpInput, function () {
+        askModalHanumanPanel('lp', 'lineage_readonly');
+      });
+      wireModalChatEnter(resultModalRpInput, function () {
+        askModalHanumanPanel('rp', 'edit_osng');
+      });
+      wireModalChatEnter(resultModalBpInput, function () {
+        askModalBpPanel();
+      });
 
       function sudDownloadFileName(sud) {
         var name = String((sud && sud.entry) || 'outcome').trim();
@@ -2200,15 +3678,75 @@
         triggerBlobDownload(new Blob([text], { type: 'text/plain;charset=utf-8' }), fileName);
       }
 
+      /**
+       * Compact result row: serial id · type · status (C/A/M).
+       * SUD uses serial 0; evidences are 1..n in list order.
+       */
+      function appendResultRow(listEl, opts) {
+        var o = opts || {};
+        var li = document.createElement('li');
+        var row = document.createElement('button');
+        row.type = 'button';
+        row.className = 'result-row';
+        row.disabled = !!o.disabled;
+        var statusCode = o.statusCode || 'M';
+        row.title =
+          '#' +
+          o.serial +
+          ' · ' +
+          (o.type || '?') +
+          ' · ' +
+          resultStatusLabel(statusCode) +
+          (o.openHint ? ' — ' + o.openHint : '');
+        row.setAttribute(
+          'aria-label',
+          'Sample ' +
+            o.serial +
+            ', type ' +
+            (o.type || 'unknown') +
+            ', status ' +
+            resultStatusLabel(statusCode)
+        );
+
+        var idEl = document.createElement('span');
+        idEl.className = 'result-row-id';
+        idEl.textContent = String(o.serial);
+        var typeEl = document.createElement('span');
+        typeEl.className = 'result-row-type';
+        typeEl.textContent = o.type || '—';
+        var statusEl = document.createElement('span');
+        statusEl.className = 'result-row-status';
+        statusEl.setAttribute('data-status', statusCode);
+        statusEl.textContent = statusCode;
+
+        row.appendChild(idEl);
+        row.appendChild(typeEl);
+        row.appendChild(statusEl);
+        if (typeof o.onOpen === 'function') {
+          row.addEventListener('click', function () {
+            o.onOpen(row);
+          });
+        }
+        li.appendChild(row);
+        listEl.appendChild(li);
+        return row;
+      }
+
+      /**
+       * Outcome row: serial 0 · type · C/A/M — click opens #resultModal.
+       */
       function renderSud(sud) {
         sudPane.innerHTML = '';
         sudMeta.innerHTML = '';
+        lastSud = sud || null;
         if (!sud) {
           setSudStageVisible(false);
+          rebuildResultGallery();
           return;
         }
         setSudStageVisible(true);
         captureOsngOutcomeBaseline();
+
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'sud-download';
@@ -2220,54 +3758,57 @@
           downloadSudArtifact(sud);
         });
         sudMeta.appendChild(btn);
-        if (sud.media_kind === 'software' && sud.url) {
-          var iframe = document.createElement('iframe');
-          iframe.title = 'Outcome preview';
-          iframe.src = sud.url;
-          sudPane.appendChild(iframe);
-          return;
-        }
-        var pre = document.createElement('pre');
-        pre.style.margin = '0';
-        pre.style.border = '0';
-        pre.style.maxHeight = 'none';
-        pre.style.padding = '0';
-        pre.textContent = sud.text != null ? sud.text : sud.error || '(empty)';
-        sudPane.appendChild(pre);
+
+        var list = document.createElement('ul');
+        list.className = 'evidence-list';
+        list.style.marginTop = '0';
+        var hasPayload = !!(sud.url || sud.text != null);
+        var statusCode = sud.error
+          ? 'M'
+          : mapResultStatusCode(sud.status, hasPayload);
+        appendResultRow(list, {
+          serial: 0,
+          type: sudResultType(sud),
+          statusCode: statusCode,
+          disabled: !(hasPayload || sud.error),
+          openHint: 'open in modal',
+          onOpen: function (row) {
+            openSudInModal(row);
+          }
+        });
+        sudPane.appendChild(list);
+        rebuildResultGallery();
       }
 
+      /**
+       * Evidence rows: serial 1..n · kind · C/A/M — click opens one sample in #resultModal.
+       */
       function renderEvidence(evidence) {
         evidenceList.innerHTML = '';
         var targets = (evidence && evidence.targets) || [];
+        lastEvidenceTargets = targets.slice();
         if (!targets.length) {
           setEvidenceStageVisible(false);
+          rebuildResultGallery();
           return;
         }
         setEvidenceStageVisible(true);
-        targets.forEach(function (t) {
-          var li = document.createElement('li');
-          var title = document.createElement('div');
-          title.textContent =
-            (t.evidence_id || t.target_id || 'evidence') +
-            ' · ' +
-            (t.status || 'unknown') +
-            (t.kind ? ' · ' + t.kind : '');
-          li.appendChild(title);
-          if (t.artifact && t.artifact.url) {
-            var a = document.createElement('a');
-            a.href = t.artifact.url;
-            a.target = '_blank';
-            a.rel = 'noopener';
-            a.textContent = t.artifact.file_name || t.artifact.url;
-            li.appendChild(a);
-          } else if (t.notes) {
-            var notes = document.createElement('div');
-            notes.className = 'muted';
-            notes.textContent = t.notes;
-            li.appendChild(notes);
-          }
-          evidenceList.appendChild(li);
+        targets.forEach(function (t, index) {
+          var hasArtifact = !!(t.artifact && t.artifact.url);
+          var statusCode = mapResultStatusCode(t.status, hasArtifact);
+          var type = String(t.kind || 'TEXTUAL_SNIPPET').trim() || 'TEXTUAL_SNIPPET';
+          appendResultRow(evidenceList, {
+            serial: index + 1,
+            type: type,
+            statusCode: statusCode,
+            disabled: !hasArtifact && statusCode === 'M' && !t.notes,
+            openHint: 'open in modal',
+            onOpen: function (row) {
+              openEvidenceInModal(t, row);
+            }
+          });
         });
+        rebuildResultGallery();
       }
 
       function showResults(payload) {
@@ -2344,6 +3885,7 @@
           refreshIntentForNextRaise(args.intent);
           var result = await window.gtih.osng.proposeThenRealizeUntilDone(args, {
             onLog: appendLog,
+            onLaborEvent: appendLaborEvent,
             onStatus: appendStatusBeat,
             onEnvelope: revealProposedOsng
           });
@@ -2414,6 +3956,7 @@
           refreshIntentForNextRaise(args.intent);
           var envelope = await window.gtih.osng.proposeFromIntentUntilDone(args, {
             onLog: appendLog,
+            onLaborEvent: appendLaborEvent,
             onStatus: appendStatusBeat
           });
           out.className = 'ok';

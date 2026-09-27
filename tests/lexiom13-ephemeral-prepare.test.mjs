@@ -64,6 +64,23 @@ test('prepareLexiom13Build accepts osng_envelope without Lexiom YAML', async () 
     const nodesDir = path.join(tmpRoot, 'builds', 'lexiom13', handoff.run_id, 'nodes');
     const nodeFiles = await fsp.readdir(nodesDir);
     assert.ok(nodeFiles.some((f) => f.endsWith('.json')));
+    const capsule = JSON.parse(
+      await fsp.readFile(path.join(nodesDir, nodeFiles.find((f) => f.endsWith('.json'))), 'utf8')
+    );
+    const ctx = capsule.context || capsule;
+    assert.equal(ctx.seed, undefined);
+    assert.equal(ctx.lenses, undefined);
+    assert.equal(ctx.title, undefined);
+    assert.equal(typeof ctx.output_spec, 'string');
+    assert.ok(ctx.output_spec.length > 0);
+    assert.ok(Array.isArray(ctx.success_evidences));
+    assert.ok(Array.isArray(ctx.unique_requirements));
+    assert.ok(ctx.unique_requirements.length > 0);
+
+    const onDiskSub = (onDisk.subgraph || []).find((n) => n.id === rootId) || onDisk.subgraph?.[0];
+    if (onDiskSub) {
+      assert.ok(!onDiskSub.sections?.some((s) => s.key === 'seed' || s.key === 'thematic_lenses'));
+    }
   } finally {
     await fsp.rm(tmpRoot, { recursive: true, force: true });
   }

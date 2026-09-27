@@ -231,6 +231,7 @@
           : '');
       return run(laborSession, {
         onLog: o.onLog,
+        onLaborEvent: o.onLaborEvent,
         onPassChange: o.onPassChange,
         signal: o.signal,
         gtihBaseUrl: gtihBase
@@ -247,7 +248,7 @@
 
     /**
      * Convenience: start → Hanuman labor → poll until ok/failed.
-     * @returns envelope { root_osn_id, nodes, meta }
+     * @returns envelope { root_osn_id, nodes }
      */
     async function proposeFromIntentUntilDone(args, opts) {
       var o = opts || {};
@@ -257,6 +258,7 @@
         try {
           await serveProposeSession(started.ca_session, {
             onLog: o.onLog,
+            onLaborEvent: o.onLaborEvent,
             signal: o.signal
           });
         } catch (laborErr) {
@@ -307,6 +309,129 @@
         await sleep(pollMs);
       }
       var timeoutErr = new Error('OSNG propose poll timeout');
+      timeoutErr.status = 504;
+      timeoutErr.debug = { phase: 'poll_timeout', run_id: started.run_id };
+      throw timeoutErr;
+    }
+
+    /**
+     * Start TRH modal LP/RP Hanuman Job (same propose CA; contract in AGENT_PROMPT only).
+     * @param {{
+     *   contract: 'lineage_readonly'|'edit_osng',
+     *   question: string,
+     *   osng_envelope: { root_osn_id: string, nodes: object[] },
+     *   focus_sample?: object,
+     *   focus_content?: string,
+     *   evidence_summary?: object,
+     *   thread?: { role: string, content: string }[]
+     * }} args
+     */
+    async function startModalChat(args) {
+      var a = args || {};
+      var question = String(a.question || a.intent || '').trim();
+      if (!question) throw new Error('question must be non-empty');
+      var contract = String(a.contract || '').trim();
+      if (contract !== 'lineage_readonly' && contract !== 'edit_osng') {
+        throw new Error('contract must be lineage_readonly or edit_osng');
+      }
+      if (!a.osng_envelope || !Array.isArray(a.osng_envelope.nodes)) {
+        throw new Error('osng_envelope required');
+      }
+      return jsonFetch(
+        'POST',
+        '/lexiom13/osn/propose',
+        {
+          mode: 'modal_chat',
+          contract: contract,
+          question: question,
+          intent: question,
+          osng_envelope: a.osng_envelope,
+          focus_sample: a.focus_sample || null,
+          focus_content: typeof a.focus_content === 'string' ? a.focus_content : '',
+          evidence_summary: a.evidence_summary != null ? a.evidence_summary : [],
+          thread: Array.isArray(a.thread) ? a.thread : []
+        },
+        openRouterHeaders()
+      );
+    }
+
+    /**
+     * Convenience: start modal chat → Hanuman labor → poll until ok/failed.
+     * @returns {{ reply: string, envelope: object, contract: string, run_id: string, status: object }}
+     */
+    async function modalChatUntilDone(args, opts) {
+      var o = opts || {};
+      var started = await startModalChat(args);
+      if (o.onStatus) o.onStatus(started);
+      if (started && started.ca_session) {
+        try {
+          await serveProposeSession(started.ca_session, {
+            onLog: o.onLog,
+            onLaborEvent: o.onLaborEvent,
+            signal: o.signal
+          });
+        } catch (laborErr) {
+          var afterLabor = null;
+          try {
+            afterLabor = await getProposeStatus(started.run_id);
+          } catch (_e) {
+            afterLabor = null;
+          }
+          if (afterLabor && afterLabor.status === 'ok' && afterLabor.reply) {
+            return {
+              reply: afterLabor.reply,
+              envelope: afterLabor.envelope || null,
+              contract: afterLabor.contract || (args && args.contract) || null,
+              proposal_warning: afterLabor.proposal_warning || null,
+              run_id: started.run_id,
+              status: afterLabor
+            };
+          }
+          var fail = new Error(
+            (afterLabor && afterLabor.detail) ||
+              (laborErr && laborErr.message) ||
+              'Hanuman modal chat labor failed'
+          );
+          fail.status = 502;
+          fail.detail = afterLabor && afterLabor.detail;
+          fail.debug =
+            (afterLabor && afterLabor.debug) ||
+            {
+              phase: 'hanuman_labor',
+              error_message: laborErr && laborErr.message
+            };
+          fail.body = afterLabor;
+          throw fail;
+        }
+      }
+
+      var pollMs = typeof o.pollMs === 'number' ? o.pollMs : 1500;
+      var maxWaitMs = typeof o.maxWaitMs === 'number' ? o.maxWaitMs : 20 * 60 * 1000;
+      var t0 = Date.now();
+      while (Date.now() - t0 < maxWaitMs) {
+        var st = await getProposeStatus(started.run_id);
+        if (o.onStatus) o.onStatus(st);
+        if (st.status === 'ok' && (st.reply || st.envelope)) {
+          return {
+            reply: st.reply || '',
+            envelope: st.envelope || null,
+            contract: st.contract || (args && args.contract) || null,
+            proposal_warning: st.proposal_warning || null,
+            run_id: started.run_id,
+            status: st
+          };
+        }
+        if (st.status === 'failed') {
+          var err = new Error(st.detail || 'Modal chat failed');
+          err.status = 502;
+          err.detail = st.detail;
+          err.debug = st.debug;
+          err.body = st;
+          throw err;
+        }
+        await sleep(pollMs);
+      }
+      var timeoutErr = new Error('Modal chat poll timeout');
       timeoutErr.status = 504;
       timeoutErr.debug = { phase: 'poll_timeout', run_id: started.run_id };
       throw timeoutErr;
@@ -495,6 +620,7 @@
           if (o.onLog) o.onLog('phase: Hanuman realize labor');
           await serveRealizeSession(started.ca_session, {
             onLog: o.onLog,
+            onLaborEvent: o.onLaborEvent,
             onPassChange: o.onPassChange,
             signal: o.signal
           });
@@ -539,6 +665,7 @@
       if (o.onLog) o.onLog('phase: propose OSNG');
       var envelope = await proposeFromIntentUntilDone(args, {
         onLog: o.onLog,
+        onLaborEvent: o.onLaborEvent,
         onStatus: function (st) {
           if (o.onStatus) o.onStatus({ phase: 'propose', status: st });
         },
@@ -560,13 +687,13 @@
         {
           osng_envelope: {
             root_osn_id: envelope.root_osn_id,
-            nodes: envelope.nodes,
-            meta: envelope.meta
+            nodes: envelope.nodes
           },
           strategy_id: args && args.strategy_id
         },
         {
           onLog: o.onLog,
+          onLaborEvent: o.onLaborEvent,
           onStatus: function (st) {
             if (o.onStatus) o.onStatus({ phase: 'realize', status: st });
           },
@@ -696,6 +823,8 @@
         serveProposeSession: serveProposeSession,
         serveRealizeSession: serveRealizeSession,
         realizeUntilDone: realizeUntilDone,
+        startModalChat: startModalChat,
+        modalChatUntilDone: modalChatUntilDone,
         listEvidenceCollections: listEvidenceCollections,
         getBudArtifactUrl: getBudArtifactUrl,
         getBudPreviewUrl: getBudPreviewUrl,
