@@ -1478,7 +1478,8 @@ app.post('/lexiom13/build/session/:sessionId/cancel', (req, res) => {
 app.get('/lexiom13/evidence/collections', async (req, res) => {
   try {
     const osnId = typeof req.query.osn_id === 'string' ? req.query.osn_id : '';
-    const result = await listFocusEvidenceCollections(__dirname, osnId);
+    const runId = typeof req.query.run_id === 'string' ? req.query.run_id : '';
+    const result = await listFocusEvidenceCollections(__dirname, osnId, { runId });
     return res.json({ status: 'ok', ...result });
   } catch (e) {
     const status = e && e.statusCode ? e.statusCode : 500;

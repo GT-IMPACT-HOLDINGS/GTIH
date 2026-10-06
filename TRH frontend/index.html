@@ -201,8 +201,16 @@
       margin: 0;
       accent-color: var(--ink);
     }
+    .sidebar-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 0 0 auto;
+      margin-left: auto;
+    }
     .osng-download,
     .sud-download,
+    .osng-trash,
     .osng-rerealize {
       margin: 0;
       padding: 0.25rem 0.55rem;
@@ -219,21 +227,30 @@
     }
     .osng-download:hover:not(:disabled),
     .sud-download:hover:not(:disabled),
+    .osng-trash:hover:not(:disabled),
     .osng-rerealize:hover:not(:disabled) {
       background: var(--paper);
     }
     .osng-download:disabled,
     .sud-download:disabled,
+    .osng-trash:disabled,
     .osng-rerealize:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
     .osng-download .glyph,
     .sud-download .glyph,
+    .osng-trash .glyph,
     .osng-rerealize .glyph {
       font-size: 0.95rem;
       line-height: 1;
     }
+    .osng-trash svg {
+      width: 0.95rem;
+      height: 0.95rem;
+      display: block;
+    }
+    .osng-trash[hidden],
     .osng-rerealize[hidden] {
       display: none !important;
     }
@@ -307,6 +324,20 @@
       content: attr(data-placeholder);
       color: var(--muted);
     }
+    #osngView .osng-node {
+      display: block;
+      padding-left: calc(var(--osn-depth, 0) * 1.1rem);
+      transition: opacity 0.15s;
+    }
+    #osngView.osng-outcome-prose .osng-node {
+      margin: 0 0 1rem;
+    }
+    #osngView.osng-outcome-prose .osng-node:last-child {
+      margin-bottom: 0;
+    }
+    #osngView.has-osn-focus .osng-node:not(.is-focused) {
+      opacity: 0.45;
+    }
 
     .workspace {
       flex: 1 1 auto;
@@ -339,6 +370,41 @@
       min-height: 2.65rem;
       border-bottom: 1px solid var(--rule);
       background: var(--surface);
+    }
+    .workspace-rail.has-modes {
+      display: flex;
+      align-items: center;
+      padding: 0 0.75rem 0 1.25rem;
+    }
+    .workspace-rail .rail-modes {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.1rem;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    .workspace-rail .rail-modes[hidden] {
+      display: none;
+    }
+    .workspace-rail .rail-modes label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.82rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .workspace-rail .rail-modes input {
+      width: auto;
+      margin: 0;
+      accent-color: var(--ink);
+    }
+    .workspace-rail .rail-modes:disabled label {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     .workspace-body {
       flex: 1 1 auto;
@@ -853,28 +919,8 @@
     <aside class="osng-sidebar" id="osngSidebar" aria-label="System Pack">
       <div class="sidebar-head">
         <h2 id="osngTitle">System Pack</h2>
-        <button
-          type="button"
-          class="osng-rerealize"
-          id="osngRerealize"
-          title="Re-realize altered Outcome Spec / evidences with Hanuman"
-          aria-label="Re-realize with Hanuman"
-          hidden
-        >
-          <span class="glyph" aria-hidden="true">▶</span>
-        </button>
       </div>
       <div class="osng-filters" role="group" aria-label="System Pack view filters">
-        <button
-          type="button"
-          class="osng-download"
-          id="osngDownload"
-          title="Download full OSNG as YAML"
-          aria-label="Download full OSNG as YAML"
-          disabled
-        >
-          <span class="glyph" aria-hidden="true">⬇</span>
-        </button>
         <label title="Outcome Spec narrative as paragraphs: output_spec (blue) then evidence texts (green). Not YAML structure.">
           <input type="checkbox" id="osngFilterOutcome" checked />
           Outcome Spec
@@ -883,6 +929,44 @@
           <input type="checkbox" id="osngFilterMeta" />
           Neural Geometry
         </label>
+        <span class="sidebar-actions">
+          <button
+            type="button"
+            class="osng-download"
+            id="osngDownload"
+            title="Download full OSNG as YAML"
+            aria-label="Download full OSNG as YAML"
+            disabled
+          >
+            <span class="glyph" aria-hidden="true">⬇</span>
+          </button>
+          <button
+            type="button"
+            class="osng-trash"
+            id="osngTrash"
+            title="Delete the focused node and its subtree"
+            aria-label="Delete focused node"
+            hidden
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6h18" />
+              <path d="M8 6V4h8v2" />
+              <path d="M19 6l-1 14H6L5 6" />
+              <path d="M10 11v6M14 11v6" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="osng-rerealize"
+            id="osngRerealize"
+            title="Re-realize altered Outcome Spec / evidences with Hanuman"
+            aria-label="Re-realize with Hanuman"
+            hidden
+          >
+            <span class="glyph" aria-hidden="true">▶</span>
+          </button>
+        </span>
       </div>
       <pre id="osngView" tabindex="0" role="region" aria-label="System Pack content"></pre>
     </aside>
@@ -891,7 +975,7 @@
       <div class="sidebar-head workspace-head">
           <h2 id="intent-heading"><label for="intent">Desired Outcome</label></h2>
       </div>
-      <div class="workspace-rail" aria-hidden="true"></div>
+      <div class="workspace-rail" id="workspaceRail" aria-hidden="true" aria-live="polite"></div>
       <div class="workspace-body">
         <section class="stage" aria-labelledby="intent-heading">
           <textarea
@@ -1052,7 +1136,17 @@
       var osngFilterMeta = document.getElementById('osngFilterMeta');
       var osngDownload = document.getElementById('osngDownload');
       var osngRerealizeBtn = document.getElementById('osngRerealize');
+      var osngTrashBtn = document.getElementById('osngTrash');
+      var workspaceRail = document.getElementById('workspaceRail');
       var lastOsngEnvelope = null;
+      var selectedOsnId = null;
+      /** What the intent box does once a tree exists: 'expand' | 'edit' (sticky until toggled). */
+      var intentMode = 'expand';
+      var railModesEl = null;
+      var INTENT_PLACEHOLDER_EXPAND =
+        'Name a direction — Hanuman will add one descendant under the focused node (Enter)…';
+      var INTENT_PLACEHOLDER_EDIT =
+        'Describe the change — Hanuman will revise the OSNG around the focused node (Enter)…';
       /** Fingerprint of Outcome Spec + evidence narratives at last SUD realization. */
       var osngBaselineOutcome = null;
       var osngOutcomeDirty = false;
@@ -1152,6 +1246,11 @@
 
       function applyIntentPlaceholder() {
         if (!intentEl) return;
+        if (osnTreeActive()) {
+          intentEl.placeholder =
+            intentMode === 'edit' ? INTENT_PLACEHOLDER_EDIT : INTENT_PLACEHOLDER_EXPAND;
+          return;
+        }
         intentEl.placeholder = lastIntentRecall || INTENT_PLACEHOLDER_DEFAULT;
       }
 
@@ -1167,6 +1266,7 @@
       /** Tab with empty box: concretize last-intent placeholder into editable value. */
       function concretizeIntentPlaceholder() {
         if (!intentEl) return false;
+        if (osnTreeActive()) return false;
         if (String(intentEl.value || '').length > 0) return false;
         if (!lastIntentRecall) return false;
         intentEl.value = lastIntentRecall;
@@ -1256,26 +1356,6 @@
           }
         });
         return out;
-      }
-
-      function filterOsngEnvelope(envelope, showOutcome, showMeta) {
-        if (!envelope) return null;
-        var nodes = Array.isArray(envelope.nodes) ? envelope.nodes : [];
-        var filteredNodes = nodes.map(function (n) {
-          return filterOsngNode(n, showOutcome, showMeta);
-        });
-        if (showMeta) {
-          var doc = {
-            root_osn_id: envelope.root_osn_id,
-            nodes: filteredNodes,
-            meta: envelope.meta
-          };
-          if (doc.root_osn_id == null) delete doc.root_osn_id;
-          if (doc.meta == null) delete doc.meta;
-          return doc;
-        }
-        // Outcome-only: nodes with outcome field content only
-        return { nodes: filteredNodes };
       }
 
       function escapeHtml(str) {
@@ -1461,10 +1541,11 @@
        * not canonical YAML / JSON structure.
        */
       function outcomeNarrativeHtml(envelope) {
-        var nodes = Array.isArray(envelope && envelope.nodes) ? envelope.nodes : [];
-        var parts = [];
-        nodes.forEach(function (node, nodeIndex) {
-          if (!node || typeof node !== 'object') return;
+        var blocks = [];
+        osnTreeOrder(envelope).forEach(function (entry) {
+          var node = entry.node;
+          var nodeIndex = entry.index;
+          var parts = [];
           if (node.output_spec != null) {
             var specText =
               typeof node.output_spec === 'string'
@@ -1497,11 +1578,12 @@
                 '</span>'
             );
           });
+          if (parts.length) blocks.push(osnBlockOpen(entry) + parts.join('\n') + '</span>');
         });
-        if (!parts.length) {
+        if (!blocks.length) {
           return '<span class="osng-comment"># No outcome narratives in this OSNG</span>';
         }
-        return parts.join('\n');
+        return blocks.join('\n');
       }
 
       function editablePlainText(el) {
@@ -1665,7 +1747,10 @@
           var evidence = null;
           try {
             appendLog('phase: collect evidence listings');
-            evidence = await window.gtih.hanuman.listEvidenceCollections(osnId);
+            evidence = await window.gtih.hanuman.listRunEvidence(
+              { root_osn_id: osnId, nodes: envelope.nodes },
+              handoff.run_id
+            );
           } catch (evErr) {
             evidence = {
               osn_id: osnId,
@@ -1723,6 +1808,14 @@
       function bindOsngEditable() {
         if (!osngView || osngView._osngEditBound) return;
         osngView._osngEditBound = true;
+        function focusFromEvent(ev) {
+          var el = ev.target;
+          var block = el && el.closest ? el.closest('.osng-node') : null;
+          if (!block || !osngView.contains(block)) return;
+          focusOsn(block.getAttribute('data-osn-id'));
+        }
+        osngView.addEventListener('focusin', focusFromEvent);
+        osngView.addEventListener('click', focusFromEvent);
         osngView.addEventListener('focusout', function (ev) {
           var el = ev.target;
           if (!el || !el.getAttribute || !el.getAttribute('data-osng-field')) return;
@@ -1771,6 +1864,12 @@
           },
           bodyHtml: function (doc, tone) {
             return toYamlHtml(doc, 0, tone);
+          },
+          nodesHead: function () {
+            return yamlChromeKey('nodes') + yamlChromePunct(':');
+          },
+          nodeHtml: function (node, tone) {
+            return toYamlHtml([node], 0, tone);
           }
         },
         json: {
@@ -1781,6 +1880,12 @@
           },
           bodyHtml: function (doc, tone) {
             return toJsonHtml(doc, 0, tone);
+          },
+          nodesHead: function () {
+            return '<span class="osng-comment">// nodes</span>';
+          },
+          nodeHtml: function (node, tone) {
+            return toJsonHtml(node, 0, tone);
           }
         }
       };
@@ -1983,23 +2088,35 @@
         if (showOutcome && !showMeta) {
           return outcomeNarrativeHtml(envelope);
         }
-        var filtered = filterOsngEnvelope(envelope, showOutcome, showMeta);
         var tone = { showOutcome: showOutcome, showMeta: showMeta };
-        return fmt.bodyHtml(filtered, tone);
+        var head = {};
+        if (envelope.root_osn_id != null) head.root_osn_id = envelope.root_osn_id;
+        if (envelope.meta != null) head.meta = envelope.meta;
+        var html = Object.keys(head).length ? fmt.bodyHtml(head, tone) + '\n' : '';
+        html += fmt.nodesHead();
+        osnTreeOrder(envelope).forEach(function (entry) {
+          html +=
+            osnBlockOpen(entry) +
+            fmt.nodeHtml(filterOsngNode(entry.node, showOutcome, showMeta), tone) +
+            '</span>';
+        });
+        return html;
       }
 
       function renderOsng(envelope) {
-        if (envelope) lastOsngEnvelope = envelope;
-        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
-        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
-        updateOsngTitle();
-        // Commit any in-flight Outcome Spec / evidence edits before re-render.
-        if (osngView) {
+        var replacing = !!envelope && envelope !== lastOsngEnvelope;
+        // Commit in-flight Outcome Spec / evidence edits into the envelope they
+        // were rendered from — never into an incoming replacement.
+        if (osngView && !replacing) {
           var live = osngView.querySelectorAll('[data-osng-field]');
           for (var i = 0; i < live.length; i++) {
             commitOsngEditable(live[i]);
           }
         }
+        if (envelope) lastOsngEnvelope = envelope;
+        var showOutcome = !!(osngFilterOutcome && osngFilterOutcome.checked);
+        var showMeta = !!(osngFilterMeta && osngFilterMeta.checked);
+        updateOsngTitle();
         var prevScroll = osngView ? osngView.scrollTop : 0;
         osngView.classList.toggle('osng-outcome-prose', !!(showOutcome && !showMeta));
         osngView.innerHTML = envelopeToOsngHtml(lastOsngEnvelope, osngViewFormat);
@@ -2007,6 +2124,9 @@
         if (osngDownload) {
           osngDownload.disabled = !lastOsngEnvelope;
         }
+        applyOsnFocusClasses();
+        updateOsngTrashButton();
+        renderWorkspaceRail();
       }
 
       function downloadOsngYaml() {
@@ -2061,6 +2181,11 @@
           requestOsngRerealize();
         });
       }
+      if (osngTrashBtn) {
+        osngTrashBtn.addEventListener('click', function () {
+          deleteOsnSubtree(ensureSelectedOsn());
+        });
+      }
 
       /** Show proposed OSNG as soon as the envelope lands (before SUD / evidences). */
       function revealProposedOsng(envelope) {
@@ -2078,11 +2203,487 @@
         });
       }
 
+      // ---- Prism-guided OSNG expansion (tree helpers, rail, focus, delete) ----
+
+      function osngNodes() {
+        return lastOsngEnvelope && Array.isArray(lastOsngEnvelope.nodes)
+          ? lastOsngEnvelope.nodes
+          : [];
+      }
+
+      function osnNodeById(id) {
+        var nodes = osngNodes();
+        for (var i = 0; i < nodes.length; i++) {
+          if (nodes[i] && nodes[i].id === id) return nodes[i];
+        }
+        return null;
+      }
+
+      function osnRootId() {
+        var nodes = osngNodes();
+        if (!nodes.length) return null;
+        var rootId = lastOsngEnvelope.root_osn_id;
+        return osnNodeById(rootId) ? rootId : nodes[0].id;
+      }
+
+      function osnChildIds(node) {
+        var ids = node && node.graph && Array.isArray(node.graph.child_osn_ids)
+          ? node.graph.child_osn_ids
+          : [];
+        return ids.filter(function (id) {
+          return !!osnNodeById(id);
+        });
+      }
+
+      function osnParentId(node) {
+        var ids = node && node.graph && Array.isArray(node.graph.parent_osn_ids)
+          ? node.graph.parent_osn_ids
+          : [];
+        for (var i = 0; i < ids.length; i++) {
+          if (osnNodeById(ids[i])) return ids[i];
+        }
+        return null;
+      }
+
+      /** Root → id chain via parent_osn_ids (cycle-safe). */
+      function osnPathTo(id) {
+        var chain = [];
+        var seen = {};
+        var cur = osnNodeById(id);
+        while (cur && !seen[cur.id]) {
+          seen[cur.id] = true;
+          chain.unshift(cur.id);
+          var pid = osnParentId(cur);
+          cur = pid ? osnNodeById(pid) : null;
+        }
+        return chain;
+      }
+
+      /**
+       * Depth-first tree order from the root: [{ node, index, depth }], where index is the
+       * node's position in envelope.nodes (data-osng-node). Unreachable nodes trail at depth 0.
+       */
+      function osnTreeOrder(envelope) {
+        var nodes = Array.isArray(envelope && envelope.nodes) ? envelope.nodes : [];
+        var indexById = {};
+        nodes.forEach(function (n, i) {
+          if (n && typeof n === 'object' && n.id != null && !(n.id in indexById)) {
+            indexById[n.id] = i;
+          }
+        });
+        var order = [];
+        var seen = {};
+        function visit(index, depth) {
+          var node = nodes[index];
+          if (!node || typeof node !== 'object' || seen[index]) return;
+          seen[index] = true;
+          order.push({ node: node, index: index, depth: depth });
+          var kids = node.graph && Array.isArray(node.graph.child_osn_ids)
+            ? node.graph.child_osn_ids
+            : [];
+          kids.forEach(function (cid) {
+            if (cid in indexById) visit(indexById[cid], depth + 1);
+          });
+        }
+        if (nodes.length) {
+          var rootId = envelope.root_osn_id;
+          visit(rootId in indexById ? indexById[rootId] : 0, 0);
+        }
+        nodes.forEach(function (_n, i) {
+          visit(i, 0);
+        });
+        return order;
+      }
+
+      function osnBlockOpen(entry) {
+        var id = entry.node.id != null ? String(entry.node.id) : '';
+        return (
+          '<span class="osng-node" data-osn-id="' + escapeHtml(id) +
+          '" style="--osn-depth:' + entry.depth + '">'
+        );
+      }
+
+      function ensureSelectedOsn() {
+        if (!selectedOsnId || !osnNodeById(selectedOsnId)) {
+          selectedOsnId = osnRootId();
+        }
+        return selectedOsnId;
+      }
+
+      /** Node label: Root, then 1-based child positions (e.g. 2 · 1). */
+      function osnNodeLabel(id) {
+        var chain = osnPathTo(id);
+        if (chain.length <= 1) return 'Root';
+        var parts = [];
+        for (var i = 1; i < chain.length; i++) {
+          var parent = osnNodeById(chain[i - 1]);
+          parts.push(String(osnChildIds(parent).indexOf(chain[i]) + 1));
+        }
+        return parts.join('·');
+      }
+
+      function resetOsngTreeState() {
+        selectedOsnId = null;
+        applyOsnFocusClasses();
+        updateOsngTrashButton();
+        renderWorkspaceRail();
+      }
+
+      /** Once a tree exists, the intent box acts on the focused node (expand / edit). */
+      function osnTreeActive() {
+        return !!(lastOsngEnvelope && osngNodes().length);
+      }
+
+      function buildRailModes() {
+        var fieldset = document.createElement('fieldset');
+        fieldset.className = 'rail-modes';
+        fieldset.setAttribute('aria-label', 'Intent box operation on the focused node');
+        [
+          { value: 'expand', label: 'Expand', title: 'Add one descendant under the focused node' },
+          { value: 'edit', label: 'Edit', title: 'Revise the OSNG around the focused node' }
+        ].forEach(function (opt) {
+          var label = document.createElement('label');
+          label.title = opt.title;
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'intentMode';
+          input.value = opt.value;
+          input.addEventListener('change', function () {
+            if (!input.checked) return;
+            intentMode = opt.value;
+            applyIntentPlaceholder();
+          });
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(opt.label));
+          fieldset.appendChild(label);
+        });
+        return fieldset;
+      }
+
+      function renderWorkspaceRail() {
+        if (!workspaceRail) return;
+        var active = osnTreeActive();
+        if (!railModesEl) {
+          railModesEl = buildRailModes();
+          workspaceRail.appendChild(railModesEl);
+        }
+        railModesEl.hidden = !active;
+        railModesEl.disabled = !!busy;
+        var radios = railModesEl.querySelectorAll('input[type="radio"]');
+        for (var i = 0; i < radios.length; i++) {
+          radios[i].checked = radios[i].value === intentMode;
+        }
+        workspaceRail.classList.toggle('has-modes', active);
+        workspaceRail.setAttribute('aria-hidden', active ? 'false' : 'true');
+        applyIntentPlaceholder();
+      }
+
+      /** Dim every node block except the focused one (only when the tree has >1 node). */
+      function applyOsnFocusClasses() {
+        if (!osngView) return;
+        var multi = osngNodes().length > 1;
+        var focusId = multi ? ensureSelectedOsn() : null;
+        osngView.classList.toggle('has-osn-focus', !!focusId);
+        var blocks = osngView.querySelectorAll('.osng-node');
+        for (var i = 0; i < blocks.length; i++) {
+          blocks[i].classList.toggle(
+            'is-focused',
+            !!focusId && blocks[i].getAttribute('data-osn-id') === focusId
+          );
+        }
+      }
+
+      /** In-place focus change — no re-render, so carets and in-flight edits survive. */
+      function focusOsn(id) {
+        if (busy || !osnNodeById(id) || id === selectedOsnId) return;
+        selectedOsnId = id;
+        applyOsnFocusClasses();
+        renderWorkspaceRail();
+        updateOsngTrashButton();
+      }
+
+      function updateOsngTrashButton() {
+        if (!osngTrashBtn) return;
+        var focusId = lastOsngEnvelope && osngNodes().length ? ensureSelectedOsn() : null;
+        osngTrashBtn.hidden = !focusId;
+        osngTrashBtn.disabled = !!busy;
+        if (focusId) {
+          osngTrashBtn.title =
+            focusId === osnRootId()
+              ? 'Delete the whole OSNG (resets the cockpit)'
+              : 'Delete node ' + osnNodeLabel(focusId) + ' and its subtree';
+        }
+      }
+
+      /** Live sidebar edits → envelope before structural changes. */
+      function commitLiveOsngEdits() {
+        if (!osngView) return;
+        var live = osngView.querySelectorAll('[data-osng-field]');
+        for (var i = 0; i < live.length; i++) {
+          commitOsngEditable(live[i]);
+        }
+      }
+
+      /** Root delete: drop the OSNG, prism state and realized results — back to the empty cockpit. */
+      function resetCockpitToStart() {
+        lastOsngEnvelope = null;
+        resetResultStages();
+        resetOsngTreeState();
+        updateOsngTitle();
+        if (osngView) {
+          osngView.innerHTML = envelopeToOsngHtml(null, osngViewFormat);
+          osngView.classList.remove('has-osn-focus');
+        }
+        if (osngDownload) osngDownload.disabled = true;
+        updateOsngRerealizeButton();
+        updateOsngTrashButton();
+        applyIntentPlaceholder();
+        appendBeat(
+          beat('Ram cleared the whole OSNG — the cockpit awaits a new desired outcome.', true, true, 'expand')
+        );
+      }
+
+      function deleteOsnSubtree(id) {
+        if (busy || !id) return;
+        var node = osnNodeById(id);
+        if (!node) return;
+        var isRoot = id === osnRootId();
+        var doomed = {};
+        var doomedCount = 0;
+        (function collect(nid) {
+          if (!nid || doomed[nid]) return;
+          doomed[nid] = true;
+          doomedCount++;
+          osnChildIds(osnNodeById(nid)).forEach(collect);
+        })(id);
+        if (isRoot) doomedCount = osngNodes().length;
+        var label = osnNodeLabel(id);
+        if (doomedCount > 1) {
+          var confirmText = isRoot
+            ? 'Delete the whole OSNG (' + doomedCount + ' nodes)? This also clears the realized SUD.'
+            : 'Delete node ' + label + ' and its ' + (doomedCount - 1) +
+              (doomedCount - 1 === 1 ? ' descendant?' : ' descendants?');
+          if (!window.confirm(confirmText)) return;
+        }
+        if (isRoot) {
+          resetCockpitToStart();
+          return;
+        }
+        commitLiveOsngEdits();
+        var parentId = osnParentId(node);
+        lastOsngEnvelope.nodes = osngNodes().filter(function (n) {
+          return !(n && doomed[n.id]);
+        });
+        var parent = parentId ? osnNodeById(parentId) : null;
+        if (parent && parent.graph && Array.isArray(parent.graph.child_osn_ids)) {
+          parent.graph.child_osn_ids = parent.graph.child_osn_ids.filter(function (cid) {
+            return !doomed[cid];
+          });
+        }
+        selectedOsnId = parentId || osnRootId();
+        renderOsng(lastOsngEnvelope);
+        refreshOsngOutcomeDirty();
+        updateOsngRerealizeButton();
+        appendBeat(
+          beat('Ram pruned node ' + label + ' (and its subtree) from the draft OSNG.', true, true, 'expand')
+        );
+      }
+
+      /** Graft new children under parentId (siblings accumulate on re-expansion). */
+      function graftOsnChildren(parentId, children) {
+        var parent = osnNodeById(parentId);
+        if (!parent || !Array.isArray(children)) return [];
+        if (!parent.graph || typeof parent.graph !== 'object') parent.graph = {};
+        if (!Array.isArray(parent.graph.child_osn_ids)) parent.graph.child_osn_ids = [];
+        var added = [];
+        children.forEach(function (child) {
+          if (!child || !child.id || osnNodeById(child.id)) return;
+          var copy = JSON.parse(JSON.stringify(child));
+          if (!copy.graph || typeof copy.graph !== 'object') copy.graph = {};
+          copy.graph.parent_osn_ids = [parentId];
+          if (!Array.isArray(copy.graph.child_osn_ids)) copy.graph.child_osn_ids = [];
+          if (!Array.isArray(copy.graph.standard_ancestor_osn_ids)) {
+            copy.graph.standard_ancestor_osn_ids = [];
+          }
+          lastOsngEnvelope.nodes.push(copy);
+          parent.graph.child_osn_ids.push(copy.id);
+          added.push(copy.id);
+        });
+        return added;
+      }
+
+      /** Expand mode: the intent text is the prism → one refining child (no auto-realize). */
+      async function runOsnExpand() {
+        if (busy) return;
+        var parentId = ensureSelectedOsn();
+        var answer = String((intentEl && intentEl.value) || '').trim();
+        if (!parentId || !answer) return;
+        if (
+          !window.gtih ||
+          !window.gtih.hanuman ||
+          !window.gtih.hanuman.expandOsnUntilDone
+        ) {
+          appendBeat(beat('gtih-sdk.js not loaded (need hanuman.expandOsnUntilDone)', true, true, 'expand'));
+          return;
+        }
+        if (keyEl && keyEl.value && keyEl.value.trim()) {
+          window.gtih.setApiKey(keyEl.value.trim());
+        }
+        commitLiveOsngEdits();
+        var pathNodes = osnPathTo(parentId).map(function (id) {
+          return JSON.parse(JSON.stringify(osnNodeById(id)));
+        });
+        var label = osnNodeLabel(parentId);
+
+        setBusy(true);
+        hanumanArc = 'expand';
+        intentEl.value = '';
+        appendBeat(
+          beat('Ram asks to expand node ' + label + ' toward: “' + answer + '”', true, true, 'expand')
+        );
+        appendBeat(
+          beat('Hanuman refines node ' + label + ' through that prism (advised by GT3)…', false, true, 'expand')
+        );
+        try {
+          var result = await window.gtih.hanuman.expandOsnUntilDone(
+            { path_nodes: pathNodes, prism: answer },
+            {
+              onLog: appendLog,
+              onLaborEvent: appendLaborEvent,
+              onStatus: function (st) {
+                appendStatusBeat({ phase: 'propose', status: st });
+              }
+            }
+          );
+          if (!osnNodeById(parentId)) {
+            throw new Error('Node ' + label + ' was removed while Hanuman labored');
+          }
+          var added = graftOsnChildren(parentId, result.children);
+          if (!added.length) throw new Error('Hanuman returned no new descendants');
+          renderOsng(lastOsngEnvelope);
+          refreshOsngOutcomeDirty();
+          updateOsngRerealizeButton();
+          out.className = 'ok';
+          appendBeat(
+            beat(
+              'Hanuman grafts ' +
+                (added.length === 1 ? 'a descendant' : added.length + ' descendants') +
+                ' under node ' + label +
+                ' — click any node in the System Pack to focus it; ▶ re-realizes the whole tree.',
+              true,
+              true,
+              'expand'
+            )
+          );
+        } catch (e) {
+          intentEl.value = answer;
+          appendBeat(
+            beat(
+              'Expansion of node ' + label + ' failed: ' +
+                ((e && (e.detail || e.message)) || String(e)),
+              true,
+              true,
+              'expand'
+            )
+          );
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      /** Edit mode: Hanuman revises the whole OSNG with the focused node as the main target. */
+      async function runOsnEdit() {
+        if (busy) return;
+        var targetId = ensureSelectedOsn();
+        var instruction = String((intentEl && intentEl.value) || '').trim();
+        if (!targetId || !instruction) return;
+        if (
+          !window.gtih ||
+          !window.gtih.hanuman ||
+          !window.gtih.hanuman.modalChatUntilDone
+        ) {
+          appendBeat(beat('gtih-sdk.js not loaded (need hanuman.modalChatUntilDone)', true, true, 'expand'));
+          return;
+        }
+        if (keyEl && keyEl.value && keyEl.value.trim()) {
+          window.gtih.setApiKey(keyEl.value.trim());
+        }
+        commitLiveOsngEdits();
+        var label = osnNodeLabel(targetId);
+        var prior = {
+          root_osn_id: lastOsngEnvelope.root_osn_id,
+          nodes: JSON.parse(JSON.stringify(osngNodes()))
+        };
+
+        setBusy(true);
+        hanumanArc = 'expand';
+        intentEl.value = '';
+        appendBeat(
+          beat('Ram asks to edit the OSNG around node ' + label + ': “' + instruction + '”', true, true, 'expand')
+        );
+        appendBeat(beat('Hanuman revises the draft OSNG (advised by GT3)…', false, true, 'expand'));
+        try {
+          var result = await window.gtih.hanuman.modalChatUntilDone(
+            {
+              contract: 'edit_osng',
+              question: instruction,
+              osng_envelope: prior,
+              focus_osn_id: targetId,
+              focus_sample: { kind: 'osn', osn_id: targetId, label: label },
+              evidence_summary: evidenceSummaryForModal(),
+              thread: []
+            },
+            {
+              onLog: appendLog,
+              onLaborEvent: appendLaborEvent,
+              onStatus: function (st) {
+                appendStatusBeat({ phase: 'propose', status: st });
+              }
+            }
+          );
+          var revised = result && result.envelope;
+          if (!revised || !Array.isArray(revised.nodes) || !revised.nodes.length) {
+            var warn = result && result.proposal_warning;
+            throw new Error(
+              warn ? warn.detail || warn.reason || 'revised OSNG unusable' : 'Hanuman returned no revised OSNG'
+            );
+          }
+          var keepFocus = revised.nodes.some(function (n) {
+            return n && n.id === selectedOsnId;
+          });
+          if (!keepFocus) selectedOsnId = revised.root_osn_id || null;
+          renderOsng({
+            root_osn_id: revised.root_osn_id,
+            nodes: JSON.parse(JSON.stringify(revised.nodes))
+          });
+          refreshOsngOutcomeDirty();
+          updateOsngRerealizeButton();
+          out.className = 'ok';
+          appendBeat(
+            beat('Hanuman revised the OSNG around node ' + label + ' — ▶ re-realizes the whole tree.', true, true, 'expand')
+          );
+        } catch (e) {
+          intentEl.value = instruction;
+          appendBeat(
+            beat(
+              'Edit around node ' + label + ' failed: ' + ((e && (e.detail || e.message)) || String(e)),
+              true,
+              true,
+              'expand'
+            )
+          );
+        } finally {
+          setBusy(false);
+        }
+      }
+
       function setBusy(next) {
         busy = !!next;
         intentEl.disabled = busy;
         proposeOnlyBtn.disabled = busy;
         updateOsngRerealizeButton();
+        updateOsngTrashButton();
+        if (railModesEl) railModesEl.disabled = busy;
         if (busy) {
           startHanumanSpinner();
         } else {
@@ -3405,14 +4006,14 @@
             ? msgOrEnvelope.envelope
             : msgOrEnvelope;
         if (!envelope || !Array.isArray(envelope.nodes)) return;
-        lastOsngEnvelope = {
+        var applied = {
           root_osn_id: envelope.root_osn_id,
-          nodes: envelope.nodes
+          nodes: JSON.parse(JSON.stringify(envelope.nodes))
         };
         if (msgOrEnvelope && msgOrEnvelope.envelope) {
           msgOrEnvelope.applied = true;
         }
-        renderOsng(lastOsngEnvelope);
+        renderOsng(applied);
         refreshOsngOutcomeDirty();
         appendModalChat(
           'rp',
@@ -3785,7 +4386,16 @@
        */
       function renderEvidence(evidence) {
         evidenceList.innerHTML = '';
-        var targets = (evidence && evidence.targets) || [];
+        var targets = ((evidence && evidence.targets) || []).slice();
+        var treeRank = {};
+        osnTreeOrder(lastOsngEnvelope).forEach(function (entry, i) {
+          if (entry.node.id != null) treeRank[entry.node.id] = i;
+        });
+        targets.sort(function (a, b) {
+          var ra = a.osn_id in treeRank ? treeRank[a.osn_id] : Infinity;
+          var rb = b.osn_id in treeRank ? treeRank[b.osn_id] : Infinity;
+          return ra - rb;
+        });
         lastEvidenceTargets = targets.slice();
         if (!targets.length) {
           setEvidenceStageVisible(false);
@@ -3880,6 +4490,7 @@
           beat('Hanuman will labor; GT3 alone is the sun.', true, true, 'expand')
         );
         resetResultStages();
+        resetOsngTreeState();
         try {
           var args = readIntent();
           refreshIntentForNextRaise(args.intent);
@@ -3926,7 +4537,13 @@
           return;
         }
         ev.preventDefault();
-        runProposeRealize();
+        if (!osnTreeActive()) {
+          runProposeRealize();
+        } else if (intentMode === 'edit') {
+          runOsnEdit();
+        } else {
+          runOsnExpand();
+        }
       });
 
       proposeOnlyBtn.addEventListener('click', async function () {
@@ -3951,6 +4568,7 @@
           beat('Hanuman opens the Job (advised by GT3)…', false, true, 'expand')
         );
         resetResultStages();
+        resetOsngTreeState();
         try {
           var args = readIntent();
           refreshIntentForNextRaise(args.intent);

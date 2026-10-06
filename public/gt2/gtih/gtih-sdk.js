@@ -323,7 +323,8 @@
      *   focus_sample?: object,
      *   focus_content?: string,
      *   evidence_summary?: object,
-     *   thread?: { role: string, content: string }[]
+     *   thread?: { role: string, content: string }[],
+     *   focus_osn_id?: string — edit_osng only: the node the revision mainly targets
      * }} args
      */
     async function startModalChat(args) {
@@ -349,7 +350,8 @@
           focus_sample: a.focus_sample || null,
           focus_content: typeof a.focus_content === 'string' ? a.focus_content : '',
           evidence_summary: a.evidence_summary != null ? a.evidence_summary : [],
-          thread: Array.isArray(a.thread) ? a.thread : []
+          thread: Array.isArray(a.thread) ? a.thread : [],
+          focus_osn_id: a.focus_osn_id || null
         },
         openRouterHeaders()
       );
@@ -437,6 +439,99 @@
       throw timeoutErr;
     }
 
+    /**
+     * TRH prism expansion: Hanuman refines the last path node into one child.
+     * @param {{ path_nodes: object[], prism: string }} args — root → selected parent chain
+     */
+    async function startOsnExpand(args) {
+      var a = args || {};
+      var prism = String(a.prism || '').trim();
+      if (!prism) throw new Error('prism must be non-empty');
+      if (!Array.isArray(a.path_nodes) || !a.path_nodes.length) {
+        throw new Error('path_nodes required (root → selected parent)');
+      }
+      return jsonFetch(
+        'POST',
+        '/lexiom13/osn/propose',
+        { mode: 'expand', prism: prism, path_nodes: a.path_nodes },
+        openRouterHeaders()
+      );
+    }
+
+    function expandResultFromStatus(st, runId) {
+      return {
+        children: Array.isArray(st.children) ? st.children : [],
+        parent_osn_id: st.parent_osn_id || null,
+        run_id: runId,
+        status: st
+      };
+    }
+
+    /**
+     * Convenience: start expansion → Hanuman labor → poll until ok/failed.
+     * @returns {{ children: object[], parent_osn_id: string, run_id: string, status: object }}
+     */
+    async function expandOsnUntilDone(args, opts) {
+      var o = opts || {};
+      var started = await startOsnExpand(args);
+      if (o.onStatus) o.onStatus(started);
+      if (started && started.ca_session) {
+        try {
+          await serveProposeSession(started.ca_session, {
+            onLog: o.onLog,
+            onLaborEvent: o.onLaborEvent,
+            signal: o.signal
+          });
+        } catch (laborErr) {
+          var afterLabor = null;
+          try {
+            afterLabor = await getProposeStatus(started.run_id);
+          } catch (_e) {
+            afterLabor = null;
+          }
+          if (afterLabor && afterLabor.status === 'ok' && afterLabor.children) {
+            return expandResultFromStatus(afterLabor, started.run_id);
+          }
+          var fail = new Error(
+            (afterLabor && afterLabor.detail) ||
+              (laborErr && laborErr.message) ||
+              'Hanuman expansion labor failed'
+          );
+          fail.status = 502;
+          fail.detail = afterLabor && afterLabor.detail;
+          fail.debug =
+            (afterLabor && afterLabor.debug) ||
+            { phase: 'hanuman_labor', error_message: laborErr && laborErr.message };
+          fail.body = afterLabor;
+          throw fail;
+        }
+      }
+
+      var pollMs = typeof o.pollMs === 'number' ? o.pollMs : 1500;
+      var maxWaitMs = typeof o.maxWaitMs === 'number' ? o.maxWaitMs : 20 * 60 * 1000;
+      var t0 = Date.now();
+      while (Date.now() - t0 < maxWaitMs) {
+        var st = await getProposeStatus(started.run_id);
+        if (o.onStatus) o.onStatus(st);
+        if (st.status === 'ok' && st.children) {
+          return expandResultFromStatus(st, started.run_id);
+        }
+        if (st.status === 'failed') {
+          var err = new Error(st.detail || 'OSN expansion failed');
+          err.status = 502;
+          err.detail = st.detail;
+          err.debug = st.debug;
+          err.body = st;
+          throw err;
+        }
+        await sleep(pollMs);
+      }
+      var timeoutErr = new Error('OSN expansion poll timeout');
+      timeoutErr.status = 504;
+      timeoutErr.debug = { phase: 'poll_timeout', run_id: started.run_id };
+      throw timeoutErr;
+    }
+
     async function prepare(args) {
       var a = args || {};
       var body = {};
@@ -511,15 +606,56 @@
       throw timeoutErr;
     }
 
-    async function listEvidenceCollections(osnId) {
+    /** @param {string} [runId] — restrict to one build run (TRH ephemeral drafts). */
+    async function listEvidenceCollections(osnId, runId) {
       var id = String(osnId || '').trim();
       if (!id) throw new Error('osn_id required');
+      var run = String(runId || '').trim();
       return jsonFetch(
         'GET',
-        '/lexiom13/evidence/collections?osn_id=' + encodeURIComponent(id),
+        '/lexiom13/evidence/collections?osn_id=' +
+          encodeURIComponent(id) +
+          (run ? '&run_id=' + encodeURIComponent(run) : ''),
         undefined,
         openRouterHeaders()
       );
+    }
+
+    /**
+     * Evidence for every node of a realized envelope, scoped to one run.
+     * One listing per node (root first); each target is tagged with its `osn_id`.
+     * A failing node listing does not drop the others (reasons land in `detail`).
+     * @param {{ root_osn_id?: string, nodes?: object[] }} envelope
+     * @param {string} runId
+     */
+    async function listRunEvidence(envelope, runId) {
+      var env = envelope || {};
+      var rootId = String(env.root_osn_id || '').trim();
+      var ids = [];
+      if (rootId) ids.push(rootId);
+      (Array.isArray(env.nodes) ? env.nodes : []).forEach(function (n) {
+        var id = n && n.id != null ? String(n.id).trim() : '';
+        if (id && ids.indexOf(id) < 0) ids.push(id);
+      });
+      var failures = [];
+      var listings = await Promise.all(
+        ids.map(function (id) {
+          return listEvidenceCollections(id, runId).catch(function (err) {
+            failures.push(id + ': ' + ((err && err.message) || String(err)));
+            return null;
+          });
+        })
+      );
+      var targets = [];
+      listings.forEach(function (listing, i) {
+        var rows = (listing && listing.targets) || [];
+        rows.forEach(function (t) {
+          targets.push(Object.assign({}, t, { osn_id: t.osn_id || ids[i] }));
+        });
+      });
+      var result = { osn_id: rootId || ids[0] || null, osn_ids: ids, run_id: runId || null, targets: targets };
+      if (failures.length) result.detail = failures.join('; ');
+      return result;
     }
 
     function getBudArtifactUrl(runId, entry) {
@@ -710,7 +846,10 @@
       var evidence = null;
       try {
         if (o.onLog) o.onLog('phase: collect evidence listings');
-        evidence = await listEvidenceCollections(osnId);
+        evidence = await listRunEvidence(
+          { root_osn_id: osnId, nodes: envelope.nodes },
+          handoff.run_id
+        );
       } catch (evErr) {
         evidence = {
           osn_id: osnId,
@@ -825,7 +964,10 @@
         realizeUntilDone: realizeUntilDone,
         startModalChat: startModalChat,
         modalChatUntilDone: modalChatUntilDone,
+        startOsnExpand: startOsnExpand,
+        expandOsnUntilDone: expandOsnUntilDone,
         listEvidenceCollections: listEvidenceCollections,
+        listRunEvidence: listRunEvidence,
         getBudArtifactUrl: getBudArtifactUrl,
         getBudPreviewUrl: getBudPreviewUrl,
         getEvidenceArtifactUrl: getEvidenceArtifactUrl,

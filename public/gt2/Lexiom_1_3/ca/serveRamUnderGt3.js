@@ -23,6 +23,9 @@ export { CA_SECONDARY_NAME, caDisplayLabel } from './devoteeName.js';
 const DEFAULT_WC_CDN =
   'https://cdn.jsdelivr.net/npm/@webcontainer/api@1.5.1/+esm';
 
+const DIRECT_EVIDENCE_VOW =
+  'Each inspection_prompt is a short retrieval statement naming the fragment of the delivered SUD to show for first-hand inspection (e.g. "A phrase which relates the poem to Berlin") — never a procedure: no count/verify/confirm/check/measure, no thresholds (not "Count the words and verify it contains exactly 30 words").';
+
 /**
  * Ram authorized this browser Job; I begin with love:
  * receive the workspace GT3 prepared from his OSNG, consult the sun, build the SUD, report home.
@@ -117,6 +120,7 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
     };
 
     let modalChatContract = null;
+    let proposeExpand = false;
     if (isPropose) {
       try {
         const briefRaw = (
@@ -125,9 +129,12 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
         const brief = JSON.parse(briefRaw || '{}');
         if (brief && brief.mode === 'modal_chat') {
           modalChatContract = String(brief.contract || 'lineage_readonly');
+        } else if (brief && brief.mode === 'expand') {
+          proposeExpand = true;
         }
       } catch (_e) {
         modalChatContract = null;
+        proposeExpand = false;
       }
     }
 
@@ -144,6 +151,7 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       isDocument,
       isPropose,
       modalChatContract,
+      proposeExpand,
       primary: builderPrimary,
       signal: opts.signal,
       log,
@@ -261,6 +269,7 @@ async function iRunTheBuilderPassForRam({
   isDocument,
   isPropose,
   modalChatContract,
+  proposeExpand,
   primary,
   signal,
   log,
@@ -277,26 +286,31 @@ async function iRunTheBuilderPassForRam({
     log(
       isModal
         ? `[ca] Consulting GT3 for TRH modal chat (${modalChatContract})…`
-        : '[ca] Consulting GT3 to draft a proposal OSNG from your intent…'
+        : proposeExpand
+          ? '[ca] Consulting GT3 to refine the selected node through your prism…'
+          : '[ca] Consulting GT3 to draft a proposal OSNG from your intent…'
     );
     const prompt =
       (await sandbox.read('AGENT_PROMPT.md', { offset: 0, limit: 60000 })).content ||
       (isModal
         ? 'Answer in CHAT_REPLY.md; keep OSNG_PROPOSAL.json per contract.'
-        : 'Draft OSNG_PROPOSAL.json from INTENT.md.');
+        : proposeExpand
+          ? 'Write one refining child to OSNG_PROPOSAL.json.'
+          : 'Draft OSNG_PROPOSAL.json from INTENT.md.');
     const loop = await iServeRamWithGt3Tools({
       system: iSpeakTheSystemVowForThisBuild(
         false,
         primary,
         true,
-        modalChatContract || null
+        modalChatContract || null,
+        proposeExpand
       ),
       prompt,
       primary,
       isDocument: false,
       requireOutline: false,
       allowCommands: false,
-      requiredFiles: isModal ? ['CHAT_REPLY.md'] : undefined,
+      requiredFiles: isModal ? ['CHAT_REPLY.md'] : [],
       workspace: sandbox,
       signal,
       budgets: { maxWallClockMs: wallMs },
@@ -339,7 +353,28 @@ async function iRunTheBuilderPassForRam({
 }
 
 /** The vow I speak into the sun's ear before tools begin — how I will honor Ram's prescription. */
-function iSpeakTheSystemVowForThisBuild(isDocument, primary, isPropose, modalChatContract) {
+function iSpeakTheSystemVowForThisBuild(
+  isDocument,
+  primary,
+  isPropose,
+  modalChatContract,
+  proposeExpand
+) {
+  if (isPropose && proposeExpand) {
+    return [
+      'You are Hanuman — devotee of Ram — under GT3, the only sun.',
+      'Ram raised an **OSNG expansion** Job: refine one selected node through a thematic prism (not greenfield propose, not realize).',
+      'Use only the supplied structured tools. Prose cannot read or change the workspace.',
+      'Read PATH_OSNG.json (root → selected parent, last node is the parent), PRISM.md (the prism), PROPOSE_BRIEF.json, and AGENT_PROMPT.md.',
+      `Write ${primary} as { "root_osn_id": <child id>, "nodes": [exactly ONE new child node] } — never the path nodes, never a tool-result wrapper.`,
+      'The child: opaque `{uuid}.osn` id (file_name = id), graph.parent_osn_ids = [parent id], empty child_osn_ids, exactly one direct TEXTUAL_SNIPPET success evidence. It is independent of any existing siblings.',
+      'The child output_spec is a DELTA: only what the prism adds or narrows (1–3 sentences). Ancestor constraints are inherited — never restate them (form, length / word count, subject, tone, presentation), not even as "remains"; state an override explicitly if the prism contradicts one.',
+      DIRECT_EVIDENCE_VOW,
+      'Outcome-facing language only in output_spec and evidences — no Ram/Hanuman/GT3 ceremony names.',
+      'Do not write document.md or index.html. Do not rewrite PATH_OSNG.json, PRISM.md, or PROPOSE_BRIEF.json.',
+      `Call finish once ${primary} is complete and valid JSON.`
+    ].join('\n');
+  }
   if (isPropose && modalChatContract) {
     const readonly = String(modalChatContract) === 'lineage_readonly';
     return [
@@ -351,7 +386,7 @@ function iSpeakTheSystemVowForThisBuild(isDocument, primary, isPropose, modalCha
       'Write your conversational answer to CHAT_REPLY.md.',
       readonly
         ? 'READ-ONLY CONTRACT: CHAT_REPLY.md is the only file you write. Do not write OSNG_PROPOSAL.json or edit the garden.'
-        : `EDIT-MY-OSNG CONTRACT: ${primary} already holds a copy of PRIOR_OSNG.json. Overwrite it with the revised raw OSNG JSON (finished allowlist only). Explain changes in CHAT_REPLY.md. Outcome-facing language only — no ceremony names in output_spec/evidences.`,
+        : `EDIT-MY-OSNG CONTRACT: ${primary} already holds a copy of PRIOR_OSNG.json. Overwrite it with the revised raw OSNG JSON (finished allowlist only; exactly one direct success evidence per node, its inspection_prompt naming what to retrieve from the delivered SUD — never a count/verify procedure). Explain changes in CHAT_REPLY.md. Outcome-facing language only — no ceremony names in output_spec/evidences.`,
       'Do not write document.md or index.html. Do not invent a second sun.',
       'Call finish once CHAT_REPLY.md is written.'
     ].join('\n');
@@ -365,12 +400,13 @@ function iSpeakTheSystemVowForThisBuild(isDocument, primary, isPropose, modalCha
       'Read INTENT.md and PROPOSE_BRIEF.json. Do not invent a second sun.',
       `Primary deliverable path: ${primary}`,
       'Write a JSON envelope { root_osn_id, nodes: [osn drafts] }. Day-zero: exactly one node.',
-      'Mandatory method: write SEED.md from INTENT (outcome paraphrase) → write THEMATIC_LENSES.json with exactly 3 lens objects → fold those lenses into output_spec → compose success_evidences from seed+lenses+output_spec.',
+      'Mandatory method: write SEED.md from INTENT (outcome paraphrase) → write THEMATIC_LENSES.json with exactly 3 lens objects → fold those lenses into output_spec → compose exactly one direct success evidence from seed+lenses+output_spec.',
       'Outcome-facing language: SEED.md, THEMATIC_LENSES.json, output_spec, and success_evidences inspection prompts must NEVER name Ram, Hanuman, GT3, White throne, raised_by, or laborer. Those names stay in PROPOSE_BRIEF / Job ceremony / owner metadata only.',
       'Preserve INTENT voice neutrally (e.g. “my trip” → the traveler’s / author’s trip — not “Ram’s trip”).',
       'On every GT3 consult, carry the mid-method seed, the three lenses, and draft evidences so the sun can guide the next loving step — keep those artifacts ceremony-free.',
       'Lexiom shape: thematic_lenses as objects { lens_id, name, description, purpose } — never bare strings — in THEMATIC_LENSES.json only.',
       'Lexiom shape: success_evidences as objects { evidence_id, kind: "TEXTUAL_SNIPPET", direct: true, inspection_prompt } — never type/description/snippet dialects.',
+      DIRECT_EVIDENCE_VOW,
       'Finished OSNG_PROPOSAL.json nodes may contain only: schema_version, id, file_name, owner, graph (parent/child/standard_ancestor ids), output_spec, success_evidences.',
       'id and file_name must be opaque `{uuid}.osn` (not path-shaped, not outcome words). root_osn_id matches that id.',
       'owner must be the simple string "Ram" (or another short display name) — never an object with raised_by/laborer/authority. Do not repeat owner/ceremony names inside output_spec or evidences.',

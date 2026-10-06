@@ -41,6 +41,13 @@ This tree lives inside the GTIH repo; Tegria’s SPA lives in the sibling [`tegr
 
   `<-`/`->` step samples; download + **X** in the header. Cockpit blurs under a scrim while the modal is open.
 
+- **Expand / Edit modes:** once an OSNG exists, the workspace rail under **Desired Outcome / Desired change** shows a radio panel — **Expand** (default) or **Edit** — that sets what Enter in the intent box does to the focused node. The choice is sticky across focus changes and runs, and the panel is disabled while Hanuman labors.
+  - **Expand:** your text is the thematic prism; Enter calls `gtih.hanuman.expandOsnUntilDone({ path_nodes, prism })`. Hanuman sees only the root → node path and returns **one** refining child, grafted under the node; expanding the same node again adds another sibling.
+  - **Edit:** your text is a revision request; Enter calls `gtih.hanuman.modalChatUntilDone({ contract: 'edit_osng', focus_osn_id, … })`. Hanuman revises the whole OSNG with the focused node as the main target. The revised OSNG replaces the System Pack (kept nodes keep their ids; new nodes get fresh ids); focus stays on the node, or falls back to the root if it was removed. Hanuman's chat reply is not shown.
+  - A new outcome is started only by deleting the root (garbage can), which brings back the plain intent box.
+
+- **System Pack focus:** `#osngView` always shows the whole OSNG in tree order, each node indented by depth (in both the Outcome Spec and Neural Geometry views). Clicking into a node's Outcome Spec / evidence text (or anywhere in its YAML block) focuses it: the other nodes dim, and Expand / Edit act on it. Focus defaults to the root after a proposal and stays on the expanded node after an expansion. The garbage-can glyph left of **▶** deletes the focused node with its subtree (focus moves to its parent); deleting the root resets the cockpit (OSNG and realized SUD). A confirmation is asked only when more than one node would be removed. Only the first proposal auto-realizes; expansions, edits and deletions mark the OSNG changed and reveal **▶**, which realizes the **whole tree** as one merged SUD that replaces the previous one.
+
 - Secondary: **propose only** (`proposeFromIntentUntilDone`, `max_descendants: 0` → single-OSN OSNG)
 
 - On failure: shows `detail` + `debug` JSON (no silent draft fallback)

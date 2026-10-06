@@ -14,6 +14,7 @@ import {
   normalizeHanumanOwner,
   buildNaiveSingleOsn,
   buildModalChatAgentPrompt,
+  finalizeModalChatResult,
   makeHanumanOsnId,
   isHanumanOsnId,
   DEFAULT_HANUMAN_OWNER,
@@ -31,6 +32,15 @@ import {
   MODAL_CHAT_FOCUS,
   MODAL_CHAT_FOCUS_CONTENT,
   MODAL_CHAT_EVIDENCE,
+  EXPAND_MODE,
+  EXPAND_CHILD_COUNT,
+  EXPAND_PATH_OSNG,
+  EXPAND_PRISM,
+  singleDirectEvidence,
+  buildExpandAgentPrompt,
+  startLexiom13OsnExpand,
+  finalizeExpandResult,
+  remintProposedOsnIds,
   proposeLexiom13OsngFromIntent
 } from '../lib/lexiom13OsnPropose.js';
 import { primaryArtifactForPlugin } from '../lib/lexiom13CaPolicy.js';
@@ -308,6 +318,7 @@ test('startLexiom13OsngPropose creates workspace + awaiting_browser ticket', asy
     assert.match(agentPrompt, /encode outcome words/);
     assert.match(agentPrompt, /put `title`, `seed`/);
     assert.match(agentPrompt, /finished node/);
+    assert.doesNotMatch(agentPrompt, /NODE_QUESTIONS|open question/);
     const brief = JSON.parse(
       await fsp.readFile(path.join(outDir, 'PROPOSE_BRIEF.json'), 'utf8')
     );
@@ -401,6 +412,97 @@ test('buildModalChatAgentPrompt lineage vs edit contracts', () => {
   assert.match(edit, new RegExp(MODAL_CHAT_REPLY));
   assert.match(edit, /already holds a copy/);
   assert.doesNotMatch(edit, /only file you write/);
+  assert.doesNotMatch(edit, /main target/);
+  assert.match(edit, /\*\*delta\*\* on top of its ancestors/);
+  assert.doesNotMatch(lineage, /\*\*delta\*\*/);
+
+  const targeted = buildModalChatAgentPrompt({
+    contract: MODAL_CHAT_CONTRACT_EDIT,
+    question: 'Make it about the river',
+    thread: [],
+    focusSample: { kind: 'osn' },
+    evidenceSummary: [],
+    focusOsnId: 'focus-1.osn'
+  });
+  assert.match(targeted, /focus-1\.osn/);
+  assert.match(targeted, /main target/);
+  assert.match(targeted, /Keep the ids of nodes you keep/);
+});
+
+test('finalizeModalChatResult (edit) accepts a multi-node revised tree and keeps prior ids', async () => {
+  const outDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'modal-edit-final-'));
+  try {
+    const rootId = makeHanumanOsnId();
+    const childId = makeHanumanOsnId();
+    const draftGrandId = makeHanumanOsnId();
+    const node = (id, parents, children, spec) => ({
+      schema_version: 'osn/0.2',
+      id,
+      file_name: id,
+      owner: 'Ram',
+      graph: { parent_osn_ids: parents, child_osn_ids: children, standard_ancestor_osn_ids: [] },
+      output_spec: spec,
+      success_evidences: [
+        { evidence_id: 'ev.direct.textual_snippet.1', kind: 'TEXTUAL_SNIPPET', direct: true, inspection_prompt: `A phrase showing ${spec}` }
+      ]
+    });
+    const prior = {
+      root_osn_id: rootId,
+      nodes: [node(rootId, [], [childId], 'A 30-word poem'), node(childId, [rootId], [], 'Colors')]
+    };
+    const revised = {
+      root_osn_id: rootId,
+      nodes: [
+        node(rootId, [], [childId], 'A 30-word poem'),
+        node(childId, [rootId], [draftGrandId], 'Colors from blue to green'),
+        node(draftGrandId, [childId], [], 'Rain on cobblestones')
+      ]
+    };
+    await fsp.writeFile(path.join(outDir, MODAL_CHAT_PRIOR_OSNG), JSON.stringify(prior), 'utf8');
+    await fsp.writeFile(path.join(outDir, OSNG_PROPOSAL_PRIMARY), JSON.stringify(revised), 'utf8');
+    await fsp.writeFile(path.join(outDir, MODAL_CHAT_REPLY), 'Narrowed the palette.', 'utf8');
+
+    const result = { status: 'completed' };
+    await finalizeModalChatResult(
+      result,
+      { contract: MODAL_CHAT_CONTRACT_EDIT },
+      outDir,
+      'use the colors range from blue to green',
+      { max_descendants_requested: 0, max_descendants_effective: 0, clamped: false }
+    );
+    assert.equal(result.proposal_warning, null);
+    assert.ok(result.envelope);
+    assert.equal(result.envelope.root_osn_id, rootId);
+    assert.equal(result.envelope.nodes.length, 3);
+    const [root, child, grand] = result.envelope.nodes;
+    assert.equal(root.id, rootId);
+    assert.equal(child.id, childId);
+    assert.equal(child.output_spec, 'Colors from blue to green');
+    assert.ok(isHanumanOsnId(grand.id) && grand.id !== draftGrandId);
+    assert.deepEqual(child.graph.child_osn_ids, [grand.id]);
+    assert.deepEqual(grand.graph.parent_osn_ids, [childId]);
+  } finally {
+    await fsp.rm(outDir, { recursive: true, force: true });
+  }
+});
+
+test('remintProposedOsnIds keepIds preserves existing ids and mints only new ones', () => {
+  const kept = 'a7f2d8c1-4e9b-11ee-be56-0242ac120002.osn';
+  const draftNew = 'b7f2d8c1-4e9b-11ee-be56-0242ac120002.osn';
+  const { nodes, idMap } = remintProposedOsnIds(
+    [
+      { id: kept, graph: { parent_osn_ids: [], child_osn_ids: [draftNew] } },
+      { id: draftNew, graph: { parent_osn_ids: [kept], child_osn_ids: [] } },
+      { id: kept, graph: { parent_osn_ids: [], child_osn_ids: [] } }
+    ],
+    { keepIds: [kept] }
+  );
+  assert.equal(nodes[0].id, kept);
+  assert.ok(isHanumanOsnId(nodes[1].id) && nodes[1].id !== draftNew);
+  assert.notEqual(nodes[2].id, kept);
+  assert.deepEqual(nodes[0].graph.child_osn_ids, [nodes[1].id]);
+  assert.deepEqual(nodes[1].graph.parent_osn_ids, [kept]);
+  assert.equal(idMap.has(kept), false);
 });
 
 test('startLexiom13ModalChat seeds PRIOR_OSNG + contract prompt', async () => {
@@ -546,6 +648,243 @@ test('modal gate: missing CHAT_REPLY.md fails', async () => {
     assert.equal(gate.reason, 'chat_reply_missing');
   } finally {
     await fsp.rm(canonical, { recursive: true, force: true });
+  }
+});
+
+test('singleDirectEvidence keeps exactly one direct evidence per OSN', () => {
+  const out = singleDirectEvidence(
+    [
+      { evidence_id: 'ev.derived.x', kind: 'TEXTUAL_SNIPPET', direct: false, inspection_prompt: 'Derived' },
+      { evidence_id: 'ev.direct.textual_snippet.2', kind: 'TEXTUAL_SNIPPET', direct: true, inspection_prompt: 'First direct' },
+      { evidence_id: 'ev.direct.textual_snippet.3', kind: 'TEXTUAL_SNIPPET', direct: true, inspection_prompt: 'Second direct' }
+    ],
+    'intent'
+  );
+  assert.equal(out.length, 1);
+  assert.equal(out[0].inspection_prompt, 'First direct');
+  assert.equal(out[0].direct, true);
+  assert.equal(out[0].evidence_id, 'ev.direct.textual_snippet.1');
+
+  const onlyDerived = singleDirectEvidence(
+    [{ evidence_id: 'ev.x', direct: false, inspection_prompt: 'Only one' }],
+    'intent'
+  );
+  assert.equal(onlyDerived.length, 1);
+  assert.equal(onlyDerived[0].direct, true);
+  assert.equal(singleDirectEvidence([], 'intent').length, 1);
+});
+
+function makeChild(parentId, spec) {
+  const id = makeHanumanOsnId();
+  return {
+    schema_version: 'osn/0.2',
+    id,
+    file_name: id,
+    owner: 'Ram',
+    graph: { parent_osn_ids: [parentId], child_osn_ids: [], standard_ancestor_osn_ids: [] },
+    output_spec: spec,
+    success_evidences: [
+      {
+        evidence_id: 'ev.direct.textual_snippet.1',
+        kind: 'TEXTUAL_SNIPPET',
+        direct: true,
+        inspection_prompt: `Check: ${spec}`
+      }
+    ]
+  };
+}
+
+const ROOT_ID = SAMPLE_ENVELOPE.root_osn_id;
+
+test('buildExpandAgentPrompt carries path, prism, and parent id', () => {
+  const prompt = buildExpandAgentPrompt({
+    pathNodes: SAMPLE_ENVELOPE.nodes,
+    prism: 'Lean into the night-time city.'
+  });
+  assert.match(prompt, /exactly \*\*one\*\* descendant OSN/);
+  assert.doesNotMatch(prompt, /exactly (\*\*)?3\b|\bthree\b/);
+  assert.match(prompt, /Lean into the night-time city/);
+  assert.match(prompt, new RegExp(ROOT_ID.replace(/\./g, '\\.')));
+  assert.match(prompt, new RegExp(EXPAND_PATH_OSNG));
+  assert.match(prompt, new RegExp(EXPAND_PRISM));
+  assert.doesNotMatch(prompt, /NODE_QUESTIONS/);
+  assert.match(prompt, /narrows or deepens/);
+  assert.match(prompt, /as a \*\*delta\*\*/);
+  assert.match(prompt, /Never restate an ancestor's constraints/);
+  assert.doesNotMatch(prompt, /still a SUD contract/);
+});
+
+test('startLexiom13OsngPropose mode expand seeds path + prism workspace', async () => {
+  const repoRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'osng-expand-'));
+  try {
+    const started = await startLexiom13OsngPropose(repoRoot, {
+      mode: EXPAND_MODE,
+      prism: 'Focus on the river.',
+      path_nodes: SAMPLE_ENVELOPE.nodes
+    });
+    assert.equal(started.status, 'awaiting_browser');
+    assert.equal(started.meta.mode, EXPAND_MODE);
+    assert.equal(started.parent_osn_id, ROOT_ID);
+    assert.equal(started.ca_session.plugin_id, OSNG_PROPOSER_PLUGIN_ID);
+
+    const outDir = path.join(repoRoot, 'builds', 'lexiom13-propose', started.run_id);
+    const pathEnv = JSON.parse(await fsp.readFile(path.join(outDir, EXPAND_PATH_OSNG), 'utf8'));
+    assert.equal(pathEnv.nodes.length, 1);
+    assert.equal(pathEnv.nodes[0].id, ROOT_ID);
+    assert.equal(await fsp.readFile(path.join(outDir, EXPAND_PRISM), 'utf8'), 'Focus on the river.');
+    const brief = JSON.parse(await fsp.readFile(path.join(outDir, 'PROPOSE_BRIEF.json'), 'utf8'));
+    assert.equal(brief.mode, EXPAND_MODE);
+    assert.equal(brief.parent_osn_id, ROOT_ID);
+    const handoff = JSON.parse(await fsp.readFile(path.join(outDir, 'HANDOFF.json'), 'utf8'));
+    assert.deepEqual(handoff.path_osn_ids, [ROOT_ID]);
+    const prompt = await fsp.readFile(path.join(outDir, 'AGENT_PROMPT.md'), 'utf8');
+    assert.match(prompt, /Focus on the river/);
+  } finally {
+    await fsp.rm(repoRoot, { recursive: true, force: true });
+  }
+});
+
+test('startLexiom13OsnExpand rejects empty prism and missing path', async () => {
+  await assert.rejects(
+    () => startLexiom13OsnExpand(os.tmpdir(), { prism: '', path_nodes: SAMPLE_ENVELOPE.nodes }),
+    (err) => err && err.statusCode === 400 && err.debug.reason === 'empty_prism'
+  );
+  await assert.rejects(
+    () => startLexiom13OsnExpand(os.tmpdir(), { prism: 'p', path_nodes: [] }),
+    (err) => err && err.statusCode === 400 && err.debug.reason === 'missing_path_nodes'
+  );
+  await assert.rejects(
+    () => startLexiom13OsnExpand(os.tmpdir(), { prism: 'p', path_nodes: [{ output_spec: 'x' }] }),
+    (err) => err && err.statusCode === 400 && err.debug.reason === 'bad_path_node'
+  );
+});
+
+async function runExpandFinalize(children) {
+  const outDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'osng-expand-final-'));
+  await fsp.writeFile(path.join(outDir, EXPAND_PRISM), 'Focus on the river.', 'utf8');
+  await fsp.writeFile(
+    path.join(outDir, OSNG_PROPOSAL_PRIMARY),
+    JSON.stringify({ root_osn_id: children[0] && children[0].id, nodes: children }),
+    'utf8'
+  );
+  const result = { status: 'completed' };
+  await finalizeExpandResult(
+    result,
+    { parent_osn_id: ROOT_ID, path_osn_ids: [ROOT_ID] },
+    outDir
+  );
+  await fsp.rm(outDir, { recursive: true, force: true });
+  return result;
+}
+
+test('finalizeExpandResult returns one child linked to the parent', async () => {
+  const children = [makeChild('wrong-parent.osn', 'Refinement 1')];
+  children[0].graph.child_osn_ids = ['stray.osn'];
+  children[0].success_evidences.push({
+    evidence_id: 'ev.direct.textual_snippet.2',
+    kind: 'TEXTUAL_SNIPPET',
+    direct: true,
+    inspection_prompt: 'Extra attestation'
+  });
+  const result = await runExpandFinalize(children);
+  assert.equal(result.status, 'completed');
+  assert.equal(result.mode, EXPAND_MODE);
+  assert.equal(result.parent_osn_id, ROOT_ID);
+  assert.equal(EXPAND_CHILD_COUNT, 1);
+  assert.equal(result.children.length, 1);
+  for (const child of result.children) {
+    assert.deepEqual(child.graph.parent_osn_ids, [ROOT_ID]);
+    assert.deepEqual(child.graph.child_osn_ids, []);
+    assert.equal(child.success_evidences.length, 1);
+    assert.equal(child.success_evidences[0].direct, true);
+    assert.equal(child.file_name, child.id);
+  }
+  const draftIds = new Set(children.map((c) => c.id));
+  const mintedIds = result.children.map((c) => c.id);
+  assert.ok(mintedIds.every((id) => isHanumanOsnId(id) && !draftIds.has(id)));
+  assert.equal(result.questions, undefined);
+});
+
+test('finalizeExpandResult rejects more than one child; remints path reuse', async () => {
+  const three = [1, 2, 3].map((i) => makeChild(ROOT_ID, `R${i}`));
+  const tooMany = await runExpandFinalize(three);
+  assert.equal(tooMany.status, 'agent_failed');
+  assert.equal(tooMany.reason, 'expand_child_count');
+
+  const reused = [{ ...makeChild(ROOT_ID, 'R1'), id: ROOT_ID, file_name: ROOT_ID }];
+  const reuse = await runExpandFinalize(reused);
+  assert.equal(reuse.status, 'completed');
+  assert.equal(reuse.children.length, 1);
+  assert.notEqual(reuse.children[0].id, ROOT_ID);
+});
+
+test('remintProposedOsnIds mints fresh ids and relinks the batch graph', () => {
+  const stock = 'a7f2d8c1-4e9b-11ee-be56-0242ac120002.osn';
+  const childId = 'b7f2d8c1-4e9b-11ee-be56-0242ac120002.osn';
+  const { nodes, idMap } = remintProposedOsnIds([
+    {
+      id: stock,
+      file_name: stock,
+      graph: { parent_osn_ids: [], child_osn_ids: [childId], standard_ancestor_osn_ids: ['std.osn'] }
+    },
+    {
+      id: childId,
+      file_name: childId,
+      graph: { parent_osn_ids: [stock], child_osn_ids: [], standard_ancestor_osn_ids: [] }
+    }
+  ]);
+  assert.ok(isHanumanOsnId(nodes[0].id));
+  assert.notEqual(nodes[0].id, stock);
+  assert.equal(nodes[0].file_name, nodes[0].id);
+  assert.equal(idMap.get(stock), nodes[0].id);
+  assert.deepEqual(nodes[0].graph.child_osn_ids, [nodes[1].id]);
+  assert.deepEqual(nodes[1].graph.parent_osn_ids, [nodes[0].id]);
+  assert.deepEqual(nodes[0].graph.standard_ancestor_osn_ids, ['std.osn']);
+  const again = remintProposedOsnIds([{ id: stock, graph: {} }]);
+  assert.notEqual(again.nodes[0].id, nodes[0].id);
+});
+
+async function makeExpandGateDirs(stagedFiles) {
+  const canonical = await fsp.mkdtemp(path.join(os.tmpdir(), 'expand-gate-'));
+  const stage = path.join(canonical, '.ca-staging', 'cas_test');
+  await fsp.mkdir(stage, { recursive: true });
+  await fsp.writeFile(
+    path.join(canonical, 'PROPOSE_BRIEF.json'),
+    JSON.stringify({ mode: EXPAND_MODE, parent_osn_id: ROOT_ID }),
+    'utf8'
+  );
+  for (const [name, content] of Object.entries(stagedFiles)) {
+    await fsp.writeFile(path.join(stage, name), content, 'utf8');
+  }
+  return { canonical, stage };
+}
+
+test('expand gate accepts a valid proposal alone and rejects a wrapped one', async () => {
+  const children = [makeChild(ROOT_ID, 'R1')];
+  const proposal = JSON.stringify({ root_osn_id: children[0].id, nodes: children });
+
+  const ok = await makeExpandGateDirs({ [OSNG_PROPOSAL_PRIMARY]: proposal });
+  try {
+    const gate = await validatePrimaryAfterSync(ok.stage, OSNG_PROPOSER_PLUGIN_ID, {
+      canonicalDir: ok.canonical
+    });
+    assert.equal(gate.ok, true);
+    assert.equal(gate.primary, OSNG_PROPOSAL_PRIMARY);
+  } finally {
+    await fsp.rm(ok.canonical, { recursive: true, force: true });
+  }
+
+  const wrapped = await makeExpandGateDirs({
+    [OSNG_PROPOSAL_PRIMARY]: WRAPPED_PROPOSAL
+  });
+  try {
+    const gate = await validatePrimaryAfterSync(wrapped.stage, OSNG_PROPOSER_PLUGIN_ID, {
+      canonicalDir: wrapped.canonical
+    });
+    assert.equal(gate.ok, false);
+    assert.equal(gate.reason, 'primary_not_json');
+  } finally {
+    await fsp.rm(wrapped.canonical, { recursive: true, force: true });
   }
 });
 

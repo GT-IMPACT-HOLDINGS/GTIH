@@ -9,6 +9,10 @@ import {
   PREPARE_SOURCE_EPHEMERAL,
   prepareLexiom13Build
 } from '../lib/lexiom13BuildPlugins.js';
+import {
+  COMPOSITION_MERGED_REFINEMENTS,
+  MERGED_REFINEMENT_GUIDANCE
+} from '../lib/lexiom13BuildContextPack.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -81,6 +85,92 @@ test('prepareLexiom13Build accepts osng_envelope without Lexiom YAML', async () 
     if (onDiskSub) {
       assert.ok(!onDiskSub.sections?.some((s) => s.key === 'seed' || s.key === 'thematic_lenses'));
     }
+  } finally {
+    await fsp.rm(tmpRoot, { recursive: true, force: true });
+  }
+});
+
+test('ephemeral multi-node envelope realizes the whole tree as one merged SUD', async () => {
+  const tmpRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'lexiom13-ephemeral-tree-'));
+  const rootId = 'draft.trh.tree.root.osn';
+  const kidIds = ['draft.trh.tree.k1.osn', 'draft.trh.tree.k2.osn'];
+  const grandId = 'draft.trh.tree.k1g1.osn';
+  const ev = (n) => [
+    {
+      evidence_id: 'ev.direct.textual_snippet.1',
+      kind: 'TEXTUAL_SNIPPET',
+      direct: true,
+      inspection_prompt: `Open document.md and confirm ${n}.`
+    }
+  ];
+  const node = (id, parents, children, spec) => ({
+    id,
+    output_spec: spec,
+    success_evidences: ev(spec),
+    graph: { parent_osn_ids: parents, child_osn_ids: children }
+  });
+
+  try {
+    const handoff = await prepareLexiom13Build(STATIC_ROOT, tmpRoot, {
+      osng_envelope: {
+        root_osn_id: rootId,
+        nodes: [
+          node(rootId, [], kidIds, 'A short poem about a trip to Berlin.'),
+          node(kidIds[0], [rootId], [grandId], 'The poem dwells on the river at night.'),
+          node(kidIds[1], [rootId], [], 'The poem uses only present tense.'),
+          node(grandId, [kidIds[0]], [], 'The river is seen from a bridge.')
+        ]
+      }
+    });
+
+    assert.equal(handoff.source, PREPARE_SOURCE_EPHEMERAL);
+    assert.equal(handoff.compilation_scope, 'self_and_approved_descendants');
+    assert.equal(handoff.composition, COMPOSITION_MERGED_REFINEMENTS);
+    assert.deepEqual(
+      handoff.subgraph.map((n) => n.id).sort(),
+      [rootId, ...kidIds, grandId].sort()
+    );
+    assert.equal(handoff.success_evidence_targets.length, 4);
+
+    const buildDir = path.join(tmpRoot, 'builds', 'lexiom13', handoff.run_id);
+    const plan = JSON.parse(await fsp.readFile(path.join(buildDir, 'BUILD_PLAN.json'), 'utf8'));
+    assert.equal(plan.composition, COMPOSITION_MERGED_REFINEMENTS);
+    assert.equal(plan.fill_clusters.length, 1);
+    assert.equal(plan.fill_clusters[0].ordered_keys.length, 4);
+    for (const line of MERGED_REFINEMENT_GUIDANCE) {
+      assert.ok(plan.policy.shared_invariants.includes(line));
+    }
+  } finally {
+    await fsp.rm(tmpRoot, { recursive: true, force: true });
+  }
+});
+
+test('single-node ephemeral envelope keeps self_only scope', async () => {
+  const tmpRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'lexiom13-ephemeral-single-'));
+  const rootId = 'draft.trh.single.osn';
+  try {
+    const handoff = await prepareLexiom13Build(STATIC_ROOT, tmpRoot, {
+      osng_envelope: {
+        root_osn_id: rootId,
+        nodes: [
+          {
+            id: rootId,
+            output_spec: 'A haiku.',
+            success_evidences: [
+              {
+                evidence_id: 'ev.direct.textual_snippet.1',
+                kind: 'TEXTUAL_SNIPPET',
+                direct: true,
+                inspection_prompt: 'Confirm it is a haiku.'
+              }
+            ],
+            graph: { parent_osn_ids: [], child_osn_ids: [] }
+          }
+        ]
+      }
+    });
+    assert.equal(handoff.compilation_scope, 'self_only');
+    assert.equal(handoff.composition, null);
   } finally {
     await fsp.rm(tmpRoot, { recursive: true, force: true });
   }
