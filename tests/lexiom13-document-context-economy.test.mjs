@@ -69,12 +69,7 @@ test('fill clusters expand BrandLexiom containers into four chapter heads', () =
   assert.equal(clusters.length, 4);
   assert.deepEqual(
     clusters.map((c) => c.title),
-    [
-      'Market Positioning',
-      'Audience & Enterprise Value',
-      'Creative Identity',
-      'Go-to-Market System'
-    ]
+    ['market', 'audience', 'creative', 'gtm']
   );
 });
 
@@ -87,7 +82,7 @@ test('prepare BrandLexiom emits per-node JSON, source pack, and four clusters', 
   });
   assert.equal(handoff.plugin_id, 'lexiom13.document_builder');
   assert.equal(handoff.context_economy?.mode, 'prepared_nodes');
-  assert.equal(handoff.context_economy?.node_count, 64);
+  assert.equal(handoff.context_economy?.node_count, 63);
   assert.equal(handoff.context_economy?.cluster_count, 4);
   assert.ok(handoff.context_economy?.source_count >= 1);
 
@@ -104,12 +99,18 @@ test('prepare BrandLexiom emits per-node JSON, source pack, and four clusters', 
   const prompt = await fsp.readFile(path.join(outDir, 'AGENT_PROMPT.md'), 'utf8');
 
   assert.equal(plan.fill_clusters.length, 4);
-  assert.equal(Object.keys(plan.node_files).length, 64);
+  assert.equal(Object.keys(plan.node_files).length, 63);
   const rootDescriptor = plan.node_files[plan.compilation_root_key];
   const rootRaw = await fsp.readFile(path.join(outDir, rootDescriptor.path), 'utf8');
   const rootNode = JSON.parse(rootRaw);
   assert.equal(rootNode.schema_version, 'lexiom13-prepared-node/1');
   assert.equal(rootNode.context.role, 'root');
+  assert.equal(rootNode.context.title, undefined);
+  assert.equal(rootNode.context.lenses, undefined);
+  assert.equal(typeof rootNode.context.output_spec, 'string');
+  assert.ok(rootNode.context.output_spec.length > 0);
+  assert.ok(Array.isArray(rootNode.context.success_evidences));
+  assert.ok(Array.isArray(rootNode.context.unique_requirements));
   assert.equal(rootNode.osn.id, handoff.compilation_root_osn_id);
   assert.equal(rootNode.source.yaml_sha256, rootDescriptor.source_yaml_sha256);
   assert.equal(
@@ -285,13 +286,13 @@ test('BrandLexiom fill packets fit budget and load referenced source sections', 
     strategy_id: 'outline_then_fill',
     run_id: 'fillpack1'
   });
+  const plan = JSON.parse(
+    await fsp.readFile(path.join(handoff.output_directory, 'BUILD_PLAN.json'), 'utf8')
+  );
+  const sectionByPhase = Object.fromEntries(
+    (plan.section_files || []).map((section) => [`fill:${section.cluster_id}`, section.path])
+  );
   const requests = [];
-  const sectionByPhase = {
-    'fill:c01': 'sections/01-market-positioning.md',
-    'fill:c02': 'sections/02-audience-and-enterprise-value.md',
-    'fill:c03': 'sections/03-creative-identity.md',
-    'fill:c04': 'sections/04-go-to-market-system.md'
-  };
   const result = await runDocumentBuildOrchestrator({
     workspace: fileWorkspace(handoff.output_directory),
     caSession: { run_id: handoff.run_id },
@@ -324,6 +325,8 @@ test('BrandLexiom fill packets fit budget and load referenced source sections', 
   assert.ok(estimateCrossingTokens(fillOne.messages, fillOne.tools) <= 8000);
   assert.match(fillOne.messages[1].content, /## 4\./);
   assert.doesNotMatch(fillOne.messages[1].content, /## 1\. Brand Mandate/);
+  assert.match(fillOne.messages[1].content, /output_spec/);
+  assert.doesNotMatch(fillOne.messages[1].content, /"title"\s*:/);
   await fsp.rm(tmp, { recursive: true, force: true });
 });
 

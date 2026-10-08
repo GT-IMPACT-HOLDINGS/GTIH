@@ -6,7 +6,7 @@ Home for **The Reasoning Hub (TRH)** frontend development.
 
 
 
-This tree sits **parallel** to [`Tegria_frontend/`](../Tegria_frontend/) at the GT3 repo root. Tegria owns a vertical product shell; TRH owns a **console-focused** surface that strives for a **CLI-based UX**—prompt in, structured GTIH outcomes out—without becoming a Lexiom 1.3 cabinet fork or a Tegria tenant wrapper.
+This tree lives inside the GTIH repo; Tegria’s SPA lives in the sibling [`tegria-front-end/`](../../tegria-front-end/) workspace. Tegria owns a vertical product shell; TRH owns a **console-focused** surface that strives for a **CLI-based UX**—prompt in, structured GTIH outcomes out—without becoming a Lexiom 1.3 cabinet fork or a Tegria tenant wrapper.
 
 
 
@@ -24,11 +24,29 @@ This tree sits **parallel** to [`Tegria_frontend/`](../Tegria_frontend/) at the 
 
 - Primary: `gtih.osng.proposeThenRealizeUntilDone` — propose OSNG → ephemeral prepare (no Lexiom YAML) → Hanuman realize → render Outcome then Evidences only when each has content
 
-- Left / right sidebars always open (OSNG · Hanuman); no collapse rails
+- Left / right sidebars always open (OSNG · Hanuman); no collapse rails. Each sidebar scrolls on its own (`#osngView` / `#out`); the center workspace scrolls separately — wheel or focus + keys on a panel do not move the others.
 
 - Left sidebar: proposed OSNG as **YAML** by default; Outcome Spec-only shows **editable** prose paragraphs (blue `output_spec`, green evidence narratives — blur/input commits into the envelope); after a SUD exists, editing Outcome Spec / evidences reveals a **▶** that calls `gtih.hanuman.realizeUntilDone({ osng_envelope })` then refreshes Outcome / Evidences; Metadata alone or both → structured YAML (meta mid-gray · spec blue · evidences green); JSON formatter kept behind `setOsngViewFormat('json'|'yaml')` for a later user toggle
 
-- Right sidebar (Agentic Delegation): **Subject Matter** / **OSNG Machinery** filters mirror left Outcome Spec / Neural Geometry — Subject Matter (default on) keeps intent→garden→SUD→evidences story beats; OSNG Machinery (default off) shows how Hanuman builds/uses the structural knowledge graph (propose/prepare/Jobs/phase); both on = full chronological stream (machinery lines mid-gray); neither = empty hint. Subject Matter lines use **light purple** during OSNG expansion and **dark purple** during SUD realization. Expand ends on the sealed propose Job; prepare opens realize with an explicit cut beat. While Hanuman labors, a `| / - \` spinner trails the log. Hard error JSON pierces the filter.
+- Right sidebar (Agentic Delegation): **Subject Matter** / **OSNG Machinery** / **Hanuman Labor** filters — Subject Matter (default on) keeps intent→garden→SUD→evidences story beats; OSNG Machinery (default off) shows host/Job machinery (propose/prepare/phase); Hanuman Labor (default off) shows structured CA `onLaborEvent` facts only (tools, FS, GT3 consults, lifecycle) — inside the leap, not TRH-invented narrative. Both/all on = full chronological stream (scrollable history in `#out`, sticky to bottom while live unless you scroll up); none = empty hint. Subject Matter lines use **light purple** during OSNG expansion and **dark purple** during SUD realization. Labor lines use slate mono. Expand ends on the sealed propose Job; prepare opens realize with an explicit cut beat. While Hanuman labors, a `| / - \` spinner trails the log. Hard error JSON pierces the filter.
+
+- **Outcome / Evidences:** each row is **serial · type · status** (`0` = SUD; evidences `1…n`; status `C` Collected / `A` Approved / `M` Missing). Click a row to open `#resultModal` (90vw×90vh). Modal body planes:
+
+  | Panel | Plane | SDK | Contract |
+  |-------|--------|-----|----------|
+  | **LP** | Hanuman WebContainer (same as RP) | `gtih.hanuman.modalChatUntilDone({ contract: 'lineage_readonly', … })` | Read-only counsel in `AGENT_PROMPT` — writes only `CHAT_REPLY.md`, answers sample questions from `FOCUS_CONTENT.md`; no Apply |
+  | **TP** | Sample content | (local) | — |
+  | **BP** | GT3 product infer | `gtih.gt3.infer` | No OSNG/SUD pack |
+  | **RP** | Hanuman WebContainer (same as LP) | `modalChatUntilDone({ contract: 'edit_osng', … })` | Edit-my-OSNG; **Apply** updates System Pack; optional ▶ re-realize |
+
+  `<-`/`->` step samples; download + **X** in the header. Cockpit blurs under a scrim while the modal is open.
+
+- **Expand / Edit modes:** once an OSNG exists, the workspace rail under **Desired Outcome / Desired change** shows a radio panel — **Expand** (default) or **Edit** — that sets what Enter in the intent box does to the focused node. The choice is sticky across focus changes and runs, and the panel is disabled while Hanuman labors.
+  - **Expand:** your text is the thematic prism; Enter calls `gtih.hanuman.expandOsnUntilDone({ path_nodes, prism })`. Hanuman sees only the root → node path and returns **one** refining child, grafted under the node; expanding the same node again adds another sibling.
+  - **Edit:** your text is a revision request; Enter calls `gtih.hanuman.modalChatUntilDone({ contract: 'edit_osng', focus_osn_id, … })`. Hanuman revises the whole OSNG with the focused node as the main target. The revised OSNG replaces the System Pack (kept nodes keep their ids; new nodes get fresh ids); focus stays on the node, or falls back to the root if it was removed. Hanuman's chat reply is not shown.
+  - A new outcome is started only by deleting the root (garbage can), which brings back the plain intent box.
+
+- **System Pack focus:** `#osngView` always shows the whole OSNG in tree order, each node indented by depth (in both the Outcome Spec and Neural Geometry views). Clicking into a node's Outcome Spec / evidence text (or anywhere in its YAML block) focuses it: the other nodes dim, and Expand / Edit act on it. Focus defaults to the root after a proposal and stays on the expanded node after an expansion. The garbage-can glyph left of **▶** deletes the focused node with its subtree (focus moves to its parent); deleting the root resets the cockpit (OSNG and realized SUD). A confirmation is asked only when more than one node would be removed. Only the first proposal auto-realizes; expansions, edits and deletions mark the OSNG changed and reveal **▶**, which realizes the **whole tree** as one merged SUD that replaces the previous one.
 
 - Secondary: **propose only** (`proposeFromIntentUntilDone`, `max_descendants: 0` → single-OSN OSNG)
 
@@ -61,5 +79,3 @@ This tree sits **parallel** to [`Tegria_frontend/`](../Tegria_frontend/) at the 
 - Hosting Tegria domain/tenant remote-server concerns.
 
 - Auto-canonizing proposed OSNG into Lexiom YAML (ephemeral prepare only).
-
-

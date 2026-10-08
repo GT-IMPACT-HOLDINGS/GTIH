@@ -390,6 +390,83 @@ test('software validation rejects missing local assets', async () => {
   await fsp.rm(root, { recursive: true, force: true });
 });
 
+test('write_file rejects invalid JSON for .json paths so the agent can retry', async () => {
+  const workspace = memoryWorkspace(
+    new Map([['OSNG_PROPOSAL.json', '{"root_osn_id":"a","nodes":[{"id":"a"}]}']])
+  );
+  const requests = [];
+  const replies = [
+    assistantCall('w-bad', TOOL_NAMES.WRITE_FILE, {
+      path: 'OSNG_PROPOSAL.json',
+      content: '{"ok":true,"path":"PRIOR_OSNG.json","content":"{}"'
+    }),
+    assistantCall('w-reply', TOOL_NAMES.WRITE_FILE, {
+      path: 'CHAT_REPLY.md',
+      content: 'Answer.'
+    }),
+    assistantCall('finish-1', TOOL_NAMES.FINISH, { summary: 'done' })
+  ];
+  const model = {
+    async complete(messages, tools) {
+      requests.push({ messages: structuredClone(messages), tools });
+      return replies.shift();
+    }
+  };
+  const result = await runAgentToolLoop({
+    system: 'Use tools.',
+    prompt: 'Answer.',
+    primary: 'OSNG_PROPOSAL.json',
+    isDocument: false,
+    requireOutline: false,
+    allowCommands: false,
+    requiredFiles: ['CHAT_REPLY.md'],
+    workspace,
+    model
+  });
+  assert.equal(result.ok, true);
+  assert.equal(
+    workspace.store.get('OSNG_PROPOSAL.json'),
+    '{"root_osn_id":"a","nodes":[{"id":"a"}]}'
+  );
+  const badResult = requests[1].messages.find(
+    (m) => m.role === 'tool' && /invalid_json/.test(String(m.content))
+  );
+  assert.ok(badResult, 'agent sees invalid_json feedback');
+});
+
+test('finish is refused until requiredFiles exist', async () => {
+  const workspace = memoryWorkspace(new Map([['OSNG_PROPOSAL.json', '{"nodes":[{}]}']]));
+  const requests = [];
+  const replies = [
+    assistantCall('finish-early', TOOL_NAMES.FINISH, { summary: 'early' }),
+    assistantCall('w-reply', TOOL_NAMES.WRITE_FILE, { path: 'CHAT_REPLY.md', content: 'A' }),
+    assistantCall('finish-1', TOOL_NAMES.FINISH, { summary: 'done' })
+  ];
+  const model = {
+    async complete(messages, tools) {
+      requests.push({ messages: structuredClone(messages), tools });
+      return replies.shift();
+    }
+  };
+  const result = await runAgentToolLoop({
+    system: 'Use tools.',
+    prompt: 'Answer.',
+    primary: 'OSNG_PROPOSAL.json',
+    isDocument: false,
+    requireOutline: false,
+    allowCommands: false,
+    requiredFiles: ['CHAT_REPLY.md'],
+    workspace,
+    model
+  });
+  assert.equal(result.ok, true);
+  assert.ok(
+    requests[1].messages.some(
+      (m) => m.role === 'tool' && /required_file_missing/.test(String(m.content))
+    )
+  );
+});
+
 function memoryWorkspace(initial) {
   const store = new Map(initial);
   return {

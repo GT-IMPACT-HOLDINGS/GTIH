@@ -76,3 +76,44 @@ test('listFocusEvidenceCollections skips empty/corrupt HANDOFF.json without 500'
 
   await fsp.rm(root, { recursive: true, force: true });
 });
+
+test('listFocusEvidenceCollections with runId ignores older runs reusing the OSN id', async () => {
+  const root = await fsp.mkdtemp(path.join(os.tmpdir(), 'lexiom13-ev-run-'));
+  const focusId = 'a7f2d8c1-4e9b-11ee-be56-0242ac120002.osn';
+  async function writeRun(runId, evidenceIds, collectedAt) {
+    const runDir = path.join(root, 'builds', 'lexiom13', runId);
+    await fsp.mkdir(runDir, { recursive: true });
+    const targets = evidenceIds.map((eid) => ({
+      target_id: `${focusId}::${eid}`,
+      osn_id: focusId,
+      evidence_id: eid,
+      kind: 'TEXTUAL_SNIPPET',
+      direct: true,
+      expected_relative_path: `evidences/${focusId}.${eid}.v1.md`
+    }));
+    await fsp.writeFile(
+      path.join(runDir, 'EVIDENCE_PLAN.json'),
+      JSON.stringify({ schema_version: 'lexiom13-evidence-collection/1', targets }),
+      'utf8'
+    );
+    await fsp.writeFile(
+      path.join(runDir, 'EVIDENCE_MANIFEST.json'),
+      JSON.stringify({
+        schema_version: 'lexiom13-evidence-manifest/1',
+        collected_at: collectedAt,
+        entries: targets.map((t) => ({ ...t, status: 'pending' }))
+      }),
+      'utf8'
+    );
+  }
+  await writeRun('old_run', ['ev.1', 'ev.2', 'ev.3'], '2026-09-27T00:00:00.000Z');
+  await writeRun('new_run', ['ev.1'], '2026-10-05T00:00:00.000Z');
+
+  const merged = await listFocusEvidenceCollections(root, focusId);
+  assert.equal(merged.targets.length, 3);
+  const scoped = await listFocusEvidenceCollections(root, focusId, { runId: 'new_run' });
+  assert.equal(scoped.targets.length, 1);
+  assert.equal(scoped.targets[0].evidence_id, 'ev.1');
+
+  await fsp.rm(root, { recursive: true, force: true });
+});

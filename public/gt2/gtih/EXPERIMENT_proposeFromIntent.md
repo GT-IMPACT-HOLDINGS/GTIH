@@ -55,7 +55,7 @@ Open: **http://localhost:8080/TRH%20frontend/**
 ## 3) Tegria day-zero UI
 
 ```bash
-cd Tegria_frontend
+cd ../tegria-front-end
 # VITE_GTIH_SDK_URL=http://localhost:8080/gt2/gtih/gtih-sdk.js  (.env / .env.example)
 npm run dev
 ```

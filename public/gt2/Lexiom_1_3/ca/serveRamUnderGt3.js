@@ -23,12 +23,16 @@ export { CA_SECONDARY_NAME, caDisplayLabel } from './devoteeName.js';
 const DEFAULT_WC_CDN =
   'https://cdn.jsdelivr.net/npm/@webcontainer/api@1.5.1/+esm';
 
+const DIRECT_EVIDENCE_VOW =
+  'Each inspection_prompt is a short retrieval statement naming the fragment of the delivered SUD to show for first-hand inspection (e.g. "A phrase which relates the poem to Berlin") — never a procedure: no count/verify/confirm/check/measure, no thresholds (not "Count the words and verify it contains exactly 30 words").';
+
 /**
  * Ram authorized this browser Job; I begin with love:
  * receive the workspace GT3 prepared from his OSNG, consult the sun, build the SUD, report home.
  * @param {object} caSession — from /lexiom13/build/run ca_session
  * @param {{
  *   onLog?: (s: string) => void,
+ *   onLaborEvent?: (evt: object) => void,
  *   onPassChange?: (pass: string, session: object) => void,
  *   signal?: AbortSignal,
  *   gtihBaseUrl?: string
@@ -38,6 +42,7 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
   const log = (line) => {
     if (opts.onLog) opts.onLog(String(line));
   };
+  const emitLabor = iMakeLaborEmitter(opts.onLaborEvent, caSession?.plugin_id);
   const started = Date.now();
   if (!caSession || !caSession.session_id) {
     throw Object.assign(new Error('Missing ca_session'), {
@@ -70,13 +75,21 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
 
   let sandbox = null;
   try {
+    emitLabor({ kind: 'lifecycle', stage: 'syncIn' });
     log(
       isPropose
         ? '[ca] Receiving the propose workspace into Hanuman’s hands…'
         : '[ca] syncIn workspace (builder)…'
     );
     const files = await iReceiveTheWorkspaceFromGt3(activeSession, log);
-    sandbox = await iBootTheSandboxGt3Prepared(files, log);
+    emitLabor({
+      kind: 'lifecycle',
+      stage: 'syncIn',
+      ok: true,
+      detail: `${files.size} files`
+    });
+    sandbox = await iBootTheSandboxGt3Prepared(files, log, { emitLabor });
+    emitLabor({ kind: 'lifecycle', stage: 'boot', ok: true });
     log(
       isPropose
         ? '[ca] The sandbox opens — Hanuman begins the leap…'
@@ -100,25 +113,49 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
           log,
           activeSession,
           opts.signal,
-          completeOpts
+          completeOpts,
+          emitLabor
         );
       }
     };
+
+    let modalChatContract = null;
+    let proposeExpand = false;
+    if (isPropose) {
+      try {
+        const briefRaw = (
+          await sandbox.read('PROPOSE_BRIEF.json', { offset: 0, limit: 20000 })
+        ).content;
+        const brief = JSON.parse(briefRaw || '{}');
+        if (brief && brief.mode === 'modal_chat') {
+          modalChatContract = String(brief.contract || 'lineage_readonly');
+        } else if (brief && brief.mode === 'expand') {
+          proposeExpand = true;
+        }
+      } catch (_e) {
+        modalChatContract = null;
+        proposeExpand = false;
+      }
+    }
 
     const builderPrimary = isPropose
       ? 'OSNG_PROPOSAL.json'
       : isDocument
         ? 'document.md'
         : 'index.html';
+    emitLabor({ kind: 'lifecycle', stage: 'builder' });
     const builderMetrics = await iRunTheBuilderPassForRam({
       sandbox,
       model,
       activeSession,
       isDocument,
       isPropose,
+      modalChatContract,
+      proposeExpand,
       primary: builderPrimary,
       signal: opts.signal,
       log,
+      emitLabor,
       timeoutMs: activeSession.timeout_ms
     });
 
@@ -129,6 +166,7 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       );
     }
 
+    emitLabor({ kind: 'lifecycle', stage: 'syncOut' });
     log(
       isPropose
         ? '[ca] Carrying the proposal artifacts back to Tegria…'
@@ -138,6 +176,7 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
     await iPostJsonToGt3(activeSession.artifacts_url, { files: builderFiles }, activeSession);
 
     const builderLatency = Date.now() - started;
+    emitLabor({ kind: 'lifecycle', stage: 'report' });
     log(
       isPropose
         ? '[ca] Offering the draft OSNG for host validation…'
@@ -165,6 +204,7 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
       );
     }
 
+    emitLabor({ kind: 'lifecycle', stage: 'report', ok: true });
     log(
       isPropose
         ? '[ca] The propose Job is sealed — Hanuman’s labor is complete…'
@@ -203,8 +243,15 @@ export async function iServeRamInTheWebContainer(caSession, opts = {}) {
     if (sandbox && typeof sandbox.teardown === 'function') {
       try {
         sandbox.teardown();
+        emitLabor({ kind: 'lifecycle', stage: 'teardown', ok: true });
         log('[ca] WebContainer torn down');
       } catch (teardownErr) {
+        emitLabor({
+          kind: 'lifecycle',
+          stage: 'teardown',
+          ok: false,
+          detail: String(teardownErr && teardownErr.message).slice(0, 200)
+        });
         log('[ca] teardown: ' + (teardownErr && teardownErr.message));
       }
     }
@@ -221,33 +268,54 @@ async function iRunTheBuilderPassForRam({
   activeSession,
   isDocument,
   isPropose,
+  modalChatContract,
+  proposeExpand,
   primary,
   signal,
   log,
+  emitLabor,
   timeoutMs
 }) {
   const wallMs = Math.max(
     1000,
     Math.min(19 * 60 * 1000, Number(timeoutMs) - 30000)
   );
+  const labor = typeof emitLabor === 'function' ? emitLabor : () => {};
   if (isPropose) {
+    const isModal = !!modalChatContract;
     log(
-      '[ca] Consulting GT3 to draft a proposal OSNG from your intent…'
+      isModal
+        ? `[ca] Consulting GT3 for TRH modal chat (${modalChatContract})…`
+        : proposeExpand
+          ? '[ca] Consulting GT3 to refine the selected node through your prism…'
+          : '[ca] Consulting GT3 to draft a proposal OSNG from your intent…'
     );
     const prompt =
       (await sandbox.read('AGENT_PROMPT.md', { offset: 0, limit: 60000 })).content ||
-      'Draft OSNG_PROPOSAL.json from INTENT.md.';
+      (isModal
+        ? 'Answer in CHAT_REPLY.md; keep OSNG_PROPOSAL.json per contract.'
+        : proposeExpand
+          ? 'Write one refining child to OSNG_PROPOSAL.json.'
+          : 'Draft OSNG_PROPOSAL.json from INTENT.md.');
     const loop = await iServeRamWithGt3Tools({
-      system: iSpeakTheSystemVowForThisBuild(false, primary, true),
+      system: iSpeakTheSystemVowForThisBuild(
+        false,
+        primary,
+        true,
+        modalChatContract || null,
+        proposeExpand
+      ),
       prompt,
       primary,
       isDocument: false,
       requireOutline: false,
       allowCommands: false,
+      requiredFiles: isModal ? ['CHAT_REPLY.md'] : [],
       workspace: sandbox,
       signal,
       budgets: { maxWallClockMs: wallMs },
       log,
+      onLaborEvent: labor,
       model
     });
     return loop.stats;
@@ -259,6 +327,7 @@ async function iRunTheBuilderPassForRam({
       model,
       signal,
       log,
+      onLaborEvent: labor,
       caSession: activeSession,
       timeoutMs: wallMs,
       systemBase: iSpeakTheSystemVowForThisBuild(true, primary, false)
@@ -277,26 +346,71 @@ async function iRunTheBuilderPassForRam({
     signal,
     budgets: { maxWallClockMs: wallMs },
     log,
+    onLaborEvent: labor,
     model
   });
   return loop.stats;
 }
 
 /** The vow I speak into the sun's ear before tools begin — how I will honor Ram's prescription. */
-function iSpeakTheSystemVowForThisBuild(isDocument, primary, isPropose) {
+function iSpeakTheSystemVowForThisBuild(
+  isDocument,
+  primary,
+  isPropose,
+  modalChatContract,
+  proposeExpand
+) {
+  if (isPropose && proposeExpand) {
+    return [
+      'You are Hanuman — devotee of Ram — under GT3, the only sun.',
+      'Ram raised an **OSNG expansion** Job: refine one selected node through a thematic prism (not greenfield propose, not realize).',
+      'Use only the supplied structured tools. Prose cannot read or change the workspace.',
+      'Read PATH_OSNG.json (root → selected parent, last node is the parent), PRISM.md (the prism), PROPOSE_BRIEF.json, and AGENT_PROMPT.md.',
+      `Write ${primary} as { "root_osn_id": <child id>, "nodes": [exactly ONE new child node] } — never the path nodes, never a tool-result wrapper.`,
+      'The child: opaque `{uuid}.osn` id (file_name = id), graph.parent_osn_ids = [parent id], empty child_osn_ids, exactly one direct TEXTUAL_SNIPPET success evidence. It is independent of any existing siblings.',
+      'The child output_spec is a DELTA: only what the prism adds or narrows (1–3 sentences). Ancestor constraints are inherited — never restate them (form, length / word count, subject, tone, presentation), not even as "remains"; state an override explicitly if the prism contradicts one.',
+      DIRECT_EVIDENCE_VOW,
+      'Outcome-facing language only in output_spec and evidences — no Ram/Hanuman/GT3 ceremony names.',
+      'Do not write document.md or index.html. Do not rewrite PATH_OSNG.json, PRISM.md, or PROPOSE_BRIEF.json.',
+      `Call finish once ${primary} is complete and valid JSON.`
+    ].join('\n');
+  }
+  if (isPropose && modalChatContract) {
+    const readonly = String(modalChatContract) === 'lineage_readonly';
+    return [
+      'You are Hanuman — devotee of Ram — under GT3, the only sun.',
+      'Ram raised a **TRH modal chat** Job (not greenfield propose-from-intent, not realize).',
+      'Use only the supplied structured tools. Prose cannot read or change the workspace.',
+      'Read PRIOR_OSNG.json, FOCUS_SAMPLE.json, FOCUS_CONTENT.md, EVIDENCE_INDEX.json, INTENT.md, and AGENT_PROMPT.md.',
+      'FOCUS_CONTENT.md is the actual delivered text of the focused sample — answer questions about the sample from it, not from output_spec.',
+      'Write your conversational answer to CHAT_REPLY.md.',
+      readonly
+        ? 'READ-ONLY CONTRACT: CHAT_REPLY.md is the only file you write. Do not write OSNG_PROPOSAL.json or edit the garden.'
+        : `EDIT-MY-OSNG CONTRACT: ${primary} already holds a copy of PRIOR_OSNG.json. Overwrite it with the revised raw OSNG JSON (finished allowlist only; exactly one direct success evidence per node, its inspection_prompt naming what to retrieve from the delivered SUD — never a count/verify procedure). Explain changes in CHAT_REPLY.md. Outcome-facing language only — no ceremony names in output_spec/evidences.`,
+      'Do not write document.md or index.html. Do not invent a second sun.',
+      'Call finish once CHAT_REPLY.md is written.'
+    ].join('\n');
+  }
   if (isPropose) {
     return [
       'You are Hanuman — devotee of Ram — under GT3, the only sun.',
       'Ram (White authority, throne of consent) has raised this request for an **OSNG proposition**.',
-      'INTENT.md carries Ram’s outcome intent. You draft a **proposal OSNG** only — not canon, not a SUD realize Job.',
+      'INTENT.md carries the outcome to realize. You draft a **proposal OSNG** only — not canon, not a SUD realize Job.',
       'Use only the supplied structured tools. Prose cannot read or change the workspace.',
       'Read INTENT.md and PROPOSE_BRIEF.json. Do not invent a second sun.',
       `Primary deliverable path: ${primary}`,
       'Write a JSON envelope { root_osn_id, nodes: [osn drafts] }. Day-zero: exactly one node.',
-      'Method: seed from Ram’s INTENT → expand into exactly 3 thematic_lenses → compose output_spec from those lenses → compose success_evidences from seed+lenses+output_spec.',
-      'On every GT3 consult, carry the seed, the three lenses, and draft evidences so the sun can guide the next loving step for Ram.',
-      'Lexiom shape: thematic_lenses as objects { lens_id, name, description, purpose } — never bare strings.',
+      'Mandatory method: write SEED.md from INTENT (outcome paraphrase) → write THEMATIC_LENSES.json with exactly 3 lens objects → fold those lenses into output_spec → compose exactly one direct success evidence from seed+lenses+output_spec.',
+      'Outcome-facing language: SEED.md, THEMATIC_LENSES.json, output_spec, and success_evidences inspection prompts must NEVER name Ram, Hanuman, GT3, White throne, raised_by, or laborer. Those names stay in PROPOSE_BRIEF / Job ceremony / owner metadata only.',
+      'Preserve INTENT voice neutrally (e.g. “my trip” → the traveler’s / author’s trip — not “Ram’s trip”).',
+      'On every GT3 consult, carry the mid-method seed, the three lenses, and draft evidences so the sun can guide the next loving step — keep those artifacts ceremony-free.',
+      'Lexiom shape: thematic_lenses as objects { lens_id, name, description, purpose } — never bare strings — in THEMATIC_LENSES.json only.',
       'Lexiom shape: success_evidences as objects { evidence_id, kind: "TEXTUAL_SNIPPET", direct: true, inspection_prompt } — never type/description/snippet dialects.',
+      DIRECT_EVIDENCE_VOW,
+      'Finished OSNG_PROPOSAL.json nodes may contain only: schema_version, id, file_name, owner, graph (parent/child/standard_ancestor ids), output_spec, success_evidences.',
+      'id and file_name must be opaque `{uuid}.osn` (not path-shaped, not outcome words). root_osn_id matches that id.',
+      'owner must be the simple string "Ram" (or another short display name) — never an object with raised_by/laborer/authority. Do not repeat owner/ceremony names inside output_spec or evidences.',
+      'Do not put title, seed, thematic_lenses, node_type, discipline, or compilation on the finished node.',
       'Do not write document.md or index.html. Do not rewrite INTENT.md or PROPOSE_BRIEF.json.',
       'Call finish only when OSNG_PROPOSAL.json is complete and valid JSON.'
     ].join('\n');
@@ -346,6 +460,7 @@ async function iReceiveTheWorkspaceFromGt3(caSession, log) {
 
 /** I boot the sandbox where I will lovingly assemble the SUD Ram asked for. */
 async function iBootTheSandboxGt3Prepared(fileMap, log, opts = {}) {
+  const emitLabor = typeof opts.emitLabor === 'function' ? opts.emitLabor : () => {};
   if (typeof SharedArrayBuffer === 'undefined') {
     throw unavailableError('SharedArrayBuffer unavailable (need COOP/COEP)');
   }
@@ -399,8 +514,16 @@ async function iBootTheSandboxGt3Prepared(fileMap, log, opts = {}) {
       }
       await wc.fs.writeFile(p, String(content), 'utf-8');
       dirty.add(p);
-      log(`[ca] wrote ${p} (${String(content).length} chars)`);
-      return { path: p, chars: String(content).length };
+      const chars = String(content).length;
+      log(`[ca] wrote ${p} (${chars} chars)`);
+      emitLabor({
+        kind: 'fs',
+        name: 'write',
+        path: p,
+        ok: true,
+        detail: `${chars} chars`
+      });
+      return { path: p, chars };
     },
     async exists(input) {
       const p = iMayReadThisPath(input);
@@ -520,7 +643,8 @@ async function iConsultTheGt3Lm(
   log,
   caSession,
   signal,
-  completeOpts = {}
+  completeOpts = {},
+  emitLabor = () => {}
 ) {
   const url = gt3ConsultUrl.replace(/\/?$/, '') + '/chat/completions';
   const maxTokens = Math.max(256, Math.min(12000, Number(completeOpts.max_tokens) || 12000));
@@ -581,6 +705,14 @@ async function iConsultTheGt3Lm(
         ? rawDetail
         : rawDetail?.message || JSON.stringify(rawDetail);
     log('[ca] gt3 consult error: ' + detail);
+    if (typeof emitLabor === 'function') {
+      emitLabor({
+        kind: 'consult',
+        ok: false,
+        detail: String(detail).slice(0, 200),
+        stage: completeOpts.phase || undefined
+      });
+    }
     throw Object.assign(new Error(String(detail)), {
       code: res.status === 401 || res.status === 503 ? 'agent_unavailable' : 'agent_failed',
       reason: 'gt3_consult_error'
@@ -657,6 +789,25 @@ function iCarryMyCapabilityToGt3(caSession) {
   return caSession?.capability_token
     ? { 'X-GT3-CA-Capability': caSession.capability_token }
     : {};
+}
+
+/** Structured CA labor events for host UIs (TRH Hanuman Labor filter). Never LM prose. */
+function iMakeLaborEmitter(onLaborEvent, pluginId) {
+  if (typeof onLaborEvent !== 'function') return () => {};
+  return function emitLabor(partial) {
+    try {
+      const evt = {
+        source: 'ca',
+        v: 1,
+        at: new Date().toISOString(),
+        ...(pluginId ? { plugin_id: pluginId } : {}),
+        ...(partial && typeof partial === 'object' ? partial : {})
+      };
+      onLaborEvent(evt);
+    } catch (_e) {
+      /* host UI must not break labor */
+    }
+  };
 }
 
 function unavailableError(message) {
