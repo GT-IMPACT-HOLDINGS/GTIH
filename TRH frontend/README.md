@@ -48,6 +48,14 @@ This tree lives inside the GTIH repo; Tegria’s SPA lives in the sibling [`tegr
 
 - **System Pack focus:** `#osngView` always shows the whole OSNG in tree order, each node indented by depth (in both the Outcome Spec and Neural Geometry views). Clicking into a node's Outcome Spec / evidence text (or anywhere in its YAML block) focuses it: the other nodes dim, and Expand / Edit act on it. Focus defaults to the root after a proposal and stays on the expanded node after an expansion. The garbage-can glyph left of **▶** deletes the focused node with its subtree (focus moves to its parent); deleting the root resets the cockpit (OSNG and realized SUD). A confirmation is asked only when more than one node would be removed. Only the first proposal auto-realizes; expansions, edits and deletions mark the OSNG changed and reveal **▶**, which realizes the **whole tree** as one merged SUD that replaces the previous one.
 
+- **Welcome modal:** on the first visit a gallery of sample OSNGs (`gtih.osng.listSamples()`, cards with glyph · title · description tooltip) plus a ✎ start-from-scratch card. The last outcome submitted in the modal is its empty-box placeholder (`trh.welcomeIntent.v1`); **Tab** turns it into editable text, as in the cockpit. Picking a card and submitting an outcome (➤) proposes a **new** OSNG whose root cites the sample root as a standard ancestor (`sample_id`) and stops there: **▶** realizes it over the cited cone whenever you choose (you can expand / edit first). ▶ is shown whenever the System Pack has no realized SUD yet. The sample stays hidden in the System Pack; the root shows only the sample glyph as a badge. **✦** in the System Pack actions reopens the modal, enabled only when the pack is empty.
+
+- **Publish (⇪):** disabled placeholder ("Coming soon").
+
+- **Persistence:** the System Pack OSNG, focus, Expand/Edit mode and the last realized result (SUD + evidences, baseline for ▶) are saved in `localStorage` (`trh.session.v1`) and restored on load; deleting the root clears them. If storage is full, the SUD text is dropped and re-fetched on restore. `trh.welcomed.v1` marks the first visit as done.
+
+- **Software SUDs:** gallery samples may declare `medium: software`. Realization uses the software builder (Plan → Implement → Verify with fixed `smoke.mjs`). A completed software Outcome shows `verify ✓` (host re-ran smoke). Re-realize (▶) passes the previous `run_id` as `prior_run_id` so Hanuman patches the prior tree when possible. Preview opens in the result modal iframe.
+
 - Secondary: **propose only** (`proposeFromIntentUntilDone`, `max_descendants: 0` → single-OSN OSNG)
 
 - On failure: shows `detail` + `debug` JSON (no silent draft fallback)

@@ -92,6 +92,7 @@ import {
   listFocusEvidenceCollections,
   resolveEvidenceArtifactFile
 } from './lib/lexiom13EvidenceCockpitSync.js';
+import { listOsngSamples } from './lib/osngSamples.js';
 import {
   resolveBudArtifactFile,
   resolveBudPreviewFile
@@ -1474,6 +1475,17 @@ app.post('/lexiom13/build/session/:sessionId/cancel', (req, res) => {
   }
 });
 
+// Public sample OSNGs (manifests only; YAML is served statically under /osng_samples/).
+app.get('/lexiom13/osng-samples', async (_req, res) => {
+  try {
+    const samples = await listOsngSamples(STATIC_ROOT);
+    return res.json({ status: 'ok', samples });
+  } catch (e) {
+    console.error('lexiom13_osng_samples_failed', e);
+    return res.status(500).json({ detail: e && e.message ? e.message : 'Failed to list OSNG samples' });
+  }
+});
+
 // Lexiom 1.3 evidence cockpit sync: Focus-closure collections + safe artifact serve.
 app.get('/lexiom13/evidence/collections', async (req, res) => {
   try {
@@ -1525,6 +1537,16 @@ app.get('/lexiom13/evidence/artifact/:runId/*', async (req, res) => {
 });
 
 // Lexiom 1.3 Bud Center hosts (Phase B): product-port preview + document artifact.
+// TRH (and Lexiom 1.3) are COEP require-corp. Embedded preview documents must send
+// COEP themselves or Chromium blanks the iframe. credentialless lets SPA CDN assets
+// load without CORP; CORP same-origin opts the response into COEP parents.
+function lexiom13BudPreviewIsolation(req, res, next) {
+  res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
+  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  next();
+}
+app.use('/lexiom13/preview', lexiom13BudPreviewIsolation);
+
 app.get('/lexiom13/preview/:runId', async (req, res) => {
   try {
     const abs = await resolveBudPreviewFile(__dirname, req.params.runId, []);

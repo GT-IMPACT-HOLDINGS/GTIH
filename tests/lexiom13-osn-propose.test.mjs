@@ -310,8 +310,14 @@ test('startLexiom13OsngPropose creates workspace + awaiting_browser ticket', asy
     assert.match(agentPrompt, /not .Ram.s trip/);
     assert.match(agentPrompt, /inspection_prompt/);
     assert.match(agentPrompt, /Do NOT use type\/description\/snippet/);
+    assert.match(agentPrompt, /Sharpen for the deliverable type/);
+    assert.match(agentPrompt, /Software SUD/);
+    assert.match(agentPrompt, /Do not.*soft on-screen observations/s);
+    assert.match(agentPrompt, /JavaScript assignment in index\.html/);
     assert.match(agentPrompt, /exactly 3 thematic lenses/);
     assert.match(agentPrompt, /Fold into output_spec/);
+    assert.match(agentPrompt, /INTENT\.md is 6 words; the finished output_spec is \*\*at most 18 words\*\*/);
+    assert.match(agentPrompt, /no "Deliver a System Under Development \(SUD\) …" preamble/);
     assert.match(agentPrompt, new RegExp(PROPOSE_SEED_ARTIFACT));
     assert.match(agentPrompt, new RegExp(PROPOSE_LENSES_ARTIFACT));
     assert.match(agentPrompt, /\{uuid\}\.osn/);
@@ -672,6 +678,23 @@ test('singleDirectEvidence keeps exactly one direct evidence per OSN', () => {
   assert.equal(onlyDerived.length, 1);
   assert.equal(onlyDerived[0].direct, true);
   assert.equal(singleDirectEvidence([], 'intent').length, 1);
+
+  const soft = singleDirectEvidence(
+    [
+      {
+        evidence_id: 'ev.direct.textual_snippet.1',
+        kind: 'TEXTUAL_SNIPPET',
+        direct: true,
+        inspection_prompt: 'Greeting after submit'
+      }
+    ],
+    'hello world',
+    { medium: 'software' }
+  );
+  assert.equal(soft.length, 1);
+  assert.equal(soft[0].kind, 'SCREEN-SHOT');
+  assert.equal(soft[0].evidence_id, 'ev.direct.screen_shot.1');
+  assert.match(soft[0].inspection_prompt, /Greeting after submit/);
 });
 
 function makeChild(parentId, spec) {

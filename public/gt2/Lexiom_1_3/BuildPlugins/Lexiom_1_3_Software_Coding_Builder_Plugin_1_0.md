@@ -288,7 +288,7 @@ Builder success above does not require the evidence pass to have completed; evid
 
 Shared contract: [Build Plugin Contract §8](Lexiom_1_3_Build_Plugin_Contract_1_0.md#8-evidence-collection-hemisphere). This plugin only adds capture hints:
 
-- Prefer excerpts from the **delivered tree** for `TEXTUAL_SNIPPET` (including legacy `direct_code_snippet`) — never OSN `output_spec` text.
+- Prefer excerpts from the **delivered tree** (`index.html` / modules) for direct `TEXTUAL_SNIPPET` (including legacy `direct_code_snippet`) — never OSN `output_spec` text, and never `RUN_TRACE.md` / smoke narrative as a substitute for direct proof.
 - Use browser / UI capture when feasible for `SCREEN-SHOT` / `VIDEO-CLIP` against the built entrypoint (e.g. static preview on the builds port).
 - If automated capture is unavailable, mark those targets `deferred` with a concrete human-capture procedure — do **not** invent media files.
 - Derivative briefs: write under `./evidences/` from delivered behavior + OSNG; never substitute them for missing direct evidence.

@@ -24,7 +24,7 @@ const DEFAULT_WC_CDN =
   'https://cdn.jsdelivr.net/npm/@webcontainer/api@1.5.1/+esm';
 
 const DIRECT_EVIDENCE_VOW =
-  'Each inspection_prompt is a short retrieval statement naming the fragment of the delivered SUD to show for first-hand inspection (e.g. "A phrase which relates the poem to Berlin") — never a procedure: no count/verify/confirm/check/measure, no thresholds (not "Count the words and verify it contains exactly 30 words").';
+  'Each inspection_prompt is a sharp retrieval statement naming the locus in the delivered SUD (document: a named passage; software: markup/code in index.html that implements the claim, e.g. the assignment that sets Hello + name — never "the greeting displayed on the page"). Never a procedure: no count/verify/confirm/check/measure, no thresholds.';
 
 /**
  * Ram authorized this browser Job; I begin with love:
@@ -386,7 +386,7 @@ function iSpeakTheSystemVowForThisBuild(
       'Write your conversational answer to CHAT_REPLY.md.',
       readonly
         ? 'READ-ONLY CONTRACT: CHAT_REPLY.md is the only file you write. Do not write OSNG_PROPOSAL.json or edit the garden.'
-        : `EDIT-MY-OSNG CONTRACT: ${primary} already holds a copy of PRIOR_OSNG.json. Overwrite it with the revised raw OSNG JSON (finished allowlist only; exactly one direct success evidence per node, its inspection_prompt naming what to retrieve from the delivered SUD — never a count/verify procedure). Explain changes in CHAT_REPLY.md. Outcome-facing language only — no ceremony names in output_spec/evidences.`,
+        : `EDIT-MY-OSNG CONTRACT: ${primary} already holds a copy of PRIOR_OSNG.json. Overwrite it with the revised raw OSNG JSON (finished allowlist only; exactly one direct success evidence per node, its inspection_prompt a sharp locus in the delivered SUD — software: code/markup in index.html; document: a named passage — never a vague on-screen paraphrase or count/verify procedure). Explain changes in CHAT_REPLY.md. Outcome-facing language only — no ceremony names in output_spec/evidences.`,
       'Do not write document.md or index.html. Do not invent a second sun.',
       'Call finish once CHAT_REPLY.md is written.'
     ].join('\n');
@@ -400,13 +400,14 @@ function iSpeakTheSystemVowForThisBuild(
       'Read INTENT.md and PROPOSE_BRIEF.json. Do not invent a second sun.',
       `Primary deliverable path: ${primary}`,
       'Write a JSON envelope { root_osn_id, nodes: [osn drafts] }. Day-zero: exactly one node.',
-      'Mandatory method: write SEED.md from INTENT (outcome paraphrase) → write THEMATIC_LENSES.json with exactly 3 lens objects → fold those lenses into output_spec → compose exactly one direct success evidence from seed+lenses+output_spec.',
+      'Mandatory method: write SEED.md from INTENT (outcome paraphrase) → write THEMATIC_LENSES.json with exactly 3 lens objects → set output_spec per AGENT_PROMPT.md (normal propose: fold lenses within the word cap, plain prose; if CITED_OSNG.json exists: copy INTENT.md verbatim into output_spec — seed/lenses feed success evidence only) → compose exactly one direct success evidence from seed+lenses+INTENT/output_spec.',
       'Outcome-facing language: SEED.md, THEMATIC_LENSES.json, output_spec, and success_evidences inspection prompts must NEVER name Ram, Hanuman, GT3, White throne, raised_by, or laborer. Those names stay in PROPOSE_BRIEF / Job ceremony / owner metadata only.',
       'Preserve INTENT voice neutrally (e.g. “my trip” → the traveler’s / author’s trip — not “Ram’s trip”).',
       'On every GT3 consult, carry the mid-method seed, the three lenses, and draft evidences so the sun can guide the next loving step — keep those artifacts ceremony-free.',
       'Lexiom shape: thematic_lenses as objects { lens_id, name, description, purpose } — never bare strings — in THEMATIC_LENSES.json only.',
       'Lexiom shape: success_evidences as objects { evidence_id, kind: "TEXTUAL_SNIPPET", direct: true, inspection_prompt } — never type/description/snippet dialects.',
       DIRECT_EVIDENCE_VOW,
+      'If CITED_OSNG.json exists, it is an inherited standard-ancestor cone: read it first; set root output_spec to the exact text of INTENT.md (no lens fold); use seed/lenses only to define the one success evidence that attests the intent on top of the cone; graph.standard_ancestor_osn_ids cites the cone root as AGENT_PROMPT.md says.',
       'Finished OSNG_PROPOSAL.json nodes may contain only: schema_version, id, file_name, owner, graph (parent/child/standard_ancestor ids), output_spec, success_evidences.',
       'id and file_name must be opaque `{uuid}.osn` (not path-shaped, not outcome words). root_osn_id matches that id.',
       'owner must be the simple string "Ram" (or another short display name) — never an object with raised_by/laborer/authority. Do not repeat owner/ceremony names inside output_spec or evidences.',
@@ -425,10 +426,15 @@ function iSpeakTheSystemVowForThisBuild(
     `Primary deliverable path: ${primary}`,
     isDocument
       ? 'Write phase artifacts only (OUTLINE.md or the assigned sections/*.md). Host assembly owns document.md unless a reconcile phase asks otherwise. Reader-facing prose must contain ZERO OSN ids, .osn.yaml paths, output_spec, success_evidences, or build meta.'
-      : 'Software mode: produce a working index.html (and supporting assets as needed). Prefer simple static HTML/JS/CSS unless the prompt requires more.',
+      : [
+          'Software mode: follow AGENT_PROMPT.md Plan → Implement → Verify.',
+          'Write FILE_PLAN.md, then index.html (+ assets), then workspace-root smoke.mjs; run `node smoke.mjs` via run_command; write RUN_TRACE.md from the actual result; then finish.',
+          'Prefer simple static HTML/JS/CSS unless the OSNG requires more. Keep Node-importable logic free of document/window at import time when FILE_PLAN names a logic module.',
+          'Consult GT3 with architecture-first questions; report only what was actually run in RUN_TRACE.md.'
+        ].join(' '),
     isDocument
       ? 'Submit the required phase artifact with write_file; the host validates and completes the phase atomically.'
-      : 'Call finish only when the required primary artifacts are complete and correct.'
+      : 'Call finish only when index.html, FILE_PLAN.md, smoke.mjs, and RUN_TRACE.md are ready and smoke exited 0.'
   ].join('\n');
 }
 

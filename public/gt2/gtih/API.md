@@ -86,7 +86,8 @@ Three GTIH capability groups (detail below): **OSNG**, **GT3 inference**, **Hanu
 |--------|----------|------|
 | List live OSN files | `gtih.osng.list()` | `GET /lexiom13/osn/list` → `{ paths: string[] }` |
 | Load one node | `gtih.osng.getYaml(path)` | `GET` public path → YAML text |
-| Propose OSNG from SUD intent (start) | `gtih.osng.proposeFromIntent({ intent, max_descendants? })` | `POST /lexiom13/osn/propose` → `{ status: "awaiting_browser", run_id, ca_session, meta }` |
+| List OSNG samples | `gtih.osng.listSamples()` | `GET /lexiom13/osng-samples` → `{ status: "ok", samples: [{ id, title, description, glyph, root_osn_id, target_tool_profile }] }` |
+| Propose OSNG from SUD intent (start) | `gtih.osng.proposeFromIntent({ intent, max_descendants?, sample_id? })` | `POST /lexiom13/osn/propose` → `{ status: "awaiting_browser", run_id, ca_session, meta }` |
 | Propose status | `gtih.osng.getProposeStatus(run_id)` | `GET /lexiom13/osn/propose/status/:runId` → `awaiting_browser \| running \| ok \| failed` + lean envelope `{ root_osn_id, nodes }` on ok (Job `meta` separate) |
 | Propose labor (browser) | `gtih.hanuman.serveProposeSession(ca_session)` | Lexiom CA WebContainer (`OSNG_PROPOSAL.json`) |
 | Propose until done | `gtih.osng.proposeFromIntentUntilDone(...)` | start → labor → poll |
@@ -101,11 +102,21 @@ Three GTIH capability groups (detail below): **OSNG**, **GT3 inference**, **Hanu
 
 **Day-zero propose:** `max_descendants: 0` means a **single-OSN OSNG** (root only). Higher caps are accepted but clamped; multi-node trees grow through prism expansion instead. Draft only — no Lexiom YAML write. Normalized envelope is `{ root_osn_id, nodes }` only — no envelope `meta`. SDK verb stays on `osng.*`; labor is **browser Hanuman** (start/status ticket `meta.labor: hanuman_browser_ca`, plus `PROPOSE_BRIEF.json`), not product `/inference`.
 
+**output_spec length:** a proposed root's `output_spec` is asked to stay within **3× the intent's word count**, as plain prose (no SUD preamble, headings or evidence blocks). The cap is a prompt instruction only; the host does not enforce it.
+
 **One evidence per OSN:** proposed nodes (root propose, prism expansion, RP edit) carry exactly **one direct** success evidence. Prompts ask for one, and the host keeps only the first direct evidence (re-id'd `ev.direct.textual_snippet.1`) if the agent writes more.
 
 **Host-minted ids:** newly proposed nodes get fresh `{uuid}.osn` ids from the host (model-written ids are not trusted to be unique). An `edit_osng` revision keeps the ids of nodes already in `PRIOR_OSNG.json` and mints ids only for new nodes.
 
 **Prism expansion:** `mode: "expand"` reuses the propose CA plugin. Hanuman receives only `PATH_OSNG.json` (root → selected parent) and `PRISM.md` (the direction Ram wants the parent expanded in), and writes exactly **1** new child to `OSNG_PROPOSAL.json` (`EXPAND_CHILD_COUNT`). The child refines (narrows or deepens) the parent along the prism, independent of any existing siblings. The host rejects any other count, forces `graph.parent_osn_ids = [parent]`, remints the id, and returns `children` (one-element array) + `parent_osn_id`. Grafting the children onto the envelope is the client's job (TRH appends them and links the parent's `child_osn_ids`; re-expanding a node adds siblings).
+
+**OSNG samples:** read-only sample OSNGs live in `public/osng_samples/<id>/` (one `manifest.json` + `*.osn.yaml` files). With `sample_id`, propose loads the sample, resolves the **cited cone** of its root and hands it to Hanuman as `CITED_OSNG.json`. The new root's `output_spec` is the **verbatim** user intent (`INTENT.md`); seed and thematic lenses are mid-method only so Hanuman can still propose one success evidence. The host forces that verbatim `output_spec` and `graph.standard_ancestor_osn_ids = [sample root]` (brief/handoff carry `cited_sample_id` / `cited_root_osn_id`). An `edit_osng` revision keeps the prior root's citation. The 3× word cap applies only to non-sample proposes.
+
+**Cited cones (v6):** a cited node contributes itself, its native descendants, its native ancestors and, recursively, the cones of its own standard ancestors (cycle-safe). `self_as_axis_center` uses this rule, and so does Hanuman when proposing on a sample.
+
+**Realize over a sample:** an ephemeral envelope whose root cites a sample node merges the sample's nodes into the prepare graph and compiles with `compilation_scope: "self_as_axis_center"` and `composition: "merged_refinements"`. Gallery `medium: "software" | "document"` (when set) selects the plugin profile; otherwise `target_tool_profile` is used. Use `gtih.hanuman.subgraphIds(handoff)` to pass the cone's ids as `extraIds` to `listRunEvidence`.
+
+**Software builder (Plan → Implement → Verify):** Hanuman writes `FILE_PLAN.md`, then `index.html` (+ modules), then fixed workspace-root `smoke.mjs`, runs `node smoke.mjs`, and writes `RUN_TRACE.md`. The host re-runs `smoke.mjs` after sync (`runSmoke(outDir)`). Re-realize may pass `prior_run_id` to seed the prior tree for a smallest-patch rebuild. Evidence quote-spans prefer `RUN_TRACE.md` excerpts for software jobs.
 
 **Whole-tree realize:** an ephemeral envelope whose root lists children prepares with `compilation_scope: "self_and_approved_descendants"` and `composition: "merged_refinements"`. The realizer folds every node's `output_spec` into one unified SUD (deeper nodes more specific, no section per branch) and plans evidences for every node in the tree. Single-node envelopes keep `self_only`.
 
@@ -147,7 +158,8 @@ Browser CA labor is driven by the host via `serveRealizeSession` / `servePropose
 | Progress / results | `getStatus` / `watchStatus` | `GET /lexiom13/build/status/{runId}` (poll) |
 | Realize until done | `realizeUntilDone({ osng_envelope \| compilation_root_osn_id \| handoff }, { onLaborEvent? })` | prepare → run → labor → poll |
 | Evidence for a Focus OSN | `listEvidenceCollections(osnId, runId?)` | `GET /lexiom13/evidence/collections?osn_id=&run_id=` — `run_id` restricts to one build (TRH passes the just-realized run) |
-| Evidence for a whole realized tree | `listRunEvidence(envelope, runId)` | one `listEvidenceCollections(id, runId)` per envelope node (root first), merged; each target tagged with `osn_id` — used by the TRH chain and ▶ re-realize |
+| Evidence for a whole realized tree | `listRunEvidence(envelope, runId, extraIds?)` | one `listEvidenceCollections(id, runId)` per envelope node (root first) plus each `extraIds` id (e.g. cited sample nodes), merged; each target tagged with `osn_id` — used by the TRH chain and ▶ re-realize |
+| Compiled subgraph ids | `gtih.hanuman.subgraphIds(handoff)` | ids from the prepare handoff's `subgraph` |
 | Evidence / bud bytes | `getBudArtifactUrl` / `getBudPreviewUrl` / `fetchBudText` / evidence helpers | artifact / preview GETs under `/lexiom13/…` |
 | Propose → realize (TRH) | `gtih.osng.proposeThenRealizeUntilDone(..., { onEnvelope? })` | proposeUntilDone → **`onEnvelope`** → ephemeral prepare → realizeUntilDone → evidence + SUD |
 

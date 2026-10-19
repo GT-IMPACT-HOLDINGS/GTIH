@@ -176,7 +176,8 @@
 
     /**
      * Start async propose Job. Returns immediately with ca_session for browser Hanuman.
-     * @param {{ intent?: string, narrative?: string, max_descendants?: number }} args
+     * @param {{ intent?: string, narrative?: string, max_descendants?: number, sample_id?: string }} args
+     *   `sample_id` — public sample OSNG whose root the proposed root cites (standard ancestor).
      */
     async function proposeFromIntent(args) {
       var a = args || {};
@@ -188,12 +189,16 @@
         a.max_descendants !== undefined && a.max_descendants !== null
           ? Number(a.max_descendants)
           : 0;
-      return jsonFetch(
-        'POST',
-        '/lexiom13/osn/propose',
-        { intent: intent, max_descendants: maxDesc },
-        openRouterHeaders()
-      );
+      var body = { intent: intent, max_descendants: maxDesc };
+      var sampleId = String(a.sample_id || '').trim();
+      if (sampleId) body.sample_id = sampleId;
+      return jsonFetch('POST', '/lexiom13/osn/propose', body, openRouterHeaders());
+    }
+
+    /** Public sample OSNG manifests ({ id, title, description, glyph, root_osn_id }). */
+    async function listSamples() {
+      var res = await jsonFetch('GET', '/lexiom13/osng-samples', undefined, openRouterHeaders());
+      return (res && res.samples) || [];
     }
 
     async function getProposeStatus(runId) {
@@ -542,6 +547,7 @@
       }
       if (a.strategy_id) body.strategy_id = a.strategy_id;
       if (a.run_id) body.run_id = a.run_id;
+      if (a.prior_run_id) body.prior_run_id = a.prior_run_id;
       return jsonFetch('POST', '/lexiom13/build/prepare', body, openRouterHeaders());
     }
 
@@ -554,7 +560,8 @@
         osng_envelope: a.osng_envelope || a.envelope,
         proposal_run_id: a.proposal_run_id,
         strategy_id: a.strategy_id,
-        run_id: a.run_id
+        run_id: a.run_id,
+        prior_run_id: a.prior_run_id
       });
     }
 
@@ -627,14 +634,20 @@
      * A failing node listing does not drop the others (reasons land in `detail`).
      * @param {{ root_osn_id?: string, nodes?: object[] }} envelope
      * @param {string} runId
+     * @param {string[]} [extraIds] — further realized nodes outside the envelope (e.g. a cited
+     *   sample cone; pass `handoff.subgraph` ids), listed after the envelope's nodes.
      */
-    async function listRunEvidence(envelope, runId) {
+    async function listRunEvidence(envelope, runId, extraIds) {
       var env = envelope || {};
       var rootId = String(env.root_osn_id || '').trim();
       var ids = [];
       if (rootId) ids.push(rootId);
       (Array.isArray(env.nodes) ? env.nodes : []).forEach(function (n) {
         var id = n && n.id != null ? String(n.id).trim() : '';
+        if (id && ids.indexOf(id) < 0) ids.push(id);
+      });
+      (Array.isArray(extraIds) ? extraIds : []).forEach(function (raw) {
+        var id = String(raw || '').trim();
         if (id && ids.indexOf(id) < 0) ids.push(id);
       });
       var failures = [];
@@ -656,6 +669,16 @@
       var result = { osn_id: rootId || ids[0] || null, osn_ids: ids, run_id: runId || null, targets: targets };
       if (failures.length) result.detail = failures.join('; ');
       return result;
+    }
+
+    /** Node ids a prepared/realized handoff compiled (includes cited cones). */
+    function subgraphIds(handoff) {
+      var sub = handoff && Array.isArray(handoff.subgraph) ? handoff.subgraph : [];
+      return sub
+        .map(function (s) {
+          return s && (s.id || s.osn_id);
+        })
+        .filter(Boolean);
     }
 
     function getBudArtifactUrl(runId, entry) {
@@ -738,7 +761,8 @@
           osng_envelope: a.osng_envelope || a.envelope,
           proposal_run_id: a.proposal_run_id,
           strategy_id: a.strategy_id,
-          run_id: a.run_id
+          run_id: a.run_id,
+          prior_run_id: a.prior_run_id
         });
         if (o.onStatus) o.onStatus(handoff);
       }
@@ -848,7 +872,8 @@
         if (o.onLog) o.onLog('phase: collect evidence listings');
         evidence = await listRunEvidence(
           { root_osn_id: osnId, nodes: envelope.nodes },
-          handoff.run_id
+          handoff.run_id,
+          subgraphIds(handoff)
         );
       } catch (evErr) {
         evidence = {
@@ -944,6 +969,7 @@
     return {
       osng: {
         proposeFromIntent: proposeFromIntent,
+        listSamples: listSamples,
         getProposeStatus: getProposeStatus,
         proposeFromIntentUntilDone: proposeFromIntentUntilDone,
         proposeThenRealizeUntilDone: proposeThenRealizeUntilDone
@@ -968,6 +994,7 @@
         expandOsnUntilDone: expandOsnUntilDone,
         listEvidenceCollections: listEvidenceCollections,
         listRunEvidence: listRunEvidence,
+        subgraphIds: subgraphIds,
         getBudArtifactUrl: getBudArtifactUrl,
         getBudPreviewUrl: getBudPreviewUrl,
         getEvidenceArtifactUrl: getEvidenceArtifactUrl,

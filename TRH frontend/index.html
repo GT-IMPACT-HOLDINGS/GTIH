@@ -208,7 +208,90 @@
       flex: 0 0 auto;
       margin-left: auto;
     }
+    .welcome-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .welcome-modal[hidden] {
+      display: none !important;
+    }
+    .welcome-modal-panel {
+      position: relative;
+      z-index: 1;
+      width: min(40rem, 92vw);
+      max-height: 86vh;
+      overflow: auto;
+      box-sizing: border-box;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+    }
+    .welcome-modal-close {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+    }
+    .welcome-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+      gap: 0.6rem;
+    }
+    .welcome-card {
+      margin: 0;
+      padding: 0.75rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      font: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .welcome-card .glyph {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+    .welcome-card:hover,
+    .welcome-card[aria-pressed="true"] {
+      background: var(--paper);
+      border-color: var(--ink);
+    }
+    .welcome-outcome {
+      display: flex;
+      gap: 0.5rem;
+      align-items: stretch;
+    }
+    .welcome-outcome[hidden] {
+      display: none;
+    }
+    .welcome-outcome textarea {
+      flex: 1 1 auto;
+      min-height: 4.5rem;
+      margin: 0;
+    }
+    .welcome-outcome button {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    #osngView .osn-std-badge {
+      float: right;
+      margin-left: 0.4rem;
+      cursor: help;
+      user-select: none;
+    }
     .osng-download,
+    .osng-publish,
+    .osng-welcome,
     .sud-download,
     .osng-trash,
     .osng-rerealize {
@@ -226,12 +309,15 @@
       cursor: pointer;
     }
     .osng-download:hover:not(:disabled),
+    .osng-welcome:hover:not(:disabled),
     .sud-download:hover:not(:disabled),
     .osng-trash:hover:not(:disabled),
     .osng-rerealize:hover:not(:disabled) {
       background: var(--paper);
     }
     .osng-download:disabled,
+    .osng-publish[aria-disabled="true"],
+    .osng-welcome:disabled,
     .sud-download:disabled,
     .osng-trash:disabled,
     .osng-rerealize:disabled {
@@ -239,6 +325,8 @@
       cursor: not-allowed;
     }
     .osng-download .glyph,
+    .osng-publish .glyph,
+    .osng-welcome .glyph,
     .sud-download .glyph,
     .osng-trash .glyph,
     .osng-rerealize .glyph {
@@ -503,6 +591,12 @@
       border-bottom: 1px solid var(--rule);
     }
     .evidence-list li:last-child { border-bottom: 0; }
+    .result-row-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.5rem;
+      align-items: center;
+    }
     .result-row {
       display: grid;
       grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem;
@@ -543,6 +637,24 @@
     .result-row-status[data-status="C"] { color: var(--ok); }
     .result-row-status[data-status="A"] { color: var(--ink); }
     .result-row-status[data-status="M"] { color: var(--err); }
+    .result-approve {
+      display: inline-flex;
+      align-items: center;
+      margin: 0;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .result-approve input {
+      width: 0.95rem;
+      height: 0.95rem;
+      margin: 0;
+      accent-color: var(--ink);
+      cursor: pointer;
+    }
+    .result-approve input:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
     .muted { color: var(--muted); font-size: 0.85rem; }
     a { color: var(--ink); }
 
@@ -650,9 +762,9 @@
     .result-modal-identity {
       margin: 0;
       display: grid;
-      grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem;
+      grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem auto;
       gap: 0.75rem;
-      align-items: baseline;
+      align-items: center;
       min-width: 0;
       flex: 1 1 auto;
       font-size: 0.85rem;
@@ -733,6 +845,10 @@
       display: grid;
       grid-template-rows: minmax(0, 1.65fr) minmax(0, 1fr);
     }
+    /* Software SUD: give TP a PC-like 16:9 share; shrink bottom chat. */
+    .result-modal-center.is-software-preview {
+      grid-template-rows: minmax(0, 1fr) minmax(5.5rem, 0.42fr);
+    }
     .result-modal-tp {
       min-height: 0;
       overflow: auto;
@@ -742,6 +858,12 @@
       flex-direction: column;
       background: var(--surface);
       border-bottom: 1px solid var(--rule);
+    }
+    .result-modal-tp.is-desktop-stage {
+      overflow: hidden;
+      padding: 0.65rem;
+      align-items: center;
+      justify-content: center;
     }
     .result-modal-tp pre {
       margin: 0;
@@ -756,11 +878,45 @@
     .result-modal-tp iframe {
       display: block;
       width: 100%;
-      flex: 1 1 auto;
-      min-height: 0;
-      height: 100%;
+      /* Flex basis 0 + grow fills the TP; avoid height:100%/min-height:0 collapse. */
+      flex: 1 1 0;
+      min-height: 16rem;
       border: 0;
       background: var(--paper);
+    }
+    .result-modal-tp img.result-modal-evidence-img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      margin: 0 auto;
+      object-fit: contain;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+    }
+    /* Virtual desktop: stage locked to 16:9; SPA at 1280×720 scaled to fill it. */
+    .result-modal-desktop-stage {
+      position: relative;
+      flex: 0 0 auto;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      box-sizing: border-box;
+    }
+    .result-modal-desktop-stage iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      flex: none;
+      min-height: 0;
+      width: 1280px;
+      height: 720px;
+      border: 0;
+      background: #fff;
+      transform-origin: top left;
     }
     /* Content emerges from panel surface (open + gallery prev/next). */
     @keyframes result-modal-content-emerge {
@@ -771,6 +927,15 @@
       to {
         opacity: 1;
         filter: blur(0);
+      }
+    }
+    /* Chromium blanks iframe documents when CSS filter is applied to the iframe. */
+    @keyframes result-modal-iframe-emerge {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
       }
     }
     @keyframes result-modal-shell-in {
@@ -785,13 +950,21 @@
     .result-modal.is-shell-entering .result-modal-panel {
       animation: result-modal-shell-in 0.85s ease-out both;
     }
-    .result-modal-tp.is-emerging > * {
+    .result-modal-tp.is-emerging > *:not(iframe):not(.result-modal-desktop-stage):not(img) {
       animation: result-modal-content-emerge 2s ease-out both;
+    }
+    .result-modal-tp.is-emerging > iframe,
+    .result-modal-tp.is-emerging > .result-modal-desktop-stage,
+    .result-modal-tp.is-emerging > img.result-modal-evidence-img {
+      animation: result-modal-iframe-emerge 2s ease-out both;
     }
     @media (prefers-reduced-motion: reduce) {
       .result-modal.is-shell-entering .result-modal-scrim,
       .result-modal.is-shell-entering .result-modal-panel,
-      .result-modal-tp.is-emerging > * {
+      .result-modal-tp.is-emerging > *:not(iframe):not(.result-modal-desktop-stage):not(img),
+      .result-modal-tp.is-emerging > iframe,
+      .result-modal-tp.is-emerging > .result-modal-desktop-stage,
+      .result-modal-tp.is-emerging > img.result-modal-evidence-img {
         animation: none;
       }
     }
@@ -932,6 +1105,16 @@
         <span class="sidebar-actions">
           <button
             type="button"
+            class="osng-welcome"
+            id="osngWelcome"
+            title="Samples"
+            aria-label="Open samples"
+            disabled
+          >
+            <span class="glyph" aria-hidden="true">✦</span>
+          </button>
+          <button
+            type="button"
             class="osng-download"
             id="osngDownload"
             title="Download full OSNG as YAML"
@@ -939,6 +1122,16 @@
             disabled
           >
             <span class="glyph" aria-hidden="true">⬇</span>
+          </button>
+          <button
+            type="button"
+            class="osng-publish"
+            id="osngPublish"
+            title="Coming soon"
+            aria-label="Publish (coming soon)"
+            aria-disabled="true"
+          >
+            <span class="glyph" aria-hidden="true">⇪</span>
           </button>
           <button
             type="button"
@@ -1026,6 +1219,18 @@
     </aside>
   </div>
 
+  <div id="welcomeModal" class="welcome-modal" role="dialog" aria-modal="true" aria-label="Samples" hidden>
+    <div class="result-modal-scrim" aria-hidden="true"></div>
+    <div class="welcome-modal-panel">
+      <button type="button" class="result-modal-close welcome-modal-close" id="welcomeClose" aria-label="Close">×</button>
+      <div class="welcome-cards" id="welcomeCards" role="group" aria-label="Samples"></div>
+      <div class="welcome-outcome" id="welcomeOutcome" hidden>
+        <textarea id="welcomeIntent" aria-label="Desired outcome" placeholder="…"></textarea>
+        <button type="button" id="welcomeGo" aria-label="Propose and realize" title="Propose and realize">➤</button>
+      </div>
+    </div>
+  </div>
+
   <div
     id="resultModal"
     class="result-modal"
@@ -1041,6 +1246,14 @@
           <span class="result-row-id" id="resultModalId">—</span>
           <span class="result-row-type" id="resultModalType">—</span>
           <span class="result-row-status" id="resultModalStatus" data-status="M">M</span>
+          <label
+            class="result-approve"
+            id="resultModalApproveLabel"
+            title="Approve"
+            aria-label="Approve"
+          >
+            <input type="checkbox" id="resultModalApprove" />
+          </label>
         </h2>
         <div class="result-modal-actions">
           <button
@@ -1137,6 +1350,21 @@
       var osngDownload = document.getElementById('osngDownload');
       var osngRerealizeBtn = document.getElementById('osngRerealize');
       var osngTrashBtn = document.getElementById('osngTrash');
+      var osngWelcomeBtn = document.getElementById('osngWelcome');
+      var welcomeModal = document.getElementById('welcomeModal');
+      var welcomeCards = document.getElementById('welcomeCards');
+      var welcomeOutcome = document.getElementById('welcomeOutcome');
+      var welcomeIntent = document.getElementById('welcomeIntent');
+      var welcomeGo = document.getElementById('welcomeGo');
+      /** Public sample manifests ({ id, title, description, glyph, root_osn_id }). */
+      var osngSamples = [];
+      var welcomeSampleId = null;
+      var SESSION_KEY = 'trh.session.v1';
+      var WELCOMED_KEY = 'trh.welcomed.v1';
+      /** Saves are suppressed until the boot restore has run. */
+      var sessionReady = false;
+      /** Last realized result shown in the cockpit (persisted with the OSNG). */
+      var lastResultPayload = null;
       var workspaceRail = document.getElementById('workspaceRail');
       var lastOsngEnvelope = null;
       var selectedOsnId = null;
@@ -1185,6 +1413,8 @@
       var resultModalId = document.getElementById('resultModalId');
       var resultModalType = document.getElementById('resultModalType');
       var resultModalStatus = document.getElementById('resultModalStatus');
+      var resultModalApprove = document.getElementById('resultModalApprove');
+      var resultModalApproveLabel = document.getElementById('resultModalApproveLabel');
       var resultModalBody = document.getElementById('resultModalBody');
       var resultModalTp = document.getElementById('resultModalTp');
       var resultModalClose = document.getElementById('resultModalClose');
@@ -1321,6 +1551,10 @@
       });
       document.addEventListener('keydown', function (ev) {
         if (ev.key === 'Escape') {
+          if (welcomeModal && !welcomeModal.hidden) {
+            closeWelcome();
+            return;
+          }
           if (resultModal && !resultModal.hidden) {
             closeResultModal();
             return;
@@ -1661,18 +1895,20 @@
             JSON.stringify(extractOutcomeFingerprint(lastOsngEnvelope));
         }
         updateOsngRerealizeButton();
+        saveSession();
       }
 
       function updateOsngRerealizeButton() {
         if (!osngRerealizeBtn) return;
         var show = !!(
-          sudPresent &&
-          osngOutcomeDirty &&
-          lastOsngEnvelope &&
-          !busy
+          osngNodes().length &&
+          !busy &&
+          (!sudPresent || osngOutcomeDirty)
         );
         osngRerealizeBtn.hidden = !show;
         osngRerealizeBtn.disabled = !!busy;
+        osngRerealizeBtn.title = sudPresent ? 'Re-realize' : 'Realize';
+        osngRerealizeBtn.setAttribute('aria-label', osngRerealizeBtn.title);
       }
 
       /**
@@ -1688,7 +1924,8 @@
           }
         }
         refreshOsngOutcomeDirty();
-        if (!osngOutcomeDirty || !sudPresent) return;
+        if (sudPresent && !osngOutcomeDirty) return;
+        var firstRealize = !sudPresent;
 
         if (
           !window.gtih ||
@@ -1722,7 +1959,9 @@
         hanumanArc = 'realize';
         appendBeat(
           beat(
-            'Ram asks Hanuman to re-realize the altered Outcome Spec / evidences…',
+            firstRealize
+              ? 'Ram asks Hanuman to realize the OSNG…'
+              : 'Ram asks Hanuman to re-realize the altered Outcome Spec / evidences…',
             true,
             true,
             'realize'
@@ -1730,9 +1969,16 @@
         );
 
         try {
-          var realized = await window.gtih.hanuman.realizeUntilDone(
-            { osng_envelope: envelope },
-            {
+          var realizeArgs = { osng_envelope: envelope };
+          if (
+            !firstRealize &&
+            lastResultPayload &&
+            lastResultPayload.handoff &&
+            lastResultPayload.handoff.run_id
+          ) {
+            realizeArgs.prior_run_id = lastResultPayload.handoff.run_id;
+          }
+          var realized = await window.gtih.hanuman.realizeUntilDone(realizeArgs, {
               onLog: appendLog,
               onLaborEvent: appendLaborEvent,
               onStatus: function (st) {
@@ -1749,7 +1995,8 @@
             appendLog('phase: collect evidence listings');
             evidence = await window.gtih.hanuman.listRunEvidence(
               { root_osn_id: osnId, nodes: envelope.nodes },
-              handoff.run_id
+              handoff.run_id,
+              window.gtih.hanuman.subgraphIds(handoff)
             );
           } catch (evErr) {
             evidence = {
@@ -2124,9 +2371,45 @@
         if (osngDownload) {
           osngDownload.disabled = !lastOsngEnvelope;
         }
+        decorateCitedRoot();
         applyOsnFocusClasses();
         updateOsngTrashButton();
+        updateOsngRerealizeButton();
         renderWorkspaceRail();
+        saveSession();
+      }
+
+      function citedSampleOf(envelope) {
+        if (!envelope || !osngSamples.length) return null;
+        var root = null;
+        (envelope.nodes || []).forEach(function (n) {
+          if (n && n.id === envelope.root_osn_id) root = n;
+        });
+        var cites = (root && root.graph && root.graph.standard_ancestor_osn_ids) || [];
+        for (var i = 0; i < osngSamples.length; i++) {
+          if (cites.indexOf(osngSamples[i].root_osn_id) >= 0) return osngSamples[i];
+        }
+        return null;
+      }
+
+      /** Root badge: the public sample it cites as standard ancestor (the sample stays hidden). */
+      function decorateCitedRoot() {
+        if (!osngView || !lastOsngEnvelope) return;
+        var sample = citedSampleOf(lastOsngEnvelope);
+        if (!sample) return;
+        var rootId = lastOsngEnvelope.root_osn_id;
+        var blocks = osngView.querySelectorAll('.osng-node');
+        for (var i = 0; i < blocks.length; i++) {
+          if (blocks[i].getAttribute('data-osn-id') !== rootId) continue;
+          var badge = document.createElement('span');
+          badge.className = 'osn-std-badge';
+          badge.textContent = sample.glyph || '✦';
+          badge.title = sample.title;
+          badge.setAttribute('aria-label', 'Standard ancestor: ' + sample.title);
+          badge.setAttribute('contenteditable', 'false');
+          blocks[i].insertBefore(badge, blocks[i].firstChild);
+          return;
+        }
       }
 
       function downloadOsngYaml() {
@@ -2403,6 +2686,7 @@
       }
 
       function updateOsngTrashButton() {
+        if (osngWelcomeBtn) osngWelcomeBtn.disabled = !!busy || osnTreeActive();
         if (!osngTrashBtn) return;
         var focusId = lastOsngEnvelope && osngNodes().length ? ensureSelectedOsn() : null;
         osngTrashBtn.hidden = !focusId;
@@ -2438,6 +2722,7 @@
         updateOsngRerealizeButton();
         updateOsngTrashButton();
         applyIntentPlaceholder();
+        saveSession();
         appendBeat(
           beat('Ram cleared the whole OSNG — the cockpit awaits a new desired outcome.', true, true, 'expand')
         );
@@ -3388,6 +3673,7 @@
       }
 
       function resetResultStages() {
+        lastResultPayload = null;
         setSudStageVisible(false);
         setEvidenceStageVisible(false);
         lastSud = null;
@@ -3512,12 +3798,101 @@
         };
       }
 
+      var RESULT_DESKTOP_VW = 1280;
+      var RESULT_DESKTOP_VH = 720;
+
+      function resultModalCenterEl() {
+        return resultModal
+          ? resultModal.querySelector('.result-modal-center')
+          : null;
+      }
+
+      function teardownResultDesktopStage() {
+        if (!resultModalTp) return;
+        if (resultModalTp._desktopRo) {
+          try {
+            resultModalTp._desktopRo.disconnect();
+          } catch (_e) {
+            /* ignore */
+          }
+          resultModalTp._desktopRo = null;
+        }
+        resultModalTp._desktopFit = null;
+        resultModalTp.classList.remove('is-desktop-stage');
+        var center = resultModalCenterEl();
+        if (center) center.classList.remove('is-software-preview');
+      }
+
+      function fitResultDesktopStage(stage, iframe) {
+        if (!stage || !iframe || !resultModalTp) return;
+        var cs = window.getComputedStyle(resultModalTp);
+        var availW =
+          resultModalTp.clientWidth -
+          (parseFloat(cs.paddingLeft) || 0) -
+          (parseFloat(cs.paddingRight) || 0);
+        var availH =
+          resultModalTp.clientHeight -
+          (parseFloat(cs.paddingTop) || 0) -
+          (parseFloat(cs.paddingBottom) || 0);
+        if (availW < 2 || availH < 2) return;
+        /* Largest 16:9 rectangle that fits in TP → stage border matches SUD. */
+        var unit = Math.min(availW / 16, availH / 9);
+        var stageW = unit * 16;
+        var stageH = unit * 9;
+        stage.style.width = stageW + 'px';
+        stage.style.height = stageH + 'px';
+        var scale = stageW / RESULT_DESKTOP_VW;
+        iframe.style.width = RESULT_DESKTOP_VW + 'px';
+        iframe.style.height = RESULT_DESKTOP_VH + 'px';
+        iframe.style.transform = 'scale(' + scale + ')';
+      }
+
+      function mountResultDesktopStage(iframe) {
+        if (!resultModalTp || !iframe) return iframe;
+        teardownResultDesktopStage();
+        var center = resultModalCenterEl();
+        if (center) center.classList.add('is-software-preview');
+        resultModalTp.classList.add('is-desktop-stage');
+        var stage = document.createElement('div');
+        stage.className = 'result-modal-desktop-stage';
+        stage.appendChild(iframe);
+        resultModalTp.appendChild(stage);
+        var fit = function () {
+          fitResultDesktopStage(stage, iframe);
+        };
+        resultModalTp._desktopFit = fit;
+        if (typeof ResizeObserver === 'function') {
+          var ro = new ResizeObserver(function () {
+            fit();
+          });
+          ro.observe(resultModalTp);
+          resultModalTp._desktopRo = ro;
+        } else {
+          window.addEventListener('resize', fit);
+          resultModalTp._desktopRo = {
+            disconnect: function () {
+              window.removeEventListener('resize', fit);
+            }
+          };
+        }
+        requestAnimationFrame(function () {
+          fit();
+          requestAnimationFrame(fit);
+        });
+        return iframe;
+      }
+
       function closeResultModal() {
         if (!resultModal) return;
         resultModal.hidden = true;
         resultModal.classList.remove('is-shell-entering');
         if (resultModalTp) {
+          if (resultModalTp._emergeTimer) {
+            clearTimeout(resultModalTp._emergeTimer);
+            resultModalTp._emergeTimer = null;
+          }
           resultModalTp.classList.remove('is-emerging');
+          teardownResultDesktopStage();
           resultModalTp.innerHTML = '';
         }
         clearResultModalDownload();
@@ -3561,6 +3936,14 @@
         return 'Missing';
       }
 
+      function sudHasPayload(sud) {
+        return !!(sud && !sud.error && (sud.url || sud.text != null));
+      }
+
+      function evidenceHasPayload(target) {
+        return !!(target && target.artifact && target.artifact.url);
+      }
+
       function sudResultType(sud) {
         if (!sud) return 'SUD';
         if (sud.media_kind === 'software') return 'SOFTWARE';
@@ -3571,22 +3954,69 @@
 
       /** Same ID · type · status fields as cockpit result rows. */
       function sudIdentity(sud) {
-        var hasPayload = !!(sud && (sud.url || sud.text != null));
+        var hasPayload = sudHasPayload(sud);
         return {
           serial: 0,
           type: sudResultType(sud),
-          statusCode: sud && sud.error ? 'M' : mapResultStatusCode(sud && sud.status, hasPayload)
+          statusCode: sud && sud.error ? 'M' : mapResultStatusCode(sud && sud.status, hasPayload),
+          canApprove: hasPayload
         };
       }
 
       function evidenceIdentity(target, serial) {
         var t = target || {};
-        var hasArtifact = !!(t.artifact && t.artifact.url);
+        var hasArtifact = evidenceHasPayload(t);
         return {
           serial: serial != null ? serial : '?',
           type: String(t.kind || 'TEXTUAL_SNIPPET').trim() || 'TEXTUAL_SNIPPET',
-          statusCode: mapResultStatusCode(t.status, hasArtifact)
+          statusCode: mapResultStatusCode(t.status, hasArtifact),
+          canApprove: hasArtifact
         };
+      }
+
+      /**
+       * Ram approval for the current SUD (serial 0) or an evidence target.
+       * Persists via lastResultPayload → localStorage (no server round-trip).
+       */
+      function setSampleApproved(kind, targetIndex, approved) {
+        if (kind === 'sud') {
+          if (!lastSud || !sudHasPayload(lastSud)) return;
+          lastSud.status = approved ? 'approved' : 'collected';
+        } else if (kind === 'evidence') {
+          var t = lastEvidenceTargets[targetIndex];
+          if (!t || !evidenceHasPayload(t)) return;
+          t.status = approved ? 'approved' : 'collected';
+        } else {
+          return;
+        }
+        if (lastResultPayload) {
+          if (kind === 'sud') lastResultPayload.sud = lastSud;
+          if (kind === 'evidence' && lastResultPayload.evidence) {
+            lastResultPayload.evidence.targets = lastEvidenceTargets;
+          }
+        }
+        saveSession();
+        if (lastSud) renderSud(lastSud);
+        renderEvidence({ targets: lastEvidenceTargets });
+        syncResultModalApproveUi();
+      }
+
+      function syncResultModalApproveUi() {
+        var g =
+          resultGalleryIndex >= 0 ? resultGallery[resultGalleryIndex] : null;
+        var identity = null;
+        if (g && g.kind === 'sud') identity = sudIdentity(lastSud);
+        else if (g && g.kind === 'evidence') {
+          identity = evidenceIdentity(g.target, g.serial);
+        }
+        if (identity) setResultModalIdentity(identity);
+        else if (resultModalApprove) {
+          resultModalApprove.checked = false;
+          resultModalApprove.disabled = true;
+          if (resultModalApproveLabel) {
+            resultModalApproveLabel.title = 'Approve (unavailable)';
+          }
+        }
       }
 
       function setResultModalIdentity(identity) {
@@ -3594,11 +4024,27 @@
         var serial = id.serial != null ? id.serial : '—';
         var type = id.type || '—';
         var statusCode = id.statusCode || 'M';
+        var canApprove = id.canApprove === true;
         if (resultModalId) resultModalId.textContent = String(serial);
         if (resultModalType) resultModalType.textContent = type;
         if (resultModalStatus) {
           resultModalStatus.textContent = statusCode;
           resultModalStatus.setAttribute('data-status', statusCode);
+        }
+        if (resultModalApprove) {
+          resultModalApprove.disabled = !canApprove;
+          resultModalApprove.checked = canApprove && statusCode === 'A';
+          if (resultModalApproveLabel) {
+            resultModalApproveLabel.title = canApprove
+              ? statusCode === 'A'
+                ? 'Approved — uncheck to revoke'
+                : 'Approve'
+              : 'Approve (unavailable)';
+            resultModalApproveLabel.setAttribute(
+              'aria-label',
+              resultModalApproveLabel.title
+            );
+          }
         }
         if (resultModalTitle) {
           resultModalTitle.setAttribute(
@@ -3627,10 +4073,18 @@
       /** Restart 2s emerge of TP content only (head stripe stays sharp). */
       function playResultModalContentEmerge(skip) {
         if (!resultModalTp) return;
+        if (resultModalTp._emergeTimer) {
+          clearTimeout(resultModalTp._emergeTimer);
+          resultModalTp._emergeTimer = null;
+        }
         resultModalTp.classList.remove('is-emerging');
         if (skip || prefersReducedMotion()) return;
         void resultModalTp.offsetWidth;
         resultModalTp.classList.add('is-emerging');
+        resultModalTp._emergeTimer = setTimeout(function () {
+          resultModalTp._emergeTimer = null;
+          resultModalTp.classList.remove('is-emerging');
+        }, 2000);
       }
 
       function openResultModal(opts) {
@@ -3646,6 +4100,7 @@
                 ? document.activeElement
                 : null;
         setResultModalIdentity(o.identity);
+        teardownResultDesktopStage();
         resultModalTp.innerHTML = '';
         resultModalFocusContent = '';
 
@@ -3654,6 +4109,16 @@
           pre.textContent = stripEvidenceSpanDisplayHeaders(o.text);
           resultModalTp.appendChild(pre);
           if (String(o.text) !== 'Loading…') resultModalFocusContent = pre.textContent;
+        } else if (o.image && o.url) {
+          var img = document.createElement('img');
+          img.className = 'result-modal-evidence-img';
+          img.alt =
+            (o.identity && o.identity.type) ||
+            (o.identity && o.identity.serial != null
+              ? 'Sample ' + o.identity.serial
+              : 'Evidence screenshot');
+          img.src = o.url;
+          resultModalTp.appendChild(img);
         } else if (o.iframe && o.url) {
           var iframe = document.createElement('iframe');
           iframe.title =
@@ -3662,7 +4127,11 @@
               ? 'Sample ' + o.identity.serial
               : 'Preview');
           iframe.src = o.url;
-          resultModalTp.appendChild(iframe);
+          if (o.desktopPreview) {
+            mountResultDesktopStage(iframe);
+          } else {
+            resultModalTp.appendChild(iframe);
+          }
         } else if (o.url) {
           var loading = document.createElement('p');
           loading.className = 'muted';
@@ -3705,10 +4174,20 @@
       function looksLikeTextArtifact(url, contentType) {
         var path = String(url || '').split('?')[0].toLowerCase();
         if (/\.(html?|htm)$/.test(path)) return false;
+        if (/\.(png|jpe?g|gif|webp|webm|mp4)$/.test(path)) return false;
         if (/\.(md|txt|json|csv|log|yaml|yml|xml)$/.test(path)) return true;
         var ct = String(contentType || '').toLowerCase();
         if (ct.indexOf('text/html') === 0) return false;
+        if (ct.indexOf('image/') === 0 || ct.indexOf('video/') === 0) return false;
         return ct.indexOf('text/') === 0 || ct.indexOf('json') >= 0 || ct.indexOf('xml') >= 0;
+      }
+
+      function looksLikeImageArtifact(url, contentType) {
+        var path = String(url || '').split('?')[0].toLowerCase();
+        if (/\.(png|jpe?g|gif|webp)$/.test(path)) return true;
+        return String(contentType || '')
+          .toLowerCase()
+          .indexOf('image/') === 0;
       }
 
       function openEvidenceInModal(target, opener, navOpts) {
@@ -3774,6 +4253,9 @@
                 return { mode: 'text', text: text, ct: ct };
               });
             }
+            if (looksLikeImageArtifact(url, ct)) {
+              return { mode: 'image', ct: ct };
+            }
             return { mode: 'iframe', ct: ct };
           })
           .then(function (got) {
@@ -3782,6 +4264,17 @@
               openResultModal({
                 identity: identity,
                 text: got.text,
+                opener: opener,
+                downloadUrl: url,
+                downloadName: art.file_name || 'evidence'
+              });
+              return;
+            }
+            if (got.mode === 'image') {
+              openResultModal({
+                identity: identity,
+                image: true,
+                url: url,
                 opener: opener,
                 downloadUrl: url,
                 downloadName: art.file_name || 'evidence'
@@ -3823,6 +4316,7 @@
             identity: identity,
             iframe: true,
             url: sud.url,
+            desktopPreview: true,
             opener: opener,
             onDownload: function () {
               downloadSudArtifact(sud);
@@ -4179,6 +4673,22 @@
       if (resultModalClose) {
         resultModalClose.addEventListener('click', closeResultModal);
       }
+      if (resultModalApprove) {
+        resultModalApprove.addEventListener('change', function () {
+          var g =
+            resultGalleryIndex >= 0 ? resultGallery[resultGalleryIndex] : null;
+          if (!g) return;
+          if (g.kind === 'sud') {
+            setSampleApproved('sud', 0, !!resultModalApprove.checked);
+          } else if (g.kind === 'evidence') {
+            setSampleApproved(
+              'evidence',
+              g.targetIndex != null ? g.targetIndex : g.serial - 1,
+              !!resultModalApprove.checked
+            );
+          }
+        });
+      }
       if (resultModalPrev) {
         resultModalPrev.addEventListener('click', function () {
           stepResultGallery(-1);
@@ -4280,17 +4790,20 @@
       }
 
       /**
-       * Compact result row: serial id · type · status (C/A/M).
+       * Compact result row: serial id · type · status (C/A/M) · approve checkbox.
        * SUD uses serial 0; evidences are 1..n in list order.
        */
       function appendResultRow(listEl, opts) {
         var o = opts || {};
         var li = document.createElement('li');
+        var line = document.createElement('div');
+        line.className = 'result-row-line';
         var row = document.createElement('button');
         row.type = 'button';
         row.className = 'result-row';
         row.disabled = !!o.disabled;
         var statusCode = o.statusCode || 'M';
+        var canApprove = o.canApprove === true;
         row.title =
           '#' +
           o.serial +
@@ -4328,7 +4841,33 @@
             o.onOpen(row);
           });
         }
-        li.appendChild(row);
+
+        var approveLabel = document.createElement('label');
+        approveLabel.className = 'result-approve';
+        approveLabel.title = canApprove
+          ? statusCode === 'A'
+            ? 'Approved — uncheck to revoke'
+            : 'Approve'
+          : 'Approve (unavailable)';
+        approveLabel.setAttribute('aria-label', approveLabel.title);
+        var approveCb = document.createElement('input');
+        approveCb.type = 'checkbox';
+        approveCb.disabled = !canApprove;
+        approveCb.checked = canApprove && statusCode === 'A';
+        approveCb.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+        });
+        approveCb.addEventListener('change', function (ev) {
+          ev.stopPropagation();
+          if (typeof o.onApprove === 'function') {
+            o.onApprove(!!approveCb.checked);
+          }
+        });
+        approveLabel.appendChild(approveCb);
+
+        line.appendChild(row);
+        line.appendChild(approveLabel);
+        li.appendChild(line);
         listEl.appendChild(li);
         return row;
       }
@@ -4363,22 +4902,24 @@
         var list = document.createElement('ul');
         list.className = 'evidence-list';
         list.style.marginTop = '0';
-        var hasPayload = !!(sud.url || sud.text != null);
-        var statusCode = sud.error
-          ? 'M'
-          : mapResultStatusCode(sud.status, hasPayload);
+        var id = sudIdentity(sud);
         appendResultRow(list, {
           serial: 0,
-          type: sudResultType(sud),
-          statusCode: statusCode,
-          disabled: !(hasPayload || sud.error),
+          type: id.type,
+          statusCode: id.statusCode,
+          canApprove: id.canApprove,
+          disabled: !(id.canApprove || sud.error),
           openHint: 'open in modal',
           onOpen: function (row) {
             openSudInModal(row);
+          },
+          onApprove: function (approved) {
+            setSampleApproved('sud', 0, approved);
           }
         });
         sudPane.appendChild(list);
         rebuildResultGallery();
+        if (isResultModalOpen()) syncResultModalApproveUi();
       }
 
       /**
@@ -4404,27 +4945,44 @@
         }
         setEvidenceStageVisible(true);
         targets.forEach(function (t, index) {
-          var hasArtifact = !!(t.artifact && t.artifact.url);
-          var statusCode = mapResultStatusCode(t.status, hasArtifact);
-          var type = String(t.kind || 'TEXTUAL_SNIPPET').trim() || 'TEXTUAL_SNIPPET';
+          var id = evidenceIdentity(t, index + 1);
           appendResultRow(evidenceList, {
             serial: index + 1,
-            type: type,
-            statusCode: statusCode,
-            disabled: !hasArtifact && statusCode === 'M' && !t.notes,
+            type: id.type,
+            statusCode: id.statusCode,
+            canApprove: id.canApprove,
+            disabled: !id.canApprove && id.statusCode === 'M' && !t.notes,
             openHint: 'open in modal',
             onOpen: function (row) {
               openEvidenceInModal(t, row);
+            },
+            onApprove: function (approved) {
+              setSampleApproved('evidence', index, approved);
             }
           });
         });
         rebuildResultGallery();
+        if (isResultModalOpen()) syncResultModalApproveUi();
       }
 
       function showResults(payload) {
         renderOsng(payload.envelope);
         renderSud(payload.sud);
         renderEvidence(payload.evidence);
+        var h = payload.handoff || {};
+        lastResultPayload = {
+          handoff: {
+            run_id: h.run_id,
+            plugin_id: h.plugin_id,
+            source: h.source,
+            compilation_root_osn_id: h.compilation_root_osn_id,
+            subgraph: h.subgraph
+          },
+          status: payload.status || null,
+          evidence: payload.evidence || null,
+          sud: payload.sud || null
+        };
+        saveSession();
         jsonOut.textContent = JSON.stringify(
           {
             envelope: payload.envelope,
@@ -4469,7 +5027,8 @@
         };
       }
 
-      async function runProposeRealize() {
+      /** @param {string} [sampleId] public sample whose root the new root cites (welcome modal). */
+      async function runProposeRealize(sampleId) {
         if (busy) return;
         if (
           !window.gtih ||
@@ -4484,7 +5043,12 @@
         setBusy(true);
         clearHanumanLog();
         appendBeat(
-          beat('Ram raises a propose → realize chain.', true, true, 'expand')
+          beat(
+            sampleId ? 'Ram has raised an OSNG proposition.' : 'Ram raises a propose → realize chain.',
+            true,
+            true,
+            'expand'
+          )
         );
         appendBeat(
           beat('Hanuman will labor; GT3 alone is the sun.', true, true, 'expand')
@@ -4494,6 +5058,17 @@
         try {
           var args = readIntent();
           refreshIntentForNextRaise(args.intent);
+          if (typeof sampleId === 'string' && sampleId) {
+            args.sample_id = sampleId;
+            var proposed = await window.gtih.osng.proposeFromIntentUntilDone(args, {
+              onLog: appendLog,
+              onLaborEvent: appendLaborEvent,
+              onStatus: appendStatusBeat
+            });
+            out.className = 'ok';
+            revealProposedOsng(proposed);
+            return;
+          }
           var result = await window.gtih.osng.proposeThenRealizeUntilDone(args, {
             onLog: appendLog,
             onLaborEvent: appendLaborEvent,
@@ -4597,6 +5172,231 @@
           setBusy(false);
         }
       });
+
+      /* ---- Browser persistence: one OSNG + its last realized result ---- */
+
+      function writeSession(state) {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(state));
+      }
+
+      function saveSession() {
+        if (!sessionReady) return;
+        try {
+          if (!lastOsngEnvelope || !osngNodes().length) {
+            localStorage.removeItem(SESSION_KEY);
+            return;
+          }
+          var state = {
+            version: 1,
+            envelope: lastOsngEnvelope,
+            last_result: lastResultPayload,
+            baseline: osngBaselineOutcome,
+            selected_osn_id: selectedOsnId,
+            intent_mode: intentMode
+          };
+          try {
+            writeSession(state);
+          } catch (_quota) {
+            // Large SUD text: drop it; restore re-fetches from sud.url (build runs persist on the server).
+            var r = state.last_result;
+            if (r && r.sud && r.sud.text != null) {
+              state.last_result = Object.assign({}, r, { sud: Object.assign({}, r.sud, { text: null }) });
+              writeSession(state);
+            }
+          }
+        } catch (_e) {
+          /* storage unavailable (private mode) — the cockpit still works unsaved */
+        }
+      }
+
+      async function restoreSession() {
+        var raw = null;
+        try {
+          raw = localStorage.getItem(SESSION_KEY);
+        } catch (_e) {
+          raw = null;
+        }
+        if (!raw) return false;
+        var state;
+        try {
+          state = JSON.parse(raw);
+        } catch (_e) {
+          return false;
+        }
+        var env = state && state.envelope;
+        if (!env || !Array.isArray(env.nodes) || !env.nodes.length) return false;
+        if (state.intent_mode === 'edit' || state.intent_mode === 'expand') intentMode = state.intent_mode;
+        selectedOsnId = state.selected_osn_id || null;
+        var result = state.last_result;
+        if (result && result.sud) {
+          var sud = result.sud;
+          if (sud.text == null && sud.url && sud.media_kind === 'document') {
+            try {
+              var res = await fetch(sud.url);
+              if (res.ok) sud.text = await res.text();
+            } catch (_e) {
+              /* keep the URL-only SUD */
+            }
+          }
+          showResults({
+            envelope: env,
+            handoff: result.handoff || {},
+            status: result.status || null,
+            evidence: result.evidence || null,
+            sud: sud
+          });
+          if (state.baseline) {
+            osngBaselineOutcome = state.baseline;
+            refreshOsngOutcomeDirty();
+          }
+        } else {
+          renderOsng(env);
+        }
+        if (selectedOsnId && !osnNodeById(selectedOsnId)) selectedOsnId = null;
+        applyOsnFocusClasses();
+        renderWorkspaceRail();
+        updateOsngTrashButton();
+        return true;
+      }
+
+      /* ---- Welcome modal: pick a public sample to cite, or start from scratch ---- */
+
+      async function loadSamples() {
+        try {
+          if (window.gtih && window.gtih.osng && window.gtih.osng.listSamples) {
+            osngSamples = await window.gtih.osng.listSamples();
+          }
+        } catch (_e) {
+          osngSamples = [];
+        }
+      }
+
+      function welcomeCard(glyph, label, tip, sampleId) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'welcome-card';
+        btn.title = tip;
+        btn.setAttribute('aria-label', tip);
+        btn.setAttribute('aria-pressed', 'false');
+        var g = document.createElement('span');
+        g.className = 'glyph';
+        g.setAttribute('aria-hidden', 'true');
+        g.textContent = glyph;
+        btn.appendChild(g);
+        if (label) {
+          var t = document.createElement('span');
+          t.textContent = label;
+          btn.appendChild(t);
+        }
+        btn.addEventListener('click', function () {
+          if (!sampleId) {
+            closeWelcome();
+            intentEl.focus();
+            return;
+          }
+          welcomeSampleId = sampleId;
+          var cards = welcomeCards.querySelectorAll('.welcome-card');
+          for (var i = 0; i < cards.length; i++) cards[i].setAttribute('aria-pressed', 'false');
+          btn.setAttribute('aria-pressed', 'true');
+          welcomeOutcome.hidden = false;
+          welcomeIntent.focus();
+        });
+        return btn;
+      }
+
+      function renderWelcomeCards() {
+        welcomeCards.innerHTML = '';
+        osngSamples.forEach(function (s) {
+          welcomeCards.appendChild(
+            welcomeCard(s.glyph || '✦', s.title, s.description ? s.title + ' — ' + s.description : s.title, s.id)
+          );
+        });
+        welcomeCards.appendChild(welcomeCard('✎', '', 'Start from scratch', null));
+      }
+
+      async function openWelcome() {
+        if (!welcomeModal || busy || osnTreeActive()) return;
+        if (!osngSamples.length) await loadSamples();
+        welcomeSampleId = null;
+        welcomeIntent.value = '';
+        welcomeIntent.placeholder = readWelcomeIntentRecall() || '…';
+        welcomeOutcome.hidden = true;
+        renderWelcomeCards();
+        welcomeModal.hidden = false;
+        var first = welcomeCards.querySelector('.welcome-card');
+        if (first) first.focus();
+      }
+
+      var WELCOME_INTENT_KEY = 'trh.welcomeIntent.v1';
+
+      function readWelcomeIntentRecall() {
+        try {
+          return String(localStorage.getItem(WELCOME_INTENT_KEY) || '').trim();
+        } catch (_e) {
+          return '';
+        }
+      }
+
+      function closeWelcome() {
+        if (welcomeModal) welcomeModal.hidden = true;
+      }
+
+      function submitWelcome() {
+        var text = String(welcomeIntent.value || '').trim();
+        if (!text || !welcomeSampleId || busy) return;
+        var sampleId = welcomeSampleId;
+        try {
+          localStorage.setItem(WELCOME_INTENT_KEY, text);
+        } catch (_e) {}
+        intentEl.value = text;
+        closeWelcome();
+        runProposeRealize(sampleId);
+      }
+
+      if (welcomeModal) {
+        welcomeModal.querySelector('.result-modal-scrim').addEventListener('click', closeWelcome);
+        document.getElementById('welcomeClose').addEventListener('click', closeWelcome);
+        welcomeGo.addEventListener('click', submitWelcome);
+        welcomeIntent.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Tab' && !ev.shiftKey && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
+            var recall = readWelcomeIntentRecall();
+            if (!welcomeIntent.value && recall) {
+              ev.preventDefault();
+              welcomeIntent.value = recall;
+              try {
+                welcomeIntent.setSelectionRange(recall.length, recall.length);
+              } catch (_e) {}
+            }
+            return;
+          }
+          if (ev.key === 'Enter' && !ev.shiftKey && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
+            ev.preventDefault();
+            submitWelcome();
+          }
+        });
+      }
+      if (osngWelcomeBtn) osngWelcomeBtn.addEventListener('click', openWelcome);
+
+      (async function bootSession() {
+        await loadSamples();
+        var restored = false;
+        try {
+          restored = await restoreSession();
+        } catch (_e) {
+          restored = false;
+        }
+        sessionReady = true;
+        updateOsngTrashButton();
+        if (restored) return;
+        var welcomed = false;
+        try {
+          welcomed = !!localStorage.getItem(WELCOMED_KEY);
+          localStorage.setItem(WELCOMED_KEY, '1');
+        } catch (_e) {
+          welcomed = false;
+        }
+        if (!welcomed) openWelcome();
+      })();
     })();
   </script>
 </body>

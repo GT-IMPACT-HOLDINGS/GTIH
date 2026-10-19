@@ -67,7 +67,7 @@ Realization.a1000200.osn            ← plane name Realization (eldest root; not
 - `self_only` — the clicked node only
 - `self_and_approved_descendants` — the clicked node + recursive native children
 - `self_plus_parent_context` — the clicked node + direct native parents
-- `self_as_axis_center` — axis + native descendants + native ancestors (parents only); each cited standard ancestor C is C + C’s native descendants + C’s native ancestors (parents only) + C’s standard-ancestor **nodes**. Reciprocal citations use a visited-set. Do not take siblings or uncles of a shared ancestor.
+- `self_as_axis_center` — axis + native descendants + native ancestors (parents only); each cited standard ancestor C contributes its **cone**: C + C’s native descendants + C’s native ancestors (parents only) + the cone of every standard ancestor C cites, recursively. Reciprocal citations use a visited-set. Do not take siblings or uncles of a shared ancestor.
 
 **Additional-plane convention:** when a plane is entered through a Focus OSN’s own `standard_ancestor_osn_ids` link to `S` (not inherited by walk-up from native parents), treat **`S` as that plane’s layout trunk** for surrounding-tree display (ancestor column ending at `S`, peers = children of `S` plus grafted inheritors). The **plane name** is always the origin-leaf of the **eldest root** of `S`’s native primary-parent chain (e.g. link to AccessControl → plane name `WebAppSecurity`). Native-plane naming likewise uses the eldest OSN on the Focus primary-parent chain. The PlaneShift shadow companions native ancestors only when the Focus OSN itself declares alternate links.
 
