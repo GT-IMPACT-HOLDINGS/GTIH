@@ -250,6 +250,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: run_id
+          in: query
+          required: false
+          description: Restrict the listing to one build run (otherwise all covering runs, newest wins per evidence).
+          schema:
+            type: string
       responses:
         "200":
           description: Collection snapshot

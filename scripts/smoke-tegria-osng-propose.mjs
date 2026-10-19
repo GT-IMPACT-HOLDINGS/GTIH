@@ -98,8 +98,11 @@ try {
   if (!proposal.nodes || proposal.nodes.length !== 1) {
     throw new Error(`Expected single-node OSNG, got ${JSON.stringify(proposal).slice(0, 400)}`);
   }
-  if (result.envelope && result.envelope.meta && result.envelope.meta.labor !== 'hanuman_browser_ca') {
-    throw new Error(`Unexpected labor: ${result.envelope.meta.labor}`);
+  if (result.envelope && result.envelope.meta != null) {
+    throw new Error('Normalized OSNG envelope must not carry meta');
+  }
+  if (result.meta && result.meta.labor !== 'hanuman_browser_ca') {
+    throw new Error(`Unexpected ticket labor: ${result.meta.labor}`);
   }
 
   console.log(

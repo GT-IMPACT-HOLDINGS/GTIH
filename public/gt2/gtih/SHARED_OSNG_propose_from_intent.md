@@ -4,7 +4,7 @@
 **Date:** 2026-09-12  
 **Scope lock:** Exactly **one** SDK API call. Naive **single-OSN** OSNG for day-zero. Full multi-node OSNG arithmetic generation is **out of scope** (named future evolution only).
 
-**Inputs read:** [Tegria_day-zero_OSNG_plan.md](../../Tegria_frontend/Tegria_day-zero_OSNG_plan.md), [API.md](./API.md), Lexiom Hanuman legend (`ca/README.md`).
+**Inputs read:** [Tegria_day-zero_OSNG_plan.md](../../../../tegria-front-end/Tegria_day-zero_OSNG_plan.md), [API.md](./API.md), Lexiom Hanuman legend (`ca/README.md`).
 
 **Council agents:** [Tegria POV](fcd520cd-3a85-45ba-8238-5959d6efaf6b) · [TRH POV](6f71ebec-1c96-48a1-a2c7-e951ed824511) · [GTIH/Lexiom POV](f772a7a7-1045-436a-9ac9-b9783d8d01ac)
 
@@ -47,7 +47,8 @@ gtih.osng.proposeFromIntent({
 
 gtih.osng.getProposeStatus(run_id): Promise<{
   status: "awaiting_browser" | "running" | "ok" | "failed";
-  envelope?: { root_osn_id: string; nodes: OsnDraft[]; meta?: object };
+  envelope?: { root_osn_id: string; nodes: OsnDraft[] };
+  meta?: object; // Job/ticket ops (caps, labor) — not part of the OSNG document
   detail?: string;
   debug?: object;
 }>;
@@ -58,7 +59,6 @@ gtih.hanuman.serveProposeSession(ca_session, { onLog? }): Promise<workerReport>;
 gtih.osng.proposeFromIntentUntilDone(args, { onLog?, onStatus? }): Promise<{
   root_osn_id: string;
   nodes: OsnDraft[];
-  meta?: object;
 }>;
 ```
 
@@ -75,20 +75,28 @@ gtih.osng.proposeFromIntentUntilDone(args, { onLog?, onStatus? }): Promise<{
 ### HTTP façade (steward preference)
 
 - **Start:** `POST /lexiom13/osn/propose` → `{ status: "awaiting_browser", run_id, ca_session, meta }`.
-- **Status:** `GET /lexiom13/osn/propose/status/:runId` → `awaiting_browser | running | ok | failed` + envelope on ok.
+- **Status:** `GET /lexiom13/osn/propose/status/:runId` → `awaiting_browser | running | ok | failed` + lean envelope `{ root_osn_id, nodes }` on ok (ticket `meta` separate).
 - **Session sync:** reuses `/lexiom13/build/session/:id/{workspace,file,artifacts,report}` (propose finalize skips evidence/bud).
 - **Primary:** `OSNG_PROPOSAL.json` under `builds/lexiom13-propose/<runId>/`.
+- **Mid-method labor:** `SEED.md` + `THEMATIC_LENSES.json` in that same propose build dir (not on finished nodes).
 - **Errors:** `{ detail, debug }` — **no** silent deterministic draft. Tegria/TRH surface both.
 
 **Known divergence (vs earlier sync council draft):** callers no longer get the envelope on the start Promise; browser must run Hanuman then poll (or use `proposeFromIntentUntilDone`).
 
-### `OsnDraft` (minimal fields for all three UIs)
+### `OsnDraft` (finished-node allowlist)
 
-Enough for Tegria `DocumentView` / TRH structure rail / Lexiom-shaped future:
+Enough for Tegria `DocumentView` / TRH structure rail / Lexiom-shaped future — **finished proposition keys only**:
 
-- `id`, `title`, `seed`, `thematic_lenses`, `output_spec`, `success_evidences`
-- `graph.parent_osn_ids`, `graph.child_osn_ids` (empty or self-consistent for single node)
-- `schema_version: "osn/0.2"` (or equivalent living Lexiom draft shape)
+- `schema_version: "osn/0.2"`
+- `id`, `file_name`, `owner` — Hanuman draft `id` / `file_name` are opaque `{uuid}.osn` (not path-shaped). `owner` is a simple string (default `"Ram"`). Canon Lexiom garden ids / richer `owner` objects stay on disk for Lexiom 1.3 UX.
+- `output_spec`, `success_evidences`
+- `graph.parent_osn_ids`, `graph.child_osn_ids`, `graph.standard_ancestor_osn_ids` (empty or self-consistent for single node)
+
+**No `title`** on finished Hanuman nodes (silently dropped). Document outline / cluster labels use OSN `id`.
+
+**Mandatory propose method** (mid-method labor, not finished fields): seed from `INTENT.md` → exactly 3 thematic lenses → fold into `output_spec` → then evidences. Host keeps mid-method scratch under `builds/lexiom13-propose/<runId>/` as `SEED.md` and `THEMATIC_LENSES.json`. Finished `OSNG_PROPOSAL.json` nodes must not carry `title`, `seed`, `thematic_lenses`, `compilation`, `node_type`, etc.; normalize silently drops extras.
+
+**SUD realize LM surface:** only `output_spec`, `success_evidences`, and structural `graph` (plus short keys for routing).
 
 ---
 
@@ -145,15 +153,17 @@ flowchart LR
 ## 8. Acceptance for “shared brick shipped”
 
 1. `gtih.osng.proposeFromIntent({ intent })` starts an async Job; `proposeFromIntentUntilDone` (or start + `hanuman.serveProposeSession` + `getProposeStatus`) yields the envelope.  
-2. On success, status returns `{ root_osn_id, nodes }` with `nodes.length === 1` (day-zero).  
+2. On success, status `envelope` is `{ root_osn_id, nodes }` only (no `meta`) with `nodes.length === 1` (day-zero). Job ops (`labor`, caps) stay on start/status ticket `meta` and `PROPOSE_BRIEF.json`.  
 3. Tegria Ask Anything and TRH console can each complete one Hanuman round-trip.  
 4. Lexiom prepare/realize tests unchanged in behavior.  
+
+**TRH modal follow-on (same brick):** `gtih.hanuman.modalChatUntilDone({ contract: 'lineage_readonly' | 'edit_osng', … })` starts the same propose CA plugin with `mode: modal_chat`, seeding `PRIOR_OSNG.json`. LP/RP differ only by `AGENT_PROMPT` contract; RP Apply updates the draft envelope; no auto-canon.
 
 ---
 
 ## 9. Note to Tegria day-zero plan authors
 
-The council **honors** empty garden + one frontend call + draft review UX from [Tegria_day-zero_OSNG_plan.md](../../Tegria_frontend/Tegria_day-zero_OSNG_plan.md), and **amends** two day-zero claims for shared benefit:
+The council **honors** empty garden + one frontend call + draft review UX from [Tegria_day-zero_OSNG_plan.md](../../../../tegria-front-end/Tegria_day-zero_OSNG_plan.md), and **amends** two day-zero claims for shared benefit:
 
 1. SDK home: **`gtih.osng.proposeFromIntent`**, not `gtih.hanuman.proposeOsngFromIntent`.  
 2. Result richness: **naive single-OSN** first; multi-node broker tree is future evolution of the same envelope—not the shared day-zero contract.

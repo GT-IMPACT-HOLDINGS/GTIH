@@ -375,6 +375,27 @@
     .node.participant { color: #123866; border-color: var(--participant-border); background: var(--participant); }
     .node.link-source { border-color: #d97706; background: #fff3d4; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.18); }
 
+    .node-name-editor {
+      position: absolute;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      color: var(--ink);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(18, 103, 214, 0.18);
+      font: inherit;
+      font-weight: 700;
+      text-align: center;
+      pointer-events: auto;
+    }
+
+    .node-name-editor:focus-visible { outline: 3px solid rgba(255, 184, 77, 0.7); outline-offset: 2px; }
+
+    .node.renaming { visibility: hidden; }
+
     .edge-layer {
       position: absolute;
       inset: 0;
@@ -479,6 +500,9 @@
           </div>
         </div>
       </div>
+      <div class="action-controls" aria-label="OSNG export">
+        <button id="exportAction" type="button" disabled>Export OSNG (YAML zip)</button>
+      </div>
       <p class="teaching-note hidden" id="teachingNote" role="status" aria-live="polite"></p>
       <div id="status" class="status" aria-live="polite">Enter a volume name and create a volume to begin. Switch to Top view for circular volume boundaries around each trunk.</div>
     </aside>
@@ -547,6 +571,7 @@
     const nativeDepthRevealedByPlane = new Map();
     let mode = null;
     let linkSourceId = null;
+    let renamingNodeId = null;
     let teachingNoteTimer = null;
     let viewKind = 'side'; // 'side' | 'top'
     let gardenVolumeLayouts = [];
@@ -561,6 +586,7 @@
     const buildScopeSelect = document.getElementById('buildScopeSelect');
     const buildAction = document.getElementById('buildAction');
     const clearAction = document.getElementById('clearAction');
+    const exportAction = document.getElementById('exportAction');
     const sideViewAction = document.getElementById('sideViewAction');
     const topViewAction = document.getElementById('topViewAction');
     const board = document.getElementById('board');
@@ -622,6 +648,8 @@
       resetMode('Build simulation cleared.');
       refreshActionAvailability();
     });
+
+    exportAction.addEventListener('click', exportOsngZip);
 
     window.addEventListener('resize', () => {
       if (viewKind === 'top') syncNodeVisibility();
@@ -759,6 +787,7 @@
         localToGlobal.set(template.localId, id);
         const node = {
           id,
+          osnId: makeHanumanOsnId(),
           plane: planeId,
           label: template.root ? label : `${label} [${template.localId}]`,
           x: template.x,
@@ -791,10 +820,97 @@
       label.className = 'node-label';
       label.textContent = node.label;
       button.appendChild(label);
-      const role = node.root ? 'root OSN planted on the' : 'OSN in the';
-      button.setAttribute('aria-label', `${node.label}, ${role} ${planeLabel(node.plane)} volume`);
+      button.setAttribute('aria-label', nodeAriaLabel(node));
+      button.title = 'Double-click or press F2 to rename';
       button.addEventListener('click', () => onNodeClick(node.id));
+      button.addEventListener('dblclick', () => beginNodeRename(node.id));
+      button.addEventListener('keydown', event => {
+        if (event.key === 'F2') {
+          event.preventDefault();
+          beginNodeRename(node.id);
+        }
+      });
       host.appendChild(button);
+    }
+
+    function nodeAriaLabel(node) {
+      const role = node.root ? 'root OSN planted on the' : 'OSN in the';
+      return `${node.label}, ${role} ${planeLabel(node.plane)} volume`;
+    }
+
+    function beginNodeRename(nodeId) {
+      const node = byId.get(nodeId);
+      const element = document.getElementById(`node-${nodeId}`);
+      if (!node || !element || !isNodeVisible(node) || renamingNodeId === nodeId) return;
+      if (mode) {
+        status.textContent = 'Finish or cancel the current action before renaming an OSN.';
+        return;
+      }
+      document.querySelector('.node-name-editor')?.blur();
+
+      renamingNodeId = nodeId;
+      const editor = document.createElement('input');
+      editor.type = 'text';
+      editor.className = 'node-name-editor';
+      editor.value = node.label;
+      editor.maxLength = 80;
+      editor.setAttribute('aria-label', `Rename OSN ${node.label}`);
+      editor.style.left = element.style.left;
+      editor.style.top = element.style.top;
+      editor.style.width = `${Math.max(element.offsetWidth, 150)}px`;
+      element.classList.add('renaming');
+      element.parentElement.appendChild(editor);
+      editor.focus();
+      editor.select();
+      status.textContent = `Renaming ${node.label}: press Enter to save or Escape to cancel.`;
+
+      let finished = false;
+      const finish = (commit, restoreFocus) => {
+        if (finished) return;
+        finished = true;
+        renamingNodeId = null;
+        element.classList.remove('renaming');
+        editor.remove();
+        if (commit) applyNodeRename(nodeId, editor.value);
+        else status.textContent = `Rename of ${node.label} cancelled.`;
+        if (restoreFocus) element.focus();
+      };
+
+      editor.addEventListener('keydown', event => {
+        event.stopPropagation();
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          finish(true, true);
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          finish(false, true);
+        }
+      });
+      editor.addEventListener('blur', () => finish(true, false));
+    }
+
+    function applyNodeRename(nodeId, raw) {
+      const node = byId.get(nodeId);
+      if (!node) return;
+      const label = raw.trim().replace(/\s+/g, ' ');
+      if (!label) {
+        status.textContent = `OSN names cannot be empty; kept ${node.label}.`;
+        return;
+      }
+      if (label === node.label) {
+        status.textContent = `${node.label} name unchanged.`;
+        return;
+      }
+
+      const previous = node.label;
+      node.label = label;
+      const element = document.getElementById(`node-${nodeId}`);
+      if (element) {
+        element.querySelector('.node-label').textContent = label;
+        element.setAttribute('aria-label', nodeAriaLabel(node));
+      }
+      syncNodeVisibility();
+      status.textContent = `${previous} renamed to ${label}.`;
     }
 
     function setViewKind(nextKind) {
@@ -1060,7 +1176,7 @@
       syncPlanesLayout();
       syncNodeVisibility();
       refreshActionAvailability();
-      status.textContent = `${planeLabel(planeId)} volume created with its root OSN. Reveal intra-volume lineage when ready.`;
+      status.textContent = `${planeLabel(planeId)} volume created with its root OSN. Reveal intra-volume lineage when ready. Double-click any OSN to rename it.`;
     }
 
     function revealNextNativeGeneration() {
@@ -1236,7 +1352,7 @@
         status.textContent = 'Select a dashed inter-volume root link, not an OSN.';
         return;
       }
-      status.textContent = `${byId.get(nodeId).label} selected. Choose an action first.`;
+      status.textContent = `${byId.get(nodeId).label} selected. Choose an action first, or double-click (F2) to rename it.`;
     }
 
     function handleStandardSelection(nodeId) {
@@ -1326,7 +1442,8 @@
       collectDescendantOsns(root.id, closure);
       collectNativeAncestorOsns(root.id, closure);
       if (scope === 'with_cited_cones') {
-        getStandardAncestorIds(root.id).forEach(citedId => includeCitedSpecCone(citedId, closure));
+        const expandedCones = new Set([root.id]);
+        getStandardAncestorIds(root.id).forEach(citedId => includeCitedSpecCone(citedId, closure, expandedCones));
       }
     }
 
@@ -1343,15 +1460,12 @@
       collectNativeAncestorOsns(node.parent, closure);
     }
 
-    function includeStandardAncestorNodes(nodeId, closure) {
-      getStandardAncestorIds(nodeId).forEach(id => closure.add(id));
-    }
-
-    function includeCitedSpecCone(citedId, closure) {
-      if (!byId.has(citedId)) return;
+    function includeCitedSpecCone(citedId, closure, expandedCones) {
+      if (!byId.has(citedId) || expandedCones.has(citedId)) return;
+      expandedCones.add(citedId);
       collectDescendantOsns(citedId, closure);
       collectNativeAncestorOsns(citedId, closure);
-      includeStandardAncestorNodes(citedId, closure);
+      getStandardAncestorIds(citedId).forEach(ancestorId => includeCitedSpecCone(ancestorId, closure, expandedCones));
     }
 
     function clearBuildHighlight() {
@@ -1388,6 +1502,7 @@
       deleteStandardAction.disabled = !hasVisibleNodes || standardLinks.length === 0;
       buildAction.disabled = !hasVisibleNodes;
       clearAction.disabled = !hasBuildHighlight();
+      exportAction.disabled = !hasVisibleNodes;
     }
 
     function drawEdges() {
@@ -1545,6 +1660,221 @@
       }
       const direction = dy >= 0 ? 1 : -1;
       return { x: center.x, y: center.y + direction * rect.height / 2 };
+    }
+
+    // ---- OSNG export: one TRH finished-node YAML per OSN (lib/lexiom13OsnPropose.js allowlist), zipped ----
+
+    const DEFAULT_HANUMAN_OWNER = 'Ram';
+
+    function makeHanumanOsnId() {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return `${window.crypto.randomUUID()}.osn`;
+      }
+      const hex = length => Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+      return `${hex(8)}-${hex(4)}-4${hex(3)}-a${hex(3)}-${hex(12)}.osn`;
+    }
+
+    function buildExportedOsn(node) {
+      const visibleIds = ids => ids.filter(id => isNodeVisible(byId.get(id))).map(id => byId.get(id).osnId);
+      return {
+        schema_version: 'osn/0.2',
+        id: node.osnId,
+        file_name: node.osnId,
+        owner: DEFAULT_HANUMAN_OWNER,
+        graph: {
+          parent_osn_ids: node.parent ? visibleIds([node.parent]) : [],
+          child_osn_ids: visibleIds(children.get(node.id) || []),
+          standard_ancestor_osn_ids: visibleIds(getStandardAncestorIds(node.id))
+        },
+        output_spec: [
+          'Deliver a System Under Development (SUD) that realizes the following outcome:',
+          '',
+          node.label,
+          '',
+          'A human must be able to inspect the delivered artifact and judge whether the outcome holds.'
+        ].join('\n'),
+        success_evidences: [
+          {
+            evidence_id: 'ev.direct.textual_snippet.1',
+            kind: 'TEXTUAL_SNIPPET',
+            direct: true,
+            inspection_prompt: 'The opening passage of the delivered outcome, where its intended subject appears'
+          }
+        ]
+      };
+    }
+
+    function exportOsngZip() {
+      const exported = nodes.filter(isNodeVisible).map(buildExportedOsn);
+      if (!exported.length) {
+        status.textContent = 'Nothing to export: create a volume first.';
+        return;
+      }
+      const files = exported.map(osn => ({
+        name: `${osn.file_name}.yaml`,
+        data: new TextEncoder().encode(toYaml(osn, 0) + '\n')
+      }));
+      const blob = new Blob([buildZip(files)], { type: 'application/zip' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+      a.href = url;
+      a.download = `osng-${stamp}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      status.textContent = `Exported ${files.length} OSN YAML file${files.length === 1 ? '' : 's'} as ${a.download}.`;
+    }
+
+    // YAML emitter mirrored from TRH frontend/index.html so exports match TRH's OSNG download format.
+    function yamlQuote(str) {
+      const s = String(str);
+      if (s.indexOf('\n') >= 0) {
+        return '|\n' + s.split('\n').map(line => '  ' + line).join('\n');
+      }
+      if (/^[\w./:@+-]+$/.test(s) && !/^(true|false|null|yes|no)$/i.test(s)) {
+        return s;
+      }
+      return JSON.stringify(s);
+    }
+
+    function toYaml(value, indent) {
+      const level = indent || 0;
+      const pad = '  '.repeat(level);
+      if (value === null || value === undefined) return 'null';
+      if (typeof value === 'boolean' || typeof value === 'number') return String(value);
+      if (typeof value === 'string') {
+        const q = yamlQuote(value);
+        if (q.indexOf('\n') === 0 || q.charAt(0) === '|') {
+          return q.replace(/^\|\n/, '|\n' + pad);
+        }
+        return q;
+      }
+      if (Array.isArray(value)) {
+        if (!value.length) return '[]';
+        return value
+          .map(item => {
+            if (item !== null && typeof item === 'object' && !Array.isArray(item)) {
+              const keys = Object.keys(item);
+              if (!keys.length) return pad + '- {}';
+              const firstKey = keys[0];
+              const lines = [pad + '- ' + firstKey + ': ' + yamlInlineOrBlock(item[firstKey], level + 1)];
+              keys.slice(1).forEach(k => lines.push(yamlObjectLine(k, item[k], level + 1)));
+              return lines.join('\n');
+            }
+            return pad + '- ' + toYaml(item, 0);
+          })
+          .join('\n');
+      }
+      if (typeof value === 'object') {
+        const objKeys = Object.keys(value);
+        if (!objKeys.length) return '{}';
+        return objKeys.map(k => yamlObjectLine(k, value[k], level)).join('\n');
+      }
+      return yamlQuote(String(value));
+    }
+
+    function yamlInlineOrBlock(v, level) {
+      if (v !== null && typeof v === 'object') {
+        if (Array.isArray(v)) {
+          if (!v.length) return '[]';
+          return '\n' + toYaml(v, level + 1);
+        }
+        if (!Object.keys(v).length) return '{}';
+        return '\n' + toYaml(v, level + 1);
+      }
+      return toYaml(v, level);
+    }
+
+    function yamlObjectLine(k, v, level) {
+      const pad = '  '.repeat(level);
+      if (v !== null && typeof v === 'object') {
+        if (Array.isArray(v)) {
+          if (!v.length) return pad + k + ': []';
+          return pad + k + ':\n' + toYaml(v, level + 1);
+        }
+        if (!Object.keys(v).length) return pad + k + ': {}';
+        return pad + k + ':\n' + toYaml(v, level + 1);
+      }
+      if (typeof v === 'string' && v.indexOf('\n') >= 0) {
+        const blockPad = '  '.repeat(level + 1);
+        return pad + k + ': |\n' + v.split('\n').map(line => blockPad + line).join('\n');
+      }
+      return pad + k + ': ' + toYaml(v, 0);
+    }
+
+    // Minimal STORE (uncompressed) zip writer so the page stays dependency-free.
+    const CRC32_TABLE = (() => {
+      const table = new Uint32Array(256);
+      for (let n = 0; n < 256; n += 1) {
+        let c = n;
+        for (let k = 0; k < 8; k += 1) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+        table[n] = c >>> 0;
+      }
+      return table;
+    })();
+
+    function crc32(bytes) {
+      let crc = 0xffffffff;
+      for (let i = 0; i < bytes.length; i += 1) crc = CRC32_TABLE[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+      return (crc ^ 0xffffffff) >>> 0;
+    }
+
+    function buildZip(files) {
+      const encoder = new TextEncoder();
+      const now = new Date();
+      const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+      const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+      const localParts = [];
+      const centralParts = [];
+      let offset = 0;
+
+      files.forEach(file => {
+        const nameBytes = encoder.encode(file.name);
+        const crc = crc32(file.data);
+        const size = file.data.length;
+
+        const local = new DataView(new ArrayBuffer(30));
+        local.setUint32(0, 0x04034b50, true);
+        local.setUint16(4, 20, true);
+        local.setUint16(6, 0x0800, true);
+        local.setUint16(8, 0, true);
+        local.setUint16(10, dosTime, true);
+        local.setUint16(12, dosDate, true);
+        local.setUint32(14, crc, true);
+        local.setUint32(18, size, true);
+        local.setUint32(22, size, true);
+        local.setUint16(26, nameBytes.length, true);
+        local.setUint16(28, 0, true);
+        localParts.push(new Uint8Array(local.buffer), nameBytes, file.data);
+
+        const central = new DataView(new ArrayBuffer(46));
+        central.setUint32(0, 0x02014b50, true);
+        central.setUint16(4, 20, true);
+        central.setUint16(6, 20, true);
+        central.setUint16(8, 0x0800, true);
+        central.setUint16(10, 0, true);
+        central.setUint16(12, dosTime, true);
+        central.setUint16(14, dosDate, true);
+        central.setUint32(16, crc, true);
+        central.setUint32(20, size, true);
+        central.setUint32(24, size, true);
+        central.setUint16(28, nameBytes.length, true);
+        central.setUint32(42, offset, true);
+        centralParts.push(new Uint8Array(central.buffer), nameBytes);
+
+        offset += 30 + nameBytes.length + size;
+      });
+
+      const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+      const end = new DataView(new ArrayBuffer(22));
+      end.setUint32(0, 0x06054b50, true);
+      end.setUint16(8, files.length, true);
+      end.setUint16(10, files.length, true);
+      end.setUint32(12, centralSize, true);
+      end.setUint32(16, offset, true);
+      return new Blob([...localParts, ...centralParts, new Uint8Array(end.buffer)]);
     }
   </script>
 </body>

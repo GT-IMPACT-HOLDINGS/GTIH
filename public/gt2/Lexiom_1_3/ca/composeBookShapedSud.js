@@ -20,6 +20,7 @@ const DOCUMENT_PHASE_TOOLS = Object.freeze([TOOL_NAMES.WRITE_FILE]);
  *   model: { complete(messages: object[], tools: object[], opts?: object): Promise<object> },
  *   signal?: AbortSignal,
  *   log?: (line: string) => void,
+ *   onLaborEvent?: (evt: object) => void,
  *   systemBase?: string,
  *   timeoutMs?: number,
  *   caSession?: object
@@ -27,6 +28,8 @@ const DOCUMENT_PHASE_TOOLS = Object.freeze([TOOL_NAMES.WRITE_FILE]);
  */
 export async function iComposeRamDocumentInPhases(opts) {
   const log = opts.log || (() => {});
+  const emitLabor =
+    typeof opts.onLaborEvent === 'function' ? opts.onLaborEvent : () => {};
   const workspace = opts.workspace;
   const plan = await readJson(workspace, 'BUILD_PLAN.json');
   const sourceMap = await readJson(workspace, 'SOURCE_MAP.json');
@@ -175,6 +178,12 @@ export async function iComposeRamDocumentInPhases(opts) {
   const assembled = assembleDocumentFromSections(sectionContents);
   await workspace.write('document.md', assembled);
   log('[ca] assembled document.md from sections');
+  emitLabor({
+    kind: 'lifecycle',
+    stage: 'assemble',
+    path: 'document.md',
+    ok: true
+  });
 
   if (looksDirty(assembled)) {
     await iCompleteOneDocumentPhase({
@@ -350,6 +359,14 @@ async function iCompleteOneDocumentPhase(args) {
   }
 
   log(`[ca] document phase ${phaseId}`);
+  if (typeof opts.onLaborEvent === 'function') {
+    opts.onLaborEvent({
+      kind: 'lifecycle',
+      stage: 'doc_phase',
+      detail: phaseId,
+      ok: true
+    });
+  }
   const phaseUsage = { prompt_tokens: 0, completion_tokens: 0, cached_tokens: 0, crossings: 0 };
   const model = {
     async complete(messages, tools) {
@@ -400,6 +417,7 @@ async function iCompleteOneDocumentPhase(args) {
     model,
     signal: opts.signal,
     log,
+    onLaborEvent: opts.onLaborEvent,
     budgets: {
       maxSteps,
       maxActions,
@@ -454,31 +472,34 @@ function compactRootCapsule(capsule) {
   if (!capsule) return null;
   return {
     key: capsule.key,
-    title: capsule.title,
-    seed: compactTextValue(capsule.seed, 360),
-    unique_requirements: compactRequirements(capsule.unique_requirements, 4),
-    claim_constraints: compactRequirements(capsule.claim_constraints, 4)
+    osn_id: capsule.osn_id,
+    parent_keys: capsule.parent_keys,
+    child_keys: capsule.child_keys,
+    output_spec: compactTextValue(capsule.output_spec, 2400),
+    success_evidences: compactEvidences(capsule.success_evidences, 6, 220)
   };
 }
 
 function compactClusterCapsules(capsules) {
   return capsules.map((capsule) => ({
     key: capsule.key,
-    title: capsule.title,
+    osn_id: capsule.osn_id,
     role: capsule.role,
-    discipline: capsule.discipline || undefined,
     parent_keys: capsule.parent_keys,
     child_keys: capsule.child_keys,
-    seed: compactTextValue(capsule.seed, 360),
-    unique_requirements: compactRequirements(capsule.unique_requirements, 3),
+    output_spec: compactTextValue(capsule.output_spec, 1600),
+    success_evidences: compactEvidences(capsule.success_evidences, 4, 180),
     source_sections: capsule.source?.sections || undefined
   }));
 }
 
-function compactRequirements(requirements, limit) {
-  return (requirements || [])
-    .slice(0, limit)
-    .map((requirement) => compactTextValue(requirement, 260));
+function compactEvidences(evidences, limit, promptChars) {
+  return (evidences || []).slice(0, limit).map((ev) => ({
+    evidence_id: ev?.evidence_id || null,
+    kind: ev?.kind || null,
+    direct: ev?.direct === true,
+    inspection_prompt: compactTextValue(ev?.inspection_prompt || '', promptChars)
+  }));
 }
 
 function compactTextValue(value, maxChars) {
@@ -504,6 +525,7 @@ function fitFillPrompt({
     [
       'Compose the assigned section from this bounded packet.',
       'Write only the finished SUD content for this section — no notes, remarks, commentary, or explanations about the artifact.',
+      'Honor output_spec and success_evidences; use graph parent/child keys only for structure. Do not invent a title-led outcome.',
       '',
       '## Shared policy',
       JSON.stringify(policy),
@@ -548,10 +570,10 @@ function fitFillPrompt({
   ) {
     nodes = clusterCapsules.map((capsule) => ({
       key: capsule.key,
-      title: capsule.title,
+      osn_id: capsule.osn_id,
       role: capsule.role,
-      seed: compactTextValue(capsule.seed, 220),
-      unique_requirements: compactRequirements(capsule.unique_requirements, 2),
+      output_spec: compactTextValue(capsule.output_spec, 900),
+      success_evidences: compactEvidences(capsule.success_evidences, 2, 120),
       source_sections: capsule.source_sections
     }));
     prompt = render();
@@ -567,9 +589,9 @@ function fitFillPrompt({
   ) {
     nodes = clusterCapsules.map((capsule) => ({
       key: capsule.key,
-      title: capsule.title,
-      seed: compactTextValue(capsule.seed, 160),
-      unique_requirements: compactRequirements(capsule.unique_requirements, 1)
+      osn_id: capsule.osn_id,
+      output_spec: compactTextValue(capsule.output_spec, 500),
+      success_evidences: compactEvidences(capsule.success_evidences, 1, 80)
     }));
     prompt = render();
   }

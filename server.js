@@ -47,6 +47,7 @@ import {
   GT3_DEFAULT_OPENROUTER_IMAGE_MODEL,
   openRouterGenerateImage
 } from './lib/gt3OpenRouterImage.js';
+import { openRouterFetchWithRetry } from './lib/gt3OpenRouterFetch.js';
 import {
   canonizeLexiom13Osn,
   listLexiom13OsnYamlPaths,
@@ -91,6 +92,7 @@ import {
   listFocusEvidenceCollections,
   resolveEvidenceArtifactFile
 } from './lib/lexiom13EvidenceCockpitSync.js';
+import { listOsngSamples } from './lib/osngSamples.js';
 import {
   resolveBudArtifactFile,
   resolveBudPreviewFile
@@ -197,10 +199,15 @@ const gt3RuntimeLlm = {
 };
 
 /**
- * Deploy target switch — flip to 'prod' so Tegria on Render can call this GTIH host.
- * Default 'dev' keeps open localhost CORS. Keep in sync with Tegria_frontend/src/deployTarget.ts.
+ * Deploy target from env DEPLOY_TARGET ('dev' default | 'prod').
+ * dev: CORS_ORIGINS or '*'. prod: CORS_ORIGINS or the hard-wired Tegria origins.
  */
-const DEPLOY_TARGET = 'dev'; // 'dev' | 'prod'
+const DEPLOY_TARGET = (() => {
+  const raw = String(process.env.DEPLOY_TARGET || '').trim().toLowerCase();
+  if (raw === 'prod' || raw === 'dev') return raw;
+  if (raw) console.warn(`[deploy] Unknown DEPLOY_TARGET="${raw}", using "dev"`);
+  return 'dev';
+})();
 const HARDWIRED_ORIGINS = {
   tegriaProd: 'https://tgfe-image-latest.onrender.com',
   gtihProd: 'https://gtih-image-latest.onrender.com',
@@ -228,13 +235,15 @@ const CORS_ALLOW_HEADERS = [
   'X-Lexiom-Persona-Mode'
 ];
 
-const CORS_ORIGINS =
-  DEPLOY_TARGET === 'prod'
-    ? [HARDWIRED_ORIGINS.tegriaProd, HARDWIRED_ORIGINS.tegriaDev]
-    : (process.env.CORS_ORIGINS || '*')
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
+const CORS_ORIGINS = (
+  process.env.CORS_ORIGINS ||
+  (DEPLOY_TARGET === 'prod'
+    ? [HARDWIRED_ORIGINS.tegriaProd, HARDWIRED_ORIGINS.tegriaDev].join(',')
+    : '*')
+)
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 const LEDGER_PATH = process.env.LEDGER_PATH || 'ledger.jsonl';
 const SERVER_VERSION = 'v.poc.017';
 
@@ -447,7 +456,7 @@ app.get('/gt2/lexiom/', (req, res) => {
 
 // Serve everything under /public at the root (including /favicon.ico)
 app.use(express.static(STATIC_ROOT));
-// TRH browser console (repo-root sibling to Tegria_frontend; not under public/)
+// TRH browser console (under GTIH repo root; Tegria is sibling ../tegria-front-end; not under public/)
 app.use(
   '/TRH%20frontend',
   express.static(path.join(__dirname, 'TRH frontend'))
@@ -973,22 +982,36 @@ async function llmGenerate(narrative, apiKeyOverrides = {}, llmOptions = {}) {
       throw err;
     }
 
-    const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        // HTTP-Referer is optional; use env var if available, otherwise omit
-        ...(process.env.GT3_HTTP_REFERER ? { 'HTTP-Referer': process.env.GT3_HTTP_REFERER } : {}),
-        'X-Title': 'GT3 POC',
-        'Content-Type': 'application/json'
+    const resp = await openRouterFetchWithRetry(
+      'https://openrouter.ai/api/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          // HTTP-Referer is optional; use env var if available, otherwise omit
+          ...(process.env.GT3_HTTP_REFERER
+            ? { 'HTTP-Referer': process.env.GT3_HTTP_REFERER }
+            : {}),
+          'X-Title': 'GT3 POC',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: gt3RuntimeLlm.openrouterModel,
+          messages,
+          temperature,
+          max_tokens
+        })
       },
-      body: JSON.stringify({
-        model: gt3RuntimeLlm.openrouterModel,
-        messages,
-        temperature,
-        max_tokens
-      })
-    });
+      {
+        label: 'OpenRouter',
+        onRetry: ({ attempt, maxAttempts, retryAfterMs, detail }) => {
+          console.warn(
+            `[gt3 llmGenerate] ${detail}; wait ${retryAfterMs}ms then retry ` +
+              `(attempt ${attempt}/${maxAttempts - 1} retries)`
+          );
+        }
+      }
+    );
 
     if (!resp.ok) {
       const bodyText = await resp.text();
@@ -1452,11 +1475,23 @@ app.post('/lexiom13/build/session/:sessionId/cancel', (req, res) => {
   }
 });
 
+// Public sample OSNGs (manifests only; YAML is served statically under /osng_samples/).
+app.get('/lexiom13/osng-samples', async (_req, res) => {
+  try {
+    const samples = await listOsngSamples(STATIC_ROOT);
+    return res.json({ status: 'ok', samples });
+  } catch (e) {
+    console.error('lexiom13_osng_samples_failed', e);
+    return res.status(500).json({ detail: e && e.message ? e.message : 'Failed to list OSNG samples' });
+  }
+});
+
 // Lexiom 1.3 evidence cockpit sync: Focus-closure collections + safe artifact serve.
 app.get('/lexiom13/evidence/collections', async (req, res) => {
   try {
     const osnId = typeof req.query.osn_id === 'string' ? req.query.osn_id : '';
-    const result = await listFocusEvidenceCollections(__dirname, osnId);
+    const runId = typeof req.query.run_id === 'string' ? req.query.run_id : '';
+    const result = await listFocusEvidenceCollections(__dirname, osnId, { runId });
     return res.json({ status: 'ok', ...result });
   } catch (e) {
     const status = e && e.statusCode ? e.statusCode : 500;
@@ -1502,6 +1537,16 @@ app.get('/lexiom13/evidence/artifact/:runId/*', async (req, res) => {
 });
 
 // Lexiom 1.3 Bud Center hosts (Phase B): product-port preview + document artifact.
+// TRH (and Lexiom 1.3) are COEP require-corp. Embedded preview documents must send
+// COEP themselves or Chromium blanks the iframe. credentialless lets SPA CDN assets
+// load without CORP; CORP same-origin opts the response into COEP parents.
+function lexiom13BudPreviewIsolation(req, res, next) {
+  res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
+  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  next();
+}
+app.use('/lexiom13/preview', lexiom13BudPreviewIsolation);
+
 app.get('/lexiom13/preview/:runId', async (req, res) => {
   try {
     const abs = await resolveBudPreviewFile(__dirname, req.params.runId, []);

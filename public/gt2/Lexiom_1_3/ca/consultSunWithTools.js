@@ -93,17 +93,21 @@ export const buildAgentTools = iOfferTheToolsGt3Allows;
  *   allowCommands?: boolean,
  *   allowedTools?: string[],
  *   allowedWritePaths?: string[],
+ *   requiredFiles?: string[],
  *   autoFinishAfterWrite?: boolean,
  *   finalize?: () => Promise<{ ok: boolean, error?: string, detail?: string, [key: string]: any }>,
  *   workspace: object,
  *   model: { complete(messages: object[], tools: object[]): Promise<object> },
  *   signal?: AbortSignal,
  *   log?: (line: string) => void,
+ *   onLaborEvent?: (evt: object) => void,
  *   budgets?: { maxSteps?: number, maxActions?: number, maxNoProgress?: number, maxToolResultChars?: number, maxWallClockMs?: number }
  * }} opts
  */
 export async function iServeRamWithGt3Tools(opts) {
   const log = opts.log || (() => {});
+  const emitLabor =
+    typeof opts.onLaborEvent === 'function' ? opts.onLaborEvent : () => {};
   const budgets = {
     maxSteps: opts.budgets?.maxSteps || (opts.isDocument ? 36 : 48),
     maxActions: opts.budgets?.maxActions || (opts.isDocument ? 120 : 180),
@@ -142,10 +146,31 @@ export async function iServeRamWithGt3Tools(opts) {
     iStopIfMyWallClockEnds(deadline);
     stats.steps = step + 1;
     log(`[ca] tool step ${stats.steps}/${budgets.maxSteps}`);
-    const raw = await opts.model.complete(messages, tools);
+    const consultStarted = Date.now();
+    let raw;
+    try {
+      raw = await opts.model.complete(messages, tools);
+    } catch (consultErr) {
+      emitLabor({
+        kind: 'consult',
+        step: stats.steps,
+        max_steps: budgets.maxSteps,
+        ok: false,
+        detail: String(consultErr?.message || consultErr).slice(0, 200)
+      });
+      throw consultErr;
+    }
     const assistant = iHearWhatGt3Replied(raw);
     messages.push(assistant);
     const calls = Array.isArray(assistant.tool_calls) ? assistant.tool_calls : [];
+    emitLabor({
+      kind: 'consult',
+      step: stats.steps,
+      max_steps: budgets.maxSteps,
+      ok: true,
+      latency_ms: Date.now() - consultStarted,
+      tool_call_count: calls.length
+    });
     if (!calls.length) {
       noProgress++;
       if (noProgress >= budgets.maxNoProgress) {
@@ -178,8 +203,9 @@ export async function iServeRamWithGt3Tools(opts) {
         );
       }
       let result;
+      let args = {};
       try {
-        const args = iParseToolArgumentsGt3Sent(call?.function?.arguments);
+        args = iParseToolArgumentsGt3Sent(call?.function?.arguments);
         result = await iWieldOneToolForRam(name, args, { ...opts, requireOutline }, stats);
         if (result.ok && name !== TOOL_NAMES.FINISH) progressed = true;
         if (name === TOOL_NAMES.FINISH && result.ok) finished = true;
@@ -190,6 +216,15 @@ export async function iServeRamWithGt3Tools(opts) {
           detail: error?.message || String(error)
         };
       }
+      emitLabor({
+        kind: 'tool',
+        name,
+        path: iSummarizeToolPath(name, args),
+        ok: result?.ok !== false,
+        detail: iSummarizeToolDetail(name, result),
+        step: stats.steps,
+        max_steps: budgets.maxSteps
+      });
       messages.push({
         role: 'tool',
         tool_call_id: call.id || `tool_${stats.actions}`,
@@ -254,6 +289,19 @@ async function iWieldOneToolForRam(name, args, opts, stats) {
           `Write path is not available in this phase: ${args.path || '(missing path)'}`
         );
       }
+      if (/\.json$/i.test(String(args.path || ''))) {
+        try {
+          JSON.parse(String(args.content == null ? '' : args.content));
+        } catch (jsonErr) {
+          return {
+            ok: false,
+            error: 'invalid_json',
+            detail:
+              `Not written: ${args.path} must contain valid JSON (${String(jsonErr?.message || jsonErr).slice(0, 160)}). ` +
+              'Write the raw JSON document itself — never a read_file tool-result wrapper.'
+          };
+        }
+      }
       const result = await opts.workspace.write(args.path, args.content);
       stats.writes++;
       addUnique(stats.files_written, result.path || args.path);
@@ -290,6 +338,15 @@ async function iWieldOneToolForRam(name, args, opts, stats) {
             ? `Required primary is missing: ${opts.primary}`
             : 'OUTLINE.md is required before document completion'
         };
+      }
+      for (const required of Array.isArray(opts.requiredFiles) ? opts.requiredFiles : []) {
+        if (!(await opts.workspace.exists(required))) {
+          return {
+            ok: false,
+            error: 'required_file_missing',
+            detail: `Required file is missing: ${required}`
+          };
+        }
       }
       if (typeof opts.finalize === 'function') {
         const finalized = await opts.finalize({
@@ -375,6 +432,44 @@ function tool(name, description, parameters) {
 
 function addUnique(values, value) {
   if (value && !values.includes(value)) values.push(value);
+}
+
+/** Path / command summary for labor telemetry — never file bodies. */
+function iSummarizeToolPath(name, args) {
+  if (!args || typeof args !== 'object') return undefined;
+  if (args.path) return String(args.path);
+  if (name === TOOL_NAMES.RUN_COMMAND && args.command) {
+    const extra = Array.isArray(args.args) && args.args.length ? ' …' : '';
+    return String(args.command) + extra;
+  }
+  if (name === TOOL_NAMES.FINISH && args.summary) {
+    return String(args.summary).slice(0, 80);
+  }
+  return undefined;
+}
+
+/** Short outcome hint for labor telemetry. */
+function iSummarizeToolDetail(name, result) {
+  if (!result) return undefined;
+  if (result.ok === false) {
+    return String(result.detail || result.error || 'failed').slice(0, 200);
+  }
+  if (name === TOOL_NAMES.WRITE_FILE && result.chars != null) {
+    return `${result.chars} chars`;
+  }
+  if (name === TOOL_NAMES.READ_FILE && result.content_chars != null) {
+    return `${result.content_chars} chars`;
+  }
+  if (name === TOOL_NAMES.LIST_FILES && Array.isArray(result.files)) {
+    return `${result.files.length} entries`;
+  }
+  if (name === TOOL_NAMES.RUN_COMMAND && result.exit_code != null) {
+    return `exit ${result.exit_code}`;
+  }
+  if (name === TOOL_NAMES.FINISH) {
+    return result.summary ? String(result.summary).slice(0, 80) : 'finished';
+  }
+  return undefined;
 }
 
 function loopError(reason, message) {

@@ -92,6 +92,8 @@ test('evidence agent prompt is CA/Real Bolt protocol without Cursor manual steps
   assert.equal(prompt.includes('SECRET_PROMPT'), false);
   assert.equal(prompt.includes('Govern the welcome SPA'), false);
   assert.match(prompt, /inspection_prompt/);
+  assert.match(prompt, /Aligning excerpts to the DoE narrative/);
+  assert.match(prompt, /proving locus/);
 });
 
 test('validateEvidenceManifestAfterSync requires full plan coverage', async () => {
@@ -355,6 +357,336 @@ test('host quote-span evidence fails without LM fallback when spans are missing'
     });
     assert.equal(result.ok, false);
     assert.equal(result.reason, 'evidence_span_incomplete');
+  } finally {
+    setEvidenceSpanCompleteChatForTests(null);
+    await fsp.rm(root, { recursive: true, force: true });
+  }
+});
+
+test('span prompt exposes doe_claim and DoE alignment rubric', async () => {
+  const { buildSpanPromptMessages } = await import('../lib/lexiom13EvidenceSpanCollect.js');
+  const messages = buildSpanPromptMessages({
+    sudPath: 'index.html',
+    sudText: '<html>Hello</html>',
+    targets: [
+      {
+        target_id: 'a::e1',
+        osn_id: 'a',
+        evidence_id: 'e1',
+        kind: 'TEXTUAL_SNIPPET',
+        direct: true,
+        doe_claim: "The greeting showing 'Hello' followed by the user name",
+        hint: 'Ship a greeting SPA — The greeting showing Hello',
+        selection_goal: 'verbatim_passage_that_proves_doe_claim'
+      }
+    ]
+  });
+  const system = messages.find((m) => m.role === 'system')?.content || '';
+  const user = messages.find((m) => m.role === 'user')?.content || '';
+  assert.match(system, /DoE alignment rubric/);
+  assert.match(system, /doe_claim/);
+  assert.match(system, /"proves"/);
+  assert.match(system, /Greeting \/ displayed-message/);
+  assert.match(user, /doe_claim/);
+  assert.match(user, /Hello' followed by the user name/);
+  assert.match(user, /verbatim_passage_that_proves_doe_claim/);
+});
+
+test('YAML snapshot hint includes inspection_prompt for software OSNs', async () => {
+  const { inspectionPromptFromYaml, hintFromOsnSnapshot, doeFieldsFromOsnSnapshot } = await import(
+    '../lib/lexiom13EvidenceSpanCollect.js'
+  );
+  const yaml = `
+id: demo.osn
+output_spec: |-
+  Ship a Bootstrap SPA with CDN tags.
+success_evidences:
+  - evidence_id: ev.direct.textual_snippet.1
+    kind: TEXTUAL_SNIPPET
+    direct: true
+    inspection_prompt: The Bootstrap CDN stylesheet link and script tags in the delivered index.html
+compilation:
+  can_be_compilation_root: true
+`;
+  assert.match(
+    inspectionPromptFromYaml(yaml, 'ev.direct.textual_snippet.1'),
+    /Bootstrap CDN stylesheet/
+  );
+  const fields = doeFieldsFromOsnSnapshot(
+    yaml,
+    'osng/demo.osn.yaml',
+    'ev.direct.textual_snippet.1'
+  );
+  assert.match(fields.doe_claim, /Bootstrap CDN stylesheet/);
+  assert.equal(fields.doe_claim.includes('Ship a Bootstrap SPA'), false);
+  assert.match(fields.hint, /Bootstrap CDN/);
+  assert.match(fields.hint, /Ship a Bootstrap SPA/);
+  assert.match(
+    hintFromOsnSnapshot(yaml, 'osng/demo.osn.yaml', 'ev.direct.textual_snippet.1'),
+    /Bootstrap CDN/
+  );
+});
+
+test('software SCREEN-SHOT defers when Playwright browsers are missing', async () => {
+  const { collectEvidenceByQuoteSpans, setEvidenceSpanCompleteChatForTests } =
+    await import('../lib/lexiom13EvidenceSpanCollect.js');
+  const {
+    setEvidenceBrowserCaptureForTests,
+    shouldDeferScreenshotFailure
+  } = await import('../lib/lexiom13EvidenceBrowserCapture.js');
+
+  assert.equal(
+    shouldDeferScreenshotFailure(
+      'evidence_shot_no_playwright',
+      'Executable does not exist'
+    ),
+    true
+  );
+
+  const root = await fsp.mkdtemp(path.join(os.tmpdir(), 'lexiom13-ev-shot-defer-'));
+  const rel = 'evidences/soft.osn.ev.direct.screen_shot.1.v1.png';
+  await fsp.writeFile(
+    path.join(root, EVIDENCE_PLAN_FILENAME),
+    JSON.stringify({
+      schema_version: 'lexiom13-evidence-collection/1',
+      targets: [
+        {
+          target_id: 'soft.osn::ev.direct.screen_shot.1',
+          osn_id: 'soft.osn',
+          evidence_id: 'ev.direct.screen_shot.1',
+          kind: 'SCREEN-SHOT',
+          direct: true,
+          expected_relative_path: rel
+        },
+        {
+          target_id: 'std.osn::ev.direct.textual_snippet.1',
+          osn_id: 'std.osn',
+          evidence_id: 'ev.direct.textual_snippet.1',
+          kind: 'TEXTUAL_SNIPPET',
+          direct: true,
+          expected_relative_path: 'evidences/std.osn.ev.direct.textual_snippet.1.v1.md'
+        }
+      ]
+    }),
+    'utf8'
+  );
+  const html = '<html><body>cdn.jsdelivr.net/npm/bootstrap snippet</body></html>';
+  await fsp.writeFile(path.join(root, 'index.html'), html, 'utf8');
+
+  setEvidenceBrowserCaptureForTests(async () => ({
+    ok: false,
+    reason: 'evidence_shot_no_playwright',
+    detail:
+      "browserType.launch: Executable doesn't exist\nRun: npx playwright install chromium"
+  }));
+  const needle = 'cdn.jsdelivr.net/npm/bootstrap';
+  const start = html.indexOf(needle);
+  setEvidenceSpanCompleteChatForTests(async () => ({
+    ok: true,
+    content: JSON.stringify({
+      quotes: [
+        {
+          target_id: 'std.osn::ev.direct.textual_snippet.1',
+          start,
+          end: start + needle.length
+        }
+      ]
+    })
+  }));
+
+  try {
+    const result = await collectEvidenceByQuoteSpans({
+      run_id: 'shot_defer',
+      plugin_id: 'lexiom13.software_coding_builder',
+      output_directory: root
+    });
+    assert.equal(result.ok, true, result.detail || result.reason);
+    assert.equal(result.summary.deferred, 1);
+    assert.equal(result.summary.collected, 1);
+    const manifest = JSON.parse(
+      await fsp.readFile(path.join(root, 'EVIDENCE_MANIFEST.json'), 'utf8')
+    );
+    const shot = manifest.entries.find((e) =>
+      String(e.target_id).includes('screen_shot')
+    );
+    const snip = manifest.entries.find((e) =>
+      String(e.target_id).includes('textual_snippet')
+    );
+    assert.equal(shot.status, 'deferred');
+    assert.match(shot.notes, /playwright install chromium/i);
+    assert.equal(snip.status, 'collected');
+  } finally {
+    setEvidenceBrowserCaptureForTests(null);
+    setEvidenceSpanCompleteChatForTests(null);
+    await fsp.rm(root, { recursive: true, force: true });
+  }
+});
+
+test('software SCREEN-SHOT collects via host browser capture hook', async () => {
+  const {
+    collectEvidenceByQuoteSpans,
+    setEvidenceSpanCompleteChatForTests
+  } = await import('../lib/lexiom13EvidenceSpanCollect.js');
+  const { setEvidenceBrowserCaptureForTests } = await import(
+    '../lib/lexiom13EvidenceBrowserCapture.js'
+  );
+
+  const root = await fsp.mkdtemp(path.join(os.tmpdir(), 'lexiom13-ev-shot-'));
+  const rel = 'evidences/soft.osn.ev.direct.screen_shot.1.v1.png';
+  await fsp.writeFile(
+    path.join(root, EVIDENCE_PLAN_FILENAME),
+    JSON.stringify({
+      schema_version: 'lexiom13-evidence-collection/1',
+      targets: [
+        {
+          target_id: 'soft.osn::ev.direct.screen_shot.1',
+          osn_id: 'soft.osn',
+          evidence_id: 'ev.direct.screen_shot.1',
+          kind: 'SCREEN-SHOT',
+          direct: true,
+          expected_relative_path: rel
+        }
+      ]
+    }),
+    'utf8'
+  );
+  await fsp.writeFile(
+    path.join(root, 'index.html'),
+    '<!doctype html><title>Hi</title><body>Hello</body>',
+    'utf8'
+  );
+
+  setEvidenceBrowserCaptureForTests(async ({ expectedRelativePath, outDir }) => {
+    const abs = path.join(outDir, ...String(expectedRelativePath).split('/'));
+    await fsp.mkdir(path.dirname(abs), { recursive: true });
+    await fsp.writeFile(abs, Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), 'binary');
+    return {
+      ok: true,
+      artifact_path: expectedRelativePath,
+      preview_url: 'http://127.0.0.1:8080/lexiom13/preview/soft/',
+      collected_by: 'host_browser_shot'
+    };
+  });
+  setEvidenceSpanCompleteChatForTests(async () => {
+    throw new Error('span LM must not run for screenshot-only plans');
+  });
+
+  try {
+    const result = await collectEvidenceByQuoteSpans({
+      run_id: 'shot_run',
+      plugin_id: 'lexiom13.software_coding_builder',
+      output_directory: root
+    });
+    assert.equal(result.ok, true, result.detail || result.reason);
+    assert.equal(result.summary.shot_targets, 1);
+    assert.equal(result.summary.span_targets, 0);
+    const st = await fsp.stat(path.join(root, ...rel.split('/')));
+    assert.ok(st.size > 0);
+    const manifest = JSON.parse(
+      await fsp.readFile(path.join(root, 'EVIDENCE_MANIFEST.json'), 'utf8')
+    );
+    assert.equal(manifest.entries[0].status, 'collected');
+    assert.equal(manifest.entries[0].collected_by, 'host_browser_shot');
+  } finally {
+    setEvidenceBrowserCaptureForTests(null);
+    setEvidenceSpanCompleteChatForTests(null);
+    await fsp.rm(root, { recursive: true, force: true });
+  }
+});
+
+test('software quote-span collects from index.html only (not RUN_TRACE)', async () => {
+  const {
+    collectEvidenceByQuoteSpans,
+    setEvidenceSpanCompleteChatForTests
+  } = await import('../lib/lexiom13EvidenceSpanCollect.js');
+
+  const root = await fsp.mkdtemp(path.join(os.tmpdir(), 'lexiom13-ev-soft-direct-'));
+  const html =
+    '<!doctype html><html><head>' +
+    '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">' +
+    '</head><body><h1>Hello</h1></body></html>\n';
+  const trace =
+    '# RUN_TRACE\n### Checks\n2. Bootstrap CDN CSS link present\n3. Bootstrap CDN JS script present\n';
+  await fsp.writeFile(
+    path.join(root, EVIDENCE_PLAN_FILENAME),
+    JSON.stringify({
+      schema_version: 'lexiom13-evidence-collection/1',
+      targets: [
+        {
+          target_id: 'soft.osn::ev.direct.textual_snippet.1',
+          osn_id: 'soft.osn',
+          evidence_id: 'ev.direct.textual_snippet.1',
+          kind: 'TEXTUAL_SNIPPET',
+          direct: true,
+          snapshot_path: 'osng/soft.osn.yaml',
+          expected_relative_path:
+            'evidences/soft.osn.ev.direct.textual_snippet.1.v1.md'
+        }
+      ]
+    }),
+    'utf8'
+  );
+  await fsp.mkdir(path.join(root, 'osng'), { recursive: true });
+  await fsp.writeFile(
+    path.join(root, 'osng', 'soft.osn.yaml'),
+    [
+      'id: soft.osn',
+      'success_evidences:',
+      '  - evidence_id: ev.direct.textual_snippet.1',
+      '    kind: TEXTUAL_SNIPPET',
+      '    direct: true',
+      '    inspection_prompt: The Bootstrap CDN stylesheet link in index.html',
+      ''
+    ].join('\n'),
+    'utf8'
+  );
+  await fsp.writeFile(path.join(root, 'index.html'), html, 'utf8');
+  await fsp.writeFile(path.join(root, 'RUN_TRACE.md'), trace, 'utf8');
+
+  const needle = 'cdn.jsdelivr.net/npm/bootstrap@5.3.0';
+  const start = html.indexOf(needle);
+  assert.ok(start >= 0);
+  setEvidenceSpanCompleteChatForTests(async ({ messages }) => {
+    const user = messages.find((m) => m.role === 'user')?.content || '';
+    assert.match(user, /cdn\.jsdelivr\.net/);
+    assert.doesNotMatch(user, /RUN_TRACE/);
+    assert.match(user, /doe_claim/);
+    assert.match(user, /Bootstrap CDN stylesheet/);
+    const system = messages.find((m) => m.role === 'system')?.content || '';
+    assert.match(system, /DoE alignment rubric/);
+    return {
+      ok: true,
+      content: JSON.stringify({
+        quotes: [
+          {
+            target_id: 'soft.osn::ev.direct.textual_snippet.1',
+            start,
+            end: start + needle.length,
+            proves: 'Bootstrap CDN stylesheet link'
+          }
+        ]
+      })
+    };
+  });
+
+  try {
+    const result = await collectEvidenceByQuoteSpans({
+      run_id: 'soft_direct',
+      plugin_id: 'lexiom13.software_coding_builder',
+      output_directory: root
+    });
+    assert.equal(result.ok, true, result.detail || result.reason);
+    const excerpt = await fsp.readFile(
+      path.join(root, 'evidences', 'soft.osn.ev.direct.textual_snippet.1.v1.md'),
+      'utf8'
+    );
+    assert.match(excerpt, /cdn\.jsdelivr\.net/);
+    assert.doesNotMatch(excerpt, /Checks Performed|CDN CSS link present/);
+    const manifest = JSON.parse(
+      await fsp.readFile(path.join(root, 'EVIDENCE_MANIFEST.json'), 'utf8')
+    );
+    assert.equal(manifest.sud_path, 'index.html');
+    assert.deepEqual(manifest.entries[0].source_artifact_paths, ['index.html']);
   } finally {
     setEvidenceSpanCompleteChatForTests(null);
     await fsp.rm(root, { recursive: true, force: true });

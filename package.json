@@ -5,10 +5,12 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
+    "prestart": "node scripts/gt3-playwright-chromium-ensure.mjs",
     "start": "node server.js",
     "dev": "node server.js",
     "postinstall": "node scripts/gt3-agent-runtime-install.mjs",
     "agent-runtime:install": "node scripts/gt3-agent-runtime-install.mjs",
+    "playwright:chromium": "node scripts/gt3-playwright-chromium-ensure.mjs",
     "build": "echo \"(No frontend build specified â€“ customize this script if needed)\"",
     "test:odd": "playwright test tests/odd.single-flow.spec.ts",
     "test:odd:headed": "playwright test tests/odd.single-flow.spec.ts --headed",
